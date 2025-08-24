@@ -1,4 +1,7 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/generate-color-palette.ts';
+import '@/ai/flows/extract-work-items-flow';
+import '@/ai/flows/generate-knowledge-entry-flow';
+import '@/ai/flows/generate-skill-flow';
+import '@/ai/flows/generate-subtasks-flow';
