@@ -1,9 +1,9 @@
 "use server";
 
-import { db } from "@/lib/firebase";
 import { writeBatch, collection, doc, Timestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import type { Task, Project } from "@/lib/types";
-import type { Contract } from '@/components/features/contracts/types';
+import type { Contract } from '../types';
 import type { WorkItem } from "@/components/features/documents/work-items-table";
 
 interface DocDetails {
@@ -38,6 +38,10 @@ function workItemsToTasks(items: WorkItem[]): Task[] {
     }));
 }
 
+/**
+ * Server Action: 從文件創建專案和合約
+ * 遵循 NextJS 15 Server Actions 最佳實踐
+ */
 export async function createProjectAndContractFromDocument(input: ActionInput): Promise<ActionResult> {
     const { docDetails, workItems } = input;
     const batch = writeBatch(db);
@@ -97,5 +101,38 @@ export async function createProjectAndContractFromDocument(input: ActionInput): 
         console.error("從文件建立專案和合約時發生錯誤：", e);
         const errorMessage = e instanceof Error ? e.message : "發生未知錯誤。";
         return { error: `建立失敗：${errorMessage}` };
+    }
+}
+
+/**
+ * Server Action: 創建合約（與現有服務層整合）
+ */
+export async function createContractAction(data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>): Promise<{ success: boolean; contractId?: string; error?: string }> {
+    try {
+        // 這裡可以調用現有的 contractService.createContract
+        // 或者直接實現邏輯以保持一致性
+        const newContractRef = doc(collection(db, "contracts"));
+        const contractId = newContractRef.id;
+
+        const contractData = {
+            ...data,
+            startDate: Timestamp.fromDate(data.startDate),
+            endDate: Timestamp.fromDate(data.endDate),
+            payments: [],
+            changeOrders: [],
+            versions: [{
+                version: 1,
+                date: Timestamp.now(),
+                changeSummary: "初始版本"
+            }]
+        };
+
+        await newContractRef.set(contractData);
+
+        return { success: true, contractId };
+    } catch (e) {
+        console.error("創建合約時發生錯誤：", e);
+        const errorMessage = e instanceof Error ? e.message : "發生未知錯誤。";
+        return { success: false, error: `創建失敗：${errorMessage}` };
     }
 }

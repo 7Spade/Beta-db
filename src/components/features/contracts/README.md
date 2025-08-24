@@ -22,7 +22,8 @@ contracts/
 ├── tables/                   # 表格組件
 ├── dashboard/                # 儀表板組件
 ├── views/                    # 頁面視圖組件
-└── providers/                # Context 提供者
+├── providers/                # Context 提供者
+└── actions/                  # Server Actions
 ```
 
 ### 核心功能
@@ -106,6 +107,11 @@ function MyComponent() {
 - `PaymentService`: 付款管理
 - `ChangeOrderService`: 變更單管理
 - `ExportService`: 數據匯出
+
+### Server Actions
+
+- `createProjectAndContractFromDocument`: 從文件創建專案和合約
+- `createContractAction`: 創建合約的 Server Action
 
 ## 開發指南
 
