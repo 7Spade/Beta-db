@@ -12,7 +12,7 @@
  */
 
 // 主要組件導出
-export * from './documents-view';
+export * from './views/documents-view';
 export * from './work-items-table';
 
 // Server Actions 導出
