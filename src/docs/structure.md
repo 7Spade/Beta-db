@@ -1,6 +1,7 @@
 ├─ai
 │  │  dev.ts
 │  │  genkit.ts
+│  │  README.md
 │  │
 │  └─flows
 │          extract-work-items-flow.ts
@@ -9,68 +10,73 @@
 │          generate-subtasks-flow.ts
 │
 ├─app
+│  │  error.tsx
 │  │  favicon.ico
 │  │  globals.css
 │  │  layout.tsx
 │  │  page.tsx
+│  │  README.md
 │  │
-│  └─(app)
-│      │  layout.tsx
-│      │  README.md
-│      │
-│      ├─contracts
-│      │  │  layout.tsx
-│      │  │  page.tsx
-│      │  │
-│      │  ├─create
-│      │  │      page.tsx
-│      │  │
-│      │  └─[id]
-│      │          page.tsx
-│      │
-│      ├─dashboard
-│      │      page.tsx
-│      │
-│      ├─documents
-│      │      page.tsx
-│      │
-│      ├─partnerverse
-│      │  ├─partners
-│      │  │      page.tsx
-│      │  │
-│      │  └─workflows
-│      │          page.tsx
-│      │
-│      ├─projects
-│      │      page.tsx
-│      │
-│      ├─quick-actions
-│      │  ├─daily-report
-│      │  │      page.tsx
-│      │  │
-│      │  ├─project-progress
-│      │  │      page.tsx
-│      │  │
-│      │  └─staff-attendance
-│      │          page.tsx
-│      │
-│      ├─settings
-│      │      page.tsx
-│      │
-│      └─team
-│          ├─knowledge-base
-│          │      page.tsx
-│          │
-│          ├─members
-│          │      page.tsx
-│          │
-│          ├─schedule
-│          │      page.tsx
-│          │
-│          └─skills
-│                  page.tsx
+│  ├─(app)
+│  │  │  layout.tsx
+│  │  │  README.md
+│  │  │
+│  │  ├─contracts
+│  │  │  │  page.tsx
+│  │  │  │
+│  │  │  ├─[id]
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─create
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─layout.tsx
+│  │  │
+│  │  ├─dashboard
+│  │  │      page.tsx
+│  │  │
+│  │  ├─documents
+│  │  │      page.tsx
+│  │  │
+│  │  ├─partnerverse
+│  │  │  ├─partners
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─workflows
+│  │  │          page.tsx
+│  │  │
+│  │  ├─projects
+│  │  │      page.tsx
+│  │  │
+│  │  ├─settings
+│  │  │      page.tsx
+│  │  │
+│  │  └─team
+│  │      ├─knowledge-base
+│  │      │      page.tsx
+│  │      │
+│  │      ├─members
+│  │      │      page.tsx
+│  │      │
+│  │      ├─schedule
+│  │      │      page.tsx
+│  │      │
+│  │      └─skills
+│  │              page.tsx
+│  │
+│  ├─actions
+│  │      contracts.actions.ts
+│  │      documents.actions.ts
+│  │      knowledge.actions.ts
+│  │      README.md
+│  │
+│  └─api
+│      └─ai-token-logs
+│              route.ts
 │
 ├─components
+│  │  README.md
+│  │
 │  ├─features
 │  │  ├─app
 │  │  │      ai-subtask-suggestions.tsx
@@ -83,13 +89,6 @@
 │  │  ├─contracts
 │  │  │  │  index.ts
 │  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      contract-actions.ts
-│  │  │  │      index.ts
-│  │  │  │      MIGRATION.md
-│  │  │  │      README.md
-│  │  │  │      types.ts
 │  │  │  │
 │  │  │  ├─components
 │  │  │  │      change-order-item.tsx
@@ -108,7 +107,6 @@
 │  │  │  │      contract-charts.tsx
 │  │  │  │      contract-dashboard.tsx
 │  │  │  │      contract-stats.tsx
-│  │  │  │      dashboard.tsx
 │  │  │  │      index.ts
 │  │  │  │
 │  │  │  ├─dialogs
@@ -176,26 +174,12 @@
 │  │  │      ai-usage-log.tsx
 │  │  │      dashboard-stats.tsx
 │  │  │      dashboard-view.tsx
-│  │  │      dashboard.tsx
 │  │  │      README.md
 │  │  │
 │  │  ├─documents
-│  │  │  │  index.ts
-│  │  │  │  README.md
-│  │  │  │  work-items-table.tsx
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      document-actions.ts
-│  │  │  │      index.ts
-│  │  │  │      MIGRATION.md
-│  │  │  │      types.ts
-│  │  │  │
-│  │  │  ├─constants
-│  │  │  │      file-constants.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          documents-view.tsx
+│  │  │      documents-view.tsx
+│  │  │      README.md
+│  │  │      work-items-table.tsx
 │  │  │
 │  │  ├─partnerverse
 │  │  │  │  README.md
@@ -205,12 +189,8 @@
 │  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─contacts
-│  │  │  │  │  contacts-tab.tsx
-│  │  │  │  │  README.md
-│  │  │  │  │
-│  │  │  │  └─forms
-│  │  │  │          contact-form.tsx
-│  │  │  │          README.md
+│  │  │  │      contacts-tab.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─contracts
 │  │  │  │      contracts-tab.tsx
@@ -228,60 +208,26 @@
 │  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─partners
-│  │  │  │  │  partner-list.tsx
-│  │  │  │  │  partner-profile.tsx
-│  │  │  │  │  partners-view.tsx
-│  │  │  │  │  README.md
-│  │  │  │  │
-│  │  │  │  ├─forms
-│  │  │  │  │      contact-form.tsx
-│  │  │  │  │      partner-form.tsx
-│  │  │  │  │
-│  │  │  │  ├─list
-│  │  │  │  │      partner-list.tsx
-│  │  │  │  │
-│  │  │  │  └─profile
-│  │  │  │          partner-profile.tsx
-│  │  │  │          profile-header.tsx
+│  │  │  │      partners-view.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─performance
 │  │  │  │      performance-tab.tsx
 │  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─transactions
-│  │  │  │      README.md
 │  │  │  │      transactions-tab.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  └─workflows
-│  │  │          optimization-assistant.tsx
 │  │  │          workflow-builder.tsx
-│  │  │
-│  │  ├─quick-actions
-│  │  │  ├─daily-report
-│  │  │  │      daily-report-view.tsx
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─project-progress
-│  │  │  │      index.ts
-│  │  │  │      project-progress-view.tsx
-│  │  │  │
-│  │  │  └─staff-attendance
-│  │  │          index.ts
-│  │  │          staff-attendance-view.tsx
 │  │  │
 │  │  ├─settings
 │  │  │      settings-view.tsx
 │  │  │
 │  │  └─team
-│  │      │  index.ts
-│  │      │
 │  │      ├─knowledge-base
-│  │      │  │  entry-form-dialog.tsx
-│  │      │  │
-│  │      │  └─actions
-│  │      │          index.ts
-│  │      │          knowledge-actions.ts
-│  │      │          types.ts
+│  │      │      entry-form-dialog.tsx
 │  │      │
 │  │      ├─members
 │  │      │      create-member-dialog.tsx
@@ -296,44 +242,22 @@
 │  │              skills-list.tsx
 │  │
 │  ├─layout
-│  │  │  index.ts
 │  │  │  README.md
 │  │  │
 │  │  ├─core
 │  │  │      app-header.tsx
 │  │  │      app-provider.tsx
 │  │  │      app-shell.tsx
-│  │  │      layout-wrapper.tsx
 │  │  │      theme-provider.tsx
 │  │  │
 │  │  ├─navigation
 │  │  │      breadcrumb.tsx
-│  │  │      context-menu.tsx
 │  │  │      navigation-menu-item.tsx
 │  │  │      navigation-menu.tsx
-│  │  │      notification-center.tsx
-│  │  │      quick-actions.tsx
-│  │  │      search-command.tsx
 │  │  │      unified-sidebar.tsx
-│  │  │      user-menu.tsx
-│  │  │
-│  │  ├─overlays
-│  │  │      drawer-container.tsx
-│  │  │      modal-container.tsx
-│  │  │      popover-container.tsx
-│  │  │      tooltip-provider.tsx
-│  │  │
-│  │  ├─responsive
-│  │  │      mobile-menu.tsx
-│  │  │      responsive-wrapper.tsx
 │  │  │
 │  │  └─shared
-│  │          empty-state.tsx
 │  │          logo.tsx
-│  │          page-container.tsx
-│  │          page-header.tsx
-│  │          section-divider.tsx
-│  │          status-indicator.tsx
 │  │
 │  └─ui
 │          accordion.tsx
@@ -392,27 +316,15 @@
 │      use-toast.ts
 │
 ├─lib
-│  │  firebase.ts
-│  │  mongodb.ts
-│  │  README.md
-│  │  roles.ts
-│  │  types.ts
-│  │  utils.ts
-│  │
-│  ├─services
-│  │  └─contracts
-│  │          contract-api.service.ts
-│  │          contract-cache.service.ts
-│  │          firebase-contract.service.ts
-│  │          index.ts
-│  │
-│  └─types
-│      └─contracts
-│              change-order.types.ts
-│              contract-version.types.ts
-│              contract.types.ts
-│              index.ts
-│              payment.types.ts
+│      firebase.ts
+│      mongodb.ts
+│      README.md
+│      roles.ts
+│      types.ts
+│      utils.ts
+│
+├─models
+│      ai-token-log.model.ts
 │
 ├─services
 │      logging.service.ts
@@ -421,3 +333,5 @@
 └─utils
         date-picker.tsx
         README.md
+
+    
