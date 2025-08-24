@@ -5,7 +5,7 @@ import { db } from '@/lib/firebase';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import type { KnowledgeBaseEntry } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { handleSaveKnowledgeBaseEntry } from '@/app/actions/knowledge.actions';
+import { handleSaveKnowledgeBaseEntry } from '@/components/features/team';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

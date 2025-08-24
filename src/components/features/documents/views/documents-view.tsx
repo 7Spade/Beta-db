@@ -51,8 +51,8 @@ import type { Partner } from "@/lib/types";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { extractDataFromDocument } from "@/components/features/documents/actions";
-import { createProjectAndContractFromDocument } from "@/components/features/contracts/actions";
+import { extractDataFromDocument } from "@/components/features/documents";
+import { createProjectAndContractFromDocument } from "@/components/features/contracts";
 import { WorkItemsTable, type WorkItem } from "@/components/features/documents/work-items-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

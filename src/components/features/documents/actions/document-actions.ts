@@ -3,7 +3,7 @@
 import { extractWorkItems, type ExtractWorkItemsOutput } from '@/ai/flows/extract-work-items-flow';
 import { z } from 'zod';
 import type { DocumentActionState, DocumentValidationState } from './types';
-import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from './types';
+import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants/file-constants';
 
 // 輸入驗證 Schema
 const actionInputSchema = z.object({

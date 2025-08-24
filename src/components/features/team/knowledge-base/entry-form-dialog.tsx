@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { handleDeleteKnowledgeBaseEntry } from '@/app/actions/knowledge.actions';
+import { handleDeleteKnowledgeBaseEntry } from '@/components/features/team';
 import { Trash2, Wand2, Loader2, Cpu } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { generateKnowledgeEntry } from '@/ai/flows/generate-knowledge-entry-flow';
