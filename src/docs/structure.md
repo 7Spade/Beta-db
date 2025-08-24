@@ -14,57 +14,61 @@
 │  │  layout.tsx
 │  │  page.tsx
 │  │
-│  ├─(app)
-│  │  │  layout.tsx
-│  │  │  README.md
-│  │  │
-│  │  ├─contracts
-│  │  │  │  layout.tsx
-│  │  │  │  page.tsx
-│  │  │  │
-│  │  │  ├─create
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─[id]
-│  │  │          page.tsx
-│  │  │
-│  │  ├─dashboard
-│  │  │      page.tsx
-│  │  │
-│  │  ├─documents
-│  │  │      page.tsx
-│  │  │
-│  │  ├─partnerverse
-│  │  │  ├─partners
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─workflows
-│  │  │          page.tsx
-│  │  │
-│  │  ├─projects
-│  │  │      page.tsx
-│  │  │
-│  │  ├─settings
-│  │  │      page.tsx
-│  │  │
-│  │  └─team
-│  │      ├─knowledge-base
-│  │      │      page.tsx
-│  │      │
-│  │      ├─members
-│  │      │      page.tsx
-│  │      │
-│  │      ├─schedule
-│  │      │      page.tsx
-│  │      │
-│  │      └─skills
-│  │              page.tsx
-│  │
-│  └─actions
-│          contracts.actions.ts
-│          documents.actions.ts
-│          knowledge.actions.ts
-│          README.md
+│  └─(app)
+│      │  layout.tsx
+│      │  README.md
+│      │
+│      ├─contracts
+│      │  │  layout.tsx
+│      │  │  page.tsx
+│      │  │
+│      │  ├─create
+│      │  │      page.tsx
+│      │  │
+│      │  └─[id]
+│      │          page.tsx
+│      │
+│      ├─dashboard
+│      │      page.tsx
+│      │
+│      ├─documents
+│      │      page.tsx
+│      │
+│      ├─partnerverse
+│      │  ├─partners
+│      │  │      page.tsx
+│      │  │
+│      │  └─workflows
+│      │          page.tsx
+│      │
+│      ├─projects
+│      │      page.tsx
+│      │
+│      ├─quick-actions
+│      │  ├─daily-report
+│      │  │      page.tsx
+│      │  │
+│      │  ├─project-progress
+│      │  │      page.tsx
+│      │  │
+│      │  └─staff-attendance
+│      │          page.tsx
+│      │
+│      ├─settings
+│      │      page.tsx
+│      │
+│      └─team
+│          ├─knowledge-base
+│          │      page.tsx
+│          │
+│          ├─members
+│          │      page.tsx
+│          │
+│          ├─schedule
+│          │      page.tsx
+│          │
+│          └─skills
+│                  page.tsx
 │
 ├─components
 │  ├─features
@@ -79,6 +83,13 @@
 │  │  ├─contracts
 │  │  │  │  index.ts
 │  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─actions
+│  │  │  │      contract-actions.ts
+│  │  │  │      index.ts
+│  │  │  │      MIGRATION.md
+│  │  │  │      README.md
+│  │  │  │      types.ts
 │  │  │  │
 │  │  │  ├─components
 │  │  │  │      change-order-item.tsx
@@ -105,7 +116,7 @@
 │  │  │  │      delete-contract-dialog.tsx
 │  │  │  │      edit-contract-dialog.tsx
 │  │  │  │      index.ts
-│  │  │  │；
+│  │  │  │
 │  │  │  ├─forms
 │  │  │  │      contract-form.tsx
 │  │  │  │      create-contract-form.tsx
@@ -169,9 +180,22 @@
 │  │  │      README.md
 │  │  │
 │  │  ├─documents
-│  │  │      documents-view.tsx
-│  │  │      README.md
-│  │  │      work-items-table.tsx
+│  │  │  │  index.ts
+│  │  │  │  README.md
+│  │  │  │  work-items-table.tsx
+│  │  │  │
+│  │  │  ├─actions
+│  │  │  │      document-actions.ts
+│  │  │  │      index.ts
+│  │  │  │      MIGRATION.md
+│  │  │  │      types.ts
+│  │  │  │
+│  │  │  ├─constants
+│  │  │  │      file-constants.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  └─views
+│  │  │          documents-view.tsx
 │  │  │
 │  │  ├─partnerverse
 │  │  │  │  README.md
@@ -232,12 +256,32 @@
 │  │  │          optimization-assistant.tsx
 │  │  │          workflow-builder.tsx
 │  │  │
+│  │  ├─quick-actions
+│  │  │  ├─daily-report
+│  │  │  │      daily-report-view.tsx
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─project-progress
+│  │  │  │      index.ts
+│  │  │  │      project-progress-view.tsx
+│  │  │  │
+│  │  │  └─staff-attendance
+│  │  │          index.ts
+│  │  │          staff-attendance-view.tsx
+│  │  │
 │  │  ├─settings
 │  │  │      settings-view.tsx
 │  │  │
 │  │  └─team
+│  │      │  index.ts
+│  │      │
 │  │      ├─knowledge-base
-│  │      │      entry-form-dialog.tsx
+│  │      │  │  entry-form-dialog.tsx
+│  │      │  │
+│  │      │  └─actions
+│  │      │          index.ts
+│  │      │          knowledge-actions.ts
+│  │      │          types.ts
 │  │      │
 │  │      ├─members
 │  │      │      create-member-dialog.tsx
