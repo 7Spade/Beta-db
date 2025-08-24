@@ -55,7 +55,10 @@ import {
     CalendarDays,
     ArrowLeftRight,
     Wrench,
-    BookOpen
+    BookOpen,
+    Calendar,
+    UserCheck,
+    Activity
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -68,6 +71,32 @@ export interface NavigationItem {
 }
 
 export const navigationConfig: NavigationItem[] = [
+    {
+        id: 'quick-actions',
+        label: '快捷操作',
+        icon: Users,
+        href: '/quick-actions',
+        children: [
+            {
+                id: 'daily-report',
+                label: '日報表',
+                icon: Calendar,
+                href: '/quick-actions/daily-report'
+            },
+            {
+                id: 'attendance',
+                label: '人員出勤',
+                icon: UserCheck,
+                href: '/quick-actions/staff-attendance'
+            },
+            {
+                id: 'progress',
+                label: '施工進度',
+                icon: Activity,
+                href: '/quick-actions/project-progress'
+            }
+        ]
+    },
     {
         id: 'dashboard',
         label: '儀表板',
