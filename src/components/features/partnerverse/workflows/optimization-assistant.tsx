@@ -64,7 +64,7 @@ export const OptimizationAssistant: FC = () => {
       <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle>AI 優化助理</CardTitle>
-          <CardDescription>提供資料以取得 AI 驅動的工作流程優化建議。</CardDescription>
+          <CardDescription>提供資料以取得 AI 驅動的收支流程優化建議。</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -81,10 +81,10 @@ export const OptimizationAssistant: FC = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="currentWorkflow">目前工作流程定義</Label>
+              <Label htmlFor="currentWorkflow">目前收支流程定義</Label>
               <Textarea
                 id="currentWorkflow"
-                placeholder="從頭到尾描述您目前的工作流程。"
+                placeholder="從頭到尾描述您目前的收支流程。"
                 className="min-h-[150px]"
                 value={formData.currentWorkflowDefinition}
                 onChange={(e) => setFormData({ ...formData, currentWorkflowDefinition: e.target.value })}

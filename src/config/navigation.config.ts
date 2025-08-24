@@ -76,19 +76,19 @@ export const navigationConfig: NavigationItem[] = [
     },
     {
         id: 'documents',
-        label: '文件',
+        label: '文件解析',
         icon: FileText,
         href: '/documents'
     },
     {
         id: 'projects',
-        label: '專案',
+        label: '專案解析',
         icon: FolderKanban,
         href: '/projects'
     },
     {
         id: 'contracts',
-        label: '合約',
+        label: '合約解析',
         icon: Building2,
         href: '/contracts'
     },
@@ -106,7 +106,7 @@ export const navigationConfig: NavigationItem[] = [
             },
             {
                 id: 'workflows',
-                label: '工作流程',
+                label: '收支流程',
                 icon: ArrowLeftRight,
                 href: '/partnerverse/workflows'
             }

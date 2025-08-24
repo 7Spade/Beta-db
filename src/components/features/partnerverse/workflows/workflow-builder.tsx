@@ -204,7 +204,7 @@ const WorkflowDesigner: FC<{ partners: Partner[], isLoading: boolean }> = ({ par
         setIsSaving(true);
         try {
             await setDoc(doc(db, 'partners', selectedPartner.id), { receivableWorkflow, payableWorkflow }, { merge: true });
-            toast({ title: "成功", description: "工作流程已儲存。" });
+            toast({ title: "成功", description: "收支流程已儲存。" });
         } finally {
             setIsSaving(false);
         }
@@ -236,7 +236,7 @@ const WorkflowDesigner: FC<{ partners: Partner[], isLoading: boolean }> = ({ par
         <div className="space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>合作夥伴工作流程設計</CardTitle>
+                    <CardTitle>合作夥伴收支流程設計</CardTitle>
                     <CardDescription>為特定合作夥伴定義應收與應付流程的步驟。</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -270,7 +270,7 @@ export const WorkflowBuilder: FC = () => {
   return (
     <div className="space-y-6">
        <div>
-            <h2 className="text-3xl font-bold tracking-tight">工作流程</h2>
+            <h2 className="text-3xl font-bold tracking-tight">收支流程</h2>
             <p className="text-muted-foreground">管理財務單據、設計合作夥伴流程。</p>
         </div>
       <Tabs defaultValue="manager" className="w-full">

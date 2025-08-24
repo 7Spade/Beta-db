@@ -106,7 +106,7 @@
 | `type`         | `string` ('receivable', 'payable') | 單據類型：應收或應付。|
 | `amount`       | `number`            | 單據金額。                                 |
 | `description`  | `string`            | 單據的簡短描述或備註。                     |
-| `currentStep`  | `string`            | 單據在對應夥伴工作流程中的目前步驟。       |
+| `currentStep`  | `string`            | 單據在對應夥伴收支流程中的目前步驟。       |
 | `createDate`   | `Timestamp`         | 單據的建立日期。                           |
 | `dueDate`      | `Timestamp`         | 單據的到期或付款日期。                     |
 | `history`      | `Array<Map>`        | 記錄流程中每一步變更的歷史。               |
