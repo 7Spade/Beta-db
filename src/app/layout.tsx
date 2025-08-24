@@ -3,8 +3,6 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { Inter } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,8 +24,6 @@ export default function RootLayout({
       <body className={cn('font-sans antialiased', inter.variable)}>
         {children}
         <Toaster />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
