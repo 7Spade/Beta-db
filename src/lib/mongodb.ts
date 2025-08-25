@@ -19,14 +19,30 @@ if (!cached) {
 }
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI!)
-      .then((mongoose) => mongoose);
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  cached.conn = await cached.promise;
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+    
+    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+      console.log("MongoDB 連線成功！");
+      return mongoose;
+    }).catch(err => {
+        console.error("MongoDB 連線失敗:", err.message);
+        throw new Error("無法連線到 MongoDB。請檢查您的 MONGODB_URI 環境變數是否正確，並包含資料庫名稱。");
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null; // 在失敗時重置 promise，以便下次可以重試
+    throw e;
+  }
+  
   return cached.conn;
 }
