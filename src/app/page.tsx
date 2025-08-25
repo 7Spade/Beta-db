@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Wrench, ShieldCheck, Activity, FolderKanban } from 'lucide-react'
@@ -13,11 +12,8 @@ export default function LandingPage() {
           <span className="text-xl font-bold">Beta-db</span>
         </div>
         <nav className="flex items-center gap-4">
-          <Button variant="ghost" asChild>
-            <Link href="/login">登入</Link>
-          </Button>
           <Button asChild>
-            <Link href="/register">立即開始</Link>
+            <Link href="/contact">諮詢方案</Link>
           </Button>
         </nav>
       </header>
@@ -91,6 +87,9 @@ export default function LandingPage() {
                 <Link href="/contact" className="hover:text-primary">聯絡我們</Link>
                 <Link href="/privacy-policy" className="hover:text-primary">隱私權政策</Link>
                 <Link href="/terms-of-service" className="hover:text-primary">服務條款</Link>
+           </div>
+           <div>
+            <Link href="/login" className="hover:text-primary text-xs">內部員工登入</Link>
            </div>
            <p>&copy; {new Date().getFullYear()} Beta-db. All rights reserved.</p>
         </div>
