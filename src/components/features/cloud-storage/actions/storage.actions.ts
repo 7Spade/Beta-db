@@ -38,13 +38,12 @@ export async function getStorageItemsAction(directoryPath: string): Promise<List
             delimiter: '/' 
         });
 
-        // Optimization: Use file.metadata directly instead of making extra getMetadata() calls.
+        // Correctly filter for files (items that do not end with a '/')
         const filePromises = files
-            .filter(file => !file.name.endsWith('/.placeholder') && !file.name.split('/').pop())
+            .filter(file => !file.name.endsWith('/')) 
             .map(async (file) => {
                 const metadata = file.metadata;
-                // Generate a signed URL for client-side display, especially for images.
-                // This is safe as the URL is short-lived and read-only.
+                // Generate a signed URL for client-side display.
                 const [signedUrl] = await file.getSignedUrl({
                     action: 'read',
                     expires: Date.now() + 15 * 60 * 1000, // 15 minutes
@@ -60,6 +59,7 @@ export async function getStorageItemsAction(directoryPath: string): Promise<List
                 };
             });
         
+        // Correctly parse folders from prefixes
         const folders: StorageFolder[] = (apiResponse?.prefixes || []).map((prefix: string) => ({
             name: prefix.split('/').filter(Boolean).pop() || '',
             fullPath: prefix,
@@ -129,7 +129,7 @@ export async function createFolderAction(folderPath: string): Promise<ActionResu
     try {
         const bucket = adminStorage.bucket();
         // Create a placeholder file to simulate a folder
-        await bucket.file(`${folderPath}/.placeholder`).save('', {
+        await bucket.file(`${folderPath}/`).save('', {
             contentType: 'application/x-directory',
         });
         
@@ -146,7 +146,7 @@ export async function createFolderAction(folderPath: string): Promise<ActionResu
 export async function deleteFolderAction(folderPath: string): Promise<ActionResult> {
   try {
     const bucket = adminStorage.bucket();
-    await bucket.deleteFiles({ prefix: `${folderPath}/` });
+    await bucket.deleteFiles({ prefix: `${folderPath}` });
 
     const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
     revalidatePath(`/cloud-storage?path=${parentPath || ''}`, 'page');
