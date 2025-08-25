@@ -29,31 +29,55 @@ export async function deleteFileAction(filePath: string): Promise<ActionResult> 
   }
 }
 
-export async function renameFileAction(oldPath: string, newPath: string): Promise<ActionResult> {
+
+async function copyFolder(sourcePath: string, destinationPath: string): Promise<void> {
+    const listRef = ref(storage, sourcePath);
+    const res = await listAll(listRef);
+
+    // Copy all files
+    for (const itemRef of res.items) {
+        const blob = await getBlob(itemRef);
+        const newName = itemRef.name;
+        const destFileRef = ref(storage, `${destinationPath}/${newName}`);
+        await uploadBytes(destFileRef, blob);
+    }
+
+    // Recursively copy all subfolders
+    for (const prefixRef of res.prefixes) {
+        const newSourcePath = prefixRef.fullPath;
+        const newDestinationPath = `${destinationPath}/${prefixRef.name}`;
+        await copyFolder(newSourcePath, newDestinationPath);
+    }
+}
+
+
+export async function renameItemAction(oldPath: string, newPath: string, type: 'file' | 'folder'): Promise<ActionResult> {
     try {
-        const oldRef = ref(storage, oldPath);
-        const newRef = ref(storage, newPath);
+        if (type === 'file') {
+            const oldRef = ref(storage, oldPath);
+            const newRef = ref(storage, newPath);
 
-        // Copy the file to the new path by getting its blob and uploading it
-        const blob = await getBlob(oldRef);
-        await uploadBytes(newRef, blob);
+            const blob = await getBlob(oldRef);
+            await uploadBytes(newRef, blob, { contentType: blob.type });
 
-        // Delete the old file
-        await deleteObject(oldRef);
+            await deleteObject(oldRef);
+        } else if (type === 'folder') {
+            await copyFolder(oldPath, newPath);
+            await deleteFolderAction(oldPath);
+        }
         
         const parentPath = oldPath.substring(0, oldPath.lastIndexOf('/'));
         revalidatePath(`/cloud-storage?path=${parentPath}`);
 
         return { success: true };
     } catch (error: any) {
-        console.error('重新命名檔案時發生錯誤:', error);
+        console.error('重新命名項目時發生錯誤:', error);
         return { success: false, error: '重新命名失敗，請再試一次。' };
     }
 }
 
 export async function createFolderAction(placeholderPath: string): Promise<ActionResult> {
     try {
-        // Create a zero-byte file with a special name to represent a folder
         const folderRef = ref(storage, placeholderPath);
         await uploadBytes(folderRef, new Blob([]));
         
@@ -85,6 +109,18 @@ export async function deleteFolderAction(folderPath: string): Promise<ActionResu
     });
     
     await Promise.all(deletePromises);
+    
+    // After deleting contents, delete the placeholder for the folder itself, if it exists
+    try {
+        const placeholderRef = ref(storage, `${folderPath}/.placeholder`);
+        await deleteObject(placeholderRef);
+    } catch (error: any) {
+        // Ignore if placeholder doesn't exist (e.g. non-empty folder)
+        if (error.code !== 'storage/object-not-found') {
+            throw error;
+        }
+    }
+
 
     const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
     if (parentPath) {
@@ -99,5 +135,3 @@ export async function deleteFolderAction(folderPath: string): Promise<ActionResu
     return { success: false, error: '刪除資料夾失敗。' };
   }
 }
-
-    

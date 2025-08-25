@@ -16,9 +16,7 @@ import { FileBrowser } from '../components/file-browser';
 import { UploadButton } from '../components/upload-button';
 import { RenameDialog } from '../components/rename-dialog';
 import { CreateFolderDialog } from '../components/create-folder-dialog';
-import { deleteFileAction, deleteFolderAction, renameFileAction, createFolderAction } from '../actions/storage.actions';
-import { storage } from '@/lib/firebase';
-import { ref, getMetadata } from 'firebase/storage';
+import { deleteFileAction, deleteFolderAction, renameItemAction, createFolderAction } from '../actions/storage.actions';
 
 function CloudStorageViewInternal() {
     const searchParams = useSearchParams();
@@ -32,15 +30,15 @@ function CloudStorageViewInternal() {
     // State for dialogs
     const [isRenameOpen, setRenameOpen] = useState(false);
     const [isCreateFolderOpen, setCreateFolderOpen] = useState(false);
-    const [itemToRename, setItemToRename] = useState<{ path: string, name: string } | null>(null);
+    const [itemToRename, setItemToRename] = useState<{ path: string, name: string, type: 'file' | 'folder' } | null>(null);
     const [itemToDelete, setItemToDelete] = useState<{ path: string, type: 'file' | 'folder' } | null>(null);
 
     // Ensure the root 'uploads' folder exists
     useEffect(() => {
         const ensureUploadsFolder = async () => {
-            if (isLoading) return; // Only run when initial load is complete
+            if (isLoading || currentPath !== '') return; // Only run when initial load is complete and at the root
             const uploadsFolderExists = folders.some(f => f.name === 'uploads');
-            if (currentPath === '' && !uploadsFolderExists) {
+            if (!uploadsFolderExists) {
                 console.log("`uploads` folder not found at root. Creating it automatically.");
                 await createFolderAction('uploads/.placeholder');
                 refresh();
@@ -69,8 +67,8 @@ function CloudStorageViewInternal() {
         return items;
     }, [currentPath]);
 
-    const handleRename = (path: string, currentName: string) => {
-        setItemToRename({ path, name: currentName });
+    const handleRename = (path: string, currentName: string, type: 'file' | 'folder') => {
+        setItemToRename({ path, name: currentName, type });
         setRenameOpen(true);
     };
     
@@ -80,7 +78,7 @@ function CloudStorageViewInternal() {
         const oldPath = itemToRename.path;
         const newPath = `${oldPath.substring(0, oldPath.lastIndexOf('/'))}/${newName}`;
 
-        const result = await renameFileAction(oldPath, newPath);
+        const result = await renameItemAction(oldPath, newPath, itemToRename.type);
         if (result.success) {
             toast({ title: '成功', description: '重新命名成功。' });
             refresh();
@@ -143,7 +141,7 @@ function CloudStorageViewInternal() {
                     <BreadcrumbItem key={item.path}>
                         {index < breadcrumbItems.length - 1 ? (
                             <>
-                                <BreadcrumbLink onClick={() => handleNavigate(item.path)} className="cursor-pointer">
+                                <BreadcrumbLink href={`${pathname}?path=${item.path}`} className="cursor-pointer">
                                     {item.name}
                                 </BreadcrumbLink>
                                 <BreadcrumbSeparator />
@@ -172,7 +170,8 @@ function CloudStorageViewInternal() {
                 onNavigate={handleNavigate}
                 onDeleteFile={(path) => handleDelete(path, 'file')}
                 onDeleteFolder={(path) => handleDelete(path, 'folder')}
-                onRename={handleRename}
+                onRename={(path, name, type) => handleRename(path, name, type)}
+                refresh={refresh}
               />
           </CardContent>
         </Card>
@@ -218,5 +217,3 @@ export function CloudStorageView() {
         </Suspense>
     );
 }
-
-    

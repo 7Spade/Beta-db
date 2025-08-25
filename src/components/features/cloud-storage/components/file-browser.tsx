@@ -16,7 +16,8 @@ interface FileBrowserProps {
   onNavigate: (path: string) => void;
   onDeleteFile: (path: string) => void;
   onDeleteFolder: (path: string) => void;
-  onRename: (path: string, currentName: string) => void;
+  onRename: (path: string, currentName: string, type: 'file' | 'folder') => void;
+  refresh: () => void;
 }
 
 export const FileBrowser: FC<FileBrowserProps> = ({ 
@@ -26,7 +27,8 @@ export const FileBrowser: FC<FileBrowserProps> = ({
     onNavigate,
     onDeleteFile,
     onDeleteFolder,
-    onRename
+    onRename,
+    refresh
 }) => {
     
     if (isLoading) {
@@ -62,7 +64,7 @@ export const FileBrowser: FC<FileBrowserProps> = ({
                     name={folder.name}
                     path={folder.fullPath}
                     onNavigate={onNavigate}
-                    onRename={onRename}
+                    onRename={(path, name) => onRename(path, name, 'folder')}
                     onDelete={onDeleteFolder}
                 />
             ))}
@@ -71,7 +73,7 @@ export const FileBrowser: FC<FileBrowserProps> = ({
                     key={file.fullPath}
                     file={file}
                     onDelete={onDeleteFile}
-                    onRename={onRename}
+                    onRename={(path, name) => onRename(path, name, 'file')}
                 />
             ))}
         </div>
