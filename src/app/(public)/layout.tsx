@@ -19,20 +19,25 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <FolderKanban className="h-7 w-7 text-primary" />
             <span className="text-lg font-bold">Beta-db</span>
           </Link>
-          <nav className="flex items-center gap-4">
-             <Button variant="ghost" asChild>
-                <Link href="/about">關於我們</Link>
-            </Button>
-             <Button variant="ghost" asChild>
-                <Link href="/blog">部落格</Link>
-            </Button>
-            <Button variant="ghost" asChild>
-                <Link href="/careers">企業徵才</Link>
-            </Button>
+          <div className="flex items-center gap-2">
+            <nav className="hidden md:flex items-center gap-1">
+                <Button variant="ghost" asChild>
+                    <Link href="/about">關於我們</Link>
+                </Button>
+                <Button variant="ghost" asChild>
+                    <Link href="/blog">部落格</Link>
+                </Button>
+                <Button variant="ghost" asChild>
+                    <Link href="/careers">企業徵才</Link>
+                </Button>
+                <Button variant="ghost" asChild>
+                    <Link href="/contact">聯絡我們</Link>
+                </Button>
+            </nav>
             <Button asChild>
               <Link href="/dashboard">前往應用程式</Link>
             </Button>
-          </nav>
+          </div>
         </div>
       </header>
 
@@ -41,7 +46,15 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       </main>
 
       <footer className="bg-muted py-8">
-        <div className="container mx-auto text-center text-muted-foreground text-sm">
+        <div className="container mx-auto text-center text-muted-foreground text-sm space-y-4">
+           <div className="flex justify-center items-center flex-wrap gap-x-6 gap-y-2">
+                <Link href="/about" className="hover:text-primary">關於我們</Link>
+                <Link href="/blog" className="hover:text-primary">部落格</Link>
+                <Link href="/careers" className="hover:text-primary">企業徵才</Link>
+                <Link href="/contact" className="hover:text-primary">聯絡我們</Link>
+                <Link href="/privacy-policy" className="hover:text-primary">隱私權政策</Link>
+                <Link href="/terms-of-service" className="hover:text-primary">服務條款</Link>
+           </div>
            <p>&copy; {new Date().getFullYear()} Beta-db. All rights reserved.</p>
         </div>
       </footer>
