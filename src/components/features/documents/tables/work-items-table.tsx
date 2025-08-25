@@ -39,11 +39,10 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
     const newData = [...data];
     const updatedItem = { ...newData[index] };
     
-    const numericValue = typeof value === 'string' ? parseFloat(value) : value;
-
     if (field === 'id' || field === 'name') {
         (updatedItem[field] as string) = String(value);
-    } else if (!isNaN(numericValue) && (field === 'quantity' || field === 'unitPrice')) {
+    } else if (field === 'quantity' || field === 'unitPrice') {
+        const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
         (updatedItem[field] as number) = numericValue;
     } else {
         (updatedItem[field] as number) = 0;
