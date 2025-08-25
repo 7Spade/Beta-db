@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import type { Contract } from '../types';
 import { ContractDetailsSheet } from '../sheets';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -46,7 +46,7 @@ export function ContractDetailView({ contractId, router }: ContractDetailViewPro
   useEffect(() => {
     if (!contractId) return;
 
-    const docRef = doc(db, 'contracts', contractId);
+    const docRef = doc(firestore, 'contracts', contractId);
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         setContract(processFirestoreContract(docSnap));

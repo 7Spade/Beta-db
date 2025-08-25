@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, onSnapshot, addDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import type { Skill } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -22,7 +22,7 @@ export function SkillsList() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'skills'), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(firestore, 'skills'), (snapshot) => {
       const skillsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Skill[];
       setSkills(skillsData.sort((a, b) => a.name.localeCompare(b.name)));
       setLoading(false);
@@ -44,12 +44,12 @@ export function SkillsList() {
     try {
       if (skillId) {
         // Update existing skill
-        const skillRef = doc(db, 'skills', skillId);
+        const skillRef = doc(firestore, 'skills', skillId);
         await setDoc(skillRef, skillData, { merge: true });
         toast({ title: "技能已更新", description: `技能 "${skillData.name}" 已成功更新。` });
       } else {
         // Add new skill
-        await addDoc(collection(db, 'skills'), skillData);
+        await addDoc(collection(firestore, 'skills'), skillData);
         toast({ title: "技能已新增", description: `已成功新增技能 "${skillData.name}"。` });
       }
       return true;
@@ -62,7 +62,7 @@ export function SkillsList() {
 
   const handleDeleteSkill = async (skillId: string) => {
     try {
-      await deleteDoc(doc(db, 'skills', skillId));
+      await deleteDoc(doc(firestore, 'skills', skillId));
       toast({ title: "技能已刪除", description: "該技能已成功從清單中移除。" });
     } catch (error) {
       console.error("刪除技能時發生錯誤：", error);

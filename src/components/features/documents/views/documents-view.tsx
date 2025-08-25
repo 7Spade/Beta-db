@@ -25,7 +25,7 @@ import { useEffect, useRef, useState, useTransition, useMemo } from "react";
 import { UploadCloud, File, Loader2, Cpu, FileCog } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { firestore } from "@/lib/firebase";
 import type { Partner } from "@/lib/types";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,7 +70,7 @@ export function DocumentsView() {
   useEffect(() => {
     const fetchPartners = async () => {
         try {
-            const partnersCollection = collection(db, 'partners');
+            const partnersCollection = collection(firestore, 'partners');
             const partnerSnapshot = await getDocs(partnersCollection);
             const partnerList = partnerSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Partner[];
             setPartners(partnerList);

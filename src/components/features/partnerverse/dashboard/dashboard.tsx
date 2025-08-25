@@ -16,7 +16,7 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import type { Partner } from '@/lib/types';
 import { Users, CheckCircle, Clock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -35,7 +35,7 @@ export const Dashboard: FC<DashboardProps> = ({ partners: initialPartners }) => 
     useEffect(() => {
         if (!initialPartners) {
             setIsLoading(true);
-            const partnersCollection = collection(db, 'partners');
+            const partnersCollection = collection(firestore, 'partners');
             const unsubscribe = onSnapshot(partnersCollection, (snapshot) => {
                 const partnerList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Partner[];
                 setPartners(partnerList);

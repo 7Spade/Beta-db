@@ -17,7 +17,7 @@ import { DashboardStats, type StatCardData } from '@/components/features/dashboa
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
 
 interface ContractDashboardProps {
@@ -32,7 +32,7 @@ export function ContractDashboard({ contracts: initialContracts, loading: initia
   useEffect(() => {
     // If contracts are not passed as props, fetch them internally.
     if (!initialContracts) {
-      const contractsCollection = collection(db, 'contracts');
+      const contractsCollection = collection(firestore, 'contracts');
       const unsubscribe = onSnapshot(contractsCollection, (snapshot) => {
         const contractList = snapshot.docs.map(doc => {
           const data = doc.data();

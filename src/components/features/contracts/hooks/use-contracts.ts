@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import type { Contract } from '../types';
 
 // Helper function to convert Firestore Timestamps to Dates
@@ -37,7 +37,7 @@ export function useContracts() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const contractsCollection = collection(db, 'contracts');
+    const contractsCollection = collection(firestore, 'contracts');
     const q = query(contractsCollection);
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {

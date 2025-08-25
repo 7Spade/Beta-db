@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type FC } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, onSnapshot, addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import type { Partner, Contact } from '@/lib/types';
@@ -27,7 +27,7 @@ export const PartnersView: FC = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const partnersCollection = collection(db, 'partners');
+    const partnersCollection = collection(firestore, 'partners');
     const unsubscribe = onSnapshot(partnersCollection, (querySnapshot) => {
         const partnerList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Partner[];
         setPartners(partnerList);
@@ -64,12 +64,12 @@ export const PartnersView: FC = () => {
     try {
       if (partnerToEdit && partnerToEdit.id) {
         // Update existing partner
-        const partnerRef = doc(db, 'partners', partnerToEdit.id);
+        const partnerRef = doc(firestore, 'partners', partnerToEdit.id);
         await setDoc(partnerRef, partnerData, { merge: true });
         toast({ title: "合作夥伴已更新", description: `${partnerData.name} 的資料已成功更新。` });
       } else {
         // Add new partner
-        await addDoc(collection(db, 'partners'), partnerData);
+        await addDoc(collection(firestore, 'partners'), partnerData);
         toast({ title: "合作夥伴已新增", description: `已成功新增合作夥伴。` });
       }
     } catch (error) {
@@ -93,7 +93,7 @@ export const PartnersView: FC = () => {
     const selectedPartner = partners.find(p => p.id === selectedPartnerId);
     if (!selectedPartner || !selectedPartner.id) return false;
     
-    const partnerRef = doc(db, 'partners', selectedPartner.id);
+    const partnerRef = doc(firestore, 'partners', selectedPartner.id);
     let updatedContacts: Contact[];
 
     if (contactId) { // Editing existing contact
@@ -120,7 +120,7 @@ export const PartnersView: FC = () => {
     const selectedPartner = partners.find(p => p.id === partnerId);
     if (!selectedPartner) return;
 
-    const partnerRef = doc(db, 'partners', partnerId);
+    const partnerRef = doc(firestore, 'partners', partnerId);
     const updatedContacts = selectedPartner.contacts.filter(c => c.id !== contactId);
 
     try {

@@ -1,7 +1,7 @@
 "use server";
 
 import { writeBatch, collection, doc, Timestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { firestore } from "@/lib/firebase";
 import type { Task, Project } from "@/lib/types";
 import type { Contract } from '../types';
 import type { WorkItem, DocDetails } from "@/components/features/documents/types";
@@ -37,11 +37,11 @@ function workItemsToTasks(items: WorkItem[]): Task[] {
  */
 export async function createProjectAndContractFromDocument(input: ActionInput): Promise<ActionResult> {
     const { docDetails, workItems } = input;
-    const batch = writeBatch(db);
+    const batch = writeBatch(firestore);
 
     try {
         // 1. Prepare Project data
-        const newProjectRef = doc(collection(db, "projects"));
+        const newProjectRef = doc(collection(firestore, "projects"));
         const projectId = newProjectRef.id;
         const totalValue = workItems.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
         const tasks = workItemsToTasks(workItems);
@@ -61,7 +61,7 @@ export async function createProjectAndContractFromDocument(input: ActionInput): 
         batch.set(newProjectRef, projectData);
 
         // 2. Prepare Contract data
-        const newContractRef = doc(collection(db, "contracts"));
+        const newContractRef = doc(collection(firestore, "contracts"));
         const contractId = newContractRef.id;
 
         const contractData: Omit<Contract, "id" | "startDate" | "endDate" | "payments" | "changeOrders" | "versions"> & { startDate: Timestamp, endDate: Timestamp, payments: [], changeOrders: [], versions: any[] } = {
@@ -104,7 +104,7 @@ export async function createContractAction(data: Omit<Contract, 'id' | 'payments
     try {
         // 這裡可以調用現有的 contractService.createContract
         // 或者直接實現邏輯以保持一致性
-        const newContractRef = doc(collection(db, "contracts"));
+        const newContractRef = doc(collection(firestore, "contracts"));
         const contractId = newContractRef.id;
 
         const contractData = {

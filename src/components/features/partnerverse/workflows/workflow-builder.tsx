@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Partner, FinancialDocument, ReceivablePayableType, Contract, Transaction } from '@/lib/types';
 import { ArrowLeftRight, PlusCircle, Save, Trash2, FileText, DollarSign, Briefcase, CheckCircle, GripVertical } from 'lucide-react';
 
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, getDocs, addDoc, doc, setDoc, updateDoc, onSnapshot, query, where, Timestamp, getDoc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
@@ -34,7 +34,7 @@ const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }>
     });
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(query(collection(db, 'financial_documents')), (snapshot) => {
+        const unsubscribe = onSnapshot(query(collection(firestore, 'financial_documents')), (snapshot) => {
             const docsList = snapshot.docs.map(doc => {
                 const data = doc.data();
                 return {
@@ -49,7 +49,7 @@ const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }>
 
     const fetchContractsForPartner = useCallback(async (partnerName: string) => {
         if (!partnerName) { setContracts([]); return; }
-        const q = query(collection(db, "contracts"), where("client", "==", partnerName));
+        const q = query(collection(firestore, "contracts"), where("client", "==", partnerName));
         const querySnapshot = await getDocs(q);
         setContracts(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Contract));
     }, []);
@@ -74,7 +74,7 @@ const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }>
         
         setIsCreating(true);
         try {
-            await addDoc(collection(db, 'financial_documents'), {
+            await addDoc(collection(firestore, 'financial_documents'), {
                 partnerId: newDocument.partnerId, partnerName: partner.name, contractId: newDocument.contractId,
                 contractName: contract.name, type: newDocument.type, amount: parseFloat(newDocument.amount),
                 description: newDocument.description, currentStep: workflow[0], createDate: Timestamp.now(),
@@ -101,13 +101,13 @@ const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }>
         }
 
         const nextStep = workflow[currentStepIndex + 1];
-        const docRef = doc(db, 'financial_documents', docId);
+        const docRef = doc(firestore, 'financial_documents', docId);
         const newHistoryEntry = { step: nextStep, date: Timestamp.now(), user: "system" };
         const updatedHistory = [...(docData.history || []), newHistoryEntry];
         
         try {
             if (currentStepIndex + 1 === workflow.length - 1) {
-                const partnerRef = doc(db, 'partners', partner.id);
+                const partnerRef = doc(firestore, 'partners', partner.id);
                 const partnerSnap = await getDoc(partnerRef);
                 const currentPartnerData = partnerSnap.data() as Partner;
                 const newTransaction: Transaction = {
@@ -203,7 +203,7 @@ const WorkflowDesigner: FC<{ partners: Partner[], isLoading: boolean }> = ({ par
         if (!selectedPartner || !selectedPartner.id) return;
         setIsSaving(true);
         try {
-            await setDoc(doc(db, 'partners', selectedPartner.id), { receivableWorkflow, payableWorkflow }, { merge: true });
+            await setDoc(doc(firestore, 'partners', selectedPartner.id), { receivableWorkflow, payableWorkflow }, { merge: true });
             toast({ title: "成功", description: "收支流程已儲存。" });
         } finally {
             setIsSaving(false);
@@ -260,7 +260,7 @@ export const WorkflowBuilder: FC = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, 'partners'), (snapshot) => {
+        const unsubscribe = onSnapshot(collection(firestore, 'partners'), (snapshot) => {
             setPartners(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Partner));
             setIsLoading(false);
         });

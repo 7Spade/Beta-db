@@ -3,7 +3,7 @@
  */
 
 import { addDoc, updateDoc, deleteDoc, doc, collection, Timestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import type { Contract } from '../types';
 
 export const contractService = {
@@ -22,7 +22,7 @@ export const contractService = {
         }]
       };
 
-      const docRef = await addDoc(collection(db, 'contracts'), newContractData);
+      const docRef = await addDoc(collection(firestore, 'contracts'), newContractData);
       return docRef.id;
     } catch (error) {
       console.error("創建合約時發生錯誤：", error);
@@ -32,7 +32,7 @@ export const contractService = {
 
   updateContract: async (id: string, data: Partial<Omit<Contract, 'id'>>): Promise<void> => {
     try {
-      const docRef = doc(db, 'contracts', id);
+      const docRef = doc(firestore, 'contracts', id);
       const updateData: any = { ...data };
       
       if (data.startDate) {
@@ -51,7 +51,7 @@ export const contractService = {
 
   deleteContract: async (id: string): Promise<void> => {
     try {
-      const docRef = doc(db, 'contracts', id);
+      const docRef = doc(firestore, 'contracts', id);
       await deleteDoc(docRef);
     } catch (error) {
       console.error("刪除合約時發生錯誤：", error);

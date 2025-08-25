@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, onSnapshot, addDoc } from 'firebase/firestore';
 import type { TeamMember } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,7 +20,7 @@ export default function TeamMembersPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'teamMembers'), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(firestore, 'teamMembers'), (snapshot) => {
       const membersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as TeamMember[];
       setMembers(membersData);
       setLoading(false);
@@ -35,7 +35,7 @@ export default function TeamMembersPage() {
 
   const handleAddMember = async (memberData: Omit<TeamMember, 'id'>) => {
     try {
-      await addDoc(collection(db, 'teamMembers'), memberData);
+      await addDoc(collection(firestore, 'teamMembers'), memberData);
       toast({ title: "成員已新增", description: `${memberData.name} 已成功加入團隊。` });
       setDialogOpen(false);
       return true;

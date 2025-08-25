@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
 import type { Partner, Contract } from '@/lib/types';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
@@ -25,7 +25,7 @@ export const ContractsTab: FC<ContractsTabProps> = ({ partner }) => {
       if (!partner.name) return;
       setIsLoadingContracts(true);
       try {
-        const contractsRef = collection(db, "contracts");
+        const contractsRef = collection(firestore, "contracts");
         const q = query(contractsRef, where("client", "==", partner.name));
         const querySnapshot = await getDocs(q);
         const contractsList = querySnapshot.docs.map(doc => {

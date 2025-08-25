@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { Project, Task, TaskStatus } from '@/lib/types';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, getDocs, doc, writeBatch, Timestamp, onSnapshot } from "firebase/firestore";
 
 interface ProjectContextType {
@@ -43,7 +43,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   }
 
   useEffect(() => {
-    const projectsCollection = collection(db, 'projects');
+    const projectsCollection = collection(firestore, 'projects');
     const unsubscribe = onSnapshot(projectsCollection, (querySnapshot) => {
         const projectsData = processFirestoreProjects(querySnapshot.docs);
         setProjects(projectsData);
@@ -63,8 +63,8 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   
   const addProject = async (project: Omit<Project, 'id' | 'tasks'>) => {
     try {
-        const batch = writeBatch(db);
-        const newProjectRef = doc(collection(db, "projects"));
+        const batch = writeBatch(firestore);
+        const newProjectRef = doc(collection(firestore, "projects"));
         
         const projectDataForFirestore = {
             ...project,
@@ -82,7 +82,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateTaskStatus = async (projectId: string, taskId: string, status: TaskStatus) => {
-    const projectRef = doc(db, "projects", projectId);
+    const projectRef = doc(firestore, "projects", projectId);
     const projectData = findProject(projectId);
     if (!projectData) return;
 
@@ -99,13 +99,13 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const newTasks = updateRecursive(projectData.tasks);
-    const batch = writeBatch(db);
+    const batch = writeBatch(firestore);
     batch.update(projectRef, { tasks: newTasks });
     await batch.commit();
   };
   
   const addTask = async (projectId: string, parentTaskId: string | null, taskTitle: string, quantity: number, unitPrice: number) => {
-    const projectRef = doc(db, "projects", projectId);
+    const projectRef = doc(firestore, "projects", projectId);
     const projectData = findProject(projectId);
     if (!projectData) return;
     
@@ -136,7 +136,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     };
     
     const newTasks = addRecursive(projectData.tasks);
-    const batch = writeBatch(db);
+    const batch = writeBatch(firestore);
     batch.update(projectRef, { tasks: newTasks });
     await batch.commit();
   }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import type { AiTokenLog } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,7 +26,7 @@ export function AiUsageLog() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const logsCollection = collection(db, 'aiTokenLogs');
+        const logsCollection = collection(firestore, 'aiTokenLogs');
         const q = query(logsCollection, orderBy('timestamp', 'desc'), limit(10));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const logList = querySnapshot.docs.map(processFirestoreLog);

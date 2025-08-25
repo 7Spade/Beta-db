@@ -1,6 +1,6 @@
 'use server';
 
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import type { AiTokenLog } from '@/lib/types';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -18,7 +18,7 @@ export async function logAiTokenUsage(
             ...logData,
             timestamp: serverTimestamp(),
         };
-        await addDoc(collection(db, 'aiTokenLogs'), logPayload);
+        await addDoc(collection(firestore, 'aiTokenLogs'), logPayload);
     } catch (error) {
         console.error("Failed to log AI token usage:", error);
         // We don't re-throw the error to avoid interrupting the user's flow.

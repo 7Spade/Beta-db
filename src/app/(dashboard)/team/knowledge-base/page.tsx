@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import type { KnowledgeBaseEntry } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -26,7 +26,7 @@ export default function KnowledgeBasePage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const q = query(collection(db, 'knowledgeBaseEntries'), orderBy('createdAt', 'desc'));
+    const q = query(collection(firestore, 'knowledgeBaseEntries'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const entriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as KnowledgeBaseEntry[];
       setEntries(entriesData);

@@ -15,7 +15,7 @@ import {
   orderBy,
   Timestamp 
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import type { Contract } from '@/components/features/contracts/types';
 
 export class FirebaseContractService {
@@ -36,7 +36,7 @@ export class FirebaseContractService {
         }]
       };
 
-      const docRef = await addDoc(collection(db, this.collectionName), newContractData);
+      const docRef = await addDoc(collection(firestore, this.collectionName), newContractData);
       return docRef.id;
     } catch (error) {
       console.error("創建合約時發生錯誤：", error);
@@ -46,7 +46,7 @@ export class FirebaseContractService {
 
   async getContractById(id: string): Promise<Contract | null> {
     try {
-      const docRef = doc(db, this.collectionName, id);
+      const docRef = doc(firestore, this.collectionName, id);
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
@@ -82,7 +82,7 @@ export class FirebaseContractService {
   async getAllContracts(): Promise<Contract[]> {
     try {
       const q = query(
-        collection(db, this.collectionName),
+        collection(firestore, this.collectionName),
         orderBy('startDate', 'desc')
       );
       
@@ -117,7 +117,7 @@ export class FirebaseContractService {
 
   async updateContract(id: string, data: Partial<Contract>): Promise<void> {
     try {
-      const docRef = doc(db, this.collectionName, id);
+      const docRef = doc(firestore, this.collectionName, id);
       const updateData = { ...data } as any;
       
       if (data.startDate) {
@@ -136,7 +136,7 @@ export class FirebaseContractService {
 
   async deleteContract(id: string): Promise<void> {
     try {
-      const docRef = doc(db, this.collectionName, id);
+      const docRef = doc(firestore, this.collectionName, id);
       await deleteDoc(docRef);
     } catch (error) {
       console.error("刪除合約時發生錯誤：", error);
