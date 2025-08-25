@@ -29,11 +29,12 @@ const DocToWorkItemsInputSchema = z.object({
 });
 export type DocToWorkItemsInput = z.infer<typeof DocToWorkItemsInputSchema>;
 
-// 定義流程的輸出 Schema (使用 Zod) - 已簡化
+// 定義流程的輸出 Schema (使用 Zod)
 const DocToWorkItemsOutputSchema = z.object({
   workItems: z.array(
     z.object({
-      item: z.string().describe('工作項目的描述。'),
+      id: z.string().describe('項次或序號。'),
+      name: z.string().describe('料號、品名或項目說明。'),
       quantity: z.number().describe('工作項目的數量。'),
       unitPrice: z.number().describe('工作項目的單價。'),
     })
@@ -56,22 +57,23 @@ export async function docToWorkItems(input: DocToWorkItemsInput): Promise<DocToW
   return result;
 }
 
-// 定義 Genkit Prompt - 已簡化
+// 定義 Genkit Prompt
 const docToWorkItemsPrompt = ai.definePrompt({
   name: 'docToWorkItemsPrompt', // Prompt 的唯一名稱
   input: {schema: DocToWorkItemsInputSchema}, // 輸入 Schema
   output: {schema: DocToWorkItemsOutputSchema}, // 輸出 Schema，讓 AI 知道要以何種格式回應
   // 提示語模板 (使用 Handlebars 語法)
-  prompt: `You are an expert AI assistant specialized in parsing documents like contracts, quotes, and estimates to extract work items.
+  prompt: `You are an expert AI assistant specialized in parsing construction and engineering documents like contracts, quotes, and estimates to extract a bill of materials or work items.
 
-  Analyze the provided document and extract every single work item you can find. For each item, extract its description (item), quantity, and unit price. Focus on accuracy for these three fields.
+  Analyze the provided document and extract every single work item you can find. For each item, you must extract the following four fields:
+  1.  **id**: The item number or serial number (e.g., "1", "A-1", "項次一").
+  2.  **name**: The material code, product name, or description of the work (e.g., "RC混凝土", "防水工程", "不銹鋼板").
+  3.  **quantity**: The quantity of the item. If not explicitly provided, default to 1.
+  4.  **unitPrice**: The price per unit for the item. If not explicitly provided, do your best to find it. If it's impossible, default to 0.
 
   Document: {{media url=documentDataUri}}
   
-  Ensure that the extracted data is accurate and well-formatted.
-  - If quantity is not explicitly provided in document, default to 1.
-  - If unit price is not explicitly provided, do your best to find it. If it's impossible, default to 0.
-  - Do NOT extract the total price, only the unit price.
+  Ensure that the extracted data is accurate and well-formatted. Do NOT extract the total price, only the unit price.
   `,
 });
 

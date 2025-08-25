@@ -28,12 +28,12 @@ interface ActionResult {
 function workItemsToTasks(items: WorkItem[]): Task[] {
     return items.map((item, index) => ({
         id: `task-${Date.now()}-${index}`,
-        title: item.item,
+        title: item.name,
         status: '待處理',
         lastUpdated: new Date().toISOString(),
         quantity: item.quantity,
         unitPrice: item.unitPrice,
-        value: item.price,
+        value: item.quantity * item.unitPrice, // Calculate total value
         subTasks: [],
     }));
 }
@@ -50,7 +50,7 @@ export async function createProjectAndContractFromDocument(input: ActionInput): 
         // 1. Prepare Project data
         const newProjectRef = doc(collection(db, "projects"));
         const projectId = newProjectRef.id;
-        const totalValue = workItems.reduce((sum, item) => sum + item.price, 0);
+        const totalValue = workItems.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
         const tasks = workItemsToTasks(workItems);
 
         const projectData: Omit<Project, "id" | "startDate" | "endDate"> & { startDate: Timestamp, endDate: Timestamp } = {

@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import type { DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
 import { Badge } from '../../ui/badge';
 
-export type WorkItem = DocToWorkItemsOutput['workItems'][0];
+export type WorkItem = DocToWorkItemsOutput['workItems'][0] & { total?: number };
 
 interface WorkItemsTableProps {
   initialData: WorkItem[];
@@ -23,10 +23,10 @@ interface WorkItemsTableProps {
 }
 
 export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProps) {
-  const [data, setData] = useState<WorkItem[]>(initialData);
+  const [data, setData] = useState<WorkItem[]>(initialData.map(item => ({...item, total: item.quantity * item.unitPrice })));
 
   useEffect(() => {
-    setData(initialData);
+    setData(initialData.map(item => ({...item, total: item.quantity * item.unitPrice })));
   }, [initialData]);
 
   const updateData = (newData: WorkItem[]) => {
@@ -40,24 +40,17 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
     
     const numericValue = typeof value === 'string' ? parseFloat(value) : value;
 
-    if (field === 'item') {
-        updatedItem.item = String(value);
-    } else if (!isNaN(numericValue) && (field === 'quantity' || field === 'price' || field === 'unitPrice')) {
+    if (field === 'id' || field === 'name') {
+        (updatedItem[field] as string) = String(value);
+    } else if (!isNaN(numericValue) && (field === 'quantity' || field === 'unitPrice')) {
         (updatedItem[field] as number) = numericValue;
     } else {
-        // Handle cases where input might be cleared, default to 0
         (updatedItem[field] as number) = 0;
     }
     
     // Automatic calculation logic
     if (field === 'quantity' || field === 'unitPrice') {
-        updatedItem.price = parseFloat((updatedItem.quantity * updatedItem.unitPrice).toFixed(2));
-    } else if (field === 'price') {
-        if (updatedItem.quantity > 0) {
-            updatedItem.unitPrice = parseFloat((updatedItem.price / updatedItem.quantity).toFixed(2));
-        } else {
-            updatedItem.unitPrice = 0; // Avoid division by zero
-        }
+        updatedItem.total = parseFloat((updatedItem.quantity * updatedItem.unitPrice).toFixed(2));
     }
 
     newData[index] = updatedItem;
@@ -71,19 +64,20 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
 
   const handleAddRow = () => {
     const newRow: WorkItem = {
-      item: '新項目',
+      id: (data.length + 1).toString(),
+      name: '新項目',
       quantity: 1,
-      price: 0,
       unitPrice: 0,
+      total: 0,
     };
     updateData([...data, newRow]);
   };
   
   const exportToCSV = () => {
-    const headers = ['項目', '數量', '單價', '總價'];
+    const headers = ['項次', '名稱', '數量', '單價', '總價'];
     const csvContent = [
       headers.join(','),
-      ...data.map(row => `"${row.item.replace(/"/g, '""')}",${row.quantity},${row.unitPrice},${row.price}`)
+      ...data.map(row => `"${row.id}","${row.name.replace(/"/g, '""')}",${row.quantity},${row.unitPrice},${row.total}`)
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -96,7 +90,7 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
   };
 
   const exportToJSON = () => {
-    const jsonContent = JSON.stringify(data, null, 2);
+    const jsonContent = JSON.stringify(data.map(({total, ...rest}) => rest), null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -106,7 +100,7 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
     document.body.removeChild(link);
   };
   
-  const totalAmount = data.reduce((sum, item) => sum + item.price, 0);
+  const totalAmount = data.reduce((sum, item) => sum + (item.total || 0), 0);
 
   if (data.length === 0) {
     return (
@@ -127,9 +121,9 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12 text-center">#</TableHead>
-              <TableHead className="w-[100px] text-center">佔比</TableHead>
-              <TableHead className="w-[45%]">項目描述</TableHead>
+              <TableHead className="w-[10%] text-center">項次</TableHead>
+              <TableHead className="w-[10%] text-center">佔比</TableHead>
+              <TableHead className="w-[40%]">品名/說明</TableHead>
               <TableHead className="text-right w-[120px]">數量</TableHead>
               <TableHead className="text-right w-[150px]">單價</TableHead>
               <TableHead className="text-right w-[150px]">總價</TableHead>
@@ -139,16 +133,22 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
           <TableBody>
             {data.map((row, index) => (
               <TableRow key={index} className="hover:bg-muted/50">
-                <TableCell className="text-center text-muted-foreground">{index + 1}</TableCell>
+                <TableCell className="p-1">
+                  <Input
+                    value={row.id}
+                    onChange={(e) => handleInputChange(index, 'id', e.target.value)}
+                    className="text-center bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
+                  />
+                </TableCell>
                 <TableCell className="text-center">
                     <Badge variant="outline">
-                        {totalAmount > 0 ? ((row.price / totalAmount) * 100).toFixed(1) : '0.0'}%
+                        {totalAmount > 0 ? (((row.total || 0) / totalAmount) * 100).toFixed(1) : '0.0'}%
                     </Badge>
                 </TableCell>
                 <TableCell className="p-1">
                   <Input
-                    value={row.item}
-                    onChange={(e) => handleInputChange(index, 'item', e.target.value)}
+                    value={row.name}
+                    onChange={(e) => handleInputChange(index, 'name', e.target.value)}
                     className="bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
                   />
                 </TableCell>
@@ -172,9 +172,9 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
                 <TableCell className="p-1">
                   <Input
                     type="number"
-                    value={row.price}
-                    onChange={(e) => handleInputChange(index, 'price', e.target.value)}
-                    className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
+                    value={row.total}
+                    readOnly
+                    className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring text-muted-foreground"
                     step="0.01"
                   />
                 </TableCell>
