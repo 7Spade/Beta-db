@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -51,9 +52,9 @@ export default function BlogListPage() {
             </div>
             <div className="flex-1 bg-background p-6 flex flex-col justify-between">
               <div className="flex-1">
-                <p className="text-sm font-medium text-primary">
+                <div className="text-sm font-medium text-primary">
                   <Badge variant="secondary">{post.category}</Badge>
-                </p>
+                </div>
                 <Link href={`/blog/${post.slug}`} className="block mt-2">
                   <CardTitle className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                     {post.title}
