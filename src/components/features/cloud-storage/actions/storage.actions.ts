@@ -53,8 +53,8 @@ export async function renameFileAction(oldPath: string, newPath: string): Promis
 
 export async function createFolderAction(folderPath: string): Promise<ActionResult> {
     try {
-        // Create a zero-byte file with a trailing slash to represent a folder
-        const folderRef = ref(storage, `${folderPath}/`);
+        // Create a zero-byte file with a special name to represent a folder
+        const folderRef = ref(storage, `${folderPath}/.placeholder`);
         await uploadBytes(folderRef, new Blob([]));
         
         const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
@@ -68,23 +68,34 @@ export async function createFolderAction(folderPath: string): Promise<ActionResu
 }
 
 export async function deleteFolderAction(folderPath: string): Promise<ActionResult> {
-    try {
-        const folderRef = ref(storage, folderPath);
-        const res = await listAll(folderRef);
+  try {
+    const folderRef = ref(storage, folderPath);
+    const res = await listAll(folderRef);
 
-        // Recursively delete all items and prefixes
-        const deletePromises: Promise<any>[] = [];
-        res.items.forEach((itemRef) => deletePromises.push(deleteObject(itemRef)));
-        res.prefixes.forEach((prefixRef) => deletePromises.push(deleteFolderAction(prefixRef.fullPath)));
-        
-        await Promise.all(deletePromises);
-        
-        const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
+    const deletePromises: Promise<any>[] = [];
+    
+    // Delete all files in the folder
+    res.items.forEach((itemRef) => {
+      deletePromises.push(deleteObject(itemRef));
+    });
+    
+    // Recursively delete all subfolders
+    res.prefixes.forEach((prefixRef) => {
+      deletePromises.push(deleteFolderAction(prefixRef.fullPath));
+    });
+    
+    await Promise.all(deletePromises);
+
+    const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
+    if (parentPath) {
         revalidatePath(`/cloud-storage?path=${parentPath}`);
-
-        return { success: true };
-    } catch (error: any) {
-        console.error('刪除資料夾時發生錯誤:', error);
-        return { success: false, error: '刪除資料夾失敗。' };
+    } else {
+        revalidatePath(`/cloud-storage`);
     }
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('刪除資料夾時發生錯誤:', error);
+    return { success: false, error: '刪除資料夾失敗。' };
+  }
 }

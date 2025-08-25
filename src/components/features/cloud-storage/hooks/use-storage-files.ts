@@ -24,8 +24,9 @@ export function useStorageFiles(directoryPath: string) {
         fullPath: folderRef.fullPath,
       }));
 
-      const filesData = await Promise.all(
-        res.items.map(async (itemRef) => {
+      const filesDataPromises = res.items
+        .filter(itemRef => !itemRef.name.endsWith('.placeholder')) // Filter out placeholder files
+        .map(async (itemRef) => {
           const url = await getDownloadURL(itemRef);
           const metadata = await getMetadata(itemRef);
           return {
@@ -36,8 +37,9 @@ export function useStorageFiles(directoryPath: string) {
             contentType: metadata.contentType || 'application/octet-stream',
             createdAt: metadata.timeCreated,
           };
-        })
-      );
+        });
+
+      const filesData = await Promise.all(filesDataPromises);
       
       setFolders(foldersData);
       setFiles(filesData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
