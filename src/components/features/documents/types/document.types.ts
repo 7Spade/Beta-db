@@ -2,12 +2,12 @@
  * @fileoverview Documents 相關類型定義
  */
 
-import type { DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
+import type { ExtractWorkItemsOutput } from '@/ai/flows/extract-work-items-flow';
 
 /**
  * 從 AI Flow 的原始輸出中提取的單個工作項目結構。
  */
-export type WorkItem = DocToWorkItemsOutput['workItems'][0] & { 
+export type WorkItem = ExtractWorkItemsOutput['workItems'][0] & { 
   /**
    * 前端計算的總價 (quantity * unitPrice)，用於 UI 顯示。
    */
@@ -18,11 +18,11 @@ export type WorkItem = DocToWorkItemsOutput['workItems'][0] & {
  * 文件處理 Server Action 的狀態，由 useActionState 管理。
  */
 export interface DocumentActionState {
-  data?: DocToWorkItemsOutput;
+  data?: ExtractWorkItemsOutput;
   error?: string;
   fileName?: string;
   totalTokens?: number;
-  storageUrl?: string; // 新增，用於保存文件的存儲路徑
+  promptType?: string; // 新增，用於保存使用的提示類型
 }
 
 /**

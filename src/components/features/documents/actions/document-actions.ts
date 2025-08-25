@@ -4,7 +4,7 @@
  * 這些 Action 被前端元件直接呼叫，以執行伺服器端的邏輯，例如與 AI 模型的互動。
  * 
  * @關聯檔案
- * - `src/ai/flows/doc-to-work-items-flow.ts`: `extractDataFromDocument` Action 會呼叫此 AI 流程來進行文件解析。
+ * - `src/ai/flows/extract-work-items-flow.ts`: `extractWorkItemsFromDocument` Action 會呼叫此 AI 流程來進行文件解析。
  * - `src/components/features/documents/views/documents-view.tsx`: 前端 UI，呼叫此處定義的 Actions。
  * - `src/components/features/documents/constants/file-constants.ts`: `validateDocument` Action 使用此檔案中的常數來進行檔案驗證。
  */
@@ -13,7 +13,7 @@
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/lib/firebase";
-import { docToWorkItems } from '@/ai/flows/doc-to-work-items-flow';
+import { extractWorkItems } from '@/ai/flows/extract-work-items-flow';
 import type { DocumentActionState, DocumentValidationState } from '../types';
 import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants';
 
@@ -26,7 +26,7 @@ import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants';
  * @param formData - 從前端表單提交的數據。
  * @returns {Promise<DocumentActionState>} - 返回一個包含解析數據、檔名或錯誤訊息的狀態物件。
  */
-export async function extractDataFromDocument(
+export async function extractWorkItemsFromDocument(
   prevState: DocumentActionState,
   formData: FormData
 ): Promise<DocumentActionState> {
@@ -43,7 +43,7 @@ export async function extractDataFromDocument(
     const storageUrl = await getDownloadURL(uploadResult.ref);
 
     // 步驟 2: 調用 Genkit AI 流程以提取工作項目
-    const result = await docToWorkItems({ storageUrl });
+    const result = await extractWorkItems({ storageUrl });
     
     if (!result || !result.workItems) {
         return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
@@ -54,7 +54,6 @@ export async function extractDataFromDocument(
       data: result, 
       fileName: file.name, 
       totalTokens: result.totalTokens,
-      storageUrl: storageUrl, // 返回 Storage URL 以供後續使用
     };
   } catch (e) {
     console.error('文件處理錯誤:', e);

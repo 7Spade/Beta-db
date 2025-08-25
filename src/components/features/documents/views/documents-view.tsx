@@ -13,7 +13,7 @@
  * Server Actions 和 useActionState 實現現代化的表單處理和狀態管理。
  * 
  * @關聯檔案
- * - `src/components/features/documents/actions/document-actions.ts`: 呼叫此檔案中的 Server Action `extractDataFromDocument` 來觸發後端處理流程。
+ * - `src/components/features/documents/actions/document-actions.ts`: 呼叫此檔案中的 Server Action `extractWorkItemsFromDocument` 來觸發後端處理流程。
  * - `src/components/features/documents/tables/work-items-table.tsx`: 在成功解析後，使用此元件來顯示和編輯提取出的工料清單。
  * - `src/components/features/contracts/actions/contract-actions.ts`: 在使用者確認工料清單後，呼叫 `createProjectAndContractFromDocument` Action 來建立專案和合約。
  */
@@ -30,7 +30,7 @@ import type { Partner } from "@/lib/types";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { extractDataFromDocument, WorkItem, DocDetails } from "@/components/features/documents";
+import { extractWorkItemsFromDocument, WorkItem, DocDetails } from "@/components/features/documents";
 import { createProjectAndContractFromDocument } from "@/components/features/contracts";
 import { WorkItemsTable } from "../tables";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,7 @@ const initialState = {
 };
 
 export function DocumentsView() {
-  const [state, formAction] = useActionState(extractDataFromDocument, initialState);
+  const [state, formAction] = useActionState(extractWorkItemsFromDocument, initialState);
   const [isPending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);

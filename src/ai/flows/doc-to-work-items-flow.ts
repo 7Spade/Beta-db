@@ -1,12 +1,12 @@
 /**
- * @fileOverview 從文件解析工料清單流程 (Doc to Work Items Flow)
+ * @fileOverview 從文件解析工料清單流程 (Extract Work Items Flow)
  * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個指向 Cloud Storage 的文件 URL，
  * 並使用 AI 模型從中解析並提取結構化的工作項目、數量和單價。
  * 這是整個「智能文件解析」功能的核心 AI 邏輯。
  * 
- * @exports docToWorkItems - 觸發數據提取過程的主要函數。
- * @exports DocToWorkItemsInput - `docToWorkItems` 函數的輸入 Zod Schema 型別。
- * @exports DocToWorkItemsOutput - `docToWorkItems` 函數的輸出 Zod Schema 型別。
+ * @exports extractWorkItems - 觸發數據提取過程的主要函數。
+ * @exports ExtractWorkItemsInput - `extractWorkItems` 函數的輸入 Zod Schema 型別。
+ * @exports ExtractWorkItemsOutput - `extractWorkItems` 函數的輸出 Zod Schema 型別。
  */
 
 'use server';
@@ -17,17 +17,17 @@ import {z} from 'genkit';
 import { media } from 'genkit/ai';
 
 // 定義流程的輸入 Schema (使用 Zod)
-const DocToWorkItemsInputSchema = z.object({
+const ExtractWorkItemsInputSchema = z.object({
   storageUrl: z
     .string()
     .describe(
       "一份文件（合約、報價單或估價單）在 Firebase Storage 中的 URL。"
     ),
 });
-export type DocToWorkItemsInput = z.infer<typeof DocToWorkItemsInputSchema>;
+export type ExtractWorkItemsInput = z.infer<typeof ExtractWorkItemsInputSchema>;
 
 // 定義流程的輸出 Schema (使用 Zod)，現在包含 totalTokens
-const DocToWorkItemsOutputSchema = z.object({
+const ExtractWorkItemsOutputSchema = z.object({
   workItems: z.array(
     z.object({
       id: z.string().describe('項次或序號。'),
@@ -39,16 +39,16 @@ const DocToWorkItemsOutputSchema = z.object({
   describe('一個包含提取出的工作項目及其數量和單價的列表。'),
   totalTokens: z.number().describe('該次操作消耗的總 token 數量。'),
 });
-export type DocToWorkItemsOutput = z.infer<typeof DocToWorkItemsOutputSchema>;
+export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema>;
 
 /**
  * 導出的異步函數，作為外部呼叫此 AI 流程的入口點。
- * @param {DocToWorkItemsInput} input - 包含文件 Storage URL 的輸入物件。
- * @returns {Promise<DocToWorkItemsOutput>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
+ * @param {ExtractWorkItemsInput} input - 包含文件 Storage URL 的輸入物件。
+ * @returns {Promise<ExtractWorkItemsOutput>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
  * @throws 如果流程沒有返回結果，則拋出錯誤。
  */
-export async function docToWorkItems(input: DocToWorkItemsInput): Promise<DocToWorkItemsOutput> {
-  const result = await docToWorkItemsFlow(input);
+export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<ExtractWorkItemsOutput> {
+  const result = await extractWorkItemsFlow(input);
   if (!result) {
     throw new Error('Flow returned no result');
   }
@@ -56,10 +56,10 @@ export async function docToWorkItems(input: DocToWorkItemsInput): Promise<DocToW
 }
 
 // 定義 Genkit Prompt
-const docToWorkItemsPrompt = ai.definePrompt({
-  name: 'docToWorkItemsPrompt', // Prompt 的唯一名稱
-  input: {schema: DocToWorkItemsInputSchema}, // 輸入 Schema
-  output: {schema: DocToWorkItemsOutputSchema.omit({ totalTokens: true })}, // 輸出 Schema，讓 AI 知道要以何種格式回應
+const extractWorkItemsPrompt = ai.definePrompt({
+  name: 'extractWorkItemsPrompt', // Prompt 的唯一名稱
+  input: {schema: ExtractWorkItemsInputSchema}, // 輸入 Schema
+  output: {schema: ExtractWorkItemsOutputSchema.omit({ totalTokens: true })}, // 輸出 Schema，讓 AI 知道要以何種格式回應
   // 提示語模板 (使用 Handlebars 語法)
   prompt: `You are an expert AI assistant specialized in parsing construction and engineering documents like contracts, quotes, and estimates to extract a bill of materials or work items.
 
@@ -76,18 +76,18 @@ const docToWorkItemsPrompt = ai.definePrompt({
 });
 
 // 定義 Genkit Flow
-const docToWorkItemsFlow = ai.defineFlow(
+const extractWorkItemsFlow = ai.defineFlow(
   {
-    name: 'docToWorkItemsFlow', // Flow 的唯一名稱
-    inputSchema: DocToWorkItemsInputSchema,
-    outputSchema: DocToWorkItemsOutputSchema,
+    name: 'extractWorkItemsFlow', // Flow 的唯一名稱
+    inputSchema: ExtractWorkItemsInputSchema,
+    outputSchema: ExtractWorkItemsOutputSchema,
   },
   // Flow 的核心執行邏輯
   async input => {
     let result;
     try {
       // 呼叫定義好的 prompt，並傳入輸入
-      result = await docToWorkItemsPrompt(input);
+      result = await extractWorkItemsPrompt(input);
       const output = result.output;
       if (!output) {
         throw new Error('No output from AI');
@@ -96,7 +96,7 @@ const docToWorkItemsFlow = ai.defineFlow(
       const totalTokens = result.usage?.totalTokens || 0;
       // 記錄 AI Token 使用量（成功時）
       await logAiTokenUsage({
-        flowName: 'docToWorkItemsFlow',
+        flowName: 'extractWorkItemsFlow',
         totalTokens: totalTokens,
         status: 'succeeded',
       });
@@ -109,7 +109,7 @@ const docToWorkItemsFlow = ai.defineFlow(
         // 記錄 AI Token 使用量（失敗時）
         const totalTokens = result?.usage?.totalTokens || 0;
         await logAiTokenUsage({
-            flowName: 'docToWorkItemsFlow',
+            flowName: 'extractWorkItemsFlow',
             totalTokens: totalTokens,
             status: 'failed',
             error: error instanceof Error ? error.message : 'Unknown error',
