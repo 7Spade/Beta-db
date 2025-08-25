@@ -5,7 +5,7 @@ import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import admin from 'firebase-admin';
+import type admin from 'firebase-admin';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -31,14 +31,18 @@ const functions = getFunctions(app);
 // Initialize Analytics only if it's supported
 const analytics = typeof window !== 'undefined' ? isSupported().then(yes => yes ? getAnalytics(app) : null) : Promise.resolve(null);
 
+let adminStorage: admin.storage.Storage | null = null;
 
 // Initialize Firebase Admin SDK for the server
-if (typeof process !== 'undefined' && !admin.apps.length) {
+if (typeof window === 'undefined') {
+  const admin = require('firebase-admin');
+  if (!admin.apps.length) {
     admin.initializeApp({
         storageBucket: firebaseConfig.storageBucket
     });
+  }
+  adminStorage = admin.storage();
 }
-const adminStorage = typeof process !== 'undefined' ? admin.storage() : null;
 
 
 // Initialize App Check on the client only
