@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import type { Partner, FinancialDocument, ReceivablePayableType, Contract, Transaction } from '@/lib/types';
-import { ArrowLeftRight, PlusCircle, Save, Trash2, FileText, DollarSign, Briefcase, CheckCircle, GripVertical } from 'lucide-react';
+import { ArrowLeftRight, PlusCircle, Save, Trash2, FileText, DollarSign, Briefcase, CheckCircle, GripVertical, Wand2 } from 'lucide-react';
 
 import { firestore } from '@/lib/firebase-client';
 import { collection, getDocs, addDoc, doc, setDoc, updateDoc, onSnapshot, query, where, Timestamp, getDoc } from 'firebase/firestore';
@@ -19,6 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { OptimizationAssistant } from './optimization-assistant';
 
 // Component for managing financial documents
 const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }> = ({ partners, isLoading }) => {
@@ -179,81 +180,6 @@ const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }>
     );
 };
 
-// Component for designing workflows
-const WorkflowDesigner: FC<{ partners: Partner[], isLoading: boolean }> = ({ partners, isLoading }) => {
-    const [selectedPartnerId, setSelectedPartnerId] = useState<string>('');
-    const [receivableWorkflow, setReceivableWorkflow] = useState<string[]>([]);
-    const [payableWorkflow, setPayableWorkflow] = useState<string[]>([]);
-    const [isSaving, setIsSaving] = useState(false);
-    const { toast } = useToast();
-
-    const selectedPartner = partners.find(p => p.id === selectedPartnerId);
-
-    useEffect(() => {
-        if (selectedPartner) {
-            setReceivableWorkflow(selectedPartner.receivableWorkflow || []);
-            setPayableWorkflow(selectedPartner.payableWorkflow || []);
-        } else {
-            setReceivableWorkflow([]);
-            setPayableWorkflow([]);
-        }
-    }, [selectedPartnerId, selectedPartner]);
-
-    const handleSave = async () => {
-        if (!selectedPartner || !selectedPartner.id) return;
-        setIsSaving(true);
-        try {
-            await setDoc(doc(firestore, 'partners', selectedPartner.id), { receivableWorkflow, payableWorkflow }, { merge: true });
-            toast({ title: "成功", description: "收支流程已儲存。" });
-        } finally {
-            setIsSaving(false);
-        }
-    };
-    
-    const WorkflowEditor: FC<{ title: string; steps: string[]; setSteps: (steps: string[]) => void; }> = ({ title, steps, setSteps }) => {
-        const handleStepChange = (index: number, value: string) => setSteps(steps.map((s, i) => i === index ? value : s));
-        const handleAddStep = () => setSteps([...steps, '新步驟']);
-        const handleRemoveStep = (index: number) => setSteps(steps.filter((_, i) => i !== index));
-
-        return (
-            <Card>
-                <CardHeader><CardTitle>{title}</CardTitle></CardHeader>
-                <CardContent className="space-y-2">
-                    {steps.map((step, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                            <GripVertical className="h-5 w-5 text-muted-foreground" />
-                            <Input value={step} onChange={(e) => handleStepChange(index, e.target.value)} />
-                            <Button variant="ghost" size="icon" onClick={() => handleRemoveStep(index)}><Trash2 className="h-4 w-4" /></Button>
-                        </div>
-                    ))}
-                    <Button variant="outline" size="sm" onClick={handleAddStep}><PlusCircle className="mr-2 h-4 w-4" />新增步驟</Button>
-                </CardContent>
-            </Card>
-        );
-    };
-
-    return (
-        <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>合作夥伴收支流程設計</CardTitle>
-                    <CardDescription>為特定合作夥伴定義應收與應付流程的步驟。</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Select onValueChange={setSelectedPartnerId} disabled={isLoading}><SelectTrigger><SelectValue placeholder="選擇一個合作夥伴以編輯其流程" /></SelectTrigger><SelectContent>{partners.map(p=><SelectItem key={p.id} value={p.id!}>{p.name}</SelectItem>)}</SelectContent></Select>
-                </CardContent>
-            </Card>
-            {selectedPartner && (
-                <div className="space-y-4">
-                    {(selectedPartner.flowType === '純收款' || selectedPartner.flowType === '收付款') && <WorkflowEditor title="應收款流程" steps={receivableWorkflow} setSteps={setReceivableWorkflow} />}
-                    {(selectedPartner.flowType === '純付款' || selectedPartner.flowType === '收付款') && <WorkflowEditor title="應付款流程" steps={payableWorkflow} setSteps={setPayableWorkflow} />}
-                    <div className="flex justify-end"><Button onClick={handleSave} disabled={isSaving}><Save className="mr-2 h-4 w-4" />儲存流程</Button></div>
-                </div>
-            )}
-        </div>
-    );
-};
-
 
 export const WorkflowBuilder: FC = () => {
     const [partners, setPartners] = useState<Partner[]>([]);
@@ -271,20 +197,21 @@ export const WorkflowBuilder: FC = () => {
     <div className="space-y-6">
        <div>
             <h2 className="text-3xl font-bold tracking-tight">收支流程</h2>
-            <p className="text-muted-foreground">管理財務單據、設計合作夥伴流程。</p>
+            <p className="text-muted-foreground">管理財務單據並使用 AI 優化您的流程。</p>
         </div>
       <Tabs defaultValue="manager" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="manager"><ArrowLeftRight className="mr-2 h-4 w-4"/>財務單據管理</TabsTrigger>
-          <TabsTrigger value="designer"><CheckCircle className="mr-2 h-4 w-4"/>流程設計</TabsTrigger>
+          <TabsTrigger value="optimizer"><Wand2 className="mr-2 h-4 w-4"/>AI 優化助理</TabsTrigger>
         </TabsList>
         <TabsContent value="manager" className="mt-6">
           <FinancialDocumentsManager partners={partners} isLoading={isLoading} />
         </TabsContent>
-        <TabsContent value="designer" className="mt-6">
-            <WorkflowDesigner partners={partners} isLoading={isLoading} />
+        <TabsContent value="optimizer" className="mt-6">
+            <OptimizationAssistant />
         </TabsContent>
       </Tabs>
     </div>
   );
 };
+
