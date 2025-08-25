@@ -15,7 +15,7 @@ import {
   orderBy,
   Timestamp 
 } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase';
+import { adminDb as firestore } from '@/lib/firebase-admin';
 import type { Contract } from '@/components/features/contracts/types';
 
 export class FirebaseContractService {
