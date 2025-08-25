@@ -1,7 +1,7 @@
 /**
  * @fileOverview 從文件解析工料清單流程 (Doc to Work Items Flow)
  * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個文件（如報價單、合約），
- * 並使用 AI 模型從中解析並提取結構化的工作項目、數量、單價和總價。
+ * 並使用 AI 模型從中解析並提取結構化的工作項目、數量和單價。
  * 這是整個「智能文件解析」功能的核心 AI 邏輯。
  * 
  * @exports docToWorkItems - 觸發數據提取過程的主要函數。
@@ -29,17 +29,16 @@ const DocToWorkItemsInputSchema = z.object({
 });
 export type DocToWorkItemsInput = z.infer<typeof DocToWorkItemsInputSchema>;
 
-// 定義流程的輸出 Schema (使用 Zod)
+// 定義流程的輸出 Schema (使用 Zod) - 已簡化
 const DocToWorkItemsOutputSchema = z.object({
   workItems: z.array(
     z.object({
       item: z.string().describe('工作項目的描述。'),
       quantity: z.number().describe('工作項目的數量。'),
-      price: z.number().describe('該工作項目的總價。'),
       unitPrice: z.number().describe('工作項目的單價。'),
     })
   ).
-  describe('一個包含提取出的工作項目及其數量、總價和單價的列表。'),
+  describe('一個包含提取出的工作項目及其數量和單價的列表。'),
 });
 export type DocToWorkItemsOutput = z.infer<typeof DocToWorkItemsOutputSchema>;
 
@@ -57,21 +56,22 @@ export async function docToWorkItems(input: DocToWorkItemsInput): Promise<DocToW
   return result;
 }
 
-// 定義 Genkit Prompt
+// 定義 Genkit Prompt - 已簡化
 const docToWorkItemsPrompt = ai.definePrompt({
   name: 'docToWorkItemsPrompt', // Prompt 的唯一名稱
   input: {schema: DocToWorkItemsInputSchema}, // 輸入 Schema
   output: {schema: DocToWorkItemsOutputSchema}, // 輸出 Schema，讓 AI 知道要以何種格式回應
   // 提示語模板 (使用 Handlebars 語法)
-  prompt: `You are an expert AI assistant specialized in parsing documents like contracts, quotes, and estimates to extract work items, quantities, prices, and unit prices.
+  prompt: `You are an expert AI assistant specialized in parsing documents like contracts, quotes, and estimates to extract work items.
 
-  Analyze the provided document and extract every single work item you can find. For each item, extract its description, quantity, total price, and calculate the unit price. Use the following document data.
+  Analyze the provided document and extract every single work item you can find. For each item, extract its description (item), quantity, and unit price. Focus on accuracy for these three fields.
 
   Document: {{media url=documentDataUri}}
   
   Ensure that the extracted data is accurate and well-formatted.
-  If quantity is not explicitly provided in document, default to 1.
-  If unit price is not explicitly provided in document, calculate the unit price by dividing the price by the quantity.
+  - If quantity is not explicitly provided in document, default to 1.
+  - If unit price is not explicitly provided, do your best to find it. If it's impossible, default to 0.
+  - Do NOT extract the total price, only the unit price.
   `,
 });
 
