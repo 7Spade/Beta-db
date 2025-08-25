@@ -12,31 +12,10 @@
  * 服務進行智能文檔分析，支援多種文檔格式的處理和工作項目提取。使用 Next.js 15 的 
  * Server Actions 和 useActionState 實現現代化的表單處理和狀態管理。
  * 
- * @tech-stack
- * - Runtime: Node.js 20+
- * - Framework: Next.js 15 (App Router)
- * - Language: TypeScript 5.0+
- * - UI: shadcn/ui + Tailwind CSS 4.0+
- * - Icons: Lucide React
- * - State: React 19 (useActionState, useTransition)
- * - AI: Google Genkit
- * - Validation: Zod
- * - Database: Firebase Firestore
- * 
- * @features
- * - 文檔拖拽上傳功能
- * - AI 驅動的文檔解析
- * - 工作項目自動提取
- * - 實時處理狀態顯示
- * - 結果數據表格展示
- * - 支援 PDF、DOCX 等格式
- * 
- * @usage
- * 此頁面作為 DocuParse 模組的主要入口，用戶可以：
- * 1. 上傳文檔文件
- * 2. 查看 AI 解析進度
- * 3. 檢視提取的工作項目
- * 4. 編輯和管理解析結果
+ * @關聯檔案
+ * - `src/components/features/documents/actions/document-actions.ts`: 呼叫此檔案中的 Server Action `extractDataFromDocument` 來觸發後端處理流程。
+ * - `src/components/features/documents/work-items-table.tsx`: 在成功解析後，使用此元件來顯示和編輯提取出的工料清單。
+ * - `src/components/features/contracts/actions/contract-actions.ts`: 在使用者確認工料清單後，呼叫 `createProjectAndContractFromDocument` Action 來建立專案和合約。
  */
 
 "use client";
@@ -163,7 +142,7 @@ export function DocumentsView() {
              toast({ variant: "destructive", title: "建立失敗", description: result.error });
         } else {
              toast({ title: "成功！", description: `專案與合約 "${docDetails.name}" 已成功建立。` });
-             router.push(`/projects/${result.projectId}`);
+             router.push(`/contracts/${result.contractId}`);
         }
     } catch (e) {
         const error = e instanceof Error ? e.message : "發生未知錯誤";
@@ -249,10 +228,10 @@ export function DocumentsView() {
                       {state.fileName}
                       </CardDescription>
                   </div>
-                  {state.data.totalTokens > 0 && (
+                  {state.data.workItems.length > 0 && (
                     <Badge variant="secondary" className="flex items-center gap-2">
                         <Cpu className="w-4 h-4" />
-                        <span>{state.data.totalTokens.toLocaleString()} tokens</span>
+                        <span>共提取 {state.data.workItems.length} 個項目</span>
                     </Badge>
                   )}
                 </div>
@@ -287,13 +266,13 @@ export function DocumentsView() {
                     <Select
                         value={docDetails.clientRepresentative}
                         onValueChange={(value) => handleDetailChange('clientRepresentative', value)}
-                        disabled={!selectedPartner || selectedPartner.contacts.length === 0}
+                        disabled={!selectedPartner || !selectedPartner.contacts || selectedPartner.contacts.length === 0}
                     >
                         <SelectTrigger id="clientRepresentative">
                             <SelectValue placeholder={!selectedPartner ? "請先選擇客戶" : "選擇一位聯絡人"} />
                         </SelectTrigger>
                         <SelectContent>
-                            {selectedPartner?.contacts.map(contact => (
+                            {selectedPartner?.contacts?.map(contact => (
                                 <SelectItem key={contact.id} value={contact.name}>
                                     {contact.name} ({contact.role})
                                 </SelectItem>
