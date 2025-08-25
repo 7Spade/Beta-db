@@ -10,7 +10,7 @@
  * @fileoverview 文檔處理主頁面 - DocuParse 模組的核心功能頁面
  * @description 提供文檔上傳、AI 解析、數據提取和結果展示功能。整合了 Google Genkit AI 
  * 服務進行智能文檔分析，支援多種文檔格式的處理和工作項目提取。使用 Next.js 15 的 
- * Server Actions 和 useActionState 實現現代化的表單處理和狀態管理。
+ * Server Actions และ useActionState 實現現代化的表單處理和狀態管理。
  * 
  * @關聯檔案
  * - `src/components/features/documents/actions/document-actions.ts`: 呼叫此檔案中的 Server Action `extractWorkItemsFromDocument` 來觸發後端處理流程。
@@ -49,8 +49,7 @@ const initialState = {
 };
 
 export function DocumentsView() {
-  const [state, formAction] = useActionState(extractWorkItemsFromDocument, initialState);
-  const [isPending, startTransition] = useTransition();
+  const [state, formAction, isPending] = useActionState(extractWorkItemsFromDocument, initialState);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -152,13 +151,11 @@ export function DocumentsView() {
     }
   }
 
-  const handleFileSelect = (storageUrl: string, fileName: string) => {
+  const handleFileSelect = (filePath: string, fileName: string) => {
     const formData = new FormData();
-    formData.append('storageUrl', storageUrl);
+    formData.append('filePath', filePath);
     formData.append('fileName', fileName);
-    startTransition(() => {
-        formAction(formData);
-    });
+    formAction(formData);
     setIsSelectorOpen(false);
   }
 

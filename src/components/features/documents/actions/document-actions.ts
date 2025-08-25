@@ -12,6 +12,8 @@
 
 import { extractWorkItems } from '@/ai/flows/extract-work-items-flow';
 import type { DocumentActionState } from '../types';
+import { storage } from '@/lib/firebase';
+import { ref } from 'firebase/storage';
 
 /**
  * Server Action: 從文件提取工作項目數據
@@ -25,16 +27,19 @@ export async function extractWorkItemsFromDocument(
   prevState: DocumentActionState,
   formData: FormData
 ): Promise<DocumentActionState> {
-  const storageUrl = formData.get('storageUrl') as string | null;
+  const filePath = formData.get('filePath') as string | null;
   const fileName = formData.get('fileName') as string | null;
   
-  if (!storageUrl || !fileName) {
+  if (!filePath || !fileName) {
     return { error: '未提供有效的檔案路徑。' };
   }
 
   try {
+    const storageRef = ref(storage, filePath);
+    const gsPath = `gs://${storageRef.bucket}/${storageRef.fullPath}`;
+
     // 步驟 1: 調用 Genkit AI 流程以提取工作項目
-    const result = await extractWorkItems({ storageUrl });
+    const result = await extractWorkItems({ storageUrl: gsPath });
     
     if (!result || !result.workItems) {
         return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };

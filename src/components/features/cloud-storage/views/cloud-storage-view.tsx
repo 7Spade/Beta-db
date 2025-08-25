@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,6 +17,7 @@ import { UploadButton } from '../components/upload-button';
 import { RenameDialog } from '../components/rename-dialog';
 import { CreateFolderDialog } from '../components/create-folder-dialog';
 import { deleteFileAction, deleteFolderAction, renameItemAction, createFolderAction } from '../actions/storage.actions';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function CloudStorageViewInternal() {
     const searchParams = useSearchParams();
@@ -43,7 +44,7 @@ function CloudStorageViewInternal() {
         let path = '';
         for (const segment of segments) {
             path += `/${segment}`;
-            items.push({ name: segment, path: path.substring(1) });
+            items.push({ name: segment, path: path });
         }
         return items;
     }, [currentPath]);
@@ -91,6 +92,8 @@ function CloudStorageViewInternal() {
     
     const handleCreateFolder = async (folderName: string) => {
         const newFolderPath = currentPath ? `${currentPath}/${folderName}` : folderName;
+        // Firebase Storage simulates folders by creating a zero-byte file. 
+        // A common convention is to add a placeholder file.
         const result = await createFolderAction(`${newFolderPath}/.placeholder`);
         if (result.success) {
             toast({ title: '成功', description: `資料夾 "${folderName}" 已建立。` });
@@ -120,18 +123,18 @@ function CloudStorageViewInternal() {
          <Breadcrumb>
             <BreadcrumbList>
                 {breadcrumbItems.map((item, index) => (
-                    <BreadcrumbItem key={item.path}>
-                        {index < breadcrumbItems.length - 1 ? (
-                            <>
+                    <React.Fragment key={item.path}>
+                        <BreadcrumbItem>
+                            {index < breadcrumbItems.length - 1 ? (
                                 <BreadcrumbLink href={`${pathname}?path=${item.path}`} className="cursor-pointer">
                                     {item.name}
                                 </BreadcrumbLink>
-                                <BreadcrumbSeparator />
-                            </>
-                        ) : (
-                            <BreadcrumbPage>{item.name}</BreadcrumbPage>
-                        )}
-                    </BreadcrumbItem>
+                            ) : (
+                                <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                            )}
+                        </BreadcrumbItem>
+                        {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
+                    </React.Fragment>
                 ))}
             </BreadcrumbList>
         </Breadcrumb>
@@ -194,7 +197,23 @@ function CloudStorageViewInternal() {
 
 export function CloudStorageView() {
     return (
-        <Suspense fallback={<div>載入中...</div>}>
+        <Suspense fallback={
+            <div className="space-y-6">
+                <Skeleton className="h-10 w-1/3" />
+                <Skeleton className="h-8 w-1/4" />
+                <Card>
+                    <CardHeader>
+                        <Skeleton className="h-6 w-1/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                            {Array.from({ length: 12 }).map((_, i) => <Skeleton key={i} className="h-32" />)}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        }>
             <CloudStorageViewInternal />
         </Suspense>
     );

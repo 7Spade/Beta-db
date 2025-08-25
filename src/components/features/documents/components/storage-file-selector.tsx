@@ -11,6 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Folder, File as FileIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SUPPORTED_FILE_TYPES } from '../constants';
+import { cn } from '@/lib/utils';
+
 
 interface StorageFileSelectorDialogProps {
     isOpen: boolean;
@@ -34,7 +36,7 @@ function FileBrowser({ onFileSelect }: { onFileSelect: (url: string, name: strin
         let path = '';
         for (const segment of segments) {
             path += `/${segment}`;
-            items.push({ name: segment, path: path.substring(1) });
+            items.push({ name: segment, path: path });
         }
         return items;
     }, [currentPath]);
@@ -48,18 +50,18 @@ function FileBrowser({ onFileSelect }: { onFileSelect: (url: string, name: strin
             <Breadcrumb>
                 <BreadcrumbList>
                     {breadcrumbItems.map((item, index) => (
-                        <BreadcrumbItem key={item.path}>
-                            {index < breadcrumbItems.length - 1 ? (
-                                <>
+                        <React.Fragment key={item.path}>
+                            <BreadcrumbItem>
+                                {index < breadcrumbItems.length - 1 ? (
                                     <BreadcrumbLink onClick={() => handleNavigate(item.path)} className="cursor-pointer">
                                         {item.name}
                                     </BreadcrumbLink>
-                                    <BreadcrumbSeparator />
-                                </>
-                            ) : (
-                                <BreadcrumbPage>{item.name}</BreadcrumbPage>
-                            )}
-                        </BreadcrumbItem>
+                                ) : (
+                                    <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                                )}
+                            </BreadcrumbItem>
+                             {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
+                        </React.Fragment>
                     ))}
                 </BreadcrumbList>
             </Breadcrumb>
@@ -84,7 +86,7 @@ function FileBrowser({ onFileSelect }: { onFileSelect: (url: string, name: strin
                             ))}
                             {files.map(file => (
                                 <Card key={file.fullPath} className={cn("hover:bg-muted", isFileSupported(file.contentType) ? "cursor-pointer" : "cursor-not-allowed opacity-50")}>
-                                     <CardContent className="p-4 flex flex-col items-center justify-center aspect-square" onClick={() => isFileSupported(file.contentType) && onFileSelect(file.url, file.name)}>
+                                     <CardContent className="p-4 flex flex-col items-center justify-center aspect-square" onClick={() => isFileSupported(file.contentType) && onFileSelect(file.fullPath, file.name)}>
                                         <FileIcon className="h-12 w-12 text-muted-foreground" />
                                         <p className="mt-2 text-sm text-center truncate w-full" title={file.name}>{file.name}</p>
                                     </CardContent>

@@ -79,7 +79,7 @@ export async function renameItemAction(oldPath: string, newPath: string, type: '
 export async function createFolderAction(placeholderPath: string): Promise<ActionResult> {
     try {
         const folderRef = ref(storage, placeholderPath);
-        await uploadBytes(folderRef, new Blob([]));
+        await uploadBytes(folderRef, new Blob(['']));
         
         const parentPath = placeholderPath.substring(0, placeholderPath.lastIndexOf('/'));
         revalidatePath(`/cloud-storage?path=${parentPath}`);
@@ -111,13 +111,14 @@ export async function deleteFolderAction(folderPath: string): Promise<ActionResu
     await Promise.all(deletePromises);
     
     // After deleting contents, delete the placeholder for the folder itself, if it exists
+    // This is useful for folders that were created but are now empty.
+    const placeholderRef = ref(storage, `${folderPath}/.placeholder`);
     try {
-        const placeholderRef = ref(storage, `${folderPath}/.placeholder`);
         await deleteObject(placeholderRef);
     } catch (error: any) {
-        // Ignore if placeholder doesn't exist (e.g. non-empty folder)
+        // Ignore if placeholder doesn't exist, which is normal for non-empty folders.
         if (error.code !== 'storage/object-not-found') {
-            throw error;
+            console.warn(`Could not delete placeholder for ${folderPath}:`, error);
         }
     }
 
