@@ -57,13 +57,13 @@ export function DocumentsView() {
 
   // State for document details and partners
   const [partners, setPartners] = useState<Partner[]>([]);
+  const [selectedPartnerId, setSelectedPartnerId] = useState('');
   const [docDetails, setDocDetails] = useState<DocDetails>({
       customId: '',
       name: '',
       client: '',
       clientRepresentative: '',
   });
-  const [selectedPartnerId, setSelectedPartnerId] = useState<string>('');
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -97,7 +97,7 @@ export function DocumentsView() {
     }
     if (state.data) {
         setWorkItems(state.data.workItems);
-        // Pre-fill fields
+        // Pre-fill fields, and reset others
         const fileNameWithoutExt = state.fileName?.replace(/\.[^/.]+$/, "") || "";
         setDocDetails({
             customId: `DOC-${Date.now()}`,
