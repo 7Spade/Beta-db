@@ -92,9 +92,12 @@ const extractWorkItemsFlow = ai.defineFlow(
       // 步驟 1: 使用 Firebase Admin SDK 取得檔案的簽署後 URL
       const bucket = adminStorage.bucket();
       const file = bucket.file(input.storagePath);
+      
       const [signedUrl] = await file.getSignedUrl({
           action: 'read',
           expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+          // Explicitly use the default service account for signing
+          serviceAccountEmail: `${process.env.GCLOUD_PROJECT_ID}@appspot.gserviceaccount.com`,
       });
         
       // 步驟 2: 呼叫定義好的 prompt，並傳入簽署後的 URL
