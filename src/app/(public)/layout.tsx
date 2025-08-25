@@ -26,6 +26,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
              <Button variant="ghost" asChild>
                 <Link href="/blog">部落格</Link>
             </Button>
+            <Button variant="ghost" asChild>
+                <Link href="/careers">企業徵才</Link>
+            </Button>
             <Button asChild>
               <Link href="/dashboard">前往應用程式</Link>
             </Button>
