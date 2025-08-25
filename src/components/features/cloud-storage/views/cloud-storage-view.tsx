@@ -61,7 +61,7 @@ function CloudStorageViewInternal() {
         let path = '';
         segments.forEach(segment => {
             path += `/${segment}`;
-            items.push({ name: segment, path: path.substring(1) });
+            items.push({ name: segment, path: path });
         });
 
         return items;
@@ -170,7 +170,7 @@ function CloudStorageViewInternal() {
                 onNavigate={handleNavigate}
                 onDeleteFile={(path) => handleDelete(path, 'file')}
                 onDeleteFolder={(path) => handleDelete(path, 'folder')}
-                onRename={(path, name, type) => handleRename(path, name, type)}
+                onRename={handleRename}
                 refresh={refresh}
               />
           </CardContent>
