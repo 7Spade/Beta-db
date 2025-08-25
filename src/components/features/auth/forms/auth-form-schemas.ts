@@ -6,16 +6,21 @@ import { z } from 'zod';
 
 // 登入表單的驗證規則
 export const loginSchema = z.object({
-  email: z.string().email('請輸入有效的電子郵件地址。'),
-  password: z.string().min(1, '密碼不能為空。'),
+  email: z.string().email({ message: '請輸入有效的電子郵件地址。' }),
+  password: z.string().min(1, { message: '密碼不能為空。' }),
 });
+
+export type LoginValues = z.infer<typeof loginSchema>;
+
 
 // 註冊表單的驗證規則
 export const registerSchema = z.object({
-    email: z.string().email('請輸入有效的電子郵件地址。'),
-    password: z.string().min(8, '密碼長度至少需要 8 個字元。'),
+    email: z.string().email({ message: '請輸入有效的電子郵件地址。' }),
+    password: z.string().min(8, { message: '密碼長度至少需要 8 個字元。' }),
     confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
     message: "兩次輸入的密碼不相符",
     path: ["confirmPassword"], // 在哪個欄位顯示錯誤
 });
+
+export type RegisterValues = z.infer<typeof registerSchema>;
