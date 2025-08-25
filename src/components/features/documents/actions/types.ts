@@ -9,6 +9,7 @@ export interface DocumentActionState {
   data?: DocToWorkItemsOutput;
   error?: string;
   fileName?: string;
+  totalTokens?: number;
 }
 
 // 文件驗證狀態

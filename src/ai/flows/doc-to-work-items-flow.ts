@@ -29,7 +29,7 @@ const DocToWorkItemsInputSchema = z.object({
 });
 export type DocToWorkItemsInput = z.infer<typeof DocToWorkItemsInputSchema>;
 
-// 定義流程的輸出 Schema (使用 Zod)
+// 定義流程的輸出 Schema (使用 Zod)，現在包含 totalTokens
 const DocToWorkItemsOutputSchema = z.object({
   workItems: z.array(
     z.object({
@@ -40,13 +40,14 @@ const DocToWorkItemsOutputSchema = z.object({
     })
   ).
   describe('一個包含提取出的工作項目及其數量和單價的列表。'),
+  totalTokens: z.number().describe('該次操作消耗的總 token 數量。'),
 });
 export type DocToWorkItemsOutput = z.infer<typeof DocToWorkItemsOutputSchema>;
 
 /**
  * 導出的異步函數，作為外部呼叫此 AI 流程的入口點。
  * @param {DocToWorkItemsInput} input - 包含文件 Data URI 的輸入物件。
- * @returns {Promise<DocToWorkItemsOutput>} - 返回一個包含解析出的工料清單的 Promise。
+ * @returns {Promise<DocToWorkItemsOutput>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
  * @throws 如果流程沒有返回結果，則拋出錯誤。
  */
 export async function docToWorkItems(input: DocToWorkItemsInput): Promise<DocToWorkItemsOutput> {
@@ -61,7 +62,7 @@ export async function docToWorkItems(input: DocToWorkItemsInput): Promise<DocToW
 const docToWorkItemsPrompt = ai.definePrompt({
   name: 'docToWorkItemsPrompt', // Prompt 的唯一名稱
   input: {schema: DocToWorkItemsInputSchema}, // 輸入 Schema
-  output: {schema: DocToWorkItemsOutputSchema}, // 輸出 Schema，讓 AI 知道要以何種格式回應
+  output: {schema: DocToWorkItemsOutputSchema.omit({ totalTokens: true })}, // 輸出 Schema，讓 AI 知道要以何種格式回應
   // 提示語模板 (使用 Handlebars 語法)
   prompt: `You are an expert AI assistant specialized in parsing construction and engineering documents like contracts, quotes, and estimates to extract a bill of materials or work items.
 
@@ -95,15 +96,18 @@ const docToWorkItemsFlow = ai.defineFlow(
         throw new Error('No output from AI');
       }
       
-      // 記錄 AI Token 使用量（成功時）
       const totalTokens = result.usage?.totalTokens || 0;
+      // 記錄 AI Token 使用量（成功時）
       await logAiTokenUsage({
         flowName: 'docToWorkItemsFlow',
         totalTokens: totalTokens,
         status: 'succeeded',
       });
       
-      return output;
+      return {
+        ...output,
+        totalTokens: totalTokens,
+      };
     } catch (error) {
         // 記錄 AI Token 使用量（失敗時）
         const totalTokens = result?.usage?.totalTokens || 0;

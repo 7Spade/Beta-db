@@ -60,7 +60,7 @@ export async function extractDataFromDocument(
     }
 
     // 步驟 4: 返回成功的結果
-    return { data: result, fileName: file.name };
+    return { data: result, fileName: file.name, totalTokens: result.totalTokens };
   } catch (e) {
     console.error('文件處理錯誤:', e);
     const errorMessage = e instanceof Error ? e.message : '發生未知錯誤。';

@@ -44,6 +44,7 @@ const initialState = {
   data: undefined,
   error: undefined,
   fileName: undefined,
+  totalTokens: undefined,
 };
 
 export function DocumentsView() {
@@ -228,12 +229,20 @@ export function DocumentsView() {
                       {state.fileName}
                       </CardDescription>
                   </div>
-                  {state.data.workItems.length > 0 && (
-                    <Badge variant="secondary" className="flex items-center gap-2">
-                        <Cpu className="w-4 h-4" />
-                        <span>共提取 {state.data.workItems.length} 個項目</span>
-                    </Badge>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {state.data.workItems.length > 0 && (
+                      <Badge variant="secondary" className="flex items-center gap-2">
+                          <Cpu className="w-4 h-4" />
+                          <span>共提取 {state.data.workItems.length} 個項目</span>
+                      </Badge>
+                    )}
+                     {state.totalTokens && (
+                      <Badge variant="outline" className="flex items-center gap-2">
+                          <Cpu className="w-4 h-4" />
+                          <span>消耗 {state.totalTokens} tokens</span>
+                      </Badge>
+                    )}
+                  </div>
                 </div>
             </CardHeader>
             <CardContent>
