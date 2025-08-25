@@ -26,14 +26,13 @@
  * ├── forms/            # Zod 表單驗證 schemas
  * ├── hooks/            # React Hooks (如 useAuthState)
  * ├── providers/        # Context Providers (如 AuthProvider)
- * ├── services/         # 服務層 (封裝 Firebase SDK 調用)
  * ├── types/            # TypeScript 類型定義
  * └── views/            # 頁面級別的視圖元件
  * `
  */
 
 // 導出所有認證相關功能
-export * from './actions/auth-actions';
+export * from './actions';
 export * from './components';
 export * from './forms';
 export * from './hooks';

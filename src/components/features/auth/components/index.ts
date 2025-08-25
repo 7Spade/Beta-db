@@ -6,5 +6,7 @@
  */
 
 export * from './login-form';
-// export * from './register-form';
-// export * from './social-auth-buttons';
+export * from './register-form';
+export * from './reset-password-form';
+export * from './social-auth-buttons';
+export * from './user-profile';
