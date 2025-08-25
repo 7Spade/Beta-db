@@ -2,13 +2,14 @@
  * @fileoverview 文件匯出相關的工具函數
  */
 import type { WorkItem } from '../types';
+import { EXPORT_FILE_NAMES } from '../constants';
 
 /**
  * 將工料清單資料匯出為 CSV 檔案。
  * @param data - 要匯出的工料清單陣列。
  * @param fileName - 匯出的檔案名稱 (不含副檔名)。
  */
-export const exportToCSV = (data: WorkItem[], fileName: string = 'work-items') => {
+export const exportToCSV = (data: WorkItem[], fileName: string = EXPORT_FILE_NAMES.WORK_ITEMS) => {
     const headers = ['項次', '名稱', '數量', '單價', '總價'];
     const csvContent = [
       headers.join(','),
@@ -31,7 +32,7 @@ export const exportToCSV = (data: WorkItem[], fileName: string = 'work-items') =
  * @param data - 要匯出的工料清單陣列。
  * @param fileName - 匯出的檔案名稱 (不含副檔名)。
  */
-export const exportToJSON = (data: WorkItem[], fileName: string = 'work-items') => {
+export const exportToJSON = (data: WorkItem[], fileName: string = EXPORT_FILE_NAMES.WORK_ITEMS) => {
     // 移除前端計算的 total 欄位
     const jsonContent = JSON.stringify(data.map(({total, ...rest}) => rest), null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });

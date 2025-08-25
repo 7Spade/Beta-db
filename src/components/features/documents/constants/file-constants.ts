@@ -26,3 +26,9 @@ export const FILE_SIZE_LIMITS = {
   MAX_SIZE: 10 * 1024 * 1024, // 10MB
   WARNING_SIZE: 5 * 1024 * 1024, // 5MB
 } as const;
+
+
+// 匯出檔案名稱
+export const EXPORT_FILE_NAMES = {
+    WORK_ITEMS: 'work-items'
+} as const;
