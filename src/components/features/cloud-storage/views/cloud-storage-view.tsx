@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import { useState, useMemo, Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
