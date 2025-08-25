@@ -62,8 +62,8 @@ export function DocumentsView() {
       name: '',
       client: '',
       clientRepresentative: '',
-      selectedPartnerId: ''
   });
+  const [selectedPartnerId, setSelectedPartnerId] = useState<string>('');
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -83,8 +83,8 @@ export function DocumentsView() {
   }, [toast]);
   
   const selectedPartner = useMemo(() => {
-    return partners.find(p => p.id === docDetails.selectedPartnerId);
-  }, [partners, docDetails.selectedPartnerId]);
+    return partners.find(p => p.id === selectedPartnerId);
+  }, [partners, selectedPartnerId]);
 
 
   useEffect(() => {
@@ -104,20 +104,20 @@ export function DocumentsView() {
             name: fileNameWithoutExt,
             client: '',
             clientRepresentative: '',
-            selectedPartnerId: ''
         });
+        setSelectedPartnerId('');
     }
   }, [state, toast]);
 
-  const handleDetailChange = (key: keyof typeof docDetails, value: string) => {
+  const handleDetailChange = (key: keyof DocDetails, value: string) => {
       setDocDetails(prev => ({...prev, [key]: value}));
   }
   
   const handlePartnerChange = (partnerId: string) => {
+    setSelectedPartnerId(partnerId);
     const partner = partners.find(p => p.id === partnerId);
     setDocDetails(prev => ({
         ...prev,
-        selectedPartnerId: partnerId,
         client: partner?.name || '',
         // Reset representative when partner changes
         clientRepresentative: '',
@@ -257,7 +257,7 @@ export function DocumentsView() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="client">客戶</Label>
-                    <Select value={docDetails.selectedPartnerId} onValueChange={handlePartnerChange}>
+                    <Select value={selectedPartnerId} onValueChange={handlePartnerChange}>
                         <SelectTrigger id="client">
                             <SelectValue placeholder="選擇一個合作夥伴" />
                         </SelectTrigger>
