@@ -17,7 +17,7 @@ import { DashboardStats, type StatCardData } from '@/components/features/dashboa
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
 import { useContracts } from '../hooks';
 

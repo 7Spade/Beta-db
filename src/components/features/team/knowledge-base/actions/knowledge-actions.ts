@@ -1,6 +1,6 @@
 "use server";
 
-import { firestore as db } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase';
 import type { KnowledgeBaseEntry } from '@/lib/types';
 import { collection, addDoc, doc, setDoc, deleteDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
@@ -17,11 +17,11 @@ export async function handleSaveKnowledgeBaseEntry(
     try {
         if (entryId) {
             // 更新現有條目
-            const entryRef = doc(db, 'knowledgeBaseEntries', entryId);
+            const entryRef = doc(firestore, 'knowledgeBaseEntries', entryId);
             await setDoc(entryRef, { ...data, updatedAt: serverTimestamp() }, { merge: true });
         } else {
             // 新增條目
-            await addDoc(collection(db, 'knowledgeBaseEntries'), {
+            await addDoc(collection(firestore, 'knowledgeBaseEntries'), {
                 ...data,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
@@ -43,7 +43,7 @@ export async function handleSaveKnowledgeBaseEntry(
  */
 export async function handleDeleteKnowledgeBaseEntry(entryId: string): Promise<SaveResult> {
     try {
-        await deleteDoc(doc(db, 'knowledgeBaseEntries', entryId));
+        await deleteDoc(doc(firestore, 'knowledgeBaseEntries', entryId));
         revalidatePath('/team/knowledge-base');
         return { message: "工法已成功刪除。" };
     } catch (error) {
@@ -61,10 +61,10 @@ export async function handleBatchKnowledgeBaseOperation(
     entryIds: string[]
 ): Promise<SaveResult> {
     try {
-        const batch = writeBatch(db);
+        const batch = writeBatch(firestore);
         
         entryIds.forEach(entryId => {
-            const entryRef = doc(db, 'knowledgeBaseEntries', entryId);
+            const entryRef = doc(firestore, 'knowledgeBaseEntries', entryId);
             const updateData: any = {
                 updatedAt: serverTimestamp(),
             };
