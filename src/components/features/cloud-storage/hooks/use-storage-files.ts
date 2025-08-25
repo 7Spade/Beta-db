@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { storage } from '@/lib/firebase';
+import { storage } from '@/lib/firebase-client';
 import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
 import type { StorageFile, StorageFolder } from '../types/storage.types';
 

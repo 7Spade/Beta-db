@@ -16,7 +16,7 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import type { Partner } from '@/lib/types';
 import { Users, CheckCircle, Clock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';

@@ -1,7 +1,7 @@
 "use server";
 
 import { writeBatch, collection, doc, Timestamp } from "firebase/firestore";
-import { firestore } from "@/lib/firebase";
+import { firestore } from "@/lib/firebase-client";
 import type { Task, Project } from "@/lib/types";
 import type { Contract } from '../types';
 import type { WorkItem, DocDetails } from "@/components/features/documents/types";

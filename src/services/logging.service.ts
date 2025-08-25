@@ -1,7 +1,7 @@
 
 'use server';
 
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import type { AiTokenLog as AiTokenLogType } from '@/lib/types';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { connectDB } from '@/lib/mongodb';

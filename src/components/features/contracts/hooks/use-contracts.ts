@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import type { Contract } from '../types';
 
 // Helper function to convert Firestore Timestamps to Dates

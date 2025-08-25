@@ -4,7 +4,7 @@
 import { useState, useRef, type FC } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { storage } from '@/lib/firebase';
+import { storage } from '@/lib/firebase-client';
 import { ref, uploadBytes } from 'firebase/storage';
 import { Upload, Loader2 } from 'lucide-react';
 

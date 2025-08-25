@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import type { AiTokenLog } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

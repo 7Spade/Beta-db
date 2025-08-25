@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import { collection, onSnapshot, addDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import type { Skill } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';

@@ -1,16 +1,17 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp, getApp, getApps, type FirebaseOptions } from "firebase/app";
+// src/lib/firebase-client.ts
+/**
+ * @fileoverview Firebase Client-Side SDK Initialization
+ * @description This file initializes the Firebase SDK for the client-side (browser) application.
+ * It should be imported by any React component or client-side script that needs to interact with Firebase services.
+ */
+
+import { initializeApp, getApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import type admin from 'firebase-admin';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
 export const firebaseConfig = {
   "projectId": "elite-chiller-455712-c4",
   "appId": "1:7807661688:web:cbf779797bd21f5a1d1f8d",
@@ -31,23 +32,8 @@ const functions = getFunctions(app);
 // Initialize Analytics only if it's supported
 const analytics = typeof window !== 'undefined' ? isSupported().then(yes => yes ? getAnalytics(app) : null) : Promise.resolve(null);
 
-let adminStorage: admin.storage.Storage | null = null;
-
-// Initialize Firebase Admin SDK for the server
-if (typeof window === 'undefined') {
-  const admin = require('firebase-admin');
-  if (!admin.apps.length) {
-    admin.initializeApp({
-        storageBucket: firebaseConfig.storageBucket
-    });
-  }
-  adminStorage = admin.storage();
-}
-
-
 // Initialize App Check on the client only
 if (typeof window !== "undefined") {
-  // Use dynamic import to avoid SSR bundling issues
   import("firebase/app-check")
     .then(({ initializeAppCheck, ReCaptchaV3Provider }) => {
       initializeAppCheck(app, {
@@ -62,4 +48,4 @@ if (typeof window !== "undefined") {
     });
 }
 
-export { app, firestore, storage, auth, functions, analytics, adminStorage };
+export { app, firestore, storage, auth, functions, analytics };

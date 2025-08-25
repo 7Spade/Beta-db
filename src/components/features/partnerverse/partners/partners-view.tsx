@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type FC } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import { collection, onSnapshot, addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import type { Partner, Contact } from '@/lib/types';

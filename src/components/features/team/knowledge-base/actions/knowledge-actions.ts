@@ -1,6 +1,6 @@
 "use server";
 
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import type { KnowledgeBaseEntry } from '@/lib/types';
 import { collection, addDoc, doc, setDoc, deleteDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';

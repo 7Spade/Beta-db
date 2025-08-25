@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Partner, FinancialDocument, ReceivablePayableType, Contract, Transaction } from '@/lib/types';
 import { ArrowLeftRight, PlusCircle, Save, Trash2, FileText, DollarSign, Briefcase, CheckCircle, GripVertical } from 'lucide-react';
 
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import { collection, getDocs, addDoc, doc, setDoc, updateDoc, onSnapshot, query, where, Timestamp, getDoc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';

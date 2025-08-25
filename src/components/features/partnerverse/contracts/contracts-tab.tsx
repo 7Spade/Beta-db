@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
 import type { Partner, Contract } from '@/lib/types';
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';

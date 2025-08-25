@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview 從文件解析工料清單流程 (Extract Work Items Flow)
  * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個指向 Cloud Storage 的文件 URL，
@@ -15,7 +16,7 @@ import {ai} from '@/ai/genkit';
 import { logAiTokenUsage } from '@/services/logging.service';
 import {z} from 'genkit';
 import { media } from 'genkit/ai';
-import { adminStorage } from '@/lib/firebase';
+import { adminStorage } from '@/lib/firebase-admin';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({
@@ -86,9 +87,6 @@ const extractWorkItemsFlow = ai.defineFlow(
   // Flow 的核心執行邏輯
   async (input) => {
     let result;
-    if (!adminStorage) {
-        throw new Error('Firebase Admin SDK 未在伺服器端初始化。');
-    }
     
     try {
       // 步驟 1: 使用 Firebase Admin SDK 取得檔案的簽署後 URL

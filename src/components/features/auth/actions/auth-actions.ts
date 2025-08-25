@@ -4,7 +4,7 @@
  */
 'use server';
 
-import { auth } from '@/lib/firebase';
+import { auth } from '@/lib/firebase-client';
 import { 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword,

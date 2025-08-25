@@ -1,7 +1,7 @@
 
 'use server';
 
-import { storage } from '@/lib/firebase';
+import { storage } from '@/lib/firebase-client';
 import { ref, deleteObject, listAll, getBlob, uploadBytes } from 'firebase/storage';
 import { revalidatePath } from 'next/cache';
 
