@@ -4,7 +4,6 @@
  * 功能說明：
  * - 統一導出所有認證相關的側邊欄組件
  * - 包含認證、資料編輯等側邊欄
- * - 使用 Shadcn/ui Sheet 組件
  */
 
 export * from './auth-sheet';

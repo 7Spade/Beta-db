@@ -4,7 +4,6 @@
  * 功能說明：
  * - 統一導出所有認證相關的對話框組件
  * - 包含登入、註冊、密碼重置等對話框
- * - 使用 Shadcn/ui Dialog 組件
  */
 
 export * from './login-dialog';
