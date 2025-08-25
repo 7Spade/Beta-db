@@ -21,8 +21,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { useEffect, useRef, useState, useTransition, useMemo } from "react";
-import { UploadCloud, File, Loader2, Cpu, FileCog } from "lucide-react";
+import { useEffect, useState, useTransition, useMemo } from "react";
+import { File, Loader2, Cpu, FileCog, FolderSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
@@ -38,6 +38,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { StorageFileSelectorDialog } from "../components/storage-file-selector";
 
 
 const initialState = {
@@ -50,8 +51,6 @@ const initialState = {
 export function DocumentsView() {
   const [state, formAction] = useActionState(extractWorkItemsFromDocument, initialState);
   const [isPending, startTransition] = useTransition();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -66,6 +65,8 @@ export function DocumentsView() {
   });
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -97,7 +98,6 @@ export function DocumentsView() {
     }
     if (state.data) {
         setWorkItems(state.data.workItems);
-        // Pre-fill fields, and reset others
         const fileNameWithoutExt = state.fileName?.replace(/\.[^/.]+$/, "") || "";
         setDocDetails({
             customId: `DOC-${Date.now()}`,
@@ -119,7 +119,6 @@ export function DocumentsView() {
     setDocDetails(prev => ({
         ...prev,
         client: partner?.name || '',
-        // Reset representative when partner changes
         clientRepresentative: '',
     }));
   };
@@ -153,59 +152,37 @@ export function DocumentsView() {
     }
   }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      if (formRef.current) {
-        const formData = new FormData(formRef.current);
-        startTransition(() => {
-          formAction(formData);
-        });
-      }
-    }
-  };
-  
-  const handleUploadClick = () => {
-    // Reset file input to allow re-uploading the same file
-    if(fileInputRef.current) {
-        fileInputRef.current.value = "";
-    }
-    fileInputRef.current?.click();
-  };
+  const handleFileSelect = (storageUrl: string, fileName: string) => {
+    const formData = new FormData();
+    formData.append('storageUrl', storageUrl);
+    formData.append('fileName', fileName);
+    startTransition(() => {
+        formAction(formData);
+    });
+    setIsSelectorOpen(false);
+  }
 
 
   return (
+    <>
     <div className="w-full max-w-5xl mx-auto space-y-8">
       <Card className="w-full shadow-2xl bg-card">
         <CardHeader>
-          <CardTitle>上傳文件</CardTitle>
-          <CardDescription>選擇一個文件以開始提取。</CardDescription>
+          <CardTitle>文件解析</CardTitle>
+          <CardDescription>從您雲端儲存的檔案中提取結構化數據，並快速建立合約。</CardDescription>
         </CardHeader>
         <CardContent>
-          <form ref={formRef}>
             <div
-              className="relative flex flex-col items-center justify-center w-full p-8 border-2 border-dashed rounded-lg cursor-pointer border-border hover:border-primary transition-colors"
-              onClick={handleUploadClick}
-              onKeyDown={(e) => e.key === 'Enter' && handleUploadClick()}
-              role="button"
-              tabIndex={0}
-              aria-label="上傳文件"
+              className="relative flex flex-col items-center justify-center w-full p-8 border-2 border-dashed rounded-lg border-border"
             >
-              <UploadCloud className="w-12 h-12 text-muted-foreground" />
+              <FolderSearch className="w-12 h-12 text-muted-foreground" />
               <p className="mt-4 text-sm text-muted-foreground">
-                <span className="font-semibold text-primary">點擊上傳</span> 或拖放文件
+                點擊按鈕以從您的雲端儲存中選擇檔案。
               </p>
-              <p className="text-xs text-muted-foreground">支援格式：PDF、DOCX 等。</p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                name="file"
-                className="hidden"
-                onChange={handleFileChange}
-                disabled={isPending}
-                accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-              />
+              <Button onClick={() => setIsSelectorOpen(true)} className="mt-4">
+                從雲端儲存選擇檔案
+              </Button>
             </div>
-          </form>
         </CardContent>
       </Card>
 
@@ -302,5 +279,11 @@ export function DocumentsView() {
         </div>
       )}
     </div>
+    <StorageFileSelectorDialog
+      isOpen={isSelectorOpen}
+      onOpenChange={setIsSelectorOpen}
+      onFileSelect={handleFileSelect}
+    />
+    </>
   );
 }

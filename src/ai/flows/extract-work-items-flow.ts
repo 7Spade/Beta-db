@@ -83,7 +83,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     outputSchema: ExtractWorkItemsOutputSchema,
   },
   // Flow 的核心執行邏輯
-  async input => {
+  async (input) => {
     let result;
     try {
       // 呼叫定義好的 prompt，並傳入輸入
