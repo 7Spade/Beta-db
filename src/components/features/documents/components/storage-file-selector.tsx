@@ -10,7 +10,6 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { useStorageFiles } from '@/components/features/cloud-storage/hooks/use-storage-files';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Folder, File as FileIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { SUPPORTED_FILE_TYPES } from '../constants';
 import { cn } from '@/lib/utils';
 
@@ -86,8 +85,17 @@ function FileBrowser({ onFileSelect }: { onFileSelect: (url: string, name: strin
                                 </Card>
                             ))}
                             {files.map(file => (
-                                <Card key={file.fullPath} className={cn("hover:bg-muted", isFileSupported(file.contentType) ? "cursor-pointer" : "cursor-not-allowed opacity-50")}>
-                                     <CardContent className="p-4 flex flex-col items-center justify-center aspect-square" onClick={() => isFileSupported(file.contentType) && onFileSelect(file.fullPath, file.name)}>
+                                <Card 
+                                    key={file.fullPath}
+                                    className={cn(
+                                        "hover:bg-muted", 
+                                        isFileSupported(file.contentType) 
+                                            ? "cursor-pointer" 
+                                            : "cursor-not-allowed opacity-50"
+                                    )}
+                                    onClick={() => isFileSupported(file.contentType) && onFileSelect(file.fullPath, file.name)}
+                                >
+                                     <CardContent className="p-4 flex flex-col items-center justify-center aspect-square">
                                         <FileIcon className="h-12 w-12 text-muted-foreground" />
                                         <p className="mt-2 text-sm text-center truncate w-full" title={file.name}>{file.name}</p>
                                     </CardContent>
