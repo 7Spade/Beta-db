@@ -21,13 +21,16 @@ const GenerateKnowledgeEntryOutputSchema = z.object({
   category: z.string().describe('A suggested category for the knowledge base entry.'),
   content: z.string().describe('The suggested content for the knowledge base entry, formatted in Markdown.'),
   tags: z.array(z.string()).describe('An array of 3-5 relevant keywords or tags.'),
-  totalTokens: z.number().describe('The total number of tokens used for the operation.'),
 });
 export type GenerateKnowledgeEntryOutput = z.infer<typeof GenerateKnowledgeEntryOutputSchema>;
 
 
-export async function generateKnowledgeEntry(input: GenerateKnowledgeEntryInput): Promise<GenerateKnowledgeEntryOutput> {
-  return generateKnowledgeEntryFlow(input);
+export async function generateKnowledgeEntry(input: GenerateKnowledgeEntryInput): Promise<GenerateKnowledgeEntryOutput & { totalTokens: number }> {
+  const result = await generateKnowledgeEntryFlow(input);
+   if (!result) {
+    throw new Error('Flow returned no result');
+  }
+  return result;
 }
 
 const prompt = ai.definePrompt({
@@ -49,7 +52,12 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
   {
     name: 'generateKnowledgeEntryFlow',
     inputSchema: GenerateKnowledgeEntryInputSchema,
-    outputSchema: GenerateKnowledgeEntryOutputSchema,
+    outputSchema: z.object({
+        category: z.string(),
+        content: z.string(),
+        tags: z.array(z.string()),
+        totalTokens: z.number(),
+    }),
   },
   async (input) => {
     let result;

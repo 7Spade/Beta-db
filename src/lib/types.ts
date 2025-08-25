@@ -171,12 +171,11 @@ export interface KnowledgeBaseEntry {
 }
 
 export interface AiTokenLog {
-    userId: string;
-    action: string;
-    tokensUsed: number;
-    model: string;
-    cost: number;
-    metadata?: Record<string, any>;
-    createdAt?: Date;
-    updatedAt?: Date;
+  id: string;
+  flowName: string;
+  totalTokens: number;
+  status: 'succeeded' | 'failed';
+  timestamp: Date;
+  userId?: string;
+  error?: string;
 }

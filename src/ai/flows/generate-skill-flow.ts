@@ -24,13 +24,16 @@ const GenerateSkillOutputSchema = z.object({
       description: z.string().describe('A brief description of the skill.'),
     })
   ).describe('An array of 3 to 5 relevant skill suggestions.'),
-  totalTokens: z.number().describe('The total number of tokens used for the operation.'),
 });
 export type GenerateSkillOutput = z.infer<typeof GenerateSkillOutputSchema>;
 
 
-export async function generateSkillSuggestion(input: GenerateSkillInput): Promise<GenerateSkillOutput> {
-  return generateSkillFlow(input);
+export async function generateSkillSuggestion(input: GenerateSkillInput): Promise<GenerateSkillOutput & { totalTokens: number }> {
+  const result = await generateSkillFlow(input);
+  if (!result) {
+    throw new Error('Flow returned no result');
+  }
+  return result;
 }
 
 const prompt = ai.definePrompt({
@@ -50,7 +53,10 @@ const generateSkillFlow = ai.defineFlow(
   {
     name: 'generateSkillFlow',
     inputSchema: GenerateSkillInputSchema,
-    outputSchema: GenerateSkillOutputSchema,
+    outputSchema: z.object({
+        skills: z.array(z.object({ name: z.string(), description: z.string() })),
+        totalTokens: z.number(),
+    }),
   },
   async (input) => {
     let result;

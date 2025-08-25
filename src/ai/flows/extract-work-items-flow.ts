@@ -31,12 +31,15 @@ const ExtractWorkItemsOutputSchema = z.object({
     })
   ).
   describe('A list of extracted work items with their quantities, prices, and unit prices.'),
-  totalTokens: z.number().describe('The total number of tokens used for the operation.'),
 });
 export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema>;
 
 export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<ExtractWorkItemsOutput> {
-  return extractWorkItemsFlow(input);
+  const result = await extractWorkItemsFlow(input);
+  if (!result) {
+    throw new Error('Flow returned no result');
+  }
+  return result;
 }
 
 const extractWorkItemsPrompt = ai.definePrompt({
@@ -77,10 +80,7 @@ const extractWorkItemsFlow = ai.defineFlow(
         status: 'succeeded',
       });
       
-      return {
-          workItems: output.workItems,
-          totalTokens: totalTokens,
-      };
+      return output;
     } catch (error) {
         const totalTokens = result?.usage?.totalTokens || 0;
         await logAiTokenUsage({

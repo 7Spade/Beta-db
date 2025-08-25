@@ -25,7 +25,11 @@ export type GenerateSubtasksOutput = z.infer<typeof GenerateSubtasksOutputSchema
 
 
 export async function generateSubtasks(input: GenerateSubtasksInput): Promise<GenerateSubtasksOutput> {
-  return generateSubtasksFlow(input);
+  const result = await generateSubtasksFlow(input);
+  if (!result) {
+    throw new Error('Flow returned no result');
+  }
+  return result;
 }
 
 const prompt = ai.definePrompt({
