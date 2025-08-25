@@ -37,9 +37,7 @@ export function LoginView() {
           </div>
         </div>
         <SocialAuthButtons />
-      </CardContent>
-      <CardContent>
-          <div className="text-center text-sm">
+         <div className="mt-4 text-center text-sm">
             還沒有帳戶嗎？{' '}
             <Link href="/register" className="underline">
               註冊
