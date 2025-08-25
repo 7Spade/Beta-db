@@ -9,6 +9,15 @@ if (!MONGODB_URI) {
     );
 }
 
+// 驗證連線字串中是否包含資料庫名稱
+const dbNameMatch = MONGODB_URI.match(/\/([^/?]+)\?/);
+if (!dbNameMatch || !dbNameMatch[1]) {
+    throw new Error(
+      "您的 MONGODB_URI 連線字串缺少資料庫名稱。它應該是這樣的格式：mongodb+srv://.../<資料庫名稱>?..."
+    );
+}
+
+
 /**
  * 確保 MongoDB 連線可重用 (避免 hot reload 時多次連線)
  */
