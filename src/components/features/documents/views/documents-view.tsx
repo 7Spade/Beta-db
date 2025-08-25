@@ -20,7 +20,7 @@
 
 "use client";
 
-import { useActionState, useState, useMemo, useEffect } from "react";
+import { useActionState, useState, useMemo, useEffect, startTransition } from "react";
 import { File, Loader2, Cpu, FileCog, FolderSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
@@ -50,9 +50,7 @@ export function DocumentsView() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // State for document details and partners
-  const [partners, setPartners] = useState<Partner[]>([]);
-  const [selectedPartnerId, setSelectedPartnerId] = useState('');
+  // This state is for user-editable fields after AI has provided initial data
   const [docDetails, setDocDetails] = useState<DocDetails>({
       customId: '',
       name: '',
@@ -60,13 +58,20 @@ export function DocumentsView() {
       clientRepresentative: '',
   });
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
+  
+  // State for UI control
   const [isCreating, setIsCreating] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  
+  // State for fetching partners
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [selectedPartnerId, setSelectedPartnerId] = useState('');
 
-  // Memoized values from state
+  // Memoized values from the server action state
   const extractedData = useMemo(() => state.data, [state.data]);
+  const serverError = useMemo(() => state.error, [state.error]);
 
-
+  // Fetch partners from Firestore
   useEffect(() => {
     const fetchPartners = async () => {
         try {
@@ -82,21 +87,23 @@ export function DocumentsView() {
     fetchPartners();
   }, [toast]);
   
+  // Find the selected partner object
   const selectedPartner = useMemo(() => {
     return partners.find(p => p.id === selectedPartnerId);
   }, [partners, selectedPartnerId]);
 
 
+  // Effect to handle the result of the server action
   useEffect(() => {
-    if (state.error) {
+    if (serverError) {
       toast({
         variant: "destructive",
         title: "提取失敗",
-        description: state.error,
+        description: serverError,
       });
     }
     if (extractedData) {
-        setWorkItems(extractedData.workItems);
+        setWorkItems(extractedData.workItems || []);
         // When AI data comes back, it becomes the source of truth for the doc details
         setDocDetails({
             customId: `DOC-${Date.now()}`,
@@ -106,12 +113,14 @@ export function DocumentsView() {
         });
         setSelectedPartnerId('');
     }
-  }, [state.error, extractedData, toast]);
+  }, [serverError, extractedData, toast]);
 
+  // Handle changes to the document detail input fields
   const handleDetailChange = (key: keyof DocDetails, value: string) => {
       setDocDetails(prev => ({...prev, [key]: value}));
   }
   
+  // Handle partner selection and auto-fill client details
   const handlePartnerChange = (partnerId: string) => {
     setSelectedPartnerId(partnerId);
     const partner = partners.find(p => p.id === partnerId);
@@ -158,7 +167,9 @@ export function DocumentsView() {
     });
     setWorkItems([]);
     
-    formAction({ filePath, fileName });
+    startTransition(() => {
+        formAction({ filePath, fileName });
+    });
     setIsSelectorOpen(false);
   }
 
@@ -267,10 +278,14 @@ export function DocumentsView() {
                     </Select>
                   </div>
               </div>
-              <WorkItemsTable initialData={workItems} onDataChange={setWorkItems} />
+              <WorkItemsTable 
+                key={state.data?.fileName} 
+                initialData={workItems} 
+                onDataChange={setWorkItems} 
+              />
             </CardContent>
             <CardContent>
-                 <Button onClick={handleCreateProjectAndContract} disabled={isCreating} className="w-full">
+                 <Button onClick={handleCreateProjectAndContract} disabled={isCreating || isPending} className="w-full">
                      <FileCog className="mr-2 h-4 w-4" />
                      {isCreating ? "建立中..." : "建立專案與合約"}
                  </Button>
