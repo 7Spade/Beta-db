@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo, Suspense, useEffect } from 'react';
+import { useState, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -33,37 +33,18 @@ function CloudStorageViewInternal() {
     const [itemToRename, setItemToRename] = useState<{ path: string, name: string, type: 'file' | 'folder' } | null>(null);
     const [itemToDelete, setItemToDelete] = useState<{ path: string, type: 'file' | 'folder' } | null>(null);
 
-    // Ensure the root 'uploads' folder exists
-    useEffect(() => {
-        const ensureUploadsFolder = async () => {
-            if (isLoading || currentPath !== '') return; // Only run when initial load is complete and at the root
-            const uploadsFolderExists = folders.some(f => f.name === 'uploads');
-            if (!uploadsFolderExists) {
-                console.log("`uploads` folder not found at root. Creating it automatically.");
-                await createFolderAction('uploads/.placeholder');
-                refresh();
-            }
-        };
-        ensureUploadsFolder();
-    }, [isLoading, folders, currentPath, refresh]);
-
-
     const handleNavigate = (path: string) => {
         router.push(`${pathname}?path=${path}`);
     };
 
     const breadcrumbItems = useMemo(() => {
-        if (!currentPath) {
-            return [{ name: '根目錄', path: '' }];
-        }
         const segments = currentPath.split('/').filter(Boolean);
         const items = [{ name: '根目錄', path: '' }];
         let path = '';
-        segments.forEach(segment => {
+        for (const segment of segments) {
             path += `/${segment}`;
-            items.push({ name: segment, path: path });
-        });
-
+            items.push({ name: segment, path: path.substring(1) });
+        }
         return items;
     }, [currentPath]);
 
@@ -76,7 +57,8 @@ function CloudStorageViewInternal() {
         if (!itemToRename) return;
         
         const oldPath = itemToRename.path;
-        const newPath = `${oldPath.substring(0, oldPath.lastIndexOf('/'))}/${newName}`;
+        const directory = oldPath.substring(0, oldPath.lastIndexOf('/'));
+        const newPath = directory ? `${directory}/${newName}` : newName;
 
         const result = await renameItemAction(oldPath, newPath, itemToRename.type);
         if (result.success) {
