@@ -6,8 +6,6 @@
  * - 職責是渲染 ResetPasswordView 元件。
  */
 
-// import { ResetPasswordView } from '@/components/features/auth';
-
 export default function ResetPasswordPage() {
   // return <ResetPasswordView />;
   return <div>密碼重置頁面內容將在此處實現。</div>;
