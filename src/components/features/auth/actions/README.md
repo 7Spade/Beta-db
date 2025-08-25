@@ -10,6 +10,6 @@
 - 安全驗證
 
 ## 使用方式
-```tsx
+`
 import { login, register, logout } from './auth-actions';
-```
+`

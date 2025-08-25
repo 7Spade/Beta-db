@@ -27,10 +27,10 @@
  * - 安全的資料結構
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import type { User, UserProfile } from '@/lib/types/auth';
  * const user: User = { id, email, displayName };
- * ```
+ * `
  */
 
 // 用戶相關類型定義將在這裡

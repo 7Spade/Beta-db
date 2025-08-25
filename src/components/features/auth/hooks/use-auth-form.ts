@@ -32,9 +32,9 @@
  * - reset: 重置表單函數
  * 
  * 使用方式：
- * ```tsx
+ * `
  * const { form, handleSubmit, isSubmitting } = useAuthForm('login');
- * ```
+ * `
  */
 
 // useAuthForm Hook 實現將在這裡

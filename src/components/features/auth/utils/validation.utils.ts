@@ -35,10 +35,10 @@
  * - formatValidationResult: 格式化驗證結果
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import { validateEmail, validatePassword } from './validation.utils';
  * const isEmailValid = validateEmail(email);
- * ```
+ * `
  */
 
 // 認證驗證工具函數實現將在這裡

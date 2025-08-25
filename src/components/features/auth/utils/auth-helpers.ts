@@ -37,10 +37,10 @@
  * - 狀態管理
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import { isAuthenticated, hasPermission } from './auth-helpers';
  * if (isAuthenticated() && hasPermission('admin')) { ... }
- * ```
+ * `
  */
 
 // 認證輔助工具函數實現將在這裡

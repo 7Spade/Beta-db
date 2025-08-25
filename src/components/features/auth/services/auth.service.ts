@@ -27,10 +27,10 @@
  * - 安全設定介面
  * 
  * 使用方式：
- * ```tsx
+ * `
  * const authService = new AuthService();
  * await authService.login(email, password);
- * ```
+ * `
  */
 
 // 認證服務抽象層實現將在這裡

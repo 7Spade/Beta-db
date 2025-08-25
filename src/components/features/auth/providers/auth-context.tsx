@@ -27,9 +27,9 @@
  * - deleteAccount: 刪除帳號方法
  * 
  * 使用方式：
- * ```tsx
+ * `
  * const auth = useContext(AuthContext);
- * ```
+ * `
  */
 
 // 認證上下文定義將在這裡

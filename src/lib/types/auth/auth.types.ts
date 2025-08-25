@@ -29,10 +29,10 @@
  * - 易於擴展和維護
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import type { AuthState, LoginCredentials } from '@/lib/types/auth';
  * const credentials: LoginCredentials = { email, password };
- * ```
+ * `
  */
 
 // 認證相關類型定義將在這裡

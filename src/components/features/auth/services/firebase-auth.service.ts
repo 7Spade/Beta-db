@@ -28,10 +28,10 @@
  * - 重新認證
  * 
  * 使用方式：
- * ```tsx
+ * `
  * const firebaseAuth = new FirebaseAuthService();
  * await firebaseAuth.signInWithEmail(email, password);
- * ```
+ * `
  */
 
 // Firebase 認證服務實現將在這裡

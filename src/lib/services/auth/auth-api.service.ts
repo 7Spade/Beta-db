@@ -28,11 +28,11 @@
  * - GET /api/auth/session - 獲取會話
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import { AuthApiService } from '@/lib/services/auth';
  * const authApi = new AuthApiService();
  * await authApi.login(email, password);
- * ```
+ * `
  */
 
 // 認證 API 服務實現將在這裡

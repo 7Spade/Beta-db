@@ -32,12 +32,12 @@
  * - 會話狀態
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import { AuthCacheService } from '@/lib/services/auth';
  * const cacheService = new AuthCacheService();
  * await cacheService.setUser(user);
  * const user = await cacheService.getUser();
- * ```
+ * `
  */
 
 // 認證快取服務實現將在這裡

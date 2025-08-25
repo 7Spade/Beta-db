@@ -25,11 +25,11 @@
  * - 帳號管理方法
  * 
  * 使用方式：
- * ```tsx
+ * `
  * <AuthProvider>
  *   <YourApp />
  * </AuthProvider>
- * ```
+ * `
  */
 
 // 認證提供者組件實現將在這裡

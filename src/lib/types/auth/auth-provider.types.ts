@@ -35,10 +35,10 @@
  * - 易於擴展新提供者
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import type { SocialAuthProvider, OAuthProvider } from '@/lib/types/auth';
  * const provider: SocialAuthProvider = 'google';
- * ```
+ * `
  */
 
 // 認證提供者類型定義將在這裡

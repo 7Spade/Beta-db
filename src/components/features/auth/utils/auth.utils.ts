@@ -27,10 +27,10 @@
  * - generateAuthKey: 生成認證金鑰
  * 
  * 使用方式：
- * ```tsx
+ * `
  * import { formatUserData, validateAuthState } from './auth.utils';
  * const formattedUser = formatUserData(rawUser);
- * ```
+ * `
  */
 
 // 認證相關工具函數實現將在這裡

@@ -12,7 +12,7 @@ Auth 模組提供完整的用戶認證功能，整合 Firebase Authentication �
 - 📊 認證狀態管理
 
 ## 目錄結構
-```
+`
 auth/
 ├── actions/          # 認證操作邏輯
 ├── components/       # UI 組件
@@ -26,10 +26,10 @@ auth/
 ├── types/            # TypeScript 類型
 ├── utils/            # 工具函數
 └── views/            # 頁面視圖
-```
+`
 
 ## 使用方式
-```tsx
+`
 import { useAuth, AuthProvider } from '@/components/features/auth';
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
     </AuthProvider>
   );
 }
-```
+`
 
 ## 技術棧
 - Firebase Authentication

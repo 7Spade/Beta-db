@@ -28,9 +28,9 @@
  * - resetPassword: 重置密碼方法
  * 
  * 使用方式：
- * ```tsx
+ * `
  * const { user, login, logout } = useAuth();
- * ```
+ * `
  */
 
 // useAuth Hook 實現將在這裡

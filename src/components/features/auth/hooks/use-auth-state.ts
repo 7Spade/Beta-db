@@ -31,9 +31,9 @@
  * - isInitialized: 是否已初始化
  * 
  * 使用方式：
- * ```tsx
+ * `
  * const { user, loading, isAuthenticated } = useAuthState();
- * ```
+ * `
  */
 
 // useAuthState Hook 實現將在這裡
