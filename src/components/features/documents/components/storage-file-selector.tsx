@@ -2,42 +2,67 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, Suspense, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from '@/components/ui/breadcrumb';
-import { useStorageFiles } from '@/components/features/cloud-storage/hooks/use-storage-files';
+import { getStorageItemsAction } from '@/components/features/cloud-storage/actions/storage.actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Folder, File as FileIcon } from 'lucide-react';
 import { SUPPORTED_FILE_TYPES } from '../constants';
 import { cn } from '@/lib/utils';
+import type { StorageFile, StorageFolder } from '@/components/features/cloud-storage/types/storage.types';
 
 
 interface StorageFileSelectorDialogProps {
     isOpen: boolean;
     onOpenChange: (isOpen: boolean) => void;
-    onFileSelect: (storageUrl: string, fileName: string) => void;
+    onFileSelect: (storagePath: string, fileName: string) => void;
 }
 
-function FileBrowser({ onFileSelect }: { onFileSelect: (url: string, name: string) => void }) {
-    const searchParams = useSearchParams();
-    const [currentPath, setCurrentPath] = useState(searchParams.get('path') || '');
-    const { files, folders, isLoading, error } = useStorageFiles(currentPath);
+function FileBrowser({ onFileSelect }: { onFileSelect: (path: string, name: string) => void }) {
+    const [currentPath, setCurrentPath] = useState('');
+    const [files, setFiles] = useState<StorageFile[]>([]);
+    const [folders, setFolders] = useState<StorageFolder[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchItems = useCallback(async (path: string) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await getStorageItemsAction(path);
+            if (result.error) {
+                setError(result.error);
+            } else {
+                setFiles(result.files);
+                setFolders(result.folders);
+            }
+        } catch (e) {
+            setError('An unexpected error occurred.');
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchItems(currentPath);
+    }, [currentPath, fetchItems]);
+
 
     const handleNavigate = (path: string) => {
         setCurrentPath(path);
     };
 
     const breadcrumbItems = useMemo(() => {
-        if (!currentPath) return [{ name: '根目錄', path: '' }];
         const segments = currentPath.split('/').filter(Boolean);
         const items = [{ name: '根目錄', path: '' }];
         let path = '';
-        for (const segment of segments) {
-            path += `/${segment}`;
-            items.push({ name: segment, path: path });
-        }
+        segments.forEach((segment) => {
+            path += `${segment}/`;
+            items.push({ name: segment, path: path.slice(0, -1) });
+        });
         return items;
     }, [currentPath]);
 
