@@ -58,7 +58,8 @@ import {
     BookOpen,
     Calendar,
     UserCheck,
-    Activity
+    Activity,
+    Cloud,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -102,6 +103,12 @@ export const navigationConfig: NavigationItem[] = [
         label: '儀表板',
         icon: LayoutDashboard,
         href: '/dashboard'
+    },
+     {
+        id: 'cloud-storage',
+        label: '雲端儲存',
+        icon: Cloud,
+        href: '/cloud-storage'
     },
     {
         id: 'projects',

@@ -44,6 +44,9 @@
 │  │  │  layout.tsx
 │  │  │  README.md
 │  │  │
+│  │  ├─cloud-storage
+│  │  │      page.tsx
+│  │  │
 │  │  ├─contracts
 │  │  │  │  layout.tsx
 │  │  │  │  page.tsx
@@ -388,7 +391,7 @@
 │  │  │          staff-attendance-view.tsx
 │  │  │
 │  │  ├─settings
-│  │  │      settings-view.tsx
+│  │  │      page.tsx
 │  │  │
 │  │  └─team
 │  │      │  index.ts
