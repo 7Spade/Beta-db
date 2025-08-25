@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '../../../ui/badge';
 import type { WorkItem } from '../types';
+import { exportToCSV, exportToJSON } from '../utils';
 
 
 interface WorkItemsTableProps {
@@ -70,33 +71,6 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
       total: 0,
     };
     updateData([...data, newRow]);
-  };
-  
-  const exportToCSV = () => {
-    const headers = ['項次', '名稱', '數量', '單價', '總價'];
-    const csvContent = [
-      headers.join(','),
-      ...data.map(row => `"${row.id}","${row.name.replace(/"/g, '""')}",${row.quantity},${row.unitPrice},${row.total}`)
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'work-items.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const exportToJSON = () => {
-    const jsonContent = JSON.stringify(data.map(({total, ...rest}) => rest), null, 2);
-    const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'work-items.json';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
   
   const totalAmount = data.reduce((sum, item) => sum + (item.total || 0), 0);
@@ -202,11 +176,11 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
 
       <div className="flex justify-start items-center mt-6">
         <div className="flex gap-2">
-          <Button onClick={exportToCSV} variant="secondary">
+          <Button onClick={() => exportToCSV(data)} variant="secondary">
             <FileText className="mr-2 h-4 w-4" />
             匯出 CSV
           </Button>
-          <Button onClick={exportToJSON} variant="secondary">
+          <Button onClick={() => exportToJSON(data)} variant="secondary">
             <FileJson className="mr-2 h-4 w-4" />
             匯出 JSON
           </Button>
