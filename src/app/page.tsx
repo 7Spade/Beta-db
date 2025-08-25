@@ -1,23 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Wrench, ShieldCheck, Activity, FolderKanban } from 'lucide-react'
+import { Wrench, ShieldCheck, Activity } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="container mx-auto h-20 flex items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <FolderKanban className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold">Beta-db</span>
-        </div>
-        <nav className="flex items-center gap-4">
-          <Button asChild>
-            <Link href="/contact">諮詢方案</Link>
-          </Button>
-        </nav>
-      </header>
-
       <main className="flex-grow">
         <section className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
@@ -77,23 +65,6 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
-
-      <footer className="bg-muted py-8">
-        <div className="container mx-auto text-center text-muted-foreground text-sm space-y-4">
-           <div className="flex justify-center items-center flex-wrap gap-x-6 gap-y-2">
-                <Link href="/about" className="hover:text-primary">關於我們</Link>
-                <Link href="/blog" className="hover:text-primary">部落格</Link>
-                <Link href="/careers" className="hover:text-primary">企業徵才</Link>
-                <Link href="/contact" className="hover:text-primary">聯絡我們</Link>
-                <Link href="/privacy-policy" className="hover:text-primary">隱私權政策</Link>
-                <Link href="/terms-of-service" className="hover:text-primary">服務條款</Link>
-           </div>
-           <div>
-            <Link href="/login" className="hover:text-primary text-xs">內部員工登入</Link>
-           </div>
-           <p>&copy; {new Date().getFullYear()} Beta-db. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   )
 }
