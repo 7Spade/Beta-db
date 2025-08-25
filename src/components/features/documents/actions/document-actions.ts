@@ -13,8 +13,8 @@
 
 import { docToWorkItems, type DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
 import { z } from 'zod';
-import type { DocumentActionState, DocumentValidationState } from './types';
-import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants/file-constants';
+import type { DocumentActionState, DocumentValidationState } from '../types';
+import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants';
 
 // 使用 Zod 定義 Server Action 的輸入驗證 Schema
 const actionInputSchema = z.object({

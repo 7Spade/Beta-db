@@ -4,4 +4,3 @@
  */
 
 export * from './document-actions';
-export * from './types';
