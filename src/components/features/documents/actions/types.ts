@@ -2,11 +2,11 @@
  * @fileoverview Documents Server Actions 相關類型定義
  */
 
-import type { ExtractWorkItemsOutput } from '@/ai/flows/extract-work-items-flow';
+import type { DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
 
 // 文件處理狀態
 export interface DocumentActionState {
-  data?: ExtractWorkItemsOutput;
+  data?: DocToWorkItemsOutput;
   error?: string;
   fileName?: string;
 }
@@ -31,7 +31,7 @@ export interface DocumentUploadInput {
 // 文件處理結果
 export interface DocumentProcessingResult {
   success: boolean;
-  data?: ExtractWorkItemsOutput;
+  data?: DocToWorkItemsOutput;
   error?: string;
   fileName?: string;
   processingTime?: number;

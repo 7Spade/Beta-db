@@ -12,10 +12,10 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import type { ExtractWorkItemsOutput } from '@/ai/flows/extract-work-items-flow';
+import type { DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
 import { Badge } from '../../ui/badge';
 
-export type WorkItem = ExtractWorkItemsOutput['workItems'][0];
+export type WorkItem = DocToWorkItemsOutput['workItems'][0];
 
 interface WorkItemsTableProps {
   initialData: WorkItem[];

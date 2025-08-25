@@ -1,6 +1,6 @@
 "use server";
 
-import { extractWorkItems, type ExtractWorkItemsOutput } from '@/ai/flows/extract-work-items-flow';
+import { docToWorkItems, type DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
 import { z } from 'zod';
 import type { DocumentActionState, DocumentValidationState } from './types';
 import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants/file-constants';
@@ -37,7 +37,7 @@ export async function extractDataFromDocument(
     }
 
     // 調用 AI 流程提取工作項目
-    const result = await extractWorkItems(validatedInput.data);
+    const result = await docToWorkItems(validatedInput.data);
     
     if (!result || !result.workItems) {
         return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
