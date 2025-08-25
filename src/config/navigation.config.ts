@@ -60,6 +60,7 @@ import {
     UserCheck,
     Activity,
     Cloud,
+    Shield,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -197,6 +198,26 @@ export const navigationConfig: NavigationItem[] = [
         icon: Cloud,
         href: '/cloud-storage'
     },
+    {
+        id: 'admin',
+        label: '後台管理',
+        icon: Shield,
+        href: '/admin/dashboard',
+        children: [
+            {
+                id: 'admin-dashboard',
+                label: '總覽',
+                icon: LayoutDashboard,
+                href: '/admin/dashboard'
+            },
+            {
+                id: 'admin-blog',
+                label: '文章管理',
+                icon: BookOpen,
+                href: '/admin/blog/posts'
+            }
+        ]
+    }
 ]
 
 export const footerNavigationConfig: NavigationItem[] = [
@@ -239,6 +260,9 @@ export function shouldExpandSection(sectionId: string, currentPath: string): boo
 export function isPathActive(itemPath: string, currentPath: string): boolean {
     if (itemPath === '/partnerverse') {
         return currentPath.startsWith('/partnerverse');
+    }
+    if (itemPath.startsWith('/admin')) {
+        return currentPath.startsWith('/admin');
     }
     return currentPath === itemPath || currentPath.startsWith(itemPath + '/')
 }
