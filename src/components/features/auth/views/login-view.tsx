@@ -7,15 +7,26 @@
  * - 未來可在此處加入社交登入按鈕等其他 UI 元素。
  */
 import { LoginForm } from '../components';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
+
 
 export function LoginView() {
   return (
-    <div className="w-full max-w-sm">
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold">登入</h1>
-        <p className="text-muted-foreground">輸入您的憑證以存取您的帳號。</p>
-      </div>
-      <LoginForm />
-    </div>
+    <Card className="w-full max-w-sm">
+      <CardHeader className="text-center">
+        <CardTitle className="text-2xl">登入</CardTitle>
+        <CardDescription>輸入您的憑證以存取您的帳號。</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <LoginForm />
+        <div className="mt-4 text-center text-sm">
+          還沒有帳號？{" "}
+          <Link href="/register" className="underline">
+            註冊
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
