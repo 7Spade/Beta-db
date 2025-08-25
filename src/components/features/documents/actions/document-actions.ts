@@ -53,7 +53,7 @@ export async function extractDataFromDocument(
     }
 
     // 步驟 3: 調用 Genkit AI 流程以提取工作項目
-    const result = await docToWorkItems(validatedInput.data);
+    const result = await docToWorkItems({ documentDataUri });
     
     if (!result || !result.workItems) {
         return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
