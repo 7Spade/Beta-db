@@ -1,16 +1,11 @@
 /**
- * Auth Module - 認證模組主入口
- *
- * 功能說明：
- * - 統一導出所有認證相關的組件、hooks、服務和工具
- * - 提供模組化的認證功能整合
+ * @fileoverview 身份驗證模組主入口
+ * @description 統一導出 Auth 模組的所有公開接口，包括視圖、元件、Hooks 和類型。
  */
-
-// 導出所有認證相關功能
-export * from './actions/auth-actions';
+export * from './views';
 export * from './components';
 export * from './forms';
 export * from './hooks';
 export * from './providers';
+export * from './actions';
 export * from './types';
-export * from './views';

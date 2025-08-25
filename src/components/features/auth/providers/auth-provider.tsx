@@ -1,9 +1,16 @@
 /**
- * Auth Provider - 認證提供者組件
- * 
- * 功能說明：
- * - 提供認證狀態和方法的 Context Provider
- * - 整合 Firebase Auth 和自定義認證邏輯
+ * @fileoverview 身份驗證 Context Provider
+ * @description 提供一個全局的 Context，讓應用程式的任何地方都能存取用戶認證狀態。
  */
+'use client';
 
-// 認證提供者組件實現將在這裡
+import React from 'react';
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  // 這裡將會使用 useAuthState 並將狀態透過 Context 提供出去
+  return (
+    <>
+      {children}
+    </>
+  );
+}

@@ -1,11 +1,5 @@
 /**
- * Auth Actions - 認證操作核心邏輯
- * 
- * 功能說明：
- * - 實現所有認證相關的業務邏輯
- * - 整合 Firebase Auth SDK 操作
- * - 處理認證狀態變更和錯誤處理
- * - 支援多種登入方式
+ * @fileoverview 身份驗證相關的 Server Actions
+ * @description 處理如登入、註冊、登出等後端邏輯。
  */
-
-// 認證操作實現將在這裡
+'use server';
