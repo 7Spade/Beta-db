@@ -10,7 +10,7 @@ export default function LandingPage() {
       <header className="container mx-auto h-20 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <FolderKanban className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold">Constructo</span>
+          <span className="text-xl font-bold">Beta-db</span>
         </div>
         <nav className="flex items-center gap-4">
           <Button variant="ghost" asChild>
@@ -28,7 +28,7 @@ export default function LandingPage() {
             為營造業打造的次世代管理平台
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-            從專案規劃、合約管理到團隊協作，Constructo 將所有流程整合在一個強大且直觀的平台中。
+            從專案規劃、合約管理到團隊協作，Beta-db 將所有流程整合在一個強大且直觀的平台中。
           </p>
           <div className="mt-8">
             <Button size="lg" asChild>
@@ -83,7 +83,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="container mx-auto py-6 text-center text-muted-foreground text-sm">
-        <p>&copy; {new Date().getFullYear()} Constructo. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Beta-db. All rights reserved.</p>
       </footer>
     </div>
   )

@@ -10,7 +10,7 @@ import { z } from 'zod';
 /**
  * 登入表單的驗證 schema。
  * - email: 必須是有效的電子郵件格式。
- * - password: 至少需要 8 個字元。
+ * - password: 至少需要 1 個字元。
  */
 export const loginSchema = z.object({
   email: z.string().email({

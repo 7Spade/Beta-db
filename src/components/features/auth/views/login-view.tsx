@@ -7,9 +7,14 @@
  * - 未來可在此處加入社交登入按鈕等其他 UI 元素。
  */
 import { LoginForm } from '../components';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import Link from 'next/link';
-
 
 export function LoginView() {
   return (
