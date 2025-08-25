@@ -30,9 +30,9 @@ import type { Partner } from "@/lib/types";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { extractDataFromDocument } from "@/components/features/documents";
+import { extractDataFromDocument, WorkItem } from "@/components/features/documents";
 import { createProjectAndContractFromDocument } from "@/components/features/contracts";
-import { WorkItemsTable, type WorkItem } from "@/components/features/documents/tables/work-items-table";
+import { WorkItemsTable } from "../tables";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";

@@ -15,7 +15,7 @@
 export * from './views/documents-view';
 
 // 可重用表格元件
-export * from './tables/work-items-table';
+export * from './tables';
 
 // Server Actions
 export * from './actions/document-actions';
