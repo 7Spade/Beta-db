@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useMemo, Suspense, useEffect } from 'react';
+import { useState, useMemo, Suspense, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -12,13 +12,13 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { FolderPlus } from 'lucide-react';
 
-import { useStorageFiles } from '../hooks/use-storage-files';
 import { FileBrowser } from '../components/file-browser';
 import { UploadButton } from '../components/upload-button';
 import { RenameDialog } from '../components/rename-dialog';
 import { CreateFolderDialog } from '../components/create-folder-dialog';
-import { deleteFileAction, deleteFolderAction, renameItemAction, createFolderAction } from '../actions/storage.actions';
+import { deleteFileAction, deleteFolderAction, renameItemAction, createFolderAction, getStorageItemsAction } from '../actions/storage.actions';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { StorageFile, StorageFolder } from '../types/storage.types';
 
 function CloudStorageViewInternal() {
     const searchParams = useSearchParams();
@@ -26,8 +26,30 @@ function CloudStorageViewInternal() {
     const pathname = usePathname();
     const { toast } = useToast();
 
+    const [files, setFiles] = useState<StorageFile[]>([]);
+    const [folders, setFolders] = useState<StorageFolder[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const currentPath = useMemo(() => searchParams.get('path') || '', [searchParams]);
-    const { files, folders, isLoading, error, refresh } = useStorageFiles(currentPath);
+
+    const fetchItems = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        const result = await getStorageItemsAction(currentPath);
+        if (result.error) {
+            setError(result.error);
+            toast({ variant: 'destructive', title: '錯誤', description: result.error });
+        } else {
+            setFiles(result.files);
+            setFolders(result.folders);
+        }
+        setIsLoading(false);
+    }, [currentPath, toast]);
+
+    useEffect(() => {
+        fetchItems();
+    }, [fetchItems]);
     
     // State for dialogs
     const [isRenameOpen, setRenameOpen] = useState(false);
@@ -44,11 +66,12 @@ function CloudStorageViewInternal() {
         const items = [{ name: '根目錄', path: '' }];
         let path = '';
         for (const segment of segments) {
-            path += `/${segment}`;
-            items.push({ name: segment, path: path });
+            path += `${segment}/`;
+            items.push({ name: segment, path: path.slice(0, -1) });
         }
         return items;
     }, [currentPath]);
+
 
     const handleRename = (path: string, currentName: string, type: 'file' | 'folder') => {
         setItemToRename({ path, name: currentName, type });
@@ -65,7 +88,7 @@ function CloudStorageViewInternal() {
         const result = await renameItemAction(oldPath, newPath, itemToRename.type);
         if (result.success) {
             toast({ title: '成功', description: '重新命名成功。' });
-            refresh();
+            fetchItems();
         } else {
             toast({ variant: 'destructive', title: '錯誤', description: result.error });
         }
@@ -84,7 +107,7 @@ function CloudStorageViewInternal() {
         
         if(result.success) {
             toast({ title: '成功', description: `${itemToDelete.type === 'file' ? '檔案' : '資料夾'}已刪除。` });
-            refresh();
+            fetchItems();
         } else {
              toast({ variant: 'destructive', title: '錯誤', description: result.error });
         }
@@ -98,7 +121,7 @@ function CloudStorageViewInternal() {
         const result = await createFolderAction(`${newFolderPath}/.placeholder`);
         if (result.success) {
             toast({ title: '成功', description: `資料夾 "${folderName}" 已建立。` });
-            refresh();
+            fetchItems();
         } else {
             toast({ variant: 'destructive', title: '錯誤', description: result.error });
         }
@@ -117,7 +140,7 @@ function CloudStorageViewInternal() {
                 <FolderPlus className="mr-2 h-4 w-4" />
                 新增資料夾
             </Button>
-            <UploadButton onUploadComplete={refresh} currentPath={currentPath} />
+            <UploadButton onUploadComplete={fetchItems} currentPath={currentPath} />
           </div>
         </div>
 
@@ -157,7 +180,7 @@ function CloudStorageViewInternal() {
                 onDeleteFile={(path) => handleDelete(path, 'file')}
                 onDeleteFolder={(path) => handleDelete(path, 'folder')}
                 onRename={handleRename}
-                refresh={refresh}
+                refresh={fetchItems}
               />
           </CardContent>
         </Card>

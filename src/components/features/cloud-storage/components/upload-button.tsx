@@ -4,9 +4,8 @@
 import { useState, useRef, type FC } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { storage } from '@/lib/firebase-client';
-import { ref, uploadBytes } from 'firebase/storage';
 import { Upload, Loader2 } from 'lucide-react';
+import { uploadFileAction } from '../actions/storage.actions';
 
 interface UploadButtonProps {
     onUploadComplete: () => void;
@@ -23,16 +22,24 @@ export const UploadButton: FC<UploadButtonProps> = ({ onUploadComplete, currentP
         if (!file) return;
 
         setIsUploading(true);
-        try {
-            const storageRef = ref(storage, `${currentPath}/${file.name}`);
-            await uploadBytes(storageRef, file);
-            toast({ title: '成功', description: `檔案 "${file.name}" 已上傳。` });
-            onUploadComplete();
-        } catch (error) {
-            console.error('上傳失敗:', error);
-            toast({ variant: 'destructive', title: '錯誤', description: '檔案上傳失敗。' });
-        } finally {
-            setIsUploading(false);
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('currentPath', currentPath);
+
+        const result = await uploadFileAction(formData);
+        
+        if (result.success) {
+             toast({ title: '成功', description: `檔案 "${file.name}" 已上傳。` });
+             onUploadComplete();
+        } else {
+            console.error('上傳失敗:', result.error);
+            toast({ variant: 'destructive', title: '錯誤', description: result.error || '檔案上傳失敗。' });
+        }
+       
+        setIsUploading(false);
+        // Reset file input
+        if(fileInputRef.current) {
+            fileInputRef.current.value = '';
         }
     };
 
