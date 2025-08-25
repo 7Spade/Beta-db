@@ -23,42 +23,32 @@ interface ListItemsResult {
 export async function getStorageItemsAction(directoryPath: string): Promise<ListItemsResult> {
     try {
         const bucket = adminStorage.bucket();
-        const [files] = await bucket.getFiles({ prefix: directoryPath ? `${directoryPath}/` : '', delimiter: '/' });
-
-        const filePromises = files.filter(file => !file.name.endsWith('/') && !file.name.endsWith('/.placeholder')).map(async (file) => {
-            const [metadata] = await file.getMetadata();
-            // 在此我們不生成下載 URL，因為前端目前不需要直接下載
-            return {
-                name: file.name.split('/').pop() || '',
-                url: '', // URL is not needed for display/management
-                fullPath: file.name,
-                size: parseInt(metadata.size as string, 10),
-                contentType: metadata.contentType || 'application/octet-stream',
-                createdAt: metadata.timeCreated,
-            };
+        const [files, , apiResponse] = await bucket.getFiles({ 
+            prefix: directoryPath ? `${directoryPath}/` : '', 
+            delimiter: '/' 
         });
-        
-        const folders: StorageFolder[] = [];
-        if (files.length > 0 && (files[0] as any).constructor.name === 'File') {
-             const prefixes = (files as any).reduce((acc: Set<string>, file: any) => {
-                const parts = file.name.substring(directoryPath ? directoryPath.length + 1 : 0).split('/');
-                if (parts.length > 1) {
-                    acc.add(parts[0]);
-                }
-                return acc;
-            }, new Set<string>());
 
-            (files as any).forEach((f: any) => {
-                if(f.metadata && f.metadata.prefixes) {
-                    f.metadata.prefixes.forEach((p: string) => {
-                        folders.push({
-                            name: p.split('/').filter(Boolean).pop() || '',
-                            fullPath: p,
-                        })
-                    })
-                }
-            })
-        }
+        const filePromises = files
+            .filter(file => !file.name.endsWith('/') && !file.name.endsWith('/.placeholder'))
+            .map(async (file) => {
+                const [metadata] = await file.getMetadata();
+                // 為了安全性，我們不在這裡生成公開的 URL。
+                // 如果前端需要顯示圖片，應考慮使用安全的、有時效的 Signed URL。
+                // 目前暫時留空，因為列表視圖只需要檔案元數據。
+                return {
+                    name: file.name.split('/').pop() || '',
+                    url: '', 
+                    fullPath: file.name,
+                    size: parseInt(metadata.size as string, 10),
+                    contentType: metadata.contentType || 'application/octet-stream',
+                    createdAt: metadata.timeCreated,
+                };
+            });
+        
+        const folders: StorageFolder[] = (apiResponse?.prefixes || []).map((prefix: string) => ({
+            name: prefix.split('/').filter(Boolean).pop() || '',
+            fullPath: prefix,
+        }));
         
         const resolvedFiles = await Promise.all(filePromises);
         
