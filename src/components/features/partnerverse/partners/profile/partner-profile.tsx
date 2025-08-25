@@ -1,18 +1,27 @@
+
 'use client';
 
-import { type FC } from 'react';
-import type { Partner, Contact } from '@/lib/types';
+import { useState, type FC, useEffect } from 'react';
+import Image from 'next/image';
+import type { Partner, Contact, Contract } from '@/lib/types';
 import type { Role } from '@/lib/roles';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, DollarSign, Star, ShieldCheck, Briefcase, ArrowLeft, ArrowLeftRight } from 'lucide-react';
-import { OverviewTab } from '@/components/features/partnerverse/overview/overview-tab';
-import { ContactsTab } from '@/components/features/partnerverse/contacts/contacts-tab';
-import { FinancialsTab } from '@/components/features/partnerverse/financials/financials-tab';
-import { PerformanceTab } from '@/components/features/partnerverse/performance/performance-tab';
-import { ComplianceTab } from '@/components/features/partnerverse/compliance/compliance-tab';
-import { ContractsTab } from '@/components/features/partnerverse/contracts/contracts-tab';
-import { TransactionsTab } from '@/components/features/partnerverse/transactions/transactions-tab';
+import { Globe, Edit, Users, DollarSign, Calendar, Star, FileText, ShieldCheck, FileWarning, FileX, Briefcase, Plus, Trash2, ArrowLeft, ExternalLink, Loader2, ArrowLeftRight } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { firestore } from '@/lib/firebase-client';
+import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { formatDate } from '@/lib/utils';
+import Link from 'next/link';
+import { OverviewTab } from '../overview/overview-tab';
+import { ContactsTab } from '../contacts/contacts-tab';
+import { FinancialsTab } from '../financials/financials-tab';
+import { PerformanceTab } from '../performance/performance-tab';
+import { ComplianceTab } from '../compliance/compliance-tab';
+import { ContractsTab } from '../contracts/contracts-tab';
+import { TransactionsTab } from '../transactions/transactions-tab';
 import { ProfileHeader } from './profile-header';
 
 

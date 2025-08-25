@@ -2,7 +2,7 @@
 /**
  * @fileoverview Firebase Admin SDK Initialization
  * @description This file initializes the Firebase Admin SDK for server-side operations.
- * It should only be imported in server-side code (e.g., Server Actions, API routes, Genkit flows).
+ * It should only be imported in server-side code (e.g., Server Actions, Genkit flows).
  */
 
 import admin from 'firebase-admin';

@@ -20,12 +20,11 @@
 
 "use client";
 
-import { useActionState, useTransition } from "react";
-import { useEffect, useState, useMemo } from "react";
+import { useActionState, useState, useMemo, useEffect } from "react";
 import { File, Loader2, Cpu, FileCog, FolderSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
-import { firestore } from "@/lib/firebase";
+import { firestore } from "@/lib/firebase-client";
 import type { Partner } from "@/lib/types";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,8 +46,7 @@ const initialState = {
 };
 
 export function DocumentsView() {
-  const [state, formAction] = useActionState(extractWorkItemsFromDocument, initialState);
-  const [isPending, startTransition] = useTransition();
+  const [state, formAction, isPending] = useActionState(extractWorkItemsFromDocument, initialState);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -99,10 +97,10 @@ export function DocumentsView() {
     }
     if (extractedData) {
         setWorkItems(extractedData.workItems);
-        const fileNameWithoutExt = extractedData.fileName?.replace(/\.[^/.]+$/, "") || "";
+        // When AI data comes back, it becomes the source of truth for the doc details
         setDocDetails({
             customId: `DOC-${Date.now()}`,
-            name: fileNameWithoutExt,
+            name: extractedData.fileName?.replace(/\.[^/.]+$/, "") || "",
             client: '',
             clientRepresentative: '',
         });
@@ -154,14 +152,13 @@ export function DocumentsView() {
   }
 
   const handleFileSelect = (filePath: string, fileName: string) => {
-    startTransition(() => {
-        formAction({ filePath, fileName });
-    });
-    // Immediately reset the details for better UX
+    // Immediately reset details for better UX while AI is processing
     setDocDetails({
         customId: '', name: fileName.replace(/\.[^/.]+$/, ""), client: '', clientRepresentative: ''
     });
     setWorkItems([]);
+    
+    formAction({ filePath, fileName });
     setIsSelectorOpen(false);
   }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { firestore } from '@/lib/firebase';
+import { firestore } from '@/lib/firebase-client';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import type { KnowledgeBaseEntry } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
