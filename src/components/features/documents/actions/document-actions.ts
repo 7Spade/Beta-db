@@ -31,6 +31,7 @@ export async function extractWorkItemsFromDocument(
   formData: FormData
 ): Promise<DocumentActionState> {
   const file = formData.get('file') as File | null;
+  const promptType = formData.get('promptType') as string || 'default';
   
   if (!file || file.size === 0) {
     return { error: '請選擇要上傳的檔案。' };
@@ -43,7 +44,7 @@ export async function extractWorkItemsFromDocument(
     const storageUrl = await getDownloadURL(uploadResult.ref);
 
     // 步驟 2: 調用 Genkit AI 流程以提取工作項目
-    const result = await extractWorkItems({ storageUrl });
+    const result = await extractWorkItems({ storageUrl, promptType });
     
     if (!result || !result.workItems) {
         return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
@@ -54,6 +55,7 @@ export async function extractWorkItemsFromDocument(
       data: result, 
       fileName: file.name, 
       totalTokens: result.totalTokens,
+      promptType: promptType,
     };
   } catch (e) {
     console.error('文件處理錯誤:', e);

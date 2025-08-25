@@ -3,7 +3,7 @@
 │  │  genkit.ts
 │  │
 │  └─flows
-│          doc-to-work-items-flow.ts
+│          extract-work-items-flow.ts
 │          generate-knowledge-entry-flow.ts
 │          generate-skill-flow.ts
 │          generate-subtasks-flow.ts
