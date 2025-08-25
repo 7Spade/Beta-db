@@ -40,15 +40,14 @@ function CloudStorageViewInternal() {
     const breadcrumbItems = useMemo(() => {
         const segments = currentPath.split('/').filter(Boolean);
         const items = [{ name: '根目錄', path: 'uploads' }];
-        let path = '';
-        segments.forEach((segment, index) => {
-            if (index > 0) {
-                 path += `/${segment}`;
-            } else {
-                 path = segment;
-            }
+        let path = 'uploads'; // Start with the base path
+
+        // Start from the second segment, as the first is always 'uploads' (our root)
+        segments.slice(1).forEach(segment => {
+            path += `/${segment}`;
             items.push({ name: segment, path: path });
         });
+
         return items;
     }, [currentPath]);
 
@@ -197,4 +196,3 @@ export function CloudStorageView() {
         </Suspense>
     );
 }
-
