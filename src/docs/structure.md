@@ -193,6 +193,19 @@
 │  │  │          profile-view.tsx
 │  │  │          register-view.tsx
 │  │  │
+│  │  ├─cloud-storage
+│  │  │  ├─actions
+│  │  │  │      storage.actions.ts
+│  │  │  ├─components
+│  │  │  │      file-browser.tsx
+│  │  │  │      upload-button.tsx
+│  │  │  ├─hooks
+│  │  │  │      use-storage-files.ts
+│  │  │  ├─types
+│  │  │  │      storage.types.ts
+│  │  │  └─views
+│  │  │          cloud-storage-view.tsx
+│  │  │
 │  │  ├─contracts
 │  │  │  │  index.ts
 │  │  │  │  README.md
