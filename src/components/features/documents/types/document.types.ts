@@ -18,11 +18,10 @@ export type WorkItem = ExtractWorkItemsOutput['workItems'][0] & {
  * 文件處理 Server Action 的狀態，由 useActionState 管理。
  */
 export interface DocumentActionState {
-  data?: ExtractWorkItemsOutput;
+  data?: ExtractWorkItemsOutput & { fileName?: string }; // fileName is nested here now
   error?: string;
-  fileName?: string;
+  fileName?: string; // Kept for backward compatibility if needed, but data.fileName is preferred
   totalTokens?: number;
-  promptType?: string; // 新增，用於保存使用的提示類型
 }
 
 /**

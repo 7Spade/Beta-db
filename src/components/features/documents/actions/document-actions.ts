@@ -12,34 +12,29 @@
 
 import { extractWorkItems } from '@/ai/flows/extract-work-items-flow';
 import type { DocumentActionState } from '../types';
-import { storage } from '@/lib/firebase';
-import { ref } from 'firebase/storage';
 
 /**
  * Server Action: 從文件提取工作項目數據
- * 此函數接收來自前端的 FormData，使用文件的 Storage URL 呼叫 AI 流程來解析文件內容，
+ * 此函數接收來自前端的檔案路徑，呼叫 AI 流程來解析文件內容，
  * 最後返回解析結果或錯誤訊息。
  * @param prevState - 上一個 Action 的狀態，由 useActionState Hook 管理。
- * @param formData - 從前端表單提交的數據。
+ * @param payload - 包含檔案路徑和名稱的物件。
  * @returns {Promise<DocumentActionState>} - 返回一個包含解析數據、檔名或錯誤訊息的狀態物件。
  */
 export async function extractWorkItemsFromDocument(
   prevState: DocumentActionState,
-  formData: FormData
+  payload: { filePath: string | null, fileName: string | null }
 ): Promise<DocumentActionState> {
-  const filePath = formData.get('filePath') as string | null;
-  const fileName = formData.get('fileName') as string | null;
+  const { filePath, fileName } = payload;
   
   if (!filePath || !fileName) {
     return { error: '未提供有效的檔案路徑。' };
   }
 
   try {
-    const storageRef = ref(storage, filePath);
-    const gsPath = `gs://${storageRef.bucket}/${storageRef.fullPath}`;
-
     // 步驟 1: 調用 Genkit AI 流程以提取工作項目
-    const result = await extractWorkItems({ storageUrl: gsPath });
+    // 我們現在傳遞的是相對路徑，而不是完整的 gs:// 路徑或 URL
+    const result = await extractWorkItems({ storagePath: filePath });
     
     if (!result || !result.workItems) {
         return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
@@ -47,13 +42,16 @@ export async function extractWorkItemsFromDocument(
 
     // 步驟 2: 返回成功的結果
     return { 
-      data: result, 
-      fileName: fileName, 
+      data: {
+        ...result,
+        fileName: fileName,
+      },
+      fileName: fileName, // keep this for backward compatibility in view if needed
       totalTokens: result.totalTokens,
     };
   } catch (e) {
     console.error('文件處理錯誤:', e);
     const errorMessage = e instanceof Error ? e.message : '發生未知錯誤。';
-    return { error: `處理文件失敗。請確認檔案未損壞並再試一次。` };
+    return { error: `處理文件失敗: ${errorMessage}` };
   }
 }

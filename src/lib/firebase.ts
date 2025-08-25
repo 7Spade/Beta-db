@@ -1,16 +1,17 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApp, getApps } from "firebase/app";
+import { initializeApp, getApp, getApps, type FirebaseOptions } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { getAnalytics, isSupported } from "firebase/analytics";
+import admin from 'firebase-admin';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+export const firebaseConfig = {
   "projectId": "elite-chiller-455712-c4",
   "appId": "1:7807661688:web:cbf779797bd21f5a1d1f8d",
   "storageBucket": "elite-chiller-455712-c4.firebasestorage.app",
@@ -20,7 +21,7 @@ const firebaseConfig = {
   "messagingSenderId": "7807661688"
 };
 
-// Initialize Firebase
+// Initialize Firebase for the client
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
@@ -28,7 +29,16 @@ const auth = getAuth(app);
 const functions = getFunctions(app);
 
 // Initialize Analytics only if it's supported
-const analytics = isSupported().then(yes => yes ? getAnalytics(app) : null);
+const analytics = typeof window !== 'undefined' ? isSupported().then(yes => yes ? getAnalytics(app) : null) : Promise.resolve(null);
+
+
+// Initialize Firebase Admin SDK for the server
+if (typeof process !== 'undefined' && !admin.apps.length) {
+    admin.initializeApp({
+        storageBucket: firebaseConfig.storageBucket
+    });
+}
+const adminStorage = typeof process !== 'undefined' ? admin.storage() : null;
 
 
 // Initialize App Check on the client only
@@ -48,4 +58,4 @@ if (typeof window !== "undefined") {
     });
 }
 
-export { app, firestore, storage, auth, functions, analytics };
+export { app, firestore, storage, auth, functions, analytics, adminStorage };

@@ -20,7 +20,7 @@
 
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
 import { useEffect, useState, useMemo } from "react";
 import { File, Loader2, Cpu, FileCog, FolderSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -44,12 +44,11 @@ import { StorageFileSelectorDialog } from "../components/storage-file-selector";
 const initialState = {
   data: undefined,
   error: undefined,
-  fileName: undefined,
-  totalTokens: undefined,
 };
 
 export function DocumentsView() {
-  const [state, formAction, isPending] = useActionState(extractWorkItemsFromDocument, initialState);
+  const [state, formAction] = useActionState(extractWorkItemsFromDocument, initialState);
+  const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -65,6 +64,9 @@ export function DocumentsView() {
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+
+  // Memoized values from state
+  const extractedData = useMemo(() => state.data, [state.data]);
 
 
   useEffect(() => {
@@ -95,9 +97,9 @@ export function DocumentsView() {
         description: state.error,
       });
     }
-    if (state.data) {
-        setWorkItems(state.data.workItems);
-        const fileNameWithoutExt = state.fileName?.replace(/\.[^/.]+$/, "") || "";
+    if (extractedData) {
+        setWorkItems(extractedData.workItems);
+        const fileNameWithoutExt = extractedData.fileName?.replace(/\.[^/.]+$/, "") || "";
         setDocDetails({
             customId: `DOC-${Date.now()}`,
             name: fileNameWithoutExt,
@@ -106,7 +108,7 @@ export function DocumentsView() {
         });
         setSelectedPartnerId('');
     }
-  }, [state, toast]);
+  }, [state.error, extractedData, toast]);
 
   const handleDetailChange = (key: keyof DocDetails, value: string) => {
       setDocDetails(prev => ({...prev, [key]: value}));
@@ -118,7 +120,7 @@ export function DocumentsView() {
     setDocDetails(prev => ({
         ...prev,
         client: partner?.name || '',
-        clientRepresentative: '',
+        clientRepresentative: partner?.contacts?.[0]?.name || '',
     }));
   };
 
@@ -152,10 +154,14 @@ export function DocumentsView() {
   }
 
   const handleFileSelect = (filePath: string, fileName: string) => {
-    const formData = new FormData();
-    formData.append('filePath', filePath);
-    formData.append('fileName', fileName);
-    formAction(formData);
+    startTransition(() => {
+        formAction({ filePath, fileName });
+    });
+    // Immediately reset the details for better UX
+    setDocDetails({
+        customId: '', name: fileName.replace(/\.[^/.]+$/, ""), client: '', clientRepresentative: ''
+    });
+    setWorkItems([]);
     setIsSelectorOpen(false);
   }
 
@@ -191,29 +197,29 @@ export function DocumentsView() {
         </div>
       )}
 
-      {state.data && !isPending && (
+      {extractedData && !isPending && (
         <div className="mt-8">
-          <Card className="shadow-2xl bg-card">
+          <Card className="shadow-2xl bg-card" key={extractedData.fileName}>
             <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
                       <CardTitle className="text-2xl">提取的工作項目</CardTitle>
                       <CardDescription className="flex items-center gap-2 pt-2">
                       <File className="w-4 h-4" />
-                      {state.fileName}
+                      {extractedData.fileName}
                       </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
-                    {state.data.workItems.length > 0 && (
+                    {extractedData.workItems.length > 0 && (
                       <Badge variant="secondary" className="flex items-center gap-2">
                           <Cpu className="w-4 h-4" />
-                          <span>共提取 {state.data.workItems.length} 個項目</span>
+                          <span>共提取 {extractedData.workItems.length} 個項目</span>
                       </Badge>
                     )}
-                     {state.totalTokens && (
+                     {extractedData.totalTokens && (
                       <Badge variant="outline" className="flex items-center gap-2">
                           <Cpu className="w-4 h-4" />
-                          <span>消耗 {state.totalTokens} tokens</span>
+                          <span>消耗 {extractedData.totalTokens} tokens</span>
                       </Badge>
                     )}
                   </div>

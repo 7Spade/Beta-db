@@ -15,13 +15,14 @@ import {ai} from '@/ai/genkit';
 import { logAiTokenUsage } from '@/services/logging.service';
 import {z} from 'genkit';
 import { media } from 'genkit/ai';
+import { adminStorage } from '@/lib/firebase';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({
-  storageUrl: z
+  storagePath: z
     .string()
     .describe(
-      "一份文件（合約、報價單或估價單）在 Firebase Storage 中的 URL。"
+      "一份文件（合約、報價單或估價單）在 Firebase Storage 中的路徑 (e.g., 'uploads/document.pdf')。"
     ),
 });
 export type ExtractWorkItemsInput = z.infer<typeof ExtractWorkItemsInputSchema>;
@@ -58,7 +59,7 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
 // 定義 Genkit Prompt
 const extractWorkItemsPrompt = ai.definePrompt({
   name: 'extractWorkItemsPrompt', // Prompt 的唯一名稱
-  input: {schema: ExtractWorkItemsInputSchema}, // 輸入 Schema
+  input: {schema: z.object({ signedUrl: z.string() })}, // 輸入改為接收簽署後的 URL
   output: {schema: ExtractWorkItemsOutputSchema.omit({ totalTokens: true })}, // 輸出 Schema，讓 AI 知道要以何種格式回應
   // 提示語模板 (使用 Handlebars 語法)
   prompt: `You are an expert AI assistant specialized in parsing construction and engineering documents like contracts, quotes, and estimates to extract a bill of materials or work items.
@@ -69,7 +70,7 @@ const extractWorkItemsPrompt = ai.definePrompt({
   3.  **quantity**: The quantity of the item. If not explicitly provided, default to 1.
   4.  **unitPrice**: The price per unit for the item. If not explicitly provided, do your best to find it. If it's impossible, default to 0.
 
-  Document: {{media url=storageUrl}}
+  Document: {{media url=signedUrl}}
   
   Ensure that the extracted data is accurate and well-formatted. Do NOT extract the total price, only the unit price.
   `,
@@ -85,9 +86,21 @@ const extractWorkItemsFlow = ai.defineFlow(
   // Flow 的核心執行邏輯
   async (input) => {
     let result;
+    if (!adminStorage) {
+        throw new Error('Firebase Admin SDK 未在伺服器端初始化。');
+    }
+    
     try {
-      // 呼叫定義好的 prompt，並傳入輸入
-      result = await extractWorkItemsPrompt(input);
+      // 步驟 1: 使用 Firebase Admin SDK 取得檔案的簽署後 URL
+      const bucket = adminStorage.bucket();
+      const file = bucket.file(input.storagePath);
+      const [signedUrl] = await file.getSignedUrl({
+          action: 'read',
+          expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+      });
+        
+      // 步驟 2: 呼叫定義好的 prompt，並傳入簽署後的 URL
+      result = await extractWorkItemsPrompt({ signedUrl });
       const output = result.output;
       if (!output) {
         throw new Error('No output from AI');
