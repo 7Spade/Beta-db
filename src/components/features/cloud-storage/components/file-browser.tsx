@@ -17,7 +17,6 @@ interface FileBrowserProps {
   onDeleteFile: (path: string) => void;
   onDeleteFolder: (path: string) => void;
   onRename: (path: string, currentName: string, type: 'file' | 'folder') => void;
-  refresh: () => void;
 }
 
 export const FileBrowser: FC<FileBrowserProps> = ({ 
@@ -28,7 +27,6 @@ export const FileBrowser: FC<FileBrowserProps> = ({
     onDeleteFile,
     onDeleteFolder,
     onRename,
-    refresh
 }) => {
     
     if (isLoading) {
@@ -38,7 +36,7 @@ export const FileBrowser: FC<FileBrowserProps> = ({
                     <Card key={i} className="animate-pulse">
                         <div className="aspect-square bg-muted rounded-t-lg" />
                         <CardFooter className="p-2 mt-2">
-                             <div className="h-4 bg-muted rounded w-3/4" />
+                             <Skeleton className="h-4 bg-muted rounded w-3/4" />
                         </CardFooter>
                     </Card>
                 ))}

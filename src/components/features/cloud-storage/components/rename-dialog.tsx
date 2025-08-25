@@ -31,11 +31,18 @@ export const RenameDialog = ({ isOpen, onOpenChange, onRename, currentName }: Re
         setIsLoading(true);
         await onRename(newName.trim());
         setIsLoading(false);
-        onOpenChange(false);
     };
+
+    // Reset name when dialog is closed
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            setNewName('');
+        }
+        onOpenChange(open);
+    }
     
     return (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>重新命名</DialogTitle>

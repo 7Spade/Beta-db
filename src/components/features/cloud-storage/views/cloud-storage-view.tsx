@@ -88,10 +88,12 @@ function CloudStorageViewInternal() {
         const result = await renameItemAction(oldPath, newPath, itemToRename.type);
         if (result.success) {
             toast({ title: '成功', description: '重新命名成功。' });
-            fetchItems();
+            // Data will be refetched by revalidation, no need to call fetchItems()
         } else {
             toast({ variant: 'destructive', title: '錯誤', description: result.error });
         }
+        setItemToRename(null);
+        setRenameOpen(false);
     };
     
     const handleDelete = async (path: string, type: 'file' | 'folder') => {
@@ -107,7 +109,7 @@ function CloudStorageViewInternal() {
         
         if(result.success) {
             toast({ title: '成功', description: `${itemToDelete.type === 'file' ? '檔案' : '資料夾'}已刪除。` });
-            fetchItems();
+            // Data will be refetched by revalidation
         } else {
              toast({ variant: 'destructive', title: '錯誤', description: result.error });
         }
@@ -116,12 +118,10 @@ function CloudStorageViewInternal() {
     
     const handleCreateFolder = async (folderName: string) => {
         const newFolderPath = currentPath ? `${currentPath}/${folderName}` : folderName;
-        // Firebase Storage simulates folders by creating a zero-byte file. 
-        // A common convention is to add a placeholder file.
-        const result = await createFolderAction(`${newFolderPath}/.placeholder`);
+        const result = await createFolderAction(newFolderPath);
         if (result.success) {
             toast({ title: '成功', description: `資料夾 "${folderName}" 已建立。` });
-            fetchItems();
+            // Data will be refetched by revalidation
         } else {
             toast({ variant: 'destructive', title: '錯誤', description: result.error });
         }
@@ -150,7 +150,7 @@ function CloudStorageViewInternal() {
                     <React.Fragment key={item.path}>
                         <BreadcrumbItem>
                             {index < breadcrumbItems.length - 1 ? (
-                                <BreadcrumbLink href={`${pathname}?path=${item.path}`} className="cursor-pointer">
+                                <BreadcrumbLink onClick={() => handleNavigate(item.path)} className="cursor-pointer">
                                     {item.name}
                                 </BreadcrumbLink>
                             ) : (
@@ -180,7 +180,6 @@ function CloudStorageViewInternal() {
                 onDeleteFile={(path) => handleDelete(path, 'file')}
                 onDeleteFolder={(path) => handleDelete(path, 'folder')}
                 onRename={handleRename}
-                refresh={fetchItems}
               />
           </CardContent>
         </Card>
@@ -211,7 +210,7 @@ function CloudStorageViewInternal() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={() => setItemToDelete(null)}>取消</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleConfirmDelete}>繼續刪除</AlertDialogAction>
+                    <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive hover:bg-destructive/90">繼續刪除</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -24,11 +24,18 @@ export const CreateFolderDialog = ({ isOpen, onOpenChange, onCreate }: CreateFol
         await onCreate(folderName.trim());
         setIsLoading(false);
         onOpenChange(false);
-        setFolderName('');
     };
+
+    // Reset folder name when dialog is closed
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            setFolderName('');
+        }
+        onOpenChange(open);
+    }
     
     return (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>建立新資料夾</DialogTitle>
