@@ -29,7 +29,7 @@ export function CloudStorageView() {
         </CardHeader>
         <CardContent>
             {error && <p className="text-destructive text-center">{error}</p>}
-            <FileBrowser files={files} isLoading={isLoading} />
+            <FileBrowser files={files} isLoading={isLoading} onActionComplete={refresh} />
         </CardContent>
       </Card>
     </div>

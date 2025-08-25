@@ -15,6 +15,7 @@ import { deleteFileAction } from '../actions/storage.actions';
 interface FileBrowserProps {
   files: StorageFile[];
   isLoading: boolean;
+  onActionComplete: () => void;
 }
 
 function formatBytes(bytes: number, decimals = 2): string {
@@ -27,13 +28,14 @@ function formatBytes(bytes: number, decimals = 2): string {
 }
 
 
-export const FileBrowser: FC<FileBrowserProps> = ({ files, isLoading }) => {
+export const FileBrowser: FC<FileBrowserProps> = ({ files, isLoading, onActionComplete }) => {
     const { toast } = useToast();
 
     const handleDelete = async (filePath: string) => {
         const result = await deleteFileAction(filePath);
         if (result.success) {
             toast({ title: '成功', description: '檔案已刪除。' });
+            onActionComplete();
         } else {
             toast({ variant: 'destructive', title: '錯誤', description: result.error });
         }
