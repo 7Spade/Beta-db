@@ -10,9 +10,10 @@ import { Upload, Loader2 } from 'lucide-react';
 
 interface UploadButtonProps {
     onUploadComplete: () => void;
+    currentPath: string;
 }
 
-export const UploadButton: FC<UploadButtonProps> = ({ onUploadComplete }) => {
+export const UploadButton: FC<UploadButtonProps> = ({ onUploadComplete, currentPath }) => {
     const [isUploading, setIsUploading] = useState(false);
     const { toast } = useToast();
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,7 +24,7 @@ export const UploadButton: FC<UploadButtonProps> = ({ onUploadComplete }) => {
 
         setIsUploading(true);
         try {
-            const storageRef = ref(storage, `uploads/${Date.now()}-${file.name}`);
+            const storageRef = ref(storage, `${currentPath}/${file.name}`);
             await uploadBytes(storageRef, file);
             toast({ title: '成功', description: `檔案 "${file.name}" 已上傳。` });
             onUploadComplete();

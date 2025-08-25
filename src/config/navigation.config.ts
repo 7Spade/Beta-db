@@ -104,12 +104,6 @@ export const navigationConfig: NavigationItem[] = [
         icon: LayoutDashboard,
         href: '/dashboard'
     },
-     {
-        id: 'cloud-storage',
-        label: '雲端儲存',
-        icon: Cloud,
-        href: '/cloud-storage'
-    },
     {
         id: 'projects',
         label: '專案管理',
@@ -196,7 +190,13 @@ export const navigationConfig: NavigationItem[] = [
             },
         
         ]
-    }
+    },
+    {
+        id: 'cloud-storage',
+        label: '雲端儲存',
+        icon: Cloud,
+        href: '/cloud-storage'
+    },
 ]
 
 export const footerNavigationConfig: NavigationItem[] = [

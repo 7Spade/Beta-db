@@ -4,10 +4,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { storage } from '@/lib/firebase';
 import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
-import type { StorageFile } from '../types/storage.types';
+import type { StorageFile, StorageFolder } from '../types/storage.types';
 
-export function useStorageFiles(directoryPath: string = 'uploads/') {
+export function useStorageFiles(directoryPath: string) {
   const [files, setFiles] = useState<StorageFile[]>([]);
+  const [folders, setFolders] = useState<StorageFolder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,6 +18,11 @@ export function useStorageFiles(directoryPath: string = 'uploads/') {
     try {
       const listRef = ref(storage, directoryPath);
       const res = await listAll(listRef);
+
+      const foldersData: StorageFolder[] = res.prefixes.map(folderRef => ({
+        name: folderRef.name,
+        fullPath: folderRef.fullPath,
+      }));
 
       const filesData = await Promise.all(
         res.items.map(async (itemRef) => {
@@ -33,6 +39,7 @@ export function useStorageFiles(directoryPath: string = 'uploads/') {
         })
       );
       
+      setFolders(foldersData);
       setFiles(filesData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     } catch (err) {
       console.error('獲取儲存檔案時發生錯誤:', err);
@@ -46,5 +53,5 @@ export function useStorageFiles(directoryPath: string = 'uploads/') {
     fetchFiles();
   }, [fetchFiles]);
 
-  return { files, isLoading, error, refresh: fetchFiles };
+  return { files, folders, isLoading, error, refresh: fetchFiles };
 }

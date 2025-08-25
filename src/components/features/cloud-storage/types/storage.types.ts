@@ -7,3 +7,8 @@ export interface StorageFile {
   contentType: string;
   createdAt: string;
 }
+
+export interface StorageFolder {
+    name: string;
+    fullPath: string;
+}

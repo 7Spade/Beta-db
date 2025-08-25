@@ -1,3 +1,4 @@
+
 ├─ai
 │  │  dev.ts
 │  │  genkit.ts
@@ -15,32 +16,7 @@
 │  │  layout.tsx
 │  │  page.tsx
 │  │
-│  ├─(admin)
-│  │      README.md
-│  │
-│  ├─(auth)
-│  │  │  layout.tsx
-│  │  │  page.tsx
-│  │  │
-│  │  ├─login
-│  │  │      page.tsx
-│  │  │
-│  │  ├─profile
-│  │  │  │  page.tsx
-│  │  │  │
-│  │  │  └─[id]
-│  │  │          page.tsx
-│  │  │
-│  │  ├─register
-│  │  │      page.tsx
-│  │  │
-│  │  ├─reset-password
-│  │  │      page.tsx
-│  │  │
-│  │  └─verify-email
-│  │          page.tsx
-│  │
-│  ├─(dashboard)
+│  ├─(app)
 │  │  │  layout.tsx
 │  │  │  README.md
 │  │  │
@@ -99,8 +75,31 @@
 │  │      └─skills
 │  │              page.tsx
 │  │
-│  └─(public)
-│          README.md
+│  ├─(auth)
+│  │  │  layout.tsx
+│  │  │  page.tsx
+│  │  │
+│  │  ├─login
+│  │  │      page.tsx
+│  │  │
+│  │  ├─profile
+│  │  │  │  page.tsx
+│  │  │  │
+│  │  │  └─[id]
+│  │  │          page.tsx
+│  │  │
+│  │  ├─register
+│  │  │      page.tsx
+│  │  │
+│  │  ├─reset-password
+│  │  │      page.tsx
+│  │  │
+│  │  └─verify-email
+│  │          page.tsx
+│  │
+│  └─api
+│      └─ai-token-logs
+│              route.ts
 │
 ├─components
 │  ├─features
@@ -114,90 +113,46 @@
 │  │  │
 │  │  ├─auth
 │  │  │  │  index.ts
-│  │  │  │  README.md
 │  │  │  │
 │  │  │  ├─actions
 │  │  │  │      auth-actions.ts
 │  │  │  │      index.ts
-│  │  │  │      MIGRATION.md
-│  │  │  │      README.md
-│  │  │  │      types.ts
 │  │  │  │
 │  │  │  ├─components
-│  │  │  │      auth-form.tsx
-│  │  │  │      auth-provider.tsx
 │  │  │  │      index.ts
 │  │  │  │      login-form.tsx
 │  │  │  │      register-form.tsx
-│  │  │  │      reset-password-form.tsx
 │  │  │  │      social-auth-buttons.tsx
-│  │  │  │      user-profile.tsx
-│  │  │  │
-│  │  │  ├─constants
-│  │  │  │      auth.constants.ts
-│  │  │  │      index.ts
-│  │  │  │      ui.constants.ts
-│  │  │  │
-│  │  │  ├─dialogs
-│  │  │  │      forgot-password-dialog.tsx
-│  │  │  │      index.ts
-│  │  │  │      login-dialog.tsx
-│  │  │  │      register-dialog.tsx
 │  │  │  │
 │  │  │  ├─forms
 │  │  │  │      auth-form-schemas.ts
 │  │  │  │      index.ts
-│  │  │  │      login-form.tsx
-│  │  │  │      profile-form.tsx
-│  │  │  │      register-form.tsx
-│  │  │  │      reset-password-form.tsx
 │  │  │  │
 │  │  │  ├─hooks
 │  │  │  │      index.ts
-│  │  │  │      use-auth-form.ts
 │  │  │  │      use-auth-state.ts
-│  │  │  │      use-auth.ts
 │  │  │  │
 │  │  │  ├─providers
-│  │  │  │      auth-context.tsx
 │  │  │  │      auth-provider.tsx
 │  │  │  │      index.ts
 │  │  │  │
-│  │  │  ├─services
-│  │  │  │      auth-cache.service.ts
-│  │  │  │      auth.service.ts
-│  │  │  │      firebase-auth.service.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─sheets
-│  │  │  │      auth-sheet.tsx
-│  │  │  │      index.ts
-│  │  │  │      profile-sheet.tsx
-│  │  │  │
 │  │  │  ├─types
-│  │  │  │      auth-provider.types.ts
-│  │  │  │      auth.types.ts
 │  │  │  │      index.ts
-│  │  │  │      user.types.ts
-│  │  │  │
-│  │  │  ├─utils
-│  │  │  │      auth-helpers.ts
-│  │  │  │      auth.utils.ts
-│  │  │  │      index.ts
-│  │  │  │      validation.utils.ts
 │  │  │  │
 │  │  │  └─views
-│  │  │          auth-view.tsx
 │  │  │          index.ts
 │  │  │          login-view.tsx
-│  │  │          profile-view.tsx
 │  │  │          register-view.tsx
 │  │  │
 │  │  ├─cloud-storage
 │  │  │  ├─actions
 │  │  │  │      storage.actions.ts
 │  │  │  ├─components
+│  │  │  │      create-folder-dialog.tsx
 │  │  │  │      file-browser.tsx
+│  │  │  │      file-card.tsx
+│  │  │  │      folder-card.tsx
+│  │  │  │      rename-dialog.tsx
 │  │  │  │      upload-button.tsx
 │  │  │  ├─hooks
 │  │  │  │      use-storage-files.ts
@@ -404,7 +359,7 @@
 │  │  │          staff-attendance-view.tsx
 │  │  │
 │  │  ├─settings
-│  │  │      page.tsx
+│  │  │      settings-view.tsx
 │  │  │
 │  │  └─team
 │  │      │  index.ts
