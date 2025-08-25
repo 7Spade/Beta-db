@@ -11,15 +11,17 @@
  * @description 集中管理所有文件相關組件、服務、工具和類型的導出
  */
 
-// 主要組件導出
+// 主要視圖元件
 export * from './views/documents-view';
-export * from './work-items-table';
 
-// Server Actions 導出
+// 可重用表格元件
+export * from './tables/work-items-table';
+
+// Server Actions
 export * from './actions/document-actions';
 
-// 常數定義導出
+// 常數定義
 export * from './constants';
 
-// 類型定義導出
+// 類型定義
 export * from './types';

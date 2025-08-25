@@ -32,7 +32,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { extractDataFromDocument } from "@/components/features/documents";
 import { createProjectAndContractFromDocument } from "@/components/features/contracts";
-import { WorkItemsTable, type WorkItem } from "@/components/features/documents/work-items-table";
+import { WorkItemsTable, type WorkItem } from "@/components/features/documents/tables/work-items-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";

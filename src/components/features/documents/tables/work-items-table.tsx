@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '../../ui/badge';
-import type { WorkItem } from './types';
+import { Badge } from '../../../ui/badge';
+import type { WorkItem } from '../types';
 
 
 interface WorkItemsTableProps {
