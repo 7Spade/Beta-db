@@ -12,10 +12,9 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import type { DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
 import { Badge } from '../../ui/badge';
+import type { WorkItem } from './types';
 
-export type WorkItem = DocToWorkItemsOutput['workItems'][0] & { total?: number };
 
 interface WorkItemsTableProps {
   initialData: WorkItem[];

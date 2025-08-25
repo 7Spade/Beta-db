@@ -3,25 +3,7 @@
  */
 
 import type { Contract } from '../types';
-import type { WorkItem } from "@/components/features/documents/work-items-table";
-
-export interface DocDetails {
-    customId: string;
-    name: string;
-    client: string;
-    clientRepresentative: string;
-}
-
-export interface ActionInput {
-    docDetails: DocDetails;
-    workItems: WorkItem[];
-}
-
-export interface ActionResult {
-    projectId?: string;
-    contractId?: string;
-    error?: string;
-}
+import type { WorkItem } from "@/components/features/documents/types";
 
 export interface CreateContractActionInput {
     data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>;

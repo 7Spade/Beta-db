@@ -4,14 +4,7 @@ import { writeBatch, collection, doc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Task, Project } from "@/lib/types";
 import type { Contract } from '../types';
-import type { WorkItem } from "@/components/features/documents/work-items-table";
-
-interface DocDetails {
-    customId: string;
-    name: string;
-    client: string;
-    clientRepresentative: string;
-}
+import type { WorkItem, DocDetails } from "@/components/features/documents/types";
 
 interface ActionInput {
     docDetails: DocDetails;
