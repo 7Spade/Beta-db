@@ -19,7 +19,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { OptimizationAssistant } from './optimization-assistant';
 
 // Component for managing financial documents
 const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }> = ({ partners, isLoading }) => {
@@ -197,21 +196,9 @@ export const WorkflowBuilder: FC = () => {
     <div className="space-y-6">
        <div>
             <h2 className="text-3xl font-bold tracking-tight">收支流程</h2>
-            <p className="text-muted-foreground">管理財務單據並使用 AI 優化您的流程。</p>
+            <p className="text-muted-foreground">管理您的財務單據。</p>
         </div>
-      <Tabs defaultValue="manager" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="manager"><ArrowLeftRight className="mr-2 h-4 w-4"/>財務單據管理</TabsTrigger>
-          <TabsTrigger value="optimizer"><Wand2 className="mr-2 h-4 w-4"/>AI 優化助理</TabsTrigger>
-        </TabsList>
-        <TabsContent value="manager" className="mt-6">
-          <FinancialDocumentsManager partners={partners} isLoading={isLoading} />
-        </TabsContent>
-        <TabsContent value="optimizer" className="mt-6">
-            <OptimizationAssistant />
-        </TabsContent>
-      </Tabs>
+        <FinancialDocumentsManager partners={partners} isLoading={isLoading} />
     </div>
   );
 };
-
