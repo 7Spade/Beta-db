@@ -1,46 +1,21 @@
 /**
  * Login View - 登入視圖組件
- * 
+ *
  * 功能說明：
- * - 專門用於用戶登入的頁面視圖組件
- * - 整合登入表單、社交登入和說明
- * - 支援多種登入方式和選項
- * - 響應式設計和無障礙訪問
- * 
- * 主要功能：
- * - 登入表單顯示
- * - Email/Password 登入
- * - 社交登入選項
- * - 記住我選項
- * - 忘記密碼連結
- * - 註冊帳號連結
- * - 錯誤訊息顯示
- * - 載入狀態指示
- * - 成功後重定向
- * 
- * 登入選項：
- * - Email/Password 登入
- * - Google 登入
- * - Facebook 登入
- * - Apple 登入
- * - GitHub 登入
- * - 電話號碼登入
- * - 匿名登入
- * 
- * 佈局特性：
- * - 清晰的登入流程
- * - 直觀的表單設計
- * - 友好的錯誤提示
- * - 豐富的登入選項
- * - 響應式佈局
- * 
- * Props:
- * - onSuccess: 登入成功回調
- * - onError: 登入錯誤回調
- * - redirectTo: 登入成功後重定向路徑
- * - showSocialLogin: 是否顯示社交登入
- * - showRememberMe: 是否顯示記住我選項
- * - showForgotPassword: 是否顯示忘記密碼
+ * - 負責登入頁的整體 UI 佈局。
+ * - 包含標題、描述、以及嵌入 LoginForm。
+ * - 未來可在此處加入社交登入按鈕等其他 UI 元素。
  */
+import { LoginForm } from '../components';
 
-// 登入視圖組件實現將在這裡
+export function LoginView() {
+  return (
+    <div className="w-full max-w-sm">
+      <div className="text-center mb-6">
+        <h1 className="text-3xl font-bold">登入</h1>
+        <p className="text-muted-foreground">輸入您的憑證以存取您的帳號。</p>
+      </div>
+      <LoginForm />
+    </div>
+  );
+}
