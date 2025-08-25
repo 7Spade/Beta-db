@@ -1,3 +1,4 @@
+
 /**
  * @project Beta-db Integrated Platform - 統一整合平台文檔處理頁面
  * @framework Next.js 15+ (App Router)
@@ -20,7 +21,7 @@
 
 "use client";
 
-import { useActionState, useState, useMemo, useEffect, startTransition } from "react";
+import { useActionState, useState, useMemo, useEffect, startTransition, Key } from "react";
 import { File, Loader2, Cpu, FileCog, FolderSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
@@ -39,7 +40,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StorageFileSelectorDialog } from "../components/storage-file-selector";
 
-
 const initialState = {
   data: undefined,
   error: undefined,
@@ -50,13 +50,15 @@ export function DocumentsView() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // This state is for user-editable fields after AI has provided initial data
+  // State for user-editable fields after AI has provided initial data
   const [docDetails, setDocDetails] = useState<DocDetails>({
       customId: '',
       name: '',
       client: '',
       clientRepresentative: '',
   });
+
+  // This state now ONLY holds the work items for the table, separate from the main server state
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
   
   // State for UI control
@@ -68,8 +70,8 @@ export function DocumentsView() {
   const [selectedPartnerId, setSelectedPartnerId] = useState('');
 
   // Memoized values from the server action state
-  const extractedData = useMemo(() => state.data, [state.data]);
-  const serverError = useMemo(() => state.error, [state.error]);
+  const extractedData = state.data;
+  const serverError = state.error;
 
   // Fetch partners from Firestore
   useEffect(() => {
@@ -104,7 +106,6 @@ export function DocumentsView() {
     }
     if (extractedData) {
         setWorkItems(extractedData.workItems || []);
-        // When AI data comes back, it becomes the source of truth for the doc details
         setDocDetails({
             customId: `DOC-${Date.now()}`,
             name: extractedData.fileName?.replace(/\.[^/.]+$/, "") || "",
@@ -207,7 +208,7 @@ export function DocumentsView() {
 
       {extractedData && !isPending && (
         <div className="mt-8">
-          <Card className="shadow-2xl bg-card" key={extractedData.fileName}>
+          <Card className="shadow-2xl bg-card" key={extractedData.fileName as Key}>
             <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>

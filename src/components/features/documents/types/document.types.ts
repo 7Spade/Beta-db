@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview Documents 相關類型定義
  */
@@ -18,10 +19,8 @@ export type WorkItem = ExtractWorkItemsOutput['workItems'][0] & {
  * 文件處理 Server Action 的狀態，由 useActionState 管理。
  */
 export interface DocumentActionState {
-  data?: ExtractWorkItemsOutput & { fileName?: string }; // fileName is nested here now
+  data?: ExtractWorkItemsOutput & { fileName: string; totalTokens: number; };
   error?: string;
-  fileName?: string; // Kept for backward compatibility if needed, but data.fileName is preferred
-  totalTokens?: number;
 }
 
 /**

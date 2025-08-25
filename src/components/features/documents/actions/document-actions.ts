@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview 文件處理相關的 Server Actions
  * @description 此檔案包含了用於處理文件上傳、驗證和數據提取的 Next.js Server Actions。
@@ -33,7 +34,6 @@ export async function extractWorkItemsFromDocument(
 
   try {
     // 步驟 1: 調用 Genkit AI 流程以提取工作項目
-    // 我們現在傳遞的是相對路徑，而不是完整的 gs:// 路徑或 URL
     const result = await extractWorkItems({ storagePath: filePath });
     
     if (!result || !result.workItems) {
@@ -45,9 +45,7 @@ export async function extractWorkItemsFromDocument(
       data: {
         ...result,
         fileName: fileName,
-      },
-      fileName: fileName, // keep this for backward compatibility in view if needed
-      totalTokens: result.totalTokens,
+      }
     };
   } catch (e) {
     console.error('文件處理錯誤:', e);
