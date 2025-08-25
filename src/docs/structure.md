@@ -1,4 +1,3 @@
-
 ├─ai
 │  │  dev.ts
 │  │  genkit.ts
@@ -77,7 +76,6 @@
 │  │
 │  ├─(auth)
 │  │  │  layout.tsx
-│  │  │  page.tsx
 │  │  │
 │  │  ├─login
 │  │  │      page.tsx
@@ -97,12 +95,52 @@
 │  │  └─verify-email
 │  │          page.tsx
 │  │
-│  └─api
-│      └─ai-token-logs
-│              route.ts
+│  ├─(public)
+│  │  │  layout.tsx
+│  │  │  README.md
+│  │  │
+│  │  ├─about
+│  │  │      page.tsx
+│  │  │
+│  │  ├─blog
+│  │  │  │  page.tsx
+│  │  │  │
+│  │  │  └─[slug]
+│  │  │          page.tsx
+│  │  │
+│  │  ├─careers
+│  │  │      page.tsx
+│  │  │
+│  │  ├─contact
+│  │  │      page.tsx
+│  │  │
+│  │  ├─privacy-policy
+│  │  │      page.tsx
+│  │  │
+│  │  └─terms-of-service
+│  │          page.tsx
+│  │
+│  └─admin
+│      │  layout.tsx
+│      │
+│      ├─blog
+│      │  └─posts
+│      │      │  page.tsx
+│      │      │
+│      │      └─[id]
+│      │              page.tsx
+│      │
+│      └─dashboard
+│              page.tsx
 │
 ├─components
 │  ├─features
+│  │  ├─admin
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  └─views
+│  │  │          admin-dashboard-view.tsx
+│  │  │
 │  │  ├─app
 │  │  │      ai-subtask-suggestions.tsx
 │  │  │      create-project-dialog.tsx
@@ -144,9 +182,20 @@
 │  │  │          login-view.tsx
 │  │  │          register-view.tsx
 │  │  │
+│  │  ├─blog
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─actions
+│  │  │  │      posts.actions.ts
+│  │  │  │
+│  │  │  └─views
+│  │  │          post-form-view.tsx
+│  │  │          posts-list-view.tsx
+│  │  │
 │  │  ├─cloud-storage
 │  │  │  ├─actions
 │  │  │  │      storage.actions.ts
+│  │  │  │
 │  │  │  ├─components
 │  │  │  │      create-folder-dialog.tsx
 │  │  │  │      file-browser.tsx
@@ -154,10 +203,10 @@
 │  │  │  │      folder-card.tsx
 │  │  │  │      rename-dialog.tsx
 │  │  │  │      upload-button.tsx
-│  │  │  ├─hooks
-│  │  │  │      use-storage-files.ts
+│  │  │  │
 │  │  │  ├─types
 │  │  │  │      storage.types.ts
+│  │  │  │
 │  │  │  └─views
 │  │  │          cloud-storage-view.tsx
 │  │  │
@@ -267,6 +316,9 @@
 │  │  │  ├─actions
 │  │  │  │      document-actions.ts
 │  │  │  │
+│  │  │  ├─components
+│  │  │  │      storage-file-selector.tsx
+│  │  │  │
 │  │  │  ├─constants
 │  │  │  │      file-constants.ts
 │  │  │  │      index.ts
@@ -311,6 +363,7 @@
 │  │  │  ├─financials
 │  │  │  │      financials-tab.tsx
 │  │  │  │      README.md
+│  │  │  │      workflow-designer.tsx
 │  │  │  │
 │  │  │  ├─overview
 │  │  │  │      overview-tab.tsx
@@ -342,7 +395,6 @@
 │  │  │  │      transactions-tab.tsx
 │  │  │  │
 │  │  │  └─workflows
-│  │  │          optimization-assistant.tsx
 │  │  │          workflow-builder.tsx
 │  │  │
 │  │  ├─quick-actions
@@ -366,6 +418,7 @@
 │  │      │
 │  │      ├─knowledge-base
 │  │      │  │  entry-form-dialog.tsx
+│  │      │  │  page.tsx
 │  │      │  │
 │  │      │  └─actions
 │  │      │          index.ts
@@ -374,6 +427,7 @@
 │  │      │
 │  │      ├─members
 │  │      │      create-member-dialog.tsx
+│  │      │      page.tsx
 │  │      │      README.md
 │  │      │
 │  │      ├─schedule
@@ -438,6 +492,7 @@
 │          chart.tsx
 │          checkbox.tsx
 │          collapsible.tsx
+│          context-menu.tsx
 │          dialog.tsx
 │          dropdown-menu.tsx
 │          form.tsx
@@ -481,7 +536,8 @@
 │      use-toast.ts
 │
 ├─lib
-│  │  firebase.ts
+│  │  firebase-admin.ts
+│  │  firebase-client.ts
 │  │  mongodb.ts
 │  │  README.md
 │  │  roles.ts
@@ -504,12 +560,6 @@
 │  │      use-storage.ts
 │  │
 │  ├─services
-│  │  ├─auth
-│  │  │      auth-api.service.ts
-│  │  │      auth-cache.service.ts
-│  │  │      firebase-auth.service.ts
-│  │  │      index.ts
-│  │  │
 │  │  ├─contracts
 │  │  │      contract-api.service.ts
 │  │  │      contract-cache.service.ts
@@ -524,12 +574,6 @@
 │  │          storage.service.ts
 │  │
 │  ├─types
-│  │  ├─auth
-│  │  │      auth-provider.types.ts
-│  │  │      auth.types.ts
-│  │  │      index.ts
-│  │  │      user.types.ts
-│  │  │
 │  │  ├─contracts
 │  │  │      change-order.types.ts
 │  │  │      contract-version.types.ts
