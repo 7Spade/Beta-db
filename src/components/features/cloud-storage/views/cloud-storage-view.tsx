@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,6 +17,8 @@ import { UploadButton } from '../components/upload-button';
 import { RenameDialog } from '../components/rename-dialog';
 import { CreateFolderDialog } from '../components/create-folder-dialog';
 import { deleteFileAction, deleteFolderAction, renameFileAction, createFolderAction } from '../actions/storage.actions';
+import { storage } from '@/lib/firebase';
+import { ref, getMetadata } from 'firebase/storage';
 
 function CloudStorageViewInternal() {
     const searchParams = useSearchParams();
@@ -24,7 +26,7 @@ function CloudStorageViewInternal() {
     const pathname = usePathname();
     const { toast } = useToast();
 
-    const currentPath = useMemo(() => searchParams.get('path') || 'uploads', [searchParams]);
+    const currentPath = useMemo(() => searchParams.get('path') || '', [searchParams]);
     const { files, folders, isLoading, error, refresh } = useStorageFiles(currentPath);
     
     // State for dialogs
@@ -33,19 +35,35 @@ function CloudStorageViewInternal() {
     const [itemToRename, setItemToRename] = useState<{ path: string, name: string } | null>(null);
     const [itemToDelete, setItemToDelete] = useState<{ path: string, type: 'file' | 'folder' } | null>(null);
 
+    // Ensure the root 'uploads' folder exists
+    useEffect(() => {
+        const ensureUploadsFolder = async () => {
+            if (isLoading) return; // Only run when initial load is complete
+            const uploadsFolderExists = folders.some(f => f.name === 'uploads');
+            if (currentPath === '' && !uploadsFolderExists) {
+                console.log("`uploads` folder not found at root. Creating it automatically.");
+                await createFolderAction('uploads/.placeholder');
+                refresh();
+            }
+        };
+        ensureUploadsFolder();
+    }, [isLoading, folders, currentPath, refresh]);
+
+
     const handleNavigate = (path: string) => {
         router.push(`${pathname}?path=${path}`);
     };
 
     const breadcrumbItems = useMemo(() => {
+        if (!currentPath) {
+            return [{ name: '根目錄', path: '' }];
+        }
         const segments = currentPath.split('/').filter(Boolean);
-        const items = [{ name: '根目錄', path: 'uploads' }];
-        let path = 'uploads'; // Start with the base path
-
-        // Start from the second segment, as the first is always 'uploads' (our root)
-        segments.slice(1).forEach(segment => {
+        const items = [{ name: '根目錄', path: '' }];
+        let path = '';
+        segments.forEach(segment => {
             path += `/${segment}`;
-            items.push({ name: segment, path: path });
+            items.push({ name: segment, path: path.substring(1) });
         });
 
         return items;
@@ -71,6 +89,10 @@ function CloudStorageViewInternal() {
         }
     };
     
+    const handleDelete = async (path: string, type: 'file' | 'folder') => {
+      setItemToDelete({ path, type });
+    }
+
     const handleConfirmDelete = async () => {
         if (!itemToDelete) return;
         
@@ -88,8 +110,8 @@ function CloudStorageViewInternal() {
     }
     
     const handleCreateFolder = async (folderName: string) => {
-        const newFolderPath = `${currentPath}/${folderName}`;
-        const result = await createFolderAction(newFolderPath);
+        const newFolderPath = currentPath ? `${currentPath}/${folderName}` : folderName;
+        const result = await createFolderAction(`${newFolderPath}/.placeholder`);
         if (result.success) {
             toast({ title: '成功', description: `資料夾 "${folderName}" 已建立。` });
             refresh();
@@ -148,8 +170,8 @@ function CloudStorageViewInternal() {
                 folders={folders}
                 isLoading={isLoading}
                 onNavigate={handleNavigate}
-                onDeleteFile={(path) => setItemToDelete({ path, type: 'file' })}
-                onDeleteFolder={(path) => setItemToDelete({ path, type: 'folder' })}
+                onDeleteFile={(path) => handleDelete(path, 'file')}
+                onDeleteFolder={(path) => handleDelete(path, 'folder')}
                 onRename={handleRename}
               />
           </CardContent>
@@ -196,3 +218,5 @@ export function CloudStorageView() {
         </Suspense>
     );
 }
+
+    

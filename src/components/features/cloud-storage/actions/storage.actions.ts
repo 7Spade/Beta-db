@@ -51,13 +51,13 @@ export async function renameFileAction(oldPath: string, newPath: string): Promis
     }
 }
 
-export async function createFolderAction(folderPath: string): Promise<ActionResult> {
+export async function createFolderAction(placeholderPath: string): Promise<ActionResult> {
     try {
         // Create a zero-byte file with a special name to represent a folder
-        const folderRef = ref(storage, `${folderPath}/.placeholder`);
+        const folderRef = ref(storage, placeholderPath);
         await uploadBytes(folderRef, new Blob([]));
         
-        const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
+        const parentPath = placeholderPath.substring(0, placeholderPath.lastIndexOf('/'));
         revalidatePath(`/cloud-storage?path=${parentPath}`);
 
         return { success: true };
@@ -99,3 +99,5 @@ export async function deleteFolderAction(folderPath: string): Promise<ActionResu
     return { success: false, error: '刪除資料夾失敗。' };
   }
 }
+
+    
