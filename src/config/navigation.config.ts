@@ -211,7 +211,7 @@ export const navigationConfig: NavigationItem[] = [
                 href: '/admin/dashboard'
             },
             {
-                id: 'admin-blog',
+                id: 'admin-blog-posts',
                 label: '文章管理',
                 icon: BookOpen,
                 href: '/admin/blog/posts'

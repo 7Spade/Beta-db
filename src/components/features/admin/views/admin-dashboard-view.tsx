@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function AdminDashboardPage() {
+export function AdminDashboardView() {
   return (
     <div className="space-y-6">
       <div>

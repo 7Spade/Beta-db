@@ -106,9 +106,9 @@
 | `type`         | `string` ('receivable', 'payable') | 單據類型：應收或應付。|
 | `amount`       | `number`            | 單據金額。                                 |
 | `description`  | `string`            | 單據的簡短描述或備註。                     |
-| `currentStep`  | `string`            | 單據在對應夥伴收支流程中的目前步驟。       |
+| `currentStep`  | `string`            | 單據在對應夥伴工作流程中的目前步驟。       |
 | `createDate`   | `Timestamp`         | 單據的建立日期。                           |
-| `dueDate`      | `Timestamp`         | 單據的到期或付款日期。                     |
+| `dueDate`      | `Timestamp`         | 單据的到期或付款日期。                     |
 | `history`      | `Array<Map>`        | 記錄流程中每一步變更的歷史。               |
 
 
@@ -171,6 +171,27 @@
 | `timestamp` | `Timestamp` | 紀錄的建立時間。                   |
 | `userId`    | `string`    | (可選) 執行此操作的使用者 ID。     |
 | `error`     | `string`    | (可選) 如果狀態為 'failed'，記錄錯誤訊息。|
+
+### 2.9. `posts`
+
+此集合儲存所有部落格文章的資訊。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+
+| 欄位         | 類型        | 描述                                        |
+|--------------|-------------|---------------------------------------------|
+| `title`      | `string`    | 文章標題。                                  |
+| `slug`       | `string`    | 用於 URL 的唯一識別符，通常由標題生成。     |
+| `content`    | `string`    | 文章內容，支援 Markdown 格式。              |
+| `excerpt`    | `string`    | (可選) 文章摘要，用於列表頁面顯示。         |
+| `imageUrl`   | `string`    | (可選) 文章的主圖片 URL。                   |
+| `status`     | `string` ('已發布', '草稿', '已封存') | 文章的當前狀態。|
+| `authorId`   | `string`    | 關聯到 `teamMembers` 的作者 ID。            |
+| `authorName` | `string`    | 作者姓名，用於顯示。                        |
+| `publishedAt`| `Timestamp` | (可選) 文章的發布時間。                     |
+| `createdAt`  | `Timestamp` | 文章的建立時間。                            |
+| `updatedAt`  | `Timestamp` | 文章的最後更新時間。                        |
 
 
 ## 3. 數據完整性

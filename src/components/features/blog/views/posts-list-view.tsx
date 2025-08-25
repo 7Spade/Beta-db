@@ -8,7 +8,7 @@ import { firestore } from '@/lib/firebase-client';
 import { collection, onSnapshot, query, orderBy, Timestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/lib/utils';
-import { deletePost } from '@/app/actions/posts.actions';
+import { deletePost } from '@/components/features/blog/actions/posts.actions';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,7 @@ interface Post {
     authorName?: string;
 }
 
-export default function AdminBlogPostsPage() {
+export function PostsListView() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();

@@ -2,7 +2,7 @@
 'use server';
 
 import { firestore } from '@/lib/firebase-client';
-import { collection, doc, addDoc, setDoc, deleteDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { collection, doc, addDoc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -26,7 +26,7 @@ export type PostFormValues = z.infer<typeof postSchema>;
 /**
  * Saves a blog post to Firestore (creates or updates).
  */
-export async function savePost(data: PostFormValues, postId?: string): Promise<PostActionResponse> {
+export async function savePost(data: PostFormValues, postId?: string | null): Promise<PostActionResponse> {
   const validation = postSchema.safeParse(data);
   if (!validation.success) {
     return { success: false, error: validation.error.errors.map(e => e.message).join(', ') };
@@ -53,11 +53,11 @@ export async function savePost(data: PostFormValues, postId?: string): Promise<P
       postId = docRef.id;
     }
 
-    revalidatePath('/admin/blog/posts');
+    revalidatePath('/admin/blog');
     revalidatePath(`/blog/${validation.data.slug}`);
     revalidatePath('/blog');
     
-    return { success: true, postId };
+    return { success: true, postId: postId! };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "發生未知錯誤。";
     return { success: false, error: `儲存文章失敗: ${errorMessage}` };
@@ -73,7 +73,7 @@ export async function deletePost(postId: string): Promise<PostActionResponse> {
     }
     try {
         await deleteDoc(doc(firestore, 'posts', postId));
-        revalidatePath('/admin/blog/posts');
+        revalidatePath('/admin/blog');
         revalidatePath('/blog');
         return { success: true };
     } catch(error) {

@@ -2,14 +2,14 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { doc, getDoc, Timestamp } from 'firebase/firestore';
 import { firestore } from '@/lib/firebase-client';
 import { useToast } from '@/hooks/use-toast';
-import { savePost, type PostFormValues } from '@/app/actions/posts.actions';
+import { savePost, type PostFormValues } from '@/components/features/blog/actions/posts.actions';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,13 +29,15 @@ const postSchema = z.object({
     imageUrl: z.string().url('請輸入有效的圖片網址。').optional().or(z.literal('')),
 });
 
-export default function PostFormPage() {
-    const params = useParams();
+interface PostFormViewProps {
+    postId: string | null;
+}
+
+export function PostFormView({ postId }: PostFormViewProps) {
     const router = useRouter();
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const postId = typeof params.id === 'string' && params.id !== 'create' ? params.id : null;
 
     const form = useForm<PostFormValues>({
         resolver: zodResolver(postSchema),
@@ -78,6 +80,7 @@ export default function PostFormPage() {
                     const data = docSnap.data() as any;
                     form.reset({
                       ...data,
+                      // Firestore timestamps need to be converted to Dates for the form
                       createdAt: (data.createdAt as Timestamp)?.toDate(),
                       updatedAt: (data.updatedAt as Timestamp)?.toDate(),
                     });
@@ -99,7 +102,13 @@ export default function PostFormPage() {
         setIsSaving(false);
         if (result.success) {
             toast({ title: "成功", description: "文章已成功儲存。" });
-            router.push('/admin/blog/posts');
+            if (postId) {
+                router.push('/admin/blog/posts');
+            } else if (result.postId) {
+                router.push(`/admin/blog/posts/${result.postId}`);
+            } else {
+                router.push('/admin/blog/posts');
+            }
         } else {
             toast({ title: "儲存失敗", description: result.error, variant: "destructive" });
         }
