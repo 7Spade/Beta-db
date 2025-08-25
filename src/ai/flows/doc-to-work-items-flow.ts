@@ -1,16 +1,12 @@
 /**
  * @fileOverview 從文件解析工料清單流程 (Doc to Work Items Flow)
- * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個文件（如報價單、合約），
+ * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個指向 Cloud Storage 的文件 URL，
  * 並使用 AI 模型從中解析並提取結構化的工作項目、數量和單價。
  * 這是整個「智能文件解析」功能的核心 AI 邏輯。
  * 
  * @exports docToWorkItems - 觸發數據提取過程的主要函數。
  * @exports DocToWorkItemsInput - `docToWorkItems` 函數的輸入 Zod Schema 型別。
  * @exports DocToWorkItemsOutput - `docToWorkItems` 函數的輸出 Zod Schema 型別。
- * 
- * @關聯檔案
- * - `src/components/features/documents/actions/document-actions.ts`: 此檔案中的 Server Action 會呼叫本流程中的 `docToWorkItems` 函數。
- * - `src/services/logging.service.ts`: 在流程執行成功或失敗時，會呼叫此服務來記錄 AI Token 的使用情況。
  */
 
 'use server';
@@ -18,13 +14,14 @@
 import {ai} from '@/ai/genkit';
 import { logAiTokenUsage } from '@/services/logging.service';
 import {z} from 'genkit';
+import { media } from 'genkit/ai';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const DocToWorkItemsInputSchema = z.object({
-  documentDataUri: z
+  storageUrl: z
     .string()
     .describe(
-      "一份文件（合約、報價單或估價單），格式為 Data URI，必須包含 MIME 類型和 Base64 編碼。預期格式：'data:<mimetype>;base64,<encoded_data>'。"
+      "一份文件（合約、報價單或估價單）在 Firebase Storage 中的 URL。"
     ),
 });
 export type DocToWorkItemsInput = z.infer<typeof DocToWorkItemsInputSchema>;
@@ -46,7 +43,7 @@ export type DocToWorkItemsOutput = z.infer<typeof DocToWorkItemsOutputSchema>;
 
 /**
  * 導出的異步函數，作為外部呼叫此 AI 流程的入口點。
- * @param {DocToWorkItemsInput} input - 包含文件 Data URI 的輸入物件。
+ * @param {DocToWorkItemsInput} input - 包含文件 Storage URL 的輸入物件。
  * @returns {Promise<DocToWorkItemsOutput>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
  * @throws 如果流程沒有返回結果，則拋出錯誤。
  */
@@ -72,7 +69,7 @@ const docToWorkItemsPrompt = ai.definePrompt({
   3.  **quantity**: The quantity of the item. If not explicitly provided, default to 1.
   4.  **unitPrice**: The price per unit for the item. If not explicitly provided, do your best to find it. If it's impossible, default to 0.
 
-  Document: {{media url=documentDataUri}}
+  Document: {{media url=storageUrl}}
   
   Ensure that the extracted data is accurate and well-formatted. Do NOT extract the total price, only the unit price.
   `,

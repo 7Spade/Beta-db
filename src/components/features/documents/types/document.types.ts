@@ -22,6 +22,7 @@ export interface DocumentActionState {
   error?: string;
   fileName?: string;
   totalTokens?: number;
+  storageUrl?: string; // 新增，用於保存文件的存儲路徑
 }
 
 /**
@@ -42,23 +43,4 @@ export interface DocDetails {
     name: string;
     client: string;
     clientRepresentative: string;
-}
-
-// 文件上傳輸入
-export interface DocumentUploadInput {
-  file: File;
-  metadata?: {
-    description?: string;
-    tags?: string[];
-    category?: string;
-  };
-}
-
-// 文件處理結果
-export interface DocumentProcessingResult {
-  success: boolean;
-  data?: DocToWorkItemsOutput;
-  error?: string;
-  fileName?: string;
-  processingTime?: number;
 }

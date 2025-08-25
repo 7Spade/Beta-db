@@ -11,20 +11,16 @@
 
 "use server";
 
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "@/lib/firebase";
 import { docToWorkItems } from '@/ai/flows/doc-to-work-items-flow';
-import { z } from 'zod';
 import type { DocumentActionState, DocumentValidationState } from '../types';
 import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants';
 
-// 使用 Zod 定義 Server Action 的輸入驗證 Schema
-const actionInputSchema = z.object({
-  documentDataUri: z.string().startsWith('data:'),
-});
-
 /**
  * Server Action: 從文件提取工作項目數據
- * 此函數接收來自前端的 FormData，將文件轉換為 base64 編碼的 Data URI，
- * 然後呼叫 AI 流程來解析文件內容，最後返回解析結果或錯誤訊息。
+ * 此函數接收來自前端的 FormData，將文件上傳到 Firebase Storage，
+ * 然後使用文件的 URL 呼叫 AI 流程來解析文件內容，最後返回解析結果或錯誤訊息。
  * 遵循 NextJS 15 Server Actions 最佳實踐。
  * @param prevState - 上一個 Action 的狀態，由 useActionState Hook 管理。
  * @param formData - 從前端表單提交的數據。
@@ -41,26 +37,25 @@ export async function extractDataFromDocument(
   }
 
   try {
-    // 步驟 1: 轉換文件為 base64 Data URI
-    const fileBuffer = await file.arrayBuffer();
-    const base64String = Buffer.from(fileBuffer).toString('base64');
-    const documentDataUri = `data:${file.type};base64,${base64String}`;
-    
-    // 步驟 2: 驗證輸入格式是否符合預期
-    const validatedInput = actionInputSchema.safeParse({ documentDataUri });
-    if (!validatedInput.success) {
-      return { error: '無效的檔案資料 URI。' };
-    }
+    // 步驟 1: 上傳文件到 Firebase Storage
+    const storageRef = ref(storage, `uploads/${Date.now()}-${file.name}`);
+    const uploadResult = await uploadBytes(storageRef, file);
+    const storageUrl = await getDownloadURL(uploadResult.ref);
 
-    // 步驟 3: 調用 Genkit AI 流程以提取工作項目
-    const result = await docToWorkItems({ documentDataUri });
+    // 步驟 2: 調用 Genkit AI 流程以提取工作項目
+    const result = await docToWorkItems({ storageUrl });
     
     if (!result || !result.workItems) {
         return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
     }
 
-    // 步驟 4: 返回成功的結果
-    return { data: result, fileName: file.name, totalTokens: result.totalTokens };
+    // 步驟 3: 返回成功的結果
+    return { 
+      data: result, 
+      fileName: file.name, 
+      totalTokens: result.totalTokens,
+      storageUrl: storageUrl, // 返回 Storage URL 以供後續使用
+    };
   } catch (e) {
     console.error('文件處理錯誤:', e);
     const errorMessage = e instanceof Error ? e.message : '發生未知錯誤。';
