@@ -16,7 +16,7 @@ export * from './views/documents-view';
 export * from './work-items-table';
 
 // Server Actions 導出
-export * from './actions';
+export * from './actions/document-actions';
 
 // 常數定義導出
 export * from './constants';

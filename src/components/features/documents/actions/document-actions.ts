@@ -11,7 +11,7 @@
 
 "use server";
 
-import { docToWorkItems, type DocToWorkItemsOutput } from '@/ai/flows/doc-to-work-items-flow';
+import { docToWorkItems } from '@/ai/flows/doc-to-work-items-flow';
 import { z } from 'zod';
 import type { DocumentActionState, DocumentValidationState } from '../types';
 import { SUPPORTED_FILE_TYPES, FILE_SIZE_LIMITS } from '../constants';
