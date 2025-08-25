@@ -1,10 +1,9 @@
 ├─ai
 │  │  dev.ts
 │  │  genkit.ts
-│  │  README.md
 │  │
 │  └─flows
-│          extract-work-items-flow.ts
+│          doc-to-work-items-flow.ts
 │          generate-knowledge-entry-flow.ts
 │          generate-skill-flow.ts
 │          generate-subtasks-flow.ts
@@ -15,22 +14,45 @@
 │  │  globals.css
 │  │  layout.tsx
 │  │  page.tsx
-│  │  README.md
 │  │
-│  ├─(app)
+│  ├─(admin)
+│  │      README.md
+│  │
+│  ├─(auth)
+│  │  │  layout.tsx
+│  │  │  page.tsx
+│  │  │
+│  │  ├─login
+│  │  │      page.tsx
+│  │  │
+│  │  ├─profile
+│  │  │  │  page.tsx
+│  │  │  │
+│  │  │  └─[id]
+│  │  │          page.tsx
+│  │  │
+│  │  ├─register
+│  │  │      page.tsx
+│  │  │
+│  │  ├─reset-password
+│  │  │      page.tsx
+│  │  │
+│  │  └─verify-email
+│  │          page.tsx
+│  │
+│  ├─(dashboard)
 │  │  │  layout.tsx
 │  │  │  README.md
 │  │  │
 │  │  ├─contracts
+│  │  │  │  layout.tsx
 │  │  │  │  page.tsx
-│  │  │  │
-│  │  │  ├─[id]
-│  │  │  │      page.tsx
 │  │  │  │
 │  │  │  ├─create
 │  │  │  │      page.tsx
 │  │  │  │
-│  │  │  └─layout.tsx
+│  │  │  └─[id]
+│  │  │          page.tsx
 │  │  │
 │  │  ├─dashboard
 │  │  │      page.tsx
@@ -48,6 +70,16 @@
 │  │  ├─projects
 │  │  │      page.tsx
 │  │  │
+│  │  ├─quick-actions
+│  │  │  ├─daily-report
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─project-progress
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─staff-attendance
+│  │  │          page.tsx
+│  │  │
 │  │  ├─settings
 │  │  │      page.tsx
 │  │  │
@@ -64,19 +96,10 @@
 │  │      └─skills
 │  │              page.tsx
 │  │
-│  ├─actions
-│  │      contracts.actions.ts
-│  │      documents.actions.ts
-│  │      knowledge.actions.ts
-│  │      README.md
-│  │
-│  └─api
-│      └─ai-token-logs
-│              route.ts
+│  └─(public)
+│          README.md
 │
 ├─components
-│  │  README.md
-│  │
 │  ├─features
 │  │  ├─app
 │  │  │      ai-subtask-suggestions.tsx
@@ -86,9 +109,97 @@
 │  │  │      README.md
 │  │  │      task-item.tsx
 │  │  │
+│  │  ├─auth
+│  │  │  │  index.ts
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─actions
+│  │  │  │      auth-actions.ts
+│  │  │  │      index.ts
+│  │  │  │      MIGRATION.md
+│  │  │  │      README.md
+│  │  │  │      types.ts
+│  │  │  │
+│  │  │  ├─components
+│  │  │  │      auth-form.tsx
+│  │  │  │      auth-provider.tsx
+│  │  │  │      index.ts
+│  │  │  │      login-form.tsx
+│  │  │  │      register-form.tsx
+│  │  │  │      reset-password-form.tsx
+│  │  │  │      social-auth-buttons.tsx
+│  │  │  │      user-profile.tsx
+│  │  │  │
+│  │  │  ├─constants
+│  │  │  │      auth.constants.ts
+│  │  │  │      index.ts
+│  │  │  │      ui.constants.ts
+│  │  │  │
+│  │  │  ├─dialogs
+│  │  │  │      forgot-password-dialog.tsx
+│  │  │  │      index.ts
+│  │  │  │      login-dialog.tsx
+│  │  │  │      register-dialog.tsx
+│  │  │  │
+│  │  │  ├─forms
+│  │  │  │      auth-form-schemas.ts
+│  │  │  │      index.ts
+│  │  │  │      login-form.tsx
+│  │  │  │      profile-form.tsx
+│  │  │  │      register-form.tsx
+│  │  │  │      reset-password-form.tsx
+│  │  │  │
+│  │  │  ├─hooks
+│  │  │  │      index.ts
+│  │  │  │      use-auth-form.ts
+│  │  │  │      use-auth-state.ts
+│  │  │  │      use-auth.ts
+│  │  │  │
+│  │  │  ├─providers
+│  │  │  │      auth-context.tsx
+│  │  │  │      auth-provider.tsx
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─services
+│  │  │  │      auth-cache.service.ts
+│  │  │  │      auth.service.ts
+│  │  │  │      firebase-auth.service.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─sheets
+│  │  │  │      auth-sheet.tsx
+│  │  │  │      index.ts
+│  │  │  │      profile-sheet.tsx
+│  │  │  │
+│  │  │  ├─types
+│  │  │  │      auth-provider.types.ts
+│  │  │  │      auth.types.ts
+│  │  │  │      index.ts
+│  │  │  │      user.types.ts
+│  │  │  │
+│  │  │  ├─utils
+│  │  │  │      auth-helpers.ts
+│  │  │  │      auth.utils.ts
+│  │  │  │      index.ts
+│  │  │  │      validation.utils.ts
+│  │  │  │
+│  │  │  └─views
+│  │  │          auth-view.tsx
+│  │  │          index.ts
+│  │  │          login-view.tsx
+│  │  │          profile-view.tsx
+│  │  │          register-view.tsx
+│  │  │
 │  │  ├─contracts
 │  │  │  │  index.ts
 │  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─actions
+│  │  │  │      contract-actions.ts
+│  │  │  │      index.ts
+│  │  │  │      MIGRATION.md
+│  │  │  │      README.md
+│  │  │  │      types.ts
 │  │  │  │
 │  │  │  ├─components
 │  │  │  │      change-order-item.tsx
@@ -107,6 +218,7 @@
 │  │  │  │      contract-charts.tsx
 │  │  │  │      contract-dashboard.tsx
 │  │  │  │      contract-stats.tsx
+│  │  │  │      dashboard.tsx
 │  │  │  │      index.ts
 │  │  │  │
 │  │  │  ├─dialogs
@@ -174,12 +286,34 @@
 │  │  │      ai-usage-log.tsx
 │  │  │      dashboard-stats.tsx
 │  │  │      dashboard-view.tsx
+│  │  │      dashboard.tsx
 │  │  │      README.md
 │  │  │
 │  │  ├─documents
-│  │  │      documents-view.tsx
-│  │  │      README.md
-│  │  │      work-items-table.tsx
+│  │  │  │  index.ts
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─actions
+│  │  │  │      document-actions.ts
+│  │  │  │
+│  │  │  ├─constants
+│  │  │  │      file-constants.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─tables
+│  │  │  │      index.ts
+│  │  │  │      work-items-table.tsx
+│  │  │  │
+│  │  │  ├─types
+│  │  │  │      document.types.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─utils
+│  │  │  │      export.utils.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  └─views
+│  │  │          documents-view.tsx
 │  │  │
 │  │  ├─partnerverse
 │  │  │  │  README.md
@@ -189,8 +323,12 @@
 │  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─contacts
-│  │  │  │      contacts-tab.tsx
-│  │  │  │      README.md
+│  │  │  │  │  contacts-tab.tsx
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  └─forms
+│  │  │  │          contact-form.tsx
+│  │  │  │          README.md
 │  │  │  │
 │  │  │  ├─contracts
 │  │  │  │      contracts-tab.tsx
@@ -208,26 +346,60 @@
 │  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─partners
-│  │  │  │      partners-view.tsx
-│  │  │  │      README.md
+│  │  │  │  │  partner-list.tsx
+│  │  │  │  │  partner-profile.tsx
+│  │  │  │  │  partners-view.tsx
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  ├─forms
+│  │  │  │  │      contact-form.tsx
+│  │  │  │  │      partner-form.tsx
+│  │  │  │  │
+│  │  │  │  ├─list
+│  │  │  │  │      partner-list.tsx
+│  │  │  │  │
+│  │  │  │  └─profile
+│  │  │  │          partner-profile.tsx
+│  │  │  │          profile-header.tsx
 │  │  │  │
 │  │  │  ├─performance
 │  │  │  │      performance-tab.tsx
 │  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─transactions
-│  │  │  │      transactions-tab.tsx
 │  │  │  │      README.md
+│  │  │  │      transactions-tab.tsx
 │  │  │  │
 │  │  │  └─workflows
+│  │  │          optimization-assistant.tsx
 │  │  │          workflow-builder.tsx
+│  │  │
+│  │  ├─quick-actions
+│  │  │  ├─daily-report
+│  │  │  │      daily-report-view.tsx
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─project-progress
+│  │  │  │      index.ts
+│  │  │  │      project-progress-view.tsx
+│  │  │  │
+│  │  │  └─staff-attendance
+│  │  │          index.ts
+│  │  │          staff-attendance-view.tsx
 │  │  │
 │  │  ├─settings
 │  │  │      settings-view.tsx
 │  │  │
 │  │  └─team
+│  │      │  index.ts
+│  │      │
 │  │      ├─knowledge-base
-│  │      │      entry-form-dialog.tsx
+│  │      │  │  entry-form-dialog.tsx
+│  │      │  │
+│  │      │  └─actions
+│  │      │          index.ts
+│  │      │          knowledge-actions.ts
+│  │      │          types.ts
 │  │      │
 │  │      ├─members
 │  │      │      create-member-dialog.tsx
@@ -242,22 +414,44 @@
 │  │              skills-list.tsx
 │  │
 │  ├─layout
+│  │  │  index.ts
 │  │  │  README.md
 │  │  │
 │  │  ├─core
 │  │  │      app-header.tsx
 │  │  │      app-provider.tsx
 │  │  │      app-shell.tsx
+│  │  │      layout-wrapper.tsx
 │  │  │      theme-provider.tsx
 │  │  │
 │  │  ├─navigation
 │  │  │      breadcrumb.tsx
+│  │  │      context-menu.tsx
 │  │  │      navigation-menu-item.tsx
 │  │  │      navigation-menu.tsx
+│  │  │      notification-center.tsx
+│  │  │      quick-actions.tsx
+│  │  │      search-command.tsx
 │  │  │      unified-sidebar.tsx
+│  │  │      user-menu.tsx
+│  │  │
+│  │  ├─overlays
+│  │  │      drawer-container.tsx
+│  │  │      modal-container.tsx
+│  │  │      popover-container.tsx
+│  │  │      tooltip-provider.tsx
+│  │  │
+│  │  ├─responsive
+│  │  │      mobile-menu.tsx
+│  │  │      responsive-wrapper.tsx
 │  │  │
 │  │  └─shared
+│  │          empty-state.tsx
 │  │          logo.tsx
+│  │          page-container.tsx
+│  │          page-header.tsx
+│  │          section-divider.tsx
+│  │          status-indicator.tsx
 │  │
 │  └─ui
 │          accordion.tsx
@@ -316,12 +510,75 @@
 │      use-toast.ts
 │
 ├─lib
-│      firebase.ts
-│      mongodb.ts
-│      README.md
-│      roles.ts
-│      types.ts
-│      utils.ts
+│  │  firebase.ts
+│  │  mongodb.ts
+│  │  README.md
+│  │  roles.ts
+│  │  types.ts
+│  │  utils.ts
+│  │
+│  ├─config
+│  │      auth.config.ts
+│  │      firebase.config.ts
+│  │      firestore.config.ts
+│  │      functions.config.ts
+│  │      index.ts
+│  │      storage.config.ts
+│  │
+│  ├─hooks
+│  │      index.ts
+│  │      use-auth.ts
+│  │      use-firestore.ts
+│  │      use-functions.ts
+│  │      use-storage.ts
+│  │
+│  ├─services
+│  │  ├─auth
+│  │  │      auth-api.service.ts
+│  │  │      auth-cache.service.ts
+│  │  │      firebase-auth.service.ts
+│  │  │      index.ts
+│  │  │
+│  │  ├─contracts
+│  │  │      contract-api.service.ts
+│  │  │      contract-cache.service.ts
+│  │  │      firebase-contract.service.ts
+│  │  │      index.ts
+│  │  │
+│  │  └─firebase
+│  │          auth.service.ts
+│  │          firestore.service.ts
+│  │          functions.service.ts
+│  │          index.ts
+│  │          storage.service.ts
+│  │
+│  ├─types
+│  │  ├─auth
+│  │  │      auth-provider.types.ts
+│  │  │      auth.types.ts
+│  │  │      index.ts
+│  │  │      user.types.ts
+│  │  │
+│  │  ├─contracts
+│  │  │      change-order.types.ts
+│  │  │      contract-version.types.ts
+│  │  │      contract.types.ts
+│  │  │      index.ts
+│  │  │      payment.types.ts
+│  │  │
+│  │  └─firebase
+│  │          auth.types.ts
+│  │          firestore.types.ts
+│  │          functions.types.ts
+│  │          index.ts
+│  │          storage.types.ts
+│  │
+│  └─utils
+│          auth.utils.ts
+│          firestore.utils.ts
+│          index.ts
+│          storage.utils.ts
+│          validation.utils.ts
 │
 ├─models
 │      ai-token-log.model.ts
@@ -333,5 +590,3 @@
 └─utils
         date-picker.tsx
         README.md
-
-    
