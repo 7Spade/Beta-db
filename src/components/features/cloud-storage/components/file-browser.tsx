@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FileCard } from './file-card';
 import { FolderCard } from './folder-card';
 import type { StorageFile, StorageFolder } from '../types/storage.types';
+import { Card, CardFooter } from '@/components/ui/card';
 
 interface FileBrowserProps {
   files: StorageFile[];
