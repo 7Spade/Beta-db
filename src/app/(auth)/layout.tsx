@@ -1,32 +1,7 @@
-/**
- * Auth Layout - 認證頁面佈局組件
- * 
- * 功能說明：
- * - 提供認證相關頁面的統一佈局
- * - 包含認證狀態檢查和重定向邏輯
- * - 支援響應式設計和主題適配
- * 
- * 主要功能：
- * - 認證狀態檢查
- * - 已認證用戶重定向
- * - 頁面標題和描述
- * - 響應式佈局
- * - 主題適配
- * - 無障礙訪問支援
- * 
- * 佈局特性：
- * - 統一的頁面結構
- * - 清晰的導航路徑
- * - 友好的用戶體驗
- * - 品牌一致性
- * - 載入狀態顯示
- * 
- * 子路由：
- * - /login - 登入頁面
- * - /register - 註冊頁面
- * - /reset-password - 密碼重置頁面
- * - /verify-email - 郵箱驗證頁面
- * - /profile - 用戶資料頁面
- */
-
-// 認證頁面佈局組件實現將在這裡
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      {children}
+    </div>
+  );
+}
