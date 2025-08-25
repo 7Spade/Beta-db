@@ -111,15 +111,31 @@ export const navigationConfig: NavigationItem[] = [
     },
     {
         id: 'projects',
-        label: '專案解析',
+        label: '專案管理',
         icon: FolderKanban,
-        href: '/projects'
+        href: '/projects',
+        children: [
+            {
+                id: 'project-list',
+                label: '專案列表',
+                icon: ClipboardList,
+                href: '/projects',
+            }
+        ]
     },
     {
         id: 'contracts',
-        label: '合約解析',
+        label: '合約管理',
         icon: Building2,
-        href: '/contracts'
+        href: '/contracts',
+        children: [
+            {
+                id: 'contract-list',
+                label: '合約列表',
+                icon: ClipboardList,
+                href: '/contracts',
+            }
+        ]
     },
     {
         id: 'partnerverse',
