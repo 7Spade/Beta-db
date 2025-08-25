@@ -124,16 +124,16 @@ export const navigationConfig: NavigationItem[] = [
         href: '/contracts',
         children: [
             {
-                id: 'contract-list',
-                label: '合約列表',
-                icon: ClipboardList,
-                href: '/contracts',
-            },
-            {
                 id: 'documents',
                 label: '文件解析',
                 icon: FileText,
                 href: '/documents'
+            },
+            {
+                id: 'contract-list',
+                label: '合約列表',
+                icon: ClipboardList,
+                href: '/contracts',
             },
         ]
     },
