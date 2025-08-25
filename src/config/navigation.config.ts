@@ -104,12 +104,6 @@ export const navigationConfig: NavigationItem[] = [
         href: '/dashboard'
     },
     {
-        id: 'documents',
-        label: '文件解析',
-        icon: FileText,
-        href: '/documents'
-    },
-    {
         id: 'projects',
         label: '專案管理',
         icon: FolderKanban,
@@ -134,7 +128,13 @@ export const navigationConfig: NavigationItem[] = [
                 label: '合約列表',
                 icon: ClipboardList,
                 href: '/contracts',
-            }
+            },
+            {
+                id: 'documents',
+                label: '文件解析',
+                icon: FileText,
+                href: '/documents'
+            },
         ]
     },
     {
