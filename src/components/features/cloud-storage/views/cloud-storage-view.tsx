@@ -117,7 +117,14 @@ function CloudStorageViewInternal() {
     }
     
     const handleCreateFolder = async (folderName: string) => {
-        const newFolderPath = currentPath ? `${currentPath}/${folderName}` : folderName;
+        // 根据Firebase官方文档，正确处理文件夹路径
+        let newFolderPath = folderName;
+        if (currentPath && currentPath.trim() !== '') {
+            // 标准化路径：移除开头和结尾的斜杠
+            const normalizedPath = currentPath.replace(/^\/+|\/+$/g, '');
+            newFolderPath = normalizedPath ? `${normalizedPath}/${folderName}` : folderName;
+        }
+        
         const result = await createFolderAction(newFolderPath);
         if (result.success) {
             toast({ title: '成功', description: `資料夾 "${folderName}" 已建立。` });

@@ -38,7 +38,7 @@ export async function getStorageItemsAction(directoryPath: string): Promise<List
             delimiter: '/' 
         });
 
-        // Correctly filter for files (items that do not end with a '/')
+        // 过滤文件：排除以 / 结尾的"文件夹文件"
         const filePromises = files
             .filter(file => !file.name.endsWith('/')) 
             .map(async (file) => {
@@ -55,15 +55,21 @@ export async function getStorageItemsAction(directoryPath: string): Promise<List
                     fullPath: file.name,
                     size: parseInt(metadata.size as string, 10),
                     contentType: metadata.contentType || 'application/octet-stream',
-                    createdAt: metadata.timeCreated,
+                    createdAt: metadata.timeCreated || new Date().toISOString(),
                 };
             });
         
-        // Correctly parse folders from prefixes
-        const folders: StorageFolder[] = (apiResponse?.prefixes || []).map((prefix: string) => ({
-            name: prefix.split('/').filter(Boolean).pop() || '',
-            fullPath: prefix,
-        }));
+        // 解析文件夹前缀，使用类型安全的检查
+        const folders: StorageFolder[] = [];
+        if (apiResponse && typeof apiResponse === 'object' && 'prefixes' in apiResponse) {
+            const prefixes = apiResponse.prefixes as string[];
+            if (Array.isArray(prefixes)) {
+                folders.push(...prefixes.map((prefix: string) => ({
+                    name: prefix.split('/').filter(Boolean).pop() || '',
+                    fullPath: prefix,
+                })));
+            }
+        }
         
         const resolvedFiles = await Promise.all(filePromises);
         
@@ -127,13 +133,20 @@ export async function renameItemAction(oldPath: string, newPath: string, type: '
 
 export async function createFolderAction(folderPath: string): Promise<ActionResult> {
     try {
-        const bucket = adminStorage.bucket();
-        // Create a placeholder file to simulate a folder
-        await bucket.file(`${folderPath}/`).save('', {
-            contentType: 'application/x-directory',
-        });
+        // 标准化路径：移除开头和结尾的斜杠
+        const normalizedPath = folderPath.replace(/^\/+|\/+$/g, '');
         
-        const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
+        if (!normalizedPath) {
+            return { success: false, error: '資料夾名稱不能為空。' };
+        }
+        
+        // 验证文件夹名称格式
+        if (!/^[a-zA-Z0-9\u4e00-\u9fa5\s\-_\.]+$/.test(normalizedPath)) {
+            return { success: false, error: '資料夾名稱包含無效字符。' };
+        }
+        
+        // Firebase Storage 中文件夹通过路径前缀实现，无需创建特殊文件
+        const parentPath = normalizedPath.substring(0, normalizedPath.lastIndexOf('/'));
         revalidatePath(`/cloud-storage?path=${parentPath}`, 'page');
         revalidatePath(`/documents`, 'page');
         return { success: true };
