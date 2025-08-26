@@ -61,6 +61,12 @@ import {
     Activity,
     Cloud,
     Shield,
+    Briefcase,
+    Mail,
+    MessageSquare,
+    Cog,
+    BarChart3,
+    Handshake,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
