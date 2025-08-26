@@ -10,10 +10,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { registerSchema, type RegisterValues } from '../forms';
 import { useToast } from '@/hooks/use-toast';
-import { registerWithEmail } from '@/components/features/auth';
 import { Loader2 } from 'lucide-react';
+import { registerWithEmail, registerSchema, type RegisterValues } from '@/lib/actions/auth.actions';
 
 export function RegisterForm() {
   const { toast } = useToast();

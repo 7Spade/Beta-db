@@ -7,8 +7,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { signInWithGoogle } from '@/components/features/auth';
 import { Loader2 } from 'lucide-react';
+import { signInWithGoogle } from '@/lib/actions/auth.actions';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px" {...props}>
