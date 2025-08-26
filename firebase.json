@@ -15,7 +15,8 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "functions"
-      ]
+      ],
+      "alwaysDeployFromSource": true
     },
     {
       "backendId": "beta-db",
@@ -26,11 +27,13 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "functions"
-      ]
+      ],
+      "alwaysDeployFromSource": true
     }
   ],
   "storage": {
-    "rules": "storage.rules"
+    "rules": "storage.rules",
+    "bucket": "elite-chiller-455712-c4.firebasestorage.app"
   },
   "functions": [
     {
@@ -44,7 +47,10 @@
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log",
-        "*.local"
+        "*.local",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        ".runtimeconfig.json"
       ]
     }
   ],
