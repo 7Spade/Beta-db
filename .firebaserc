@@ -1,5 +1,11 @@
 {
   "projects": {
     "default": "elite-chiller-455712-c4"
+  },
+  "targets": {},
+  "etags": {
+    "elite-chiller-455712-c4": {
+      "extensionInstances": {}
+    }
   }
 }
