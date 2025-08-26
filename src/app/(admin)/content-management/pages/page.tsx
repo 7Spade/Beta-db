@@ -7,7 +7,7 @@ export default function PagesManagementPage() {
     {
       id: 'about',
       title: '關於我們',
-      description: '公司介绍、团队信息、使命愿景',
+      description: '公司介紹、團隊資訊、使命願景',
       status: 'published',
       lastModified: '2024-01-15',
       path: '/about'
@@ -15,7 +15,7 @@ export default function PagesManagementPage() {
     {
       id: 'privacy-policy',
       title: '隱私權政策',
-      description: '用户隐私保护政策和使用条款',
+      description: '使用者隱私保護政策和使用條款',
       status: 'published',
       lastModified: '2024-01-10',
       path: '/privacy-policy'
@@ -23,7 +23,7 @@ export default function PagesManagementPage() {
     {
       id: 'terms-of-service',
       title: '服務條款',
-      description: '服务使用条款和条件',
+      description: '服務使用條款和條件',
       status: 'published',
       lastModified: '2024-01-10',
       path: '/terms-of-service'
@@ -31,7 +31,7 @@ export default function PagesManagementPage() {
     {
       id: 'careers',
       title: '企業徵才',
-      description: '招聘信息和职位列表',
+      description: '徵才資訊和職位列表',
       status: 'published',
       lastModified: '2024-01-12',
       path: '/careers'
@@ -39,7 +39,7 @@ export default function PagesManagementPage() {
     {
       id: 'contact',
       title: '聯絡我們',
-      description: '联系方式和联系表单',
+      description: '聯絡方式和聯絡表單',
       status: 'published',
       lastModified: '2024-01-08',
       path: '/contact'
@@ -51,7 +51,7 @@ export default function PagesManagementPage() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">頁面內容管理</h1>
-          <p className="text-muted-foreground">管理网站的静态页面内容</p>
+          <p className="text-muted-foreground">管理網站的靜態頁面內容</p>
         </div>
         <Button>
           <FileText className="mr-2 h-4 w-4" />

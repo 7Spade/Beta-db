@@ -6,7 +6,7 @@ export default function ContactManagementPage() {
   const contactModules = [
     {
       title: '諮詢管理',
-      description: '查看和管理收到的联系表单和客户咨询',
+      description: '查看和管理收到的聯絡表單和客戶諮詢',
       icon: MessageSquare,
       href: '/contact-management/inquiries',
       count: 18,
@@ -14,7 +14,7 @@ export default function ContactManagementPage() {
     },
     {
       title: '合作夥伴',
-      description: '管理合作伙伴信息和关系',
+      description: '管理合作夥伴資訊和關係',
       icon: Handshake,
       href: '/contact-management/partners',
       count: 12,
@@ -26,7 +26,7 @@ export default function ContactManagementPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">聯絡管理</h1>
-        <p className="text-muted-foreground">管理客户咨询和合作伙伴关系</p>
+        <p className="text-muted-foreground">管理客戶諮詢和合作夥伴關係</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -59,7 +59,7 @@ export default function ContactManagementPage() {
         <Card>
           <CardHeader>
             <CardTitle>聯絡統計</CardTitle>
-            <CardDescription>最近的客户联系活动概览</CardDescription>
+            <CardDescription>最近的客戶聯絡活動概覽</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4 text-center">

@@ -7,7 +7,7 @@ export default function SystemManagementPage() {
   const systemModules = [
     {
       title: '用戶管理',
-      description: '管理后台用户、权限和角色',
+      description: '管理後台使用者、權限和角色',
       icon: Users,
       href: '/system-management/users',
       count: 24,
@@ -15,7 +15,7 @@ export default function SystemManagementPage() {
     },
     {
       title: '系統設定',
-      description: '管理网站基本设置和配置',
+      description: '管理網站基本設定和配置',
       icon: Settings,
       href: '/system-management/settings',
       count: 8,
@@ -23,7 +23,7 @@ export default function SystemManagementPage() {
     },
     {
       title: '數據統計',
-      description: '查看网站访问统计和分析',
+      description: '查看網站訪問統計和分析',
       icon: BarChart3,
       href: '/system-management/analytics',
       count: 156,
@@ -42,7 +42,7 @@ export default function SystemManagementPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">系統管理</h1>
-        <p className="text-muted-foreground">管理系统设置、用户权限和系统监控</p>
+        <p className="text-muted-foreground">管理系統設定、使用者權限和系統監控</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
@@ -81,7 +81,7 @@ export default function SystemManagementPage() {
               <Shield className="h-5 w-5" />
               系統狀態
             </CardTitle>
-            <CardDescription>当前系统运行状态</CardDescription>
+            <CardDescription>當前系統運行狀態</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
