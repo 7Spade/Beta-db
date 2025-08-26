@@ -13,13 +13,13 @@ import { getFunctions } from "firebase/functions";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 export const firebaseConfig = {
-  "projectId": "elite-chiller-455712-c4",
-  "appId": "1:7807661688:web:cbf779797bd21f5a1d1f8d",
-  "storageBucket": "elite-chiller-455712-c4.firebasestorage.app",
-  "apiKey": "AIzaSyCJ-eayGjJwBKsNIh3oEAG2GjbfTrvAMEI",
-  "authDomain": "elite-chiller-455712-c4.firebaseapp.com",
-  "measurementId": "G-3FLE19K97P",
-  "messagingSenderId": "7807661688"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
 };
 
 // Initialize Firebase for the client
@@ -36,10 +36,13 @@ const analytics = typeof window !== 'undefined' ? isSupported().then(yes => yes 
 if (typeof window !== "undefined") {
   import("firebase/app-check")
     .then(({ initializeAppCheck, ReCaptchaV3Provider }) => {
+      const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
+      if (!recaptchaSiteKey) {
+        console.warn("Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY; App Check will initialize without a provider.");
+        return;
+      }
       initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(
-          "6Lcae64rAAAAAGN1IOyTBbbAleUQC2nFdb6pxx_0"
-        ),
+        provider: new ReCaptchaV3Provider(recaptchaSiteKey),
         isTokenAutoRefreshEnabled: true,
       });
     })
