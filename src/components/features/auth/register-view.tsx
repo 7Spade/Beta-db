@@ -19,11 +19,13 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { registerWithEmail, signInWithGoogle } from './auth-actions';
+import { registerWithEmail } from './auth-actions';
 import { registerSchema, type RegisterValues } from './auth-form-schemas';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '@/lib/firebase-client';
 
 function RegisterForm() {
   const { toast } = useToast();
@@ -126,21 +128,26 @@ function SocialAuthButtons() {
 
     const handleGoogleSignIn = async () => {
         setLoading(true);
-        const result = await signInWithGoogle();
-        setLoading(false);
-
-        if (result.error) {
-            toast({
-                title: 'Google 登入失敗',
-                description: result.error,
-                variant: 'destructive',
-            });
-        } else {
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithPopup(auth, provider);
             toast({
                 title: 'Google 登入成功',
                 description: '正在將您導向儀表板...',
             });
-             router.push('/dashboard');
+            router.push('/dashboard');
+        } catch (error: any) {
+            let errorMessage = 'Google 登入失敗，請稍後再試。';
+            if (error.code === 'auth/popup-closed-by-user') {
+                errorMessage = '登入流程被使用者中斷。';
+            }
+            toast({
+                title: 'Google 登入失敗',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
