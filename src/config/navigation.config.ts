@@ -202,19 +202,19 @@ export const navigationConfig: NavigationItem[] = [
         id: 'admin',
         label: '後台管理',
         icon: Shield,
-        href: '/admin/dashboard',
+        href: '/dashboard-management',
         children: [
             {
                 id: 'admin-dashboard',
                 label: '總覽',
                 icon: LayoutDashboard,
-                href: '/admin/dashboard'
+                href: '/dashboard-management'
             },
             {
                 id: 'admin-blog-posts',
                 label: '文章管理',
                 icon: BookOpen,
-                href: '/admin/blog/posts'
+                href: '/blog-management/posts'
             }
         ]
     }
