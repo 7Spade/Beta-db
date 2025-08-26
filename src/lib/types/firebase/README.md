@@ -13,3 +13,4 @@ Firebase服务相关的TypeScript类型定义。
 ## 使用说明
 
 定义Firebase各服务的类型接口，确保类型安全和开发体验。
+

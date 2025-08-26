@@ -38,9 +38,9 @@ export async function getStorageItemsAction(directoryPath: string): Promise<List
             delimiter: '/' 
         });
 
-        // 过滤文件：排除以 / 结尾的"文件夹文件"
+        // 过滤文件：排除以 / 结尾的"文件夹文件"和 .folder 標記檔案
         const filePromises = files
-            .filter(file => !file.name.endsWith('/')) 
+            .filter(file => !file.name.endsWith('/') && !file.name.endsWith('/.folder'))
             .map(async (file) => {
                 const metadata = file.metadata;
                 // Generate a signed URL for client-side display.
@@ -145,7 +145,21 @@ export async function createFolderAction(folderPath: string): Promise<ActionResu
             return { success: false, error: '資料夾名稱包含無效字符。' };
         }
         
-        // Firebase Storage 中文件夹通过路径前缀实现，无需创建特殊文件
+        // 創建資料夾標記檔案 - 這是關鍵步驟
+        const bucket = adminStorage.bucket();
+        const folderMarkerPath = `${normalizedPath}/.folder`;
+        
+        await bucket.file(folderMarkerPath).save('', {
+            contentType: 'application/x-directory',
+            metadata: {
+                customMetadata: {
+                    type: 'folder',
+                    created: new Date().toISOString(),
+                    name: normalizedPath.split('/').pop() || normalizedPath
+                }
+            }
+        });
+        
         const parentPath = normalizedPath.substring(0, normalizedPath.lastIndexOf('/'));
         revalidatePath(`/cloud-storage?path=${parentPath}`, 'page');
         revalidatePath(`/documents`, 'page');
@@ -159,10 +173,12 @@ export async function createFolderAction(folderPath: string): Promise<ActionResu
 export async function deleteFolderAction(folderPath: string): Promise<ActionResult> {
   try {
     const bucket = adminStorage.bucket();
-    await bucket.deleteFiles({ prefix: `${folderPath}` });
-
+    
+    // 刪除資料夾內的所有檔案（包括 .folder 標記）
+    await bucket.deleteFiles({ prefix: `${folderPath}/` });
+    
     const parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
-    revalidatePath(`/cloud-storage?path=${parentPath || ''}`, 'page');
+    revalidatePath(`/cloud-storage?path=${parentPath}`, 'page');
     revalidatePath(`/documents`, 'page');
     return { success: true };
   } catch (error: any) {
