@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbEllipsis, BreadcrumbPage } from '@/components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from '@/components/ui/breadcrumb';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { FolderPlus } from 'lucide-react';
 
@@ -16,158 +16,151 @@ import { FileBrowser } from '../components/file-browser';
 import { UploadButton } from '../components/upload-button';
 import { RenameDialog } from '../components/rename-dialog';
 import { CreateFolderDialog } from '../components/create-folder-dialog';
-import { deleteFileAction, deleteFolderAction, renameItemAction, createFolderAction, getStorageItemsAction } from '../actions/storage.actions';
+import { deleteItemAction, renameItemAction, createFolderAction, getStorageItemsAction } from '../actions/storage.actions';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { StorageFile, StorageFolder } from '../types/storage.types';
+import type { StorageItem } from '../types/storage.types';
 
 function CloudStorageViewInternal() {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    const pathname = usePathname();
-    const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { toast } = useToast();
 
-    const [files, setFiles] = useState<StorageFile[]>([]);
-    const [folders, setFolders] = useState<StorageFolder[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const [items, setItems] = useState<StorageItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    const currentPath = useMemo(() => searchParams.get('path') || '', [searchParams]);
+  const currentPath = useMemo(() => searchParams.get('path') || '', [searchParams]);
 
-    const fetchItems = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
-        const result = await getStorageItemsAction(currentPath);
-        if (result.error) {
-            setError(result.error);
-            toast({ variant: 'destructive', title: '錯誤', description: result.error });
-        } else {
-            setFiles(result.files);
-            setFolders(result.folders);
-        }
-        setIsLoading(false);
-    }, [currentPath, toast]);
-
-    useEffect(() => {
-        fetchItems();
-    }, [fetchItems]);
-    
-    // State for dialogs
-    const [isRenameOpen, setRenameOpen] = useState(false);
-    const [isCreateFolderOpen, setCreateFolderOpen] = useState(false);
-    const [itemToRename, setItemToRename] = useState<{ path: string, name: string, type: 'file' | 'folder' } | null>(null);
-    const [itemToDelete, setItemToDelete] = useState<{ path: string, type: 'file' | 'folder' } | null>(null);
-
-    const handleNavigate = (path: string) => {
-        router.push(`${pathname}?path=${path}`);
-    };
-
-    const breadcrumbItems = useMemo(() => {
-        const segments = currentPath.split('/').filter(Boolean);
-        const items = [{ name: '根目錄', path: '' }];
-        let path = '';
-        for (const segment of segments) {
-            path += `${segment}/`;
-            items.push({ name: segment, path: path.slice(0, -1) });
-        }
-        return items;
-    }, [currentPath]);
-
-
-    const handleRename = (path: string, currentName: string, type: 'file' | 'folder') => {
-        setItemToRename({ path, name: currentName, type });
-        setRenameOpen(true);
-    };
-    
-    const handleConfirmRename = async (newName: string) => {
-        if (!itemToRename) return;
-        
-        const oldPath = itemToRename.path;
-        const directory = oldPath.substring(0, oldPath.lastIndexOf('/'));
-        const newPath = directory ? `${directory}/${newName}` : newName;
-
-        const result = await renameItemAction(oldPath, newPath, itemToRename.type);
-        if (result.success) {
-            toast({ title: '成功', description: '重新命名成功。' });
-            // Data will be refetched by revalidation, no need to call fetchItems()
-        } else {
-            toast({ variant: 'destructive', title: '錯誤', description: result.error });
-        }
-        setItemToRename(null);
-        setRenameOpen(false);
-    };
-    
-    const handleDelete = async (path: string, type: 'file' | 'folder') => {
-      setItemToDelete({ path, type });
+  const fetchItems = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    const result = await getStorageItemsAction(currentPath);
+    if (result.error) {
+      setError(result.error);
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
+    } else {
+      setItems(result.items);
     }
+    setIsLoading(false);
+  }, [currentPath, toast]);
 
-    const handleConfirmDelete = async () => {
-        if (!itemToDelete) return;
-        
-        const result = itemToDelete.type === 'file' 
-            ? await deleteFileAction(itemToDelete.path)
-            : await deleteFolderAction(itemToDelete.path);
-        
-        if(result.success) {
-            toast({ title: '成功', description: `${itemToDelete.type === 'file' ? '檔案' : '資料夾'}已刪除。` });
-            // Data will be refetched by revalidation
-        } else {
-             toast({ variant: 'destructive', title: '錯誤', description: result.error });
-        }
-        setItemToDelete(null);
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
+  
+  // 對話框狀態
+  const [isRenameOpen, setRenameOpen] = useState(false);
+  const [isCreateFolderOpen, setCreateFolderOpen] = useState(false);
+  const [itemToRename, setItemToRename] = useState<{ path: string, name: string, type: 'file' | 'folder' } | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<{ path: string, type: 'file' | 'folder' } | null>(null);
+
+  const handleNavigate = (path: string) => {
+    router.push(`${pathname}?path=${path}`);
+  };
+
+  const breadcrumbItems = useMemo(() => {
+    const segments = currentPath.split('/').filter(Boolean);
+    const items = [{ name: '根目錄', path: '' }];
+    let path = '';
+    for (const segment of segments) {
+      path += `${segment}/`;
+      items.push({ name: segment, path: path.slice(0, -1) });
+    }
+    return items;
+  }, [currentPath]);
+
+  const handleRename = (path: string, currentName: string, type: 'file' | 'folder') => {
+    setItemToRename({ path, name: currentName, type });
+    setRenameOpen(true);
+  };
+  
+  const handleConfirmRename = async (newName: string) => {
+    if (!itemToRename) return;
+    
+    const oldPath = itemToRename.path;
+    const directory = oldPath.substring(0, oldPath.lastIndexOf('/'));
+    const newPath = directory ? `${directory}/${newName}` : newName;
+
+    const result = await renameItemAction(oldPath, newPath, itemToRename.type);
+    if (result.success) {
+      toast({ title: '成功', description: '重新命名成功。' });
+      fetchItems();
+    } else {
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
+    }
+    setItemToRename(null);
+    setRenameOpen(false);
+  };
+  
+  const handleDelete = (path: string, type: 'file' | 'folder') => {
+    setItemToDelete({ path, type });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+    
+    const result = await deleteItemAction(itemToDelete.path, itemToDelete.type);
+    
+    if(result.success) {
+      toast({ title: '成功', description: `${itemToDelete.type === 'file' ? '檔案' : '資料夾'}已刪除。` });
+      fetchItems();
+    } else {
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
+    }
+    setItemToDelete(null);
+  };
+  
+  const handleCreateFolder = async (folderName: string) => {
+    let newFolderPath = folderName;
+    if (currentPath && currentPath.trim() !== '') {
+      const normalizedPath = currentPath.replace(/^\/+|\/+$/g, '');
+      newFolderPath = normalizedPath ? `${normalizedPath}/${folderName}` : folderName;
     }
     
-    const handleCreateFolder = async (folderName: string) => {
-        // 根据Firebase官方文档，正确处理文件夹路径
-        let newFolderPath = folderName;
-        if (currentPath && currentPath.trim() !== '') {
-            // 标准化路径：移除开头和结尾的斜杠
-            const normalizedPath = currentPath.replace(/^\/+|\/+$/g, '');
-            newFolderPath = normalizedPath ? `${normalizedPath}/${folderName}` : folderName;
-        }
-        
-        const result = await createFolderAction(newFolderPath);
-        if (result.success) {
-            toast({ title: '成功', description: `資料夾 "${folderName}" 已建立。` });
-            // Data will be refetched by revalidation
-        } else {
-            toast({ variant: 'destructive', title: '錯誤', description: result.error });
-        }
-    };
+    const result = await createFolderAction(newFolderPath);
+    if (result.success) {
+      toast({ title: '成功', description: `資料夾 "${folderName}" 已建立。` });
+      fetchItems();
+    } else {
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
+    }
+  };
 
   return (
     <>
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-              <h1 className="text-3xl font-bold tracking-tight">雲端儲存</h1>
-              <p className="text-muted-foreground">管理您在 Firebase Storage 中的所有檔案。</p>
+            <h1 className="text-3xl font-bold tracking-tight">雲端儲存</h1>
+            <p className="text-muted-foreground">管理您在 Firebase Storage 中的所有檔案。</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setCreateFolderOpen(true)}>
-                <FolderPlus className="mr-2 h-4 w-4" />
-                新增資料夾
+              <FolderPlus className="mr-2 h-4 w-4" />
+              新增資料夾
             </Button>
             <UploadButton onUploadComplete={fetchItems} currentPath={currentPath} />
           </div>
         </div>
 
-         <Breadcrumb>
-            <BreadcrumbList>
-                {breadcrumbItems.map((item, index) => (
-                    <React.Fragment key={item.path}>
-                        <BreadcrumbItem>
-                            {index < breadcrumbItems.length - 1 ? (
-                                <BreadcrumbLink onClick={() => handleNavigate(item.path)} className="cursor-pointer">
-                                    {item.name}
-                                </BreadcrumbLink>
-                            ) : (
-                                <BreadcrumbPage>{item.name}</BreadcrumbPage>
-                            )}
-                        </BreadcrumbItem>
-                        {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
-                    </React.Fragment>
-                ))}
-            </BreadcrumbList>
+        <Breadcrumb>
+          <BreadcrumbList>
+            {breadcrumbItems.map((item, index) => (
+              <React.Fragment key={item.path}>
+                <BreadcrumbItem>
+                  {index < breadcrumbItems.length - 1 ? (
+                    <BreadcrumbLink onClick={() => handleNavigate(item.path)} className="cursor-pointer">
+                      {item.name}
+                    </BreadcrumbLink>
+                  ) : (
+                    <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                  )}
+                </BreadcrumbItem>
+                {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
+              </React.Fragment>
+            ))}
+          </BreadcrumbList>
         </Breadcrumb>
         
         <Card>
@@ -178,27 +171,25 @@ function CloudStorageViewInternal() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-              {error && <p className="text-destructive text-center">{error}</p>}
-              <FileBrowser 
-                files={files}
-                folders={folders}
-                isLoading={isLoading}
-                onNavigate={handleNavigate}
-                onDeleteFile={(path) => handleDelete(path, 'file')}
-                onDeleteFolder={(path) => handleDelete(path, 'folder')}
-                onRename={handleRename}
-              />
+            {error && <p className="text-destructive text-center">{error}</p>}
+            <FileBrowser 
+              items={items}
+              isLoading={isLoading}
+              onNavigate={handleNavigate}
+              onDelete={handleDelete}
+              onRename={handleRename}
+            />
           </CardContent>
         </Card>
       </div>
       
       {itemToRename && (
-          <RenameDialog
-            isOpen={isRenameOpen}
-            onOpenChange={setRenameOpen}
-            onRename={handleConfirmRename}
-            currentName={itemToRename.name}
-          />
+        <RenameDialog
+          isOpen={isRenameOpen}
+          onOpenChange={setRenameOpen}
+          onRename={handleConfirmRename}
+          currentName={itemToRename.name}
+        />
       )}
       
       <CreateFolderDialog
@@ -207,44 +198,44 @@ function CloudStorageViewInternal() {
         onCreate={handleCreateFolder}
       />
 
-       <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>確定要刪除嗎？</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        此操作無法復原。這將永久刪除此 {itemToDelete?.type === 'file' ? '檔案' : '資料夾及其所有內容'}。
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setItemToDelete(null)}>取消</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive hover:bg-destructive/90">繼續刪除</AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+      <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>確定要刪除嗎？</AlertDialogTitle>
+            <AlertDialogDescription>
+              此操作無法復原。這將永久刪除此 {itemToDelete?.type === 'file' ? '檔案' : '資料夾及其所有內容'}。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setItemToDelete(null)}>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive hover:bg-destructive/90">繼續刪除</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
 
 export function CloudStorageView() {
-    return (
-        <Suspense fallback={
-            <div className="space-y-6">
-                <Skeleton className="h-10 w-1/3" />
-                <Skeleton className="h-8 w-1/4" />
-                <Card>
-                    <CardHeader>
-                        <Skeleton className="h-6 w-1/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                            {Array.from({ length: 12 }).map((_, i) => <Skeleton key={i} className="h-32" />)}
-                        </div>
-                    </CardContent>
-                </Card>
+  return (
+    <Suspense fallback={
+      <div className="space-y-6">
+        <Skeleton className="h-10 w-1/3" />
+        <Skeleton className="h-8 w-1/4" />
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-1/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              {Array.from({ length: 12 }).map((_, i) => <Skeleton key={i} className="h-32" />)}
             </div>
-        }>
-            <CloudStorageViewInternal />
-        </Suspense>
-    );
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <CloudStorageViewInternal />
+    </Suspense>
+  );
 }

@@ -1,14 +1,20 @@
 
-export interface StorageFile {
+export interface StorageItem {
   name: string;
-  url: string;
   fullPath: string;
-  size: number;
-  contentType: string;
-  createdAt: string;
+  type: 'file' | 'folder';
+  size?: number;
+  contentType?: string;
+  createdAt?: string;
+  url?: string;
 }
 
-export interface StorageFolder {
-    name: string;
-    fullPath: string;
+export interface StorageAction {
+  success: boolean;
+  error?: string;
+}
+
+export interface StorageListResult {
+  items: StorageItem[];
+  error?: string;
 }
