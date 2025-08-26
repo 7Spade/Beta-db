@@ -9,19 +9,20 @@ import admin from 'firebase-admin';
 
 // Initialize Firebase Admin SDK for the server
 if (!admin.apps.length) {
-  // 最现代化的配置方式：使用环境变量 + 自动检测
+  // 最简一处定义：优先使用服務端環境變數，否則回退到公開變數
+  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'elite-chiller-455712-c4';
+  const storageBucket = process.env.FIREBASE_STORAGE_BUCKET || process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || `${projectId}.firebasestorage.app`;
+
   const config: admin.AppOptions = {
-    projectId: process.env.FIREBASE_PROJECT_ID || 'elite-chiller-455712-c4',
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'elite-chiller-455712-c4.firebasestorage.app',
+    projectId,
+    storageBucket,
   };
 
-  // 在 Google Cloud 环境中，使用默认凭据
-  // 在本地环境中，尝试加载服务账户文件
+  // 在雲端（App Hosting/Cloud Run）會有預設憑證；本地優先 serviceAccountKey.json
   try {
     const serviceAccount = require('../../serviceAccountKey.json');
     config.credential = admin.credential.cert(serviceAccount);
-  } catch (error) {
-    // 如果服务账户文件不存在，使用默认凭据（仅在 Google Cloud 环境中有效）
+  } catch {
     config.credential = admin.credential.applicationDefault();
   }
 
