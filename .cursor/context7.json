@@ -1,0 +1,20 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Angular",
+  "description": "Angular is a web framework that empowers developers to build fast, reliable applications",
+  "folders": [
+    "./Beta-db/**",
+    "./custom_modes/*",
+    "./memory-bank/*",
+    "./docs/*"
+  ],
+  "excludeFolders": [
+    "third_party",
+    "integration",
+    "modules",
+    "goldens",
+    "contributing-docs",
+    "scripts",
+    "tools"
+  ]
+}
