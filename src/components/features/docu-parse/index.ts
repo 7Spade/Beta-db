@@ -28,3 +28,6 @@ export * from './types';
 
 // 工具函數
 export * from './utils';
+
+export * from './components/file-selector';
+

@@ -9,7 +9,7 @@
  * @version 1.0.0
  * 
  * @fileoverview 文檔處理主頁面 - DocuParse 模組的核心功能頁面
- * @description 從 URL 讀取檔案路徑，自動觸發 AI 解析，並提供結果展示與後續操作。
+ * @description 從 URL 讀取檔案路徑，或讓使用者直接選擇檔案，自動觸發 AI 解析，並提供結果展示與後續操作。
  * 
  * @關聯檔案
  * - `src/components/features/docu-parse/actions/docu-parse-actions.ts`: 呼叫此檔案中的 Server Action `extractWorkItemsFromDocument` 來觸發後端處理流程。
@@ -35,8 +35,9 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { File, Loader2, Cpu, FileCog, Info } from "lucide-react";
+import { File, Loader2, Cpu, FileCog, Info, RefreshCcw } from "lucide-react";
 import Link from "next/link";
+import { FileSelector } from "../components/file-selector";
 
 const initialState = {
   data: undefined,
@@ -56,18 +57,19 @@ export function DocuParseView() {
   const [isCreating, setIsCreating] = useState(false);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [selectedPartnerId, setSelectedPartnerId] = useState('');
+  const [selectedFilePath, setSelectedFilePath] = useState<string | null>(() => searchParams.get('filePath'));
 
   const extractedData = state.data;
   const serverError = state.error;
-  const filePath = searchParams.get('filePath');
 
   useEffect(() => {
-    if (filePath) {
+    // This effect runs only when a file path is selected (either from URL or file selector)
+    if (selectedFilePath) {
       startTransition(() => {
-        formAction({ filePath });
+        formAction({ filePath: selectedFilePath });
       });
     }
-  }, [filePath, formAction]);
+  }, [selectedFilePath, formAction]);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -138,32 +140,27 @@ export function DocuParseView() {
         setIsCreating(false);
     }
   }
+  
+  const handleReset = () => {
+    setSelectedFilePath(null);
+    router.replace('/docu-parse'); // Clear URL params
+    // Reset all local states
+    setWorkItems([]);
+    setDocDetails({ customId: '', name: '', client: '', clientRepresentative: '' });
+    setSelectedPartnerId('');
+  };
 
-  if (!filePath) {
-    return (
-        <Card className="w-full max-w-2xl mx-auto text-center py-16">
-            <CardHeader>
-                <Info className="mx-auto h-12 w-12 text-muted-foreground" />
-                <CardTitle className="mt-4">如何使用此功能？</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <CardDescription>
-                    請先至「雲端硬碟」頁面，在您想解析的檔案上點擊右鍵，然後選擇「使用 DocuParse 解析」。
-                </CardDescription>
-                <Button asChild className="mt-6">
-                    <Link href="/cloud-drive">前往雲端硬碟</Link>
-                </Button>
-            </CardContent>
-        </Card>
-    );
+
+  if (!selectedFilePath) {
+    return <FileSelector onFileSelect={setSelectedFilePath} />;
   }
-
+  
   if (isPending) {
     return (
       <div className="flex flex-col items-center justify-center mt-8 text-center">
         <Loader2 className="w-16 h-16 animate-spin text-primary mb-4" />
         <p className="text-lg font-medium text-foreground">正在提取資料，請稍候...</p>
-        <p className="text-muted-foreground">這可能需要一些時間。</p>
+        <p className="text-muted-foreground">AI 需要一點時間思考。</p>
       </div>
     );
   }
@@ -176,8 +173,8 @@ export function DocuParseView() {
             </CardHeader>
             <CardContent>
                 <p className="text-destructive/80">{state.error}</p>
-                <Button asChild className="mt-6" variant="destructive">
-                    <Link href="/cloud-drive">返回雲端硬碟重試</Link>
+                <Button onClick={handleReset} className="mt-6" variant="destructive">
+                    返回重試
                 </Button>
             </CardContent>
         </Card>
@@ -210,6 +207,10 @@ export function DocuParseView() {
                         <span>消耗 {extractedData.totalTokens} tokens</span>
                     </Badge>
                   )}
+                   <Button variant="outline" size="sm" onClick={handleReset}>
+                        <RefreshCcw className="mr-2 h-4 w-4" />
+                        選擇其他檔案
+                    </Button>
                 </div>
               </div>
           </CardHeader>
