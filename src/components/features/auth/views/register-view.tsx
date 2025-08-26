@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { registerWithEmail, signInWithGoogle } from '@/lib/actions/auth.actions';
+import { registerWithEmail, signInWithGoogle } from '@/components/features/auth/actions/auth-actions';
 import { registerSchema, type RegisterValues } from '@/components/features/auth/forms/auth-form-schemas';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
