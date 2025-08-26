@@ -72,9 +72,16 @@ export const StorageItemCard: FC<StorageItemCardProps> = ({
     return '未知大小';
   };
 
+  const getDateText = () => {
+    if (item.createdAt) {
+      return new Date(item.createdAt).toLocaleDateString('zh-TW');
+    }
+    return item.type === 'folder' ? '虛擬資料夾' : '未知時間';
+  };
+
   return (
     <Card 
-      className={`transition-all duration-200 cursor-pointer hover:shadow-md ${
+      className={`transition-all duration-200 cursor-pointer hover:shadow-md group ${
         isHovered ? 'ring-2 ring-primary/20' : ''
       }`}
       onMouseEnter={() => setIsHovered(true)}
@@ -91,11 +98,9 @@ export const StorageItemCard: FC<StorageItemCardProps> = ({
             <p className="text-xs text-muted-foreground mt-1">
               {getSizeText()}
             </p>
-            {item.createdAt && (
-              <p className="text-xs text-muted-foreground mt-1">
-                {new Date(item.createdAt).toLocaleDateString('zh-TW')}
-              </p>
-            )}
+            <p className="text-xs text-muted-foreground mt-1">
+              {getDateText()}
+            </p>
           </div>
         </div>
       </CardContent>

@@ -172,9 +172,11 @@ function CloudStorageViewInternal() {
             <FileBrowser 
               items={items}
               isLoading={isLoading}
+              currentPath={currentPath}
               onNavigate={handleNavigate}
               onDelete={handleDelete}
               onRename={handleRename}
+              onCreateFolder={() => setCreateFolderOpen(true)}
             />
           </CardContent>
         </Card>

@@ -4,7 +4,14 @@
 import { adminStorage } from '@/lib/firebase-admin';
 import { revalidatePath } from 'next/cache';
 import type { StorageItem, StorageAction, StorageListResult } from '../types/storage.types';
-import { getParentPath, normalizePath, buildFullPath, isValidPath } from '../utils/path.utils';
+import { 
+  getParentPath, 
+  normalizePath, 
+  buildFullPath, 
+  isValidPath,
+  extractFolderPaths,
+  isFolderPath
+} from '../utils/path.utils';
 
 /**
  * 精簡的檔案名稱清理函數
@@ -14,23 +21,37 @@ function sanitizeName(name: string): string {
 }
 
 /**
- * 精簡的儲存項目獲取 - 統一處理檔案和資料夾
+ * 獲取儲存項目 - 使用路徑前綴查詢，無需 .folder 標記
  */
 export async function getStorageItemsAction(directoryPath: string): Promise<StorageListResult> {
   try {
     const bucket = adminStorage.bucket();
-    const [files, , apiResponse] = await bucket.getFiles({ 
-      prefix: directoryPath ? `${directoryPath}/` : '', 
-      delimiter: '/' 
+    const normalizedPath = normalizePath(directoryPath);
+    const prefix = normalizedPath ? `${normalizedPath}/` : '';
+    
+    // 獲取所有檔案（包括子目錄中的檔案）
+    const [files] = await bucket.getFiles({ 
+      prefix,
+      delimiter: '/'
     });
 
     const items: StorageItem[] = [];
+    const allFilePaths: string[] = [];
 
     // 處理檔案
     const filePromises = files
-      .filter(file => !file.name.endsWith('/') && !file.name.endsWith('/.folder'))
+      .filter(file => !file.name.endsWith('/')) // 排除可能的目錄標記
       .map(async (file) => {
+        allFilePaths.push(file.name);
         const metadata = file.metadata;
+        
+        // 只處理當前目錄層級的檔案
+        const relativePath = file.name.substring(prefix.length);
+        if (relativePath.includes('/')) {
+          // 這是子目錄中的檔案，跳過
+          return null;
+        }
+
         const [signedUrl] = await file.getSignedUrl({
           action: 'read',
           expires: Date.now() + 15 * 60 * 1000,
@@ -47,31 +68,27 @@ export async function getStorageItemsAction(directoryPath: string): Promise<Stor
         };
       });
 
-    // 處理資料夾
-    if (apiResponse && typeof apiResponse === 'object' && 'prefixes' in apiResponse) {
-      const prefixes = apiResponse.prefixes as string[];
-      if (Array.isArray(prefixes)) {
-        prefixes.forEach((prefix: string) => {
-          items.push({
-            name: prefix.split('/').filter(Boolean).pop() || '',
-            fullPath: prefix,
-            type: 'folder' as const,
-          });
-        });
-      }
-    }
+    // 獲取資料夾（通過路徑前綴推斷）
+    const folderPaths = extractFolderPaths(allFilePaths, normalizedPath);
+    folderPaths.forEach(folderPath => {
+      const folderName = folderPath.split('/').pop() || '';
+      items.push({
+        name: folderName,
+        fullPath: folderPath,
+        type: 'folder' as const,
+        createdAt: new Date().toISOString(), // 使用當前時間作為預設值
+      });
+    });
 
     // 添加檔案項目
     const resolvedFiles = await Promise.all(filePromises);
-    items.push(...resolvedFiles);
+    const validFiles = resolvedFiles.filter(Boolean) as StorageItem[];
+    items.push(...validFiles);
 
-    // 按類型排序：資料夾在前，檔案在後，按創建時間排序
+    // 按類型排序：資料夾在前，檔案在後，按名稱排序
     items.sort((a, b) => {
       if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
-      if (a.createdAt && b.createdAt) {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      }
-      return 0;
+      return a.name.localeCompare(b.name, 'zh-TW');
     });
 
     return { items };
@@ -82,7 +99,7 @@ export async function getStorageItemsAction(directoryPath: string): Promise<Stor
 }
 
 /**
- * 精簡的刪除操作 - 統一處理檔案和資料夾
+ * 刪除項目 - 簡化版本，無需處理 .folder 標記
  */
 export async function deleteItemAction(itemPath: string, type: 'file' | 'folder'): Promise<StorageAction> {
   try {
@@ -91,17 +108,8 @@ export async function deleteItemAction(itemPath: string, type: 'file' | 'folder'
     if (type === 'file') {
       await bucket.file(itemPath).delete();
     } else {
-      // 刪除資料夾：先刪除所有子檔案，再刪除資料夾標記
+      // 刪除資料夾：刪除所有以該路徑為前綴的檔案
       await bucket.deleteFiles({ prefix: `${itemPath}/` });
-      
-      // 刪除資料夾標記檔案（如果存在）
-      try {
-        const folderMarkerPath = `${itemPath}/.folder`;
-        await bucket.file(folderMarkerPath).delete();
-      } catch (markerError) {
-        // 如果標記檔案不存在，忽略錯誤
-        console.log('資料夾標記檔案不存在或已刪除:', markerError);
-      }
     }
     
     const parentPath = getParentPath(itemPath);
@@ -115,7 +123,7 @@ export async function deleteItemAction(itemPath: string, type: 'file' | 'folder'
 }
 
 /**
- * 精簡的重命名操作 - 統一處理檔案和資料夾
+ * 重命名項目 - 簡化版本，無需處理 .folder 標記
  */
 export async function renameItemAction(oldPath: string, newPath: string, type: 'file' | 'folder'): Promise<StorageAction> {
   try {
@@ -124,42 +132,13 @@ export async function renameItemAction(oldPath: string, newPath: string, type: '
     if (type === 'file') {
       await bucket.file(oldPath).move(newPath);
     } else {
-      // 資料夾重命名：複製後刪除
+      // 資料夾重命名：移動所有子檔案
       const [files] = await bucket.getFiles({ prefix: `${oldPath}/` });
-      const copyPromises = files.map(file => {
+      const movePromises = files.map(file => {
         const targetPath = file.name.replace(oldPath, newPath);
-        return file.copy(bucket.file(targetPath));
+        return file.move(targetPath);
       });
-      await Promise.all(copyPromises);
-      
-      // 刪除舊資料夾的所有檔案
-      await bucket.deleteFiles({ prefix: `${oldPath}/` });
-      
-      // 刪除舊資料夾標記檔案（如果存在）
-      try {
-        const oldFolderMarkerPath = `${oldPath}/.folder`;
-        await bucket.file(oldFolderMarkerPath).delete();
-      } catch (markerError) {
-        // 如果標記檔案不存在，忽略錯誤
-        console.log('舊資料夾標記檔案不存在或已刪除:', markerError);
-      }
-      
-      // 創建新資料夾標記檔案
-      try {
-        const newFolderMarkerPath = `${newPath}/.folder`;
-        await bucket.file(newFolderMarkerPath).save('', {
-          contentType: 'application/x-directory',
-          metadata: {
-            customMetadata: {
-              type: 'folder',
-              created: new Date().toISOString(),
-              name: newPath.split('/').pop() || newPath
-            }
-          }
-        });
-      } catch (markerError) {
-        console.log('創建新資料夾標記檔案失敗:', markerError);
-      }
+      await Promise.all(movePromises);
     }
     
     const parentPath = getParentPath(oldPath);
@@ -173,7 +152,7 @@ export async function renameItemAction(oldPath: string, newPath: string, type: '
 }
 
 /**
- * 精簡的資料夾創建
+ * 創建資料夾 - 創建一個隱藏的標記檔案來表示資料夾存在
  */
 export async function createFolderAction(folderPath: string): Promise<StorageAction> {
   try {
@@ -190,6 +169,7 @@ export async function createFolderAction(folderPath: string): Promise<StorageAct
     const bucket = adminStorage.bucket();
     const folderMarkerPath = `${normalizedPath}/.folder`;
     
+    // 創建一個隱藏的標記檔案
     await bucket.file(folderMarkerPath).save('', {
       contentType: 'application/x-directory',
       metadata: {
@@ -212,7 +192,7 @@ export async function createFolderAction(folderPath: string): Promise<StorageAct
 }
 
 /**
- * 精簡的檔案上傳
+ * 檔案上傳 - 保持原有邏輯
  */
 export async function uploadFileAction(formData: FormData): Promise<StorageAction> {
   const file = formData.get('file') as File;

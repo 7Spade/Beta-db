@@ -1,6 +1,6 @@
 /**
  * 雲端儲存路徑工具函數
- * 統一處理路徑操作，避免路徑計算錯誤
+ * 針對 Firebase Storage 扁平化結構優化
  */
 
 /**
@@ -40,6 +40,7 @@ export function joinPath(base: string, name: string): string {
  * @returns 是否有效
  */
 export function isValidPath(path: string): boolean {
+  // 允許中文、英文、數字、空格、連字符、底線、點號和斜線
   return /^[a-zA-Z0-9\u4e00-\u9fa5\s\-_\.\/]+$/.test(path);
 }
 
@@ -72,4 +73,45 @@ export function isRootPath(path: string): boolean {
 export function buildFullPath(currentPath: string, name: string): string {
   const normalizedCurrentPath = normalizePath(currentPath);
   return normalizedCurrentPath ? `${normalizedCurrentPath}/${name}` : name;
+}
+
+/**
+ * 從檔案路徑推斷資料夾結構
+ * @param filePaths 檔案路徑陣列
+ * @param currentPath 當前查詢路徑
+ * @returns 資料夾路徑陣列
+ */
+export function extractFolderPaths(filePaths: string[], currentPath: string): string[] {
+  const folders = new Set<string>();
+  const prefix = currentPath ? `${currentPath}/` : '';
+  
+  filePaths.forEach(filePath => {
+    if (filePath.startsWith(prefix)) {
+      const relativePath = filePath.substring(prefix.length);
+      const segments = relativePath.split('/');
+      
+      // 如果有多個段，表示有子資料夾
+      if (segments.length > 1) {
+        let folderPath = prefix;
+        for (let i = 0; i < segments.length - 1; i++) {
+          folderPath += segments[i];
+          folders.add(folderPath);
+          folderPath += '/';
+        }
+      }
+    }
+  });
+  
+  return Array.from(folders).sort();
+}
+
+/**
+ * 檢查路徑是否為資料夾（通過檢查是否有子項目）
+ * @param path 路徑
+ * @param allPaths 所有檔案路徑
+ * @returns 是否為資料夾
+ */
+export function isFolderPath(path: string, allPaths: string[]): boolean {
+  const prefix = path.endsWith('/') ? path : `${path}/`;
+  return allPaths.some(filePath => filePath.startsWith(prefix) && filePath !== prefix);
 }

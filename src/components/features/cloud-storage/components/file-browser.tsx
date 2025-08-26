@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import { File } from 'lucide-react';
+import { File, FolderPlus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { StorageItemCard } from './storage-item-card';
 import type { StorageItem } from '../types/storage.types';
@@ -11,17 +11,21 @@ import { Card, CardFooter } from '@/components/ui/card';
 interface FileBrowserProps {
   items: StorageItem[];
   isLoading: boolean;
+  currentPath: string;
   onNavigate: (path: string) => void;
   onDelete: (path: string, type: 'file' | 'folder') => void;
   onRename: (path: string, name: string, type: 'file' | 'folder') => void;
+  onCreateFolder?: () => void;
 }
 
 export const FileBrowser: FC<FileBrowserProps> = ({ 
   items, 
   isLoading, 
+  currentPath,
   onNavigate,
   onDelete,
   onRename,
+  onCreateFolder,
 }) => {
   if (isLoading) {
     return (
@@ -43,7 +47,20 @@ export const FileBrowser: FC<FileBrowserProps> = ({
       <div className="text-center py-16 border-2 border-dashed rounded-lg">
         <File className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-4 text-lg font-semibold">這個資料夾是空的</h3>
-        <p className="mt-1 text-sm text-muted-foreground">點擊右上角的按鈕開始上傳檔案。</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {currentPath ? '點擊右上角的按鈕開始上傳檔案或建立資料夾。' : '開始建立您的第一個資料夾或上傳檔案。'}
+        </p>
+        {onCreateFolder && (
+          <div className="mt-4">
+            <button
+              onClick={onCreateFolder}
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              <FolderPlus className="mr-2 h-4 w-4" />
+              建立第一個資料夾
+            </button>
+          </div>
+        )}
       </div>
     );
   }
