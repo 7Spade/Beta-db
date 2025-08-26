@@ -1,0 +1,177 @@
+/**
+ * @fileoverview Cloud Drive View Component
+ * @description The main view that assembles the Cloud Drive UI.
+ */
+'use client';
+
+import * as React from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from '@/components/ui/breadcrumb';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Input } from '@/components/ui/input';
+import { FolderPlus } from 'lucide-react';
+import { FileBrowser } from '../components/file-browser';
+import { UploadButton } from '../components/upload-button';
+import { listItems, createFolder, deleteItem } from '../actions/storage-actions';
+import type { StorageItem } from '../types/storage.types';
+
+export function CloudDriveView() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
+
+  const [items, setItems] = React.useState<StorageItem[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [itemToDelete, setItemToDelete] = React.useState<StorageItem | null>(null);
+  const [isCreateFolderOpen, setCreateFolderOpen] = React.useState(false);
+  const [newFolderName, setNewFolderName] = React.useState('');
+
+  const currentPath = React.useMemo(() => searchParams.get('path') || '', [searchParams]);
+
+  const fetchItems = React.useCallback(async () => {
+    setIsLoading(true);
+    const result = await listItems(currentPath);
+    if (result.error) {
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
+      setItems([]);
+    } else {
+      setItems(result.items);
+    }
+    setIsLoading(false);
+  }, [currentPath, toast]);
+
+  React.useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
+
+  const handleNavigate = (path: string) => {
+    router.push(`${pathname}?path=${path}`);
+  };
+
+  const handleItemClick = (item: StorageItem) => {
+    if (item.type === 'folder') {
+      handleNavigate(item.fullPath);
+    }
+  };
+  
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+    const result = await deleteItem(itemToDelete.fullPath, itemToDelete.type);
+    if (result.success) {
+      toast({ title: '成功', description: '項目已刪除。'});
+      fetchItems();
+    } else {
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
+    }
+    setItemToDelete(null);
+  };
+  
+  const handleCreateFolder = async () => {
+    if (!newFolderName) return;
+    const normalizedCurrentPath = currentPath.replace(/^\/+|\/+$/g, '');
+    const fullPath = normalizedCurrentPath ? `${normalizedCurrentPath}/${newFolderName}` : newFolderName;
+    const result = await createFolder(fullPath);
+    if (result.success) {
+        toast({ title: '成功', description: `資料夾 "${newFolderName}" 已建立。` });
+        setNewFolderName('');
+        setCreateFolderOpen(false);
+        fetchItems();
+    } else {
+        toast({ variant: 'destructive', title: '錯誤', description: result.error });
+    }
+  };
+
+  const breadcrumbItems = React.useMemo(() => {
+    const segments = currentPath.split('/').filter(Boolean);
+    const crumbs = [{ name: '根目錄', path: '' }];
+    let pathAccumulator = '';
+    for (const segment of segments) {
+      pathAccumulator += (pathAccumulator ? '/' : '') + segment;
+      crumbs.push({ name: segment, path: pathAccumulator });
+    }
+    return crumbs;
+  }, [currentPath]);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">雲端硬碟</h1>
+          <p className="text-muted-foreground">管理您的檔案和資料夾。</p>
+        </div>
+        <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setCreateFolderOpen(true)}>
+                <FolderPlus className="mr-2 h-4 w-4" /> 新增資料夾
+            </Button>
+            <UploadButton currentPath={currentPath} onUploadComplete={fetchItems} />
+        </div>
+      </div>
+      
+      <Breadcrumb>
+        <BreadcrumbList>
+          {breadcrumbItems.map((item, index) => (
+            <React.Fragment key={item.path}>
+              <BreadcrumbItem>
+                <BreadcrumbLink onClick={() => handleNavigate(item.path)} className="cursor-pointer">
+                    {item.name}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
+            </React.Fragment>
+          ))}
+        </BreadcrumbList>
+      </Breadcrumb>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>檔案瀏覽器</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FileBrowser 
+            items={items} 
+            isLoading={isLoading}
+            onItemClick={handleItemClick}
+            onDeleteItem={(item) => setItemToDelete(item)}
+          />
+        </CardContent>
+      </Card>
+      
+      <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>確定要刪除嗎？</AlertDialogTitle>
+            <AlertDialogDescription>
+              此操作無法復原。這將永久刪除「{itemToDelete?.name}」。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setItemToDelete(null)}>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>繼續</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      <AlertDialog open={isCreateFolderOpen} onOpenChange={setCreateFolderOpen}>
+          <AlertDialogContent>
+              <AlertDialogHeader>
+                  <AlertDialogTitle>建立新資料夾</AlertDialogTitle>
+                  <Input 
+                    value={newFolderName} 
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                    placeholder="輸入資料夾名稱..."
+                    onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder()}
+                  />
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                  <AlertDialogCancel>取消</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleCreateFolder}>建立</AlertDialogAction>
+              </AlertDialogFooter>
+          </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

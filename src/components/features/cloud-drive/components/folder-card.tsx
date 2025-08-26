@@ -1,0 +1,50 @@
+/**
+ * @fileoverview Folder Card Component
+ * @description 顯示單一資料夾的卡片 UI。
+ */
+'use client';
+
+import type { FC } from 'react';
+import { Folder as FolderIcon, MoreVertical, Trash2 } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import type { StorageItem } from '../types/storage.types';
+
+interface FolderCardProps {
+  folder: StorageItem;
+  onClick: () => void;
+  onDelete: () => void;
+}
+
+export const FolderCard: FC<FolderCardProps> = ({ folder, onClick, onDelete }) => {
+  return (
+    <Card 
+        className="transition-all duration-200 hover:shadow-md group cursor-pointer"
+        onDoubleClick={onClick}
+    >
+      <CardContent className="p-4 aspect-square flex items-center justify-center">
+        <FolderIcon className="h-12 w-12 text-primary/70" />
+      </CardContent>
+      <CardFooter className="p-2">
+        <div className="w-full flex items-center">
+          <span className="text-sm font-medium truncate flex-1" title={folder.name}>
+            {folder.name}
+          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => e.stopPropagation()}>
+                    <MoreVertical className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem onClick={onDelete} className="text-destructive">
+                    <Trash2 className="mr-2 h-4 w-4" /> 刪除
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </CardFooter>
+    </Card>
+  );
+};
