@@ -9,29 +9,22 @@ import admin from 'firebase-admin';
 
 // Initialize Firebase Admin SDK for the server
 if (!admin.apps.length) {
-  // 在 Firebase 平台上，尝试使用环境变量或默认配置
-  const config: admin.AppOptions = {};
-  
-  // 如果在 Firebase 平台上运行，使用环境变量
-  if (process.env.GOOGLE_CLOUD_PROJECT) {
-    config.projectId = process.env.GOOGLE_CLOUD_PROJECT;
-    config.storageBucket = process.env.FIREBASE_STORAGE_BUCKET || `${process.env.GOOGLE_CLOUD_PROJECT}.firebasestorage.app`;
-    
-    // 在 Firebase 平台上，使用默认凭据
+  // 最现代化的配置方式：使用环境变量 + 自动检测
+  const config: admin.AppOptions = {
+    projectId: process.env.FIREBASE_PROJECT_ID || 'elite-chiller-455712-c4',
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'elite-chiller-455712-c4.firebasestorage.app',
+  };
+
+  // 在 Google Cloud 环境中，使用默认凭据
+  // 在本地环境中，尝试加载服务账户文件
+  try {
+    const serviceAccount = require('../../serviceAccountKey.json');
+    config.credential = admin.credential.cert(serviceAccount);
+  } catch (error) {
+    // 如果服务账户文件不存在，使用默认凭据（仅在 Google Cloud 环境中有效）
     config.credential = admin.credential.applicationDefault();
-  } else {
-    // 本地开发环境，使用服务账户文件
-    try {
-      const serviceAccount = require('../../serviceAccountKey.json');
-      config.credential = admin.credential.cert(serviceAccount);
-      config.projectId = serviceAccount.project_id;
-      config.storageBucket = `${serviceAccount.project_id}.firebasestorage.app`;
-    } catch (error) {
-      console.warn('无法加载服务账户文件，使用默认配置');
-      // 使用默认配置（仅在 Google Cloud 环境中有效）
-    }
   }
-  
+
   admin.initializeApp(config);
 }
 

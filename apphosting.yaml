@@ -9,8 +9,8 @@ runConfig:
 
 # Environment variables and secrets.
 env:
-  # Firebase 项目配置
-  - variable: GOOGLE_CLOUD_PROJECT
+  # Firebase 项目配置（现代化命名）
+  - variable: FIREBASE_PROJECT_ID
     value: elite-chiller-455712-c4
     availability:
       - BUILD
