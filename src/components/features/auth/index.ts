@@ -4,3 +4,5 @@
  */
 export * from './login-view';
 export * from './register-view';
+export * from './auth-actions';
+export * from './auth-form-schemas';
