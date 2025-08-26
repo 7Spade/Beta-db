@@ -525,11 +525,6 @@
 │      ProjectContext.tsx
 │      README.md
 │
-├─docs
-│      database.md
-│      README.md
-│      structure.md
-│
 ├─hooks
 │      README.md
 │      use-mobile.tsx
