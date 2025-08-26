@@ -12,13 +12,13 @@
  */
 
 // 主視圖元件
-export * from './views/documents-view';
+export * from './views/docu-parse-view';
 
 // 可重用表格元件
 export * from './tables';
 
 // Server Actions
-export * from './actions/document-actions';
+export * from './actions/docu-parse-actions';
 
 // 常數定義
 export * from './constants';
@@ -28,6 +28,3 @@ export * from './types';
 
 // 工具函數
 export * from './utils';
-
-// 新增元件
-export * from './components/storage-file-selector';

@@ -1,0 +1,279 @@
+
+/**
+ * @project Beta-db Integrated Platform - 統一整合平台文檔處理頁面
+ * @framework Next.js 15+ (App Router)
+ * @typescript 5.0+
+ * @author Beta-db Development Team
+ * @created 2025-01-22
+ * @updated 2025-01-22
+ * @version 1.0.0
+ * 
+ * @fileoverview 文檔處理主頁面 - DocuParse 模組的核心功能頁面
+ * @description 從 URL 讀取檔案路徑，自動觸發 AI 解析，並提供結果展示與後續操作。
+ * 
+ * @關聯檔案
+ * - `src/components/features/docu-parse/actions/docu-parse-actions.ts`: 呼叫此檔案中的 Server Action `extractWorkItemsFromDocument` 來觸發後端處理流程。
+ * - `src/components/features/docu-parse/tables/work-items-table.tsx`: 在成功解析後，使用此元件來顯示和編輯提取出的工料清單。
+ * - `src/components/features/contracts/actions/contract-actions.ts`: 在使用者確認工料清單後，呼叫 `createProjectAndContractFromDocument` Action 來建立專案和合約。
+ */
+
+"use client";
+
+import { useActionState, useState, useMemo, useEffect, startTransition, Key } from "react";
+import { useSearchParams, useRouter } from 'next/navigation';
+import { collection, getDocs } from "firebase/firestore";
+import { firestore } from "@/lib/firebase-client";
+import type { Partner } from "@/lib/types";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { extractWorkItemsFromDocument, WorkItem, DocDetails } from "@/components/features/docu-parse";
+import { createProjectAndContractFromDocument } from "@/components/features/contracts";
+import { WorkItemsTable } from "../tables";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { File, Loader2, Cpu, FileCog, Info } from "lucide-react";
+import Link from "next/link";
+
+const initialState = {
+  data: undefined,
+  error: undefined,
+};
+
+export function DocuParseView() {
+  const searchParams = useSearchParams();
+  const [state, formAction, isPending] = useActionState(extractWorkItemsFromDocument, initialState);
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const [docDetails, setDocDetails] = useState<DocDetails>({
+      customId: '', name: '', client: '', clientRepresentative: '',
+  });
+  const [workItems, setWorkItems] = useState<WorkItem[]>([]);
+  const [isCreating, setIsCreating] = useState(false);
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [selectedPartnerId, setSelectedPartnerId] = useState('');
+
+  const extractedData = state.data;
+  const serverError = state.error;
+  const filePath = searchParams.get('filePath');
+
+  useEffect(() => {
+    if (filePath) {
+      startTransition(() => {
+        formAction({ filePath });
+      });
+    }
+  }, [filePath, formAction]);
+
+  useEffect(() => {
+    const fetchPartners = async () => {
+        try {
+            const partnersCollection = collection(firestore, 'partners');
+            const partnerSnapshot = await getDocs(partnersCollection);
+            setPartners(partnerSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Partner[]);
+        } catch (error) {
+            console.error("獲取合作夥伴時發生錯誤:", error);
+            toast({ variant: 'destructive', title: '錯誤', description: '無法載入合作夥伴列表。' });
+        }
+    }
+    fetchPartners();
+  }, [toast]);
+
+  const selectedPartner = useMemo(() => {
+    return partners.find(p => p.id === selectedPartnerId);
+  }, [partners, selectedPartnerId]);
+
+  useEffect(() => {
+    if (serverError) {
+      toast({ variant: "destructive", title: "提取失敗", description: serverError });
+    }
+    if (extractedData) {
+        setWorkItems(extractedData.workItems || []);
+        setDocDetails({
+            customId: `DOC-${Date.now()}`,
+            name: extractedData.fileName?.replace(/\.[^/.]+$/, "") || "",
+            client: '',
+            clientRepresentative: '',
+        });
+        setSelectedPartnerId('');
+    }
+  }, [serverError, extractedData, toast]);
+
+  const handleDetailChange = (key: keyof DocDetails, value: string) => {
+      setDocDetails(prev => ({...prev, [key]: value}));
+  }
+  
+  const handlePartnerChange = (partnerId: string) => {
+    setSelectedPartnerId(partnerId);
+    const partner = partners.find(p => p.id === partnerId);
+    setDocDetails(prev => ({
+        ...prev,
+        client: partner?.name || '',
+        clientRepresentative: partner?.contacts?.[0]?.name || '',
+    }));
+  };
+
+  const handleCreateProjectAndContract = async () => {
+    if (!docDetails.name || !docDetails.client || workItems.length === 0) {
+        toast({ variant: "destructive", title: "缺少必要資訊", description: "請填寫「名稱」、「客戶」，並確保至少有一個工作項目。" });
+        return;
+    }
+    setIsCreating(true);
+    try {
+        const result = await createProjectAndContractFromDocument({ docDetails, workItems });
+        if (result.error) {
+             toast({ variant: "destructive", title: "建立失敗", description: result.error });
+        } else {
+             toast({ title: "成功！", description: `專案與合約 "${docDetails.name}" 已成功建立。` });
+             router.push(`/contracts/${result.contractId}`);
+        }
+    } catch (e) {
+        const error = e instanceof Error ? e.message : "發生未知錯誤";
+        toast({ variant: "destructive", title: "建立失敗", description: error });
+    } finally {
+        setIsCreating(false);
+    }
+  }
+
+  if (!filePath) {
+    return (
+        <Card className="w-full max-w-2xl mx-auto text-center py-16">
+            <CardHeader>
+                <Info className="mx-auto h-12 w-12 text-muted-foreground" />
+                <CardTitle className="mt-4">如何使用此功能？</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <CardDescription>
+                    請先至「雲端硬碟」頁面，在您想解析的檔案上點擊右鍵，然後選擇「使用 DocuParse 解析」。
+                </CardDescription>
+                <Button asChild className="mt-6">
+                    <Link href="/cloud-drive">前往雲端硬碟</Link>
+                </Button>
+            </CardContent>
+        </Card>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <div className="flex flex-col items-center justify-center mt-8 text-center">
+        <Loader2 className="w-16 h-16 animate-spin text-primary mb-4" />
+        <p className="text-lg font-medium text-foreground">正在提取資料，請稍候...</p>
+        <p className="text-muted-foreground">這可能需要一些時間。</p>
+      </div>
+    );
+  }
+
+  if (state.error && !isPending) {
+    return (
+        <Card className="w-full max-w-2xl mx-auto text-center py-16 border-destructive">
+            <CardHeader>
+                <CardTitle className="text-destructive">解析失敗</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-destructive/80">{state.error}</p>
+                <Button asChild className="mt-6" variant="destructive">
+                    <Link href="/cloud-drive">返回雲端硬碟重試</Link>
+                </Button>
+            </CardContent>
+        </Card>
+    )
+  }
+
+  if (extractedData) {
+    return (
+      <div className="w-full max-w-5xl mx-auto space-y-8">
+        <Card className="shadow-2xl bg-card" key={extractedData.fileName as Key}>
+          <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                    <CardTitle className="text-2xl">提取的工作項目</CardTitle>
+                    <CardDescription className="flex items-center gap-2 pt-2">
+                    <File className="w-4 h-4" />
+                    {extractedData.fileName}
+                    </CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  {extractedData.workItems.length > 0 && (
+                    <Badge variant="secondary" className="flex items-center gap-2">
+                        <Cpu className="w-4 h-4" />
+                        <span>共提取 {extractedData.workItems.length} 個項目</span>
+                    </Badge>
+                  )}
+                   {extractedData.totalTokens && (
+                    <Badge variant="outline" className="flex items-center gap-2">
+                        <Cpu className="w-4 h-4" />
+                        <span>消耗 {extractedData.totalTokens} tokens</span>
+                    </Badge>
+                  )}
+                </div>
+              </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="space-y-2">
+                  <Label htmlFor="customId">編號</Label>
+                  <Input id="customId" placeholder="文件 ID" value={docDetails.customId} onChange={(e) => handleDetailChange('customId', e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="name">名稱</Label>
+                  <Input id="name" placeholder="文件名稱" value={docDetails.name} onChange={(e) => handleDetailChange('name', e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="client">客戶</Label>
+                  <Select value={selectedPartnerId} onValueChange={handlePartnerChange}>
+                      <SelectTrigger id="client">
+                          <SelectValue placeholder="選擇一個合作夥伴" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          {partners.map(partner => (
+                              <SelectItem key={partner.id} value={partner.id!}>
+                                  {partner.name}
+                              </SelectItem>
+                          ))}
+                      </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientRepresentative">客戶代表</Label>
+                  <Select
+                      value={docDetails.clientRepresentative}
+                      onValueChange={(value) => handleDetailChange('clientRepresentative', value)}
+                      disabled={!selectedPartner || !selectedPartner.contacts || selectedPartner.contacts.length === 0}
+                  >
+                      <SelectTrigger id="clientRepresentative">
+                          <SelectValue placeholder={!selectedPartner ? "請先選擇客戶" : "選擇一位聯絡人"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                          {selectedPartner?.contacts?.map(contact => (
+                              <SelectItem key={contact.id} value={contact.name}>
+                                  {contact.name} ({contact.role})
+                              </SelectItem>
+                          ))}
+                      </SelectContent>
+                  </Select>
+                </div>
+            </div>
+            <WorkItemsTable 
+              key={state.data?.fileName} 
+              initialData={workItems} 
+              onDataChange={setWorkItems} 
+            />
+          </CardContent>
+          <CardContent>
+               <Button onClick={handleCreateProjectAndContract} disabled={isCreating || isPending} className="w-full">
+                   <FileCog className="mr-2 h-4 w-4" />
+                   {isCreating ? "建立中..." : "建立專案與合約"}
+               </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return null;
+}

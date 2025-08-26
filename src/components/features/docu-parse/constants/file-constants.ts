@@ -5,7 +5,7 @@
  * 方便未來的維護和更新。
  * 
  * @關聯檔案
- * - `src/components/features/documents/actions/document-actions.ts`: 使用此處定義的常數來驗證上傳的檔案。
+ * - `src/components/features/docu-parse/actions/docu-parse-actions.ts`: 使用此處定義的常數來驗證上傳的檔案。
  */
 
 // 支援的文件類型陣列

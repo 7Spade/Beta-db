@@ -1,4 +1,5 @@
 
+
 /**
  * @fileoverview 文件處理相關的 Server Actions
  * @description 此檔案包含了用於處理文件上傳、驗證和數據提取的 Next.js Server Actions。
@@ -6,33 +7,38 @@
  * 
  * @關聯檔案
  * - `src/ai/flows/extract-work-items-flow.ts`: `extractWorkItemsFromDocument` Action 會呼叫此 AI 流程來進行文件解析。
- * - `src/components/features/documents/views/documents-view.tsx`: 前端 UI，呼叫此處定義的 Actions。
+ * - `src/components/features/docu-parse/views/docu-parse-view.tsx`: 前端 UI，呼叫此處定義的 Actions。
  */
 
 "use server";
 
 import { extractWorkItems } from '@/ai/flows/extract-work-items-flow';
-import type { DocumentActionState } from '../types';
+import type { DocuParseActionState } from '../types';
+import { getStorage } from 'firebase-admin/storage';
 
 /**
  * Server Action: 從文件提取工作項目數據
  * 此函數接收來自前端的檔案路徑，呼叫 AI 流程來解析文件內容，
  * 最後返回解析結果或錯誤訊息。
  * @param prevState - 上一個 Action 的狀態，由 useActionState Hook 管理。
- * @param payload - 包含檔案路徑和名稱的物件。
- * @returns {Promise<DocumentActionState>} - 返回一個包含解析數據、檔名或錯誤訊息的狀態物件。
+ * @param payload - 包含檔案路徑的物件。
+ * @returns {Promise<DocuParseActionState>} - 返回一個包含解析數據、檔名或錯誤訊息的狀態物件。
  */
 export async function extractWorkItemsFromDocument(
-  prevState: DocumentActionState,
-  payload: { filePath: string | null, fileName: string | null }
-): Promise<DocumentActionState> {
-  const { filePath, fileName } = payload;
+  prevState: DocuParseActionState,
+  payload: { filePath: string | null }
+): Promise<DocuParseActionState> {
+  const { filePath } = payload;
   
-  if (!filePath || !fileName) {
+  if (!filePath) {
     return { error: '未提供有效的檔案路徑。' };
   }
 
   try {
+    const file = getStorage().bucket().file(filePath);
+    const [metadata] = await file.getMetadata();
+    const fileName = metadata.name.split('/').pop() || '未知檔案';
+
     // 步驟 1: 調用 Genkit AI 流程以提取工作項目
     const result = await extractWorkItems({ storagePath: filePath });
     

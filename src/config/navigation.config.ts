@@ -193,10 +193,10 @@ export const navigationConfig: NavigationItem[] = [
         ]
     },
     {
-        id: 'documents',
+        id: 'docu-parse',
         label: '文件解析',
         icon: FileText,
-        href: '/documents'
+        href: '/docu-parse'
     },
     {
         id: 'cloud-drive',
