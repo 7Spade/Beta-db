@@ -91,7 +91,17 @@ export async function deleteItemAction(itemPath: string, type: 'file' | 'folder'
     if (type === 'file') {
       await bucket.file(itemPath).delete();
     } else {
+      // 刪除資料夾：先刪除所有子檔案，再刪除資料夾標記
       await bucket.deleteFiles({ prefix: `${itemPath}/` });
+      
+      // 刪除資料夾標記檔案（如果存在）
+      try {
+        const folderMarkerPath = `${itemPath}/.folder`;
+        await bucket.file(folderMarkerPath).delete();
+      } catch (markerError) {
+        // 如果標記檔案不存在，忽略錯誤
+        console.log('資料夾標記檔案不存在或已刪除:', markerError);
+      }
     }
     
     const parentPath = getParentPath(itemPath);
@@ -121,7 +131,35 @@ export async function renameItemAction(oldPath: string, newPath: string, type: '
         return file.copy(bucket.file(targetPath));
       });
       await Promise.all(copyPromises);
+      
+      // 刪除舊資料夾的所有檔案
       await bucket.deleteFiles({ prefix: `${oldPath}/` });
+      
+      // 刪除舊資料夾標記檔案（如果存在）
+      try {
+        const oldFolderMarkerPath = `${oldPath}/.folder`;
+        await bucket.file(oldFolderMarkerPath).delete();
+      } catch (markerError) {
+        // 如果標記檔案不存在，忽略錯誤
+        console.log('舊資料夾標記檔案不存在或已刪除:', markerError);
+      }
+      
+      // 創建新資料夾標記檔案
+      try {
+        const newFolderMarkerPath = `${newPath}/.folder`;
+        await bucket.file(newFolderMarkerPath).save('', {
+          contentType: 'application/x-directory',
+          metadata: {
+            customMetadata: {
+              type: 'folder',
+              created: new Date().toISOString(),
+              name: newPath.split('/').pop() || newPath
+            }
+          }
+        });
+      } catch (markerError) {
+        console.log('創建新資料夾標記檔案失敗:', markerError);
+      }
     }
     
     const parentPath = getParentPath(oldPath);
