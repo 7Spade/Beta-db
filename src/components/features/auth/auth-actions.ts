@@ -1,7 +1,3 @@
-/**
- * @fileoverview 身份驗證相關的 Server Actions
- * @description 處理如登入、註冊、登出等後端邏輯。
- */
 'use server';
 
 import { auth } from '@/lib/firebase-client';
@@ -12,7 +8,8 @@ import {
     GoogleAuthProvider,
     type User
 } from 'firebase/auth';
-import type { LoginValues, RegisterValues } from '../forms';
+import type { LoginValues, RegisterValues } from './auth-form-schemas';
+
 
 export interface AuthActionResponse {
   success: boolean;
