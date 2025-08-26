@@ -19,6 +19,7 @@ import { CreateFolderDialog } from '../components/create-folder-dialog';
 import { deleteItemAction, renameItemAction, createFolderAction, getStorageItemsAction } from '../actions/storage.actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { StorageItem } from '../types/storage.types';
+import { buildFullPath, getParentPath } from '../utils/path.utils';
 
 function CloudStorageViewInternal() {
   const searchParams = useSearchParams();
@@ -79,8 +80,8 @@ function CloudStorageViewInternal() {
     if (!itemToRename) return;
     
     const oldPath = itemToRename.path;
-    const directory = oldPath.substring(0, oldPath.lastIndexOf('/'));
-    const newPath = directory ? `${directory}/${newName}` : newName;
+    const directory = getParentPath(oldPath);
+    const newPath = buildFullPath(directory, newName);
 
     const result = await renameItemAction(oldPath, newPath, itemToRename.type);
     if (result.success) {
@@ -112,11 +113,7 @@ function CloudStorageViewInternal() {
   };
   
   const handleCreateFolder = async (folderName: string) => {
-    let newFolderPath = folderName;
-    if (currentPath && currentPath.trim() !== '') {
-      const normalizedPath = currentPath.replace(/^\/+|\/+$/g, '');
-      newFolderPath = normalizedPath ? `${normalizedPath}/${folderName}` : folderName;
-    }
+    const newFolderPath = buildFullPath(currentPath, folderName);
     
     const result = await createFolderAction(newFolderPath);
     if (result.success) {

@@ -4,6 +4,7 @@
 import { adminStorage } from '@/lib/firebase-admin';
 import { revalidatePath } from 'next/cache';
 import type { StorageItem, StorageAction, StorageListResult } from '../types/storage.types';
+import { getParentPath, normalizePath, buildFullPath, isValidPath } from '../utils/path.utils';
 
 /**
  * 精簡的檔案名稱清理函數
@@ -93,7 +94,7 @@ export async function deleteItemAction(itemPath: string, type: 'file' | 'folder'
       await bucket.deleteFiles({ prefix: `${itemPath}/` });
     }
     
-    const parentPath = itemPath.substring(0, itemPath.lastIndexOf('/'));
+    const parentPath = getParentPath(itemPath);
     revalidatePath(`/cloud-storage?path=${parentPath}`, 'page');
     revalidatePath(`/documents`, 'page');
     return { success: true };
@@ -112,18 +113,18 @@ export async function renameItemAction(oldPath: string, newPath: string, type: '
     
     if (type === 'file') {
       await bucket.file(oldPath).move(newPath);
-         } else {
-       // 資料夾重命名：複製後刪除
-       const [files] = await bucket.getFiles({ prefix: `${oldPath}/` });
-       const copyPromises = files.map(file => {
-         const targetPath = file.name.replace(oldPath, newPath);
-         return file.copy(bucket.file(targetPath));
-       });
-       await Promise.all(copyPromises);
-       await bucket.deleteFiles({ prefix: `${oldPath}/` });
-     }
+    } else {
+      // 資料夾重命名：複製後刪除
+      const [files] = await bucket.getFiles({ prefix: `${oldPath}/` });
+      const copyPromises = files.map(file => {
+        const targetPath = file.name.replace(oldPath, newPath);
+        return file.copy(bucket.file(targetPath));
+      });
+      await Promise.all(copyPromises);
+      await bucket.deleteFiles({ prefix: `${oldPath}/` });
+    }
     
-    const parentPath = oldPath.substring(0, oldPath.lastIndexOf('/'));
+    const parentPath = getParentPath(oldPath);
     revalidatePath(`/cloud-storage?path=${parentPath}`, 'page');
     revalidatePath(`/documents`, 'page');
     return { success: true };
@@ -138,13 +139,13 @@ export async function renameItemAction(oldPath: string, newPath: string, type: '
  */
 export async function createFolderAction(folderPath: string): Promise<StorageAction> {
   try {
-    const normalizedPath = folderPath.replace(/^\/+|\/+$/g, '');
+    const normalizedPath = normalizePath(folderPath);
     
     if (!normalizedPath) {
       return { success: false, error: '資料夾名稱不能為空。' };
     }
     
-    if (!/^[a-zA-Z0-9\u4e00-\u9fa5\s\-_\.]+$/.test(normalizedPath)) {
+    if (!isValidPath(normalizedPath)) {
       return { success: false, error: '資料夾名稱包含無效字符。' };
     }
     
@@ -162,7 +163,7 @@ export async function createFolderAction(folderPath: string): Promise<StorageAct
       }
     });
     
-    const parentPath = normalizedPath.substring(0, normalizedPath.lastIndexOf('/'));
+    const parentPath = getParentPath(normalizedPath);
     revalidatePath(`/cloud-storage?path=${parentPath}`, 'page');
     revalidatePath(`/documents`, 'page');
     return { success: true };
