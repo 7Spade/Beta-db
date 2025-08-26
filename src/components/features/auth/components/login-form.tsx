@@ -12,7 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { signInWithEmail, loginSchema, type LoginValues } from '@/lib/actions/auth.actions';
+import { signInWithEmail } from '@/lib/actions/auth.actions';
+import { loginSchema, type LoginValues } from '@/components/features/auth/forms';
 
 
 export function LoginForm() {

@@ -12,7 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { registerWithEmail, registerSchema, type RegisterValues } from '@/lib/actions/auth.actions';
+import { registerWithEmail } from '@/lib/actions/auth.actions';
+import { registerSchema, type RegisterValues } from '@/components/features/auth/forms';
 
 export function RegisterForm() {
   const { toast } = useToast();
