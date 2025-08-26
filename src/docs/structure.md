@@ -15,7 +15,41 @@
 │  │  layout.tsx
 │  │  page.tsx
 │  │
-│  ├─(app)
+│  ├─(admin)
+│  │  │  layout.tsx
+│  │  │
+│  │  ├─blog-management
+│  │  │  └─posts
+│  │  │      │  page.tsx
+│  │  │      │
+│  │  │      └─[id]
+│  │  │              page.tsx
+│  │  │
+│  │  └─dashboard-management
+│  │          page.tsx
+│  │
+│  ├─(auth)
+│  │  │  layout.tsx
+│  │  │
+│  │  ├─login
+│  │  │      page.tsx
+│  │  │
+│  │  ├─profile
+│  │  │  │  page.tsx
+│  │  │  │
+│  │  │  └─[id]
+│  │  │          page.tsx
+│  │  │
+│  │  ├─register
+│  │  │      page.tsx
+│  │  │
+│  │  ├─reset-password
+│  │  │      page.tsx
+│  │  │
+│  │  └─verify-email
+│  │          page.tsx
+│  │
+│  ├─(dashboard)
 │  │  │  layout.tsx
 │  │  │  README.md
 │  │  │
@@ -74,63 +108,29 @@
 │  │      └─skills
 │  │              page.tsx
 │  │
-│  ├─(auth)
-│  │  │  layout.tsx
-│  │  │
-│  │  ├─login
-│  │  │      page.tsx
-│  │  │
-│  │  ├─profile
-│  │  │  │  page.tsx
-│  │  │  │
-│  │  │  └─[id]
-│  │  │          page.tsx
-│  │  │
-│  │  ├─register
-│  │  │      page.tsx
-│  │  │
-│  │  ├─reset-password
-│  │  │      page.tsx
-│  │  │
-│  │  └─verify-email
-│  │          page.tsx
-│  │
-│  ├─(public)
-│  │  │  layout.tsx
-│  │  │  README.md
-│  │  │
-│  │  ├─about
-│  │  │      page.tsx
-│  │  │
-│  │  ├─blog
-│  │  │  │  page.tsx
-│  │  │  │
-│  │  │  └─[slug]
-│  │  │          page.tsx
-│  │  │
-│  │  ├─careers
-│  │  │      page.tsx
-│  │  │
-│  │  ├─contact
-│  │  │      page.tsx
-│  │  │
-│  │  ├─privacy-policy
-│  │  │      page.tsx
-│  │  │
-│  │  └─terms-of-service
-│  │          page.tsx
-│  │
-│  └─admin
+│  └─(public)
 │      │  layout.tsx
+│      │  README.md
+│      │
+│      ├─about
+│      │      page.tsx
 │      │
 │      ├─blog
-│      │  └─posts
-│      │      │  page.tsx
-│      │      │
-│      │      └─[id]
-│      │              page.tsx
+│      │  │  page.tsx
+│      │  │
+│      │  └─[slug]
+│      │          page.tsx
 │      │
-│      └─dashboard
+│      ├─careers
+│      │      page.tsx
+│      │
+│      ├─contact
+│      │      page.tsx
+│      │
+│      ├─privacy-policy
+│      │      page.tsx
+│      │
+│      └─terms-of-service
 │              page.tsx
 │
 ├─components
