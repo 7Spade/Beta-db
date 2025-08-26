@@ -4,4 +4,4 @@
 
 ## 檔案
 
-- **`ProjectContext.tsx`**: 此 Context 專門用於管理專案相關的數據。它負責從 Firestore 獲取專案列表，並提供新增專案、更新任務狀態等操作方法。任何需要存取或操作專案數據的元件都可以使用 `useProjects` hook 來連接到此 Context。
+- **`ProjectContext.tsx`**: 此 Context 專門用於管理專案相關的資料。它負責從 Firestore 獲取專案列表，並提供新增專案、更新任務狀態等操作方法。任何需要存取或操作專案資料的元件都可以使用 `useProjects` hook 來連接到此 Context。

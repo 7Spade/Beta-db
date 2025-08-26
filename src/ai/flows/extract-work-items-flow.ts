@@ -1,11 +1,11 @@
 
 /**
- * @fileOverview 從文件解析工料清單流程 (Extract Work Items Flow)
- * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個指向 Cloud Storage 的文件路徑，
- * 並在後端使用 Firebase Admin SDK 直接讀取該文件，然後使用 AI 模型從中解析並提取結構化的工作項目。
- * 這是整個「智能文件解析」功能的核心 AI 邏輯。
+ * @fileOverview 從檔案解析工料清單流程 (Extract Work Items Flow)
+ * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個指向 Cloud Storage 的檔案路徑，
+ * 並在後端使用 Firebase Admin SDK 直接讀取該檔案，然後使用 AI 模型從中解析並提取結構化的工作項目。
+ * 這是整個「智慧檔案解析」功能的核心 AI 邏輯。
  * 
- * @exports extractWorkItems - 觸發數據提取過程的主要函數。
+ * @exports extractWorkItems - 觸發資料提取過程的主要函數。
  * @exports ExtractWorkItemsInput - `extractWorkItems` 函數的輸入 Zod Schema 型別。
  * @exports ExtractWorkItemsOutput - `extractWorkItems` 函數的輸出 Zod Schema 型別。
  */
@@ -22,7 +22,7 @@ const ExtractWorkItemsInputSchema = z.object({
   storagePath: z
     .string()
     .describe(
-      "一份文件（合約、報價單或估價單）在 Firebase Storage 中的路徑 (e.g., 'uploads/document.pdf')。"
+      "一份檔案（合約、報價單或估價單）在 Firebase Storage 中的路徑 (e.g., 'uploads/document.pdf')。"
     ),
 });
 export type ExtractWorkItemsInput = z.infer<typeof ExtractWorkItemsInputSchema>;
@@ -43,7 +43,7 @@ export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema
 
 /**
  * 導出的異步函數，作為外部呼叫此 AI 流程的入口點。
- * @param {ExtractWorkItemsInput} input - 包含文件 Storage 路徑的輸入物件。
+ * @param {ExtractWorkItemsInput} input - 包含檔案 Storage 路徑的輸入物件。
  * @returns {Promise<ExtractWorkItemsOutput & { totalTokens: number }>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
  * @throws 如果流程沒有返回結果，則拋出錯誤。
  */
@@ -89,7 +89,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     let result;
     
     try {
-      // 步驟 1: 使用 Firebase Admin SDK 直接讀取文件內容
+      // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
       const bucket = adminStorage.bucket();
       const file = bucket.file(input.storagePath);
 
@@ -100,7 +100,7 @@ const extractWorkItemsFlow = ai.defineFlow(
 
       const mimeType = metadata[0].contentType || 'application/octet-stream';
       
-      // 步驟 2: 將文件內容轉換為 Data URI
+      // 步驟 2: 將檔案內容轉換為 Data URI
       const fileDataUri = `data:${mimeType};base64,${fileBuffer.toString('base64')}`;
       
       // 步驟 3: 呼叫定義好的 prompt，並傳入 Data URI

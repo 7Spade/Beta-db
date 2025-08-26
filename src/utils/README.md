@@ -7,64 +7,44 @@
 
 ### 組件列表
 
-#### 1. DatePicker
+#### 1. `DatePicker` - 基礎日期選擇器
 基礎的單一日期選擇器組件。
 
-```tsx
-import { DatePicker } from '@/utils/date-picker';
+**Props:**
+- `placeholder`: 預設為 "選擇日期"
+- `value`: 選中的日期值
+- `onChange`: 日期變更回調函數
 
-<DatePicker 
-  field={field} 
-  placeholder="選擇日期"
-  className="custom-class"
-  disabled={false}
-/>
-```
-
-#### 2. DateRangePicker
+#### 2. `DateRangePicker` - 日期範圍選擇器
 日期範圍選擇器，包含起始和結束日期。
 
-```tsx
-import { DateRangePicker } from '@/utils/date-picker';
+**Props:**
+- `startPlaceholder`: 預設為 "起始日期"
+- `endPlaceholder`: 預設為 "結束日期"
+- `startValue` / `endValue`: 起始和結束日期值
+- `onStartChange` / `onEndChange`: 日期變更回調函數
 
-<DateRangePicker
-  startField={startDateField}
-  endField={endDateField}
-  startPlaceholder="起始日期"
-  endPlaceholder="結束日期"
-/>
-```
-
-#### 3. FormDateField
+#### 3. `FormDateField` - 表單日期欄位
 與 react-hook-form 整合的日期欄位組件。
 
-```tsx
-import { FormDateField } from '@/utils/date-picker';
+**Props:**
+- `label`: 欄位標籤，預設為 "日期"
+- `placeholder`: 預設為 "選擇日期"
+- `control`: react-hook-form 的 control 物件
+- `name`: 欄位名稱
 
-<FormDateField
-  field={field}
-  label="日期"
-  placeholder="選擇日期"
-/>
-```
-
-#### 4. FormDateRangeField
+#### 4. `FormDateRangeField` - 表單日期範圍欄位
 與 react-hook-form 整合的日期範圍欄位組件。
 
-```tsx
-import { FormDateRangeField } from '@/utils/date-picker';
-
-<FormDateField
-  startField={startField}
-  endField={endField}
-  startLabel="起始日期"
-  endLabel="結束日期"
-/>
-```
+**Props:**
+- `startField`: 起始日期欄位
+- `endField`: 結束日期欄位
+- `startLabel`: 起始日期標籤
+- `endLabel`: 結束日期標籤
 
 ### 工具函數
 
-#### dateUtils
+#### `dateUtils`
 提供常用的日期操作函數：
 
 ```tsx

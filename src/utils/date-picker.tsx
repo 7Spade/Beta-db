@@ -21,12 +21,12 @@ interface DatePickerProps {
   disabled?: boolean;
 }
 
-export function DatePicker({ 
-  field, 
+export const DatePicker = ({
+  field,
   placeholder = "選擇一個日期",
   className,
-  disabled = false
-}: DatePickerProps) {
+  disabled = false,
+}: DatePickerProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -73,28 +73,28 @@ interface DateRangePickerProps {
   disabled?: boolean;
 }
 
-export function DateRangePicker({ 
-  startField, 
-  endField, 
+export const DateRangePicker = ({
+  startField,
+  endField,
   startPlaceholder = "起始日期",
   endPlaceholder = "結束日期",
   className,
-  disabled = false
-}: DateRangePickerProps) {
+  disabled = false,
+}: DateRangePickerProps) => {
   return (
     <div className={cn("grid grid-cols-2 gap-4", className)}>
       <div className="flex flex-col">
         <label className="text-sm font-medium mb-2">{startPlaceholder}</label>
-        <DatePicker 
-          field={startField} 
+        <DatePicker
+          field={startField}
           placeholder={startPlaceholder}
           disabled={disabled}
         />
       </div>
       <div className="flex flex-col">
         <label className="text-sm font-medium mb-2">{endPlaceholder}</label>
-        <DatePicker 
-          field={endField} 
+        <DatePicker
+          field={endField}
           placeholder={endPlaceholder}
           disabled={disabled}
         />
@@ -112,18 +112,18 @@ interface FormDateFieldProps {
   disabled?: boolean;
 }
 
-export function FormDateField({ 
-  field, 
-  label, 
-  placeholder,
+export const FormDateField = ({
+  field,
+  label = "日期",
+  placeholder = "選擇日期",
   className,
-  disabled = false
-}: FormDateFieldProps) {
+  disabled = false,
+}: FormDateFieldProps) => {
   return (
     <div className={cn("flex flex-col", className)}>
       <label className="text-sm font-medium mb-2">{label}</label>
-      <DatePicker 
-        field={field} 
+      <DatePicker
+        field={field}
         placeholder={placeholder}
         disabled={disabled}
       />
@@ -143,26 +143,26 @@ interface FormDateRangeFieldProps {
   disabled?: boolean;
 }
 
-export function FormDateRangeField({ 
-  startField, 
-  endField, 
+export const FormDateRangeField = ({
+  startField,
+  endField,
   startLabel = "起始日期",
   endLabel = "結束日期",
   startPlaceholder = "選擇起始日期",
   endPlaceholder = "選擇結束日期",
   className,
-  disabled = false
-}: FormDateRangeFieldProps) {
+  disabled = false,
+}: FormDateRangeFieldProps) => {
   return (
     <div className={cn("grid grid-cols-2 gap-4", className)}>
-      <FormDateField 
-        field={startField} 
+      <FormDateField
+        field={startField}
         label={startLabel}
         placeholder={startPlaceholder}
         disabled={disabled}
       />
-      <FormDateField 
-        field={endField} 
+      <FormDateField
+        field={endField}
         label={endLabel}
         placeholder={endPlaceholder}
         disabled={disabled}

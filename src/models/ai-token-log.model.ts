@@ -8,8 +8,8 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 /**
  * @interface IAiTokenLog
- * @description 定義了 AI Token Log 文件在 TypeScript 中的型別。
- * @extends {Document} - 繼承自 Mongoose 的 Document 介面，使其擁有 Mongoose 文件的屬性。
+ * @description 定義了 AI Token Log 檔案在 TypeScript 中的型別。
+ * @extends {Document} - 繼承自 Mongoose 的 Document 介面，使其擁有 Mongoose 檔案的屬性。
  */
 export interface IAiTokenLog extends Document {
   /**

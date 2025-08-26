@@ -1,18 +1,18 @@
-# 数据模型 (Data Models)
+# 資料模型 (Data Models)
 
-定义应用程序的数据结构和类型定义。
+定義應用程式的資料結構和型別定義。
 
-## 模型文件
+## 模型檔案
 
-- `ai-token-log.model.ts` - AI令牌使用日志模型
+- `ai-token-log.model.ts` - AI 令牌使用日誌模型
 
-## 设计原则
+## 設計原則
 
-- 使用TypeScript接口定义数据结构
-- 遵循Firebase Firestore的数据模型规范
-- 支持数据验证和类型安全
-- 便于扩展和维护
+- 使用 TypeScript 介面定義資料結構
+- 遵循 Firebase Firestore 的資料模型規範
+- 支援資料驗證和型別安全
+- 便於擴展和維護
 
 ## 使用方式
 
-导入模型类型用于数据操作和API接口定义。
+匯入模型型別用於資料操作和 API 介面定義。

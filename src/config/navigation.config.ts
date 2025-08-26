@@ -217,10 +217,34 @@ export const navigationConfig: NavigationItem[] = [
                 href: '/dashboard-management'
             },
             {
-                id: 'admin-blog-posts',
+                id: 'admin-blog-management',
                 label: '文章管理',
                 icon: BookOpen,
                 href: '/blog-management/posts'
+            },
+            {
+                id: 'admin-career-management',
+                label: '職涯管理',
+                icon: Briefcase,
+                href: '/career-management'
+            },
+            {
+                id: 'admin-contact-management',
+                label: '聯絡管理',
+                icon: Mail,
+                href: '/contact-management'
+            },
+            {
+                id: 'admin-content-management',
+                label: '內容管理',
+                icon: FileText,
+                href: '/content-management'
+            },
+            {
+                id: 'admin-system-management',
+                label: '系統管理',
+                icon: Cog,
+                href: '/system-management'
             }
         ]
     }
