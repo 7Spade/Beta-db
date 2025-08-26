@@ -2,7 +2,5 @@
  * @fileoverview 身份驗證模組主入口
  * @description 統一導出 Auth 模組的所有公開接口，包括視圖、元件、Hooks 和類型。
  */
-export * from './views/login-view';
-export * from './views/register-view';
-export * from './actions/auth-actions';
-export * from './forms/auth-form-schemas';
+export * from './login-view';
+export * from './register-view';
