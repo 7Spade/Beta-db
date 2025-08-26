@@ -65,10 +65,25 @@ export const menuSuggestion = onCallGenkit({
   // app users can use your API. Read more at https://firebase.google.com/docs/app-check/cloud-functions
   // enforceAppCheck: true,
 
-  // authPolicy can be any callback that accepts an AuthData (a uid and tokens dictionary) and the
-  // request data. The isSignedIn() and hasClaim() helpers can be used to simplify. The following
-  // will require the user to have the email_verified claim, for example.
-  // authPolicy: hasClaim("email_verified"),
+  // 启用身份验证策略：使用自定义函数验证用户身份
+  authPolicy: (authData) => {
+    // 检查用户是否已登录
+    if (!authData?.uid) {
+      throw new Error("用户必须登录");
+    }
+    
+    // 检查用户是否验证过邮箱
+    if (!authData.token?.email_verified) {
+      throw new Error("用户必须验证邮箱");
+    }
+    
+    // 可以添加更多验证逻辑，比如检查用户角色
+    // if (authData.token?.role !== 'admin') {
+    //   throw new Error("用户权限不足");
+    // }
+    
+    return true;
+  },
 
   // Grant access to the API key to this function:
   secrets: [apiKey],
