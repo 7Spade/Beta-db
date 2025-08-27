@@ -14,7 +14,10 @@
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log",
-        "functions"
+        "functions",
+        ".cursor",
+        "docs",
+        "src/docs"
       ],
       "alwaysDeployFromSource": true
     },
@@ -26,7 +29,10 @@
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log",
-        "functions"
+        "functions",
+        ".cursor",
+        "docs",
+        "src/docs"
       ],
       "alwaysDeployFromSource": true
     }
@@ -59,7 +65,10 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      ".cursor",
+      "docs",
+      "src/docs"
     ]
   },
   "emulators": {
