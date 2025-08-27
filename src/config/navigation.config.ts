@@ -267,14 +267,7 @@ export const navigationConfig: NavigationItem[] = [
     }
 ]
 
-export const footerNavigationConfig: NavigationItem[] = [
-    {
-        id: 'settings',
-        label: '設定',
-        icon: Settings,
-        href: '/settings'
-    }
-]
+export const footerNavigationConfig: NavigationItem[] = []
 
 // 工具函數：根據路徑找到對應的導航項目
 export function findNavigationItemByPath(path: string): NavigationItem | null {
