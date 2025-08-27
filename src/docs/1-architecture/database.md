@@ -1,41 +1,12 @@
+# Constructo - 資料庫設計 v2.0
 
-# Constructo - 資料庫設計
+**注意：此文件是整個應用的數據模型唯一事實來源 (Single Source of Truth)，所有開發都應以此為基準。**
 
-本文件詳細說明了 Constructo 平台在 Google Firestore 中的資料庫結構。Firestore 是一個 NoSQL、基於文件的資料庫。
+本文件詳細說明了 Constructo 平台在 Google Firestore 中的資料庫結構。v2.0 版本根據最新的系統藍圖進行了全面更新，以支援更複雜的協作與管理功能。
 
-## 1. 資料模型概述
+## 1. 核心基礎系統設計
 
-我們使用集合 (Collections) 和文件 (Documents) 來組織數據。頂層集合代表了應用的主要實體。
-
----
-
-## 核心基礎系統設計
-
-除了業務相關的集合，本應用程式還包含三個核心的基礎系統，以確保其安全性、可追溯性和互動性。
-
-### 1. **RBAC (Role-Based Access Control) 系統**
-此系統是應用程式安全性的基礎，負責定義「誰能做什麼」。它不是一個獨立的集合，而是整合在各個業務集合中的一個設計模式，主要依賴 `users` 集合中的 `role` 欄位來實現。
-
-- **核心概念**:
-  - **`users.role`**: 每個使用者都有一個角色 (如 'Admin', 'Member')。
-  - **後端驗證**: 所有關鍵的 Server Actions（如 `approveUser`, `deleteContract`）在執行前，都必須先檢查呼叫者的 `role` 是否有足夠的權限。
-  - **前端渲染**: UI 元件（如側邊欄選單、按鈕）會根據當前使用者的 `role` 來決定是否渲染，提供更簡潔的操作介面。
-
-### 2. **通知系統 (Notifications)**
-此系統用於驅動應用程式內的即時通知，例如通知管理員有新用戶待審核。
-
-- **對應集合**: `notifications` (詳見下方 2.11 節)
-
-### 3. **活動日誌系統 (Activity Logs)**
-此系統作為稽核追蹤，記錄應用程式中的所有重要操作，以確保所有變更都有據可查。
-
-- **對應集合**: `activity_logs` (詳見下方 2.12 節)
-
----
-
-## 2. 集合 (Collections)
-
-### 2.1. `users`
+### 1.1. `users`
 
 此集合儲存所有使用者的設定檔、角色和狀態，是 **RBAC 系統**的基礎。
 
@@ -46,14 +17,50 @@
 |--------------|-----------------------------------------|--------------------------------------------|
 | `displayName`| `string`                                | 使用者的顯示名稱。                         |
 | `email`      | `string`                                | 使用者的電子郵件地址。                     |
-| `role`       | `string` ('Admin', 'Member')            | **[RBAC 核心]** 使用者角色，用於權限控制，預設為 'Member'。 |
-| `status`     | `string` ('pending', 'approved', 'rejected') | **核心欄位**。帳號審核狀態，新用戶預設為 'pending'。 |
+| `role`       | `string` ('Admin', 'Member')            | **[RBAC 核心]** 使用者角色，用於權限控制。 |
+| `status`     | `string` ('pending', 'approved', 'rejected') | 帳號審核狀態，新用戶預設為 'pending'。 |
 | `createdAt`  | `Timestamp`                             | 帳號建立時間。                             |
 | `approvedAt` | `Timestamp`                             | (可選) 帳號被核准的時間。                  |
 | `approvedBy` | `string`                                | (可選) 核准此帳號的管理員 UID。            |
 
+### 1.2. `notifications`
 
-### 2.2. `projects`
+此集合用於驅動應用程式內的即時通知系統。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+
+| 欄位        | 類型        | 描述                                       |
+|-------------|-------------|--------------------------------------------|
+| `recipientId` | `string`    | 通知的接收者 `users` 文件 ID。             |
+| `type`      | `string`    | 通知的類型，例如：`'new_user_for_approval'` |
+| `message`   | `string`    | 通知的內容。                               |
+| `link`      | `string`    | (可選) 點擊通知後應導向的頁面路徑。        |
+| `isRead`    | `boolean`   | 標記此通知是否已被讀取，預設為 `false`。   |
+| `createdAt` | `Timestamp` | 通知的建立時間。                           |
+
+
+### 1.3. `activity_logs`
+
+此集合作為審計追蹤，記錄應用程式中的所有重要操作。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+
+| 欄位         | 類型        | 描述                                       |
+|--------------|-------------|--------------------------------------------|
+| `actorId`    | `string`    | 執行此操作的使用者 `users` 文件 ID。       |
+| `entityType` | `string`    | 被操作的實體類型，例如：`'project'`, `'task'` |
+| `entityId`   | `string`    | 被操作的實體文件 ID。                      |
+| `action`     | `string`    | 執行的具體操作，例如：`'create'`, `'update_status'` |
+| `details`    | `Map`       | (可選) 操作的詳細內容。                     |
+| `timestamp`  | `Timestamp` | 操作發生的時間。                           |
+
+---
+
+## 2. 核心業務模組
+
+### 2.1. `projects`
 
 此集合儲存所有營造專案的資訊。
 
@@ -62,56 +69,69 @@
 
 | 欄位                   | 類型                                | 描述                                       |
 |------------------------|-------------------------------------|--------------------------------------------|
-| `ownerId`              | `string`                            | **[RBAC]** 建立此專案的使用者 UID，關聯到 `users` 集合。 |
+| `ownerId`              | `string`                            | 建立此專案的使用者 UID。                   |
 | `customId`             | `string`                            | (可選) 自訂的專案編號。                    |
 | `title`                | `string`                            | 專案的標題或名稱。                         |
 | `description`          | `string`                            | 專案的詳細描述。                           |
 | `client`               | `string`                            | (可選) 客戶名稱。                          |
-| `clientRepresentative` | `string`                            | (可選) 客戶代表名稱。                      |
 | `value`                | `number`                            | 專案的總合約價值。                         |
 | `startDate`            | `Timestamp`                         | 專案的開始日期。                           |
 | `endDate`              | `Timestamp`                         | 專案的預計結束日期。                       |
-| `tasks`                | `Array<Map>` (Task 物件陣列)        | 專案下的任務列表，支持無限層級的子任務。   |
+| `tasks`                | `Array<Map>` (Task 物件陣列)        | 專案下的任務列表。                         |
 
-#### 巢狀 `Task` 物件結構
+#### 巢狀 `Task` 物件結構 (v2.0)
 
-| 欄位          | 類型                                | 描述                                       |
-|---------------|-------------------------------------|--------------------------------------------|
-| `id`          | `string`                            | 任務的唯一 ID (客戶端生成)。               |
-| `title`       | `string`                            | 任務的標題。                               |
-| `status`      | `string` ('待處理', '進行中', '已完成') | 任務的當前狀態。                           |
-| `assigneeId`  | `string` &#124; `null`              | **[RBAC]** 被指派此任務的成員 ID，關聯到 `teamMembers` 集合。 |
-| `lastUpdated` | `string` (ISO 8601)                 | 任務最後一次更新的時間。                   |
-| `quantity`    | `number`                            | 項目數量。                                 |
-| `unitPrice`   | `number`                            | 項目單價。                                 |
-| `value`       | `number`                            | 任務的價值 (quantity * unitPrice)。        |
-| `subTasks`    | `Array<Map>` (Task 物件陣列)        | 巢狀的子任務列表，結構與父任務相同。       |
+| 欄位             | 類型                                | 描述                                       |
+|------------------|-------------------------------------|--------------------------------------------|
+| `id`             | `string`                            | 任務的唯一 ID。                            |
+| `title`          | `string`                            | 任務的標題。                               |
+| `status`         | `string` ('待處理', '進行中', '已完成') | 任務的當前狀態。                           |
+| `value`          | `number`                            | 任務的價值 (quantity * unitPrice)。        |
+| `requiredSkills` | `Array<string>`                     | (可選) 執行此任務所需的技能 ID 列表。      |
+| `assignment`     | `Map`                               | (可選) **任務委派物件**。                    |
+| `subTasks`       | `Array<Map>` (Task 物件陣列)        | 巢狀的子任務列表。                         |
 
+#### 巢狀 `Assignment` 物件結構
 
-### 2.3. `contracts`
+| 欄位           | 類型                | 描述                                       |
+|----------------|---------------------|--------------------------------------------|
+| `type`         | `'Internal'`\|`'Partner'`| 委派類型。                                 |
+| `assigneeId`   | `string`            | 被委派方的 ID (`users` 或 `partners` ID)。  |
+| `assigneeName` | `string`            | 被委派方的名稱。                           |
+| `status`       | `string`            | 委派狀態（`'Pending'`, `'Accepted'`, `'InProgress'`, `'PendingReview'`, `'Completed'`）。 |
+| `history`      | `Array<Map>`        | 狀態變更歷史紀錄。                         |
+
+### 2.2. `contracts`
 
 此集合儲存所有合約的資訊。
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
 
-| 欄位                   | 類型                | 描述                                       |
-|------------------------|---------------------|--------------------------------------------|
-| `createdBy`            | `string`            | **[RBAC]** 建立此合約的使用者 UID，關聯到 `users` 集合。 |
-| `approvedBy`           | `string` &#124; `null` | **[RBAC]** 核准此合約的管理員 UID，關聯到 `users` 集合。 |
-| `customId`             | `string`            | (可選) 自訂的合約編號。                    |
-| `name`                 | `string`            | 合約的名稱。                               |
-| `contractor`           | `string`            | 承包商的名稱。                             |
-| `client`               | `string`            | 客戶的名稱。                               |
-| `clientRepresentative` | `string`            | (可選) 客戶代表名稱。                      |
-| `totalValue`           | `number`            | 合約的總價值。                             |
-| `status`               | `string` ('啟用中', '已完成', '暫停中', '已終止') | 合約的當前狀態。                           |
-| `scope`                | `string`            | 合約的工作範疇描述。                       |
-| `startDate`            | `Timestamp`         | 合約的開始日期。                           |
-| `endDate`              | `Timestamp`         | 合約的結束日期。                           |
-| `payments`             | `Array<Map>`        | 付款記錄陣列 (目前為空，未來可擴充)。      |
-| `changeOrders`         | `Array<Map>`        | 變更單記錄陣列 (目前為空，未來可擴充)。    |
-| `versions`             | `Array<Map>`        | 合約版本歷史記錄。                         |
+| 欄位              | 類型                | 描述                                       |
+|-------------------|---------------------|--------------------------------------------|
+| `customId`        | `string`            | (可選) 自訂的合約編號。                    |
+| `name`            | `string`            | 合約的名稱。                               |
+| `contractor`      | `string`            | 承包商的名稱。                             |
+| `client`          | `string`            | 客戶的名稱。                               |
+| `totalValue`      | `number`            | 合約的總價值。                             |
+| `status`          | `string`            | 合約的當前狀態。                           |
+| `paymentSchedule` | `Array<Map>`        | (可選) 付款排程，用於進度計價。            |
+| `versions`        | `Array<Map>`        | 合約版本歷史記錄。                         |
+
+### 2.3. `billing_requests`
+
+此集合用於儲存所有產生的計價單。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+| 欄位            | 類型                | 描述                                       |
+|-----------------|---------------------|--------------------------------------------|
+| `contractId`    | `string`            | 關聯的 `contracts` ID。                    |
+| `projectId`     | `string`            | 關聯的 `projects` ID。                     |
+| `status`        | `string`            | 計價單狀態 (`'Draft'`, `'Approved'`, etc.) |
+| `totalAmount`   | `number`            | 計價單總金額。                             |
+| `linkedTaskIds` | `Array<string>`     | **核心欄位**，關聯的已完成任務 ID。        |
 
 ### 2.4. `partners`
 
@@ -120,45 +140,31 @@
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
 
-| 欄位                  | 類型                                | 描述                                       |
-|-----------------------|-------------------------------------|--------------------------------------------|
-| `name`                | `string`                            | 合作夥伴的公司名稱。                       |
-| `logoUrl`             | `string`                            | 合作夥伴 Logo 的 URL。                     |
-| `category`            | `string` ('技術', '供應商', etc.) | 合作夥伴的類別。                           |
-| `status`              | `string` ('啟用中', '停用中', '待審核') | 合作夥伴的狀態。                           |
-| `overview`            | `string`                            | 公司業務的簡短概覽。                       |
-| `website`             | `string`                            | 官方網站 URL。                             |
-| `joinDate`            | `string` (ISO 8601)                 | 成為合作夥伴的日期。                       |
-| `flowType`            | `string` ('未配置', '純收款', '純付款', '收付款') | 廠商的財務流程類型。 |
-| `receivableWorkflow`  | `Array<string>`                     | 客製化的應收款狀態流程步驟。 |
-| `payableWorkflow`     | `Array<string>`                     | 客製化的應付款狀態流程步驟。 |
-| `contacts`            | `Array<Map>`                        | 聯絡人列表 (未來可擴充)。                 |
-| `transactions`        | `Array<Map>`                        | 交易記錄 (未來可擴充)。                   |
-| `performanceReviews`  | `Array<Map>`                        | 績效評估記錄 (未來可擴充)。               |
-| `complianceDocuments` | `Array<Map>`                        | 合規文件記錄 (未來可擴充)。               |
-| `contracts`           | `Array<Map>`                        | 相關合約記錄 (未來可擴充)。               |
+| 欄位                 | 類型                                | 描述                                       |
+|----------------------|-------------------------------------|--------------------------------------------|
+| `name`               | `string`                            | 合作夥伴的公司名稱。                       |
+| `category`           | `string`                            | 合作夥伴的類別。                           |
+| `status`             | `string`                            | 合作夥伴的狀態。                           |
+| `flowType`           | `string`                            | 廠商的財務流程類型。                       |
+| `receivableWorkflow` | `Array<string>`                     | 客製化的應收款狀態流程步驟。               |
+| `payableWorkflow`    | `Array<string>`                     | 客製化的應付款狀態流程步驟。               |
+| `contacts`           | `Array<Map>`                        | 聯絡人列表。                               |
 
 ### 2.5. `financial_documents`
 
-此集合儲存所有應收與應付單據。
+此集合儲存所有與合作夥伴相關的應收與應付單據。
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
 
-| 欄位           | 類型                | 描述                                       |
-|----------------|---------------------|--------------------------------------------|
-| `partnerId`    | `string`            | 關聯到的 `partners` 集合的文件 ID。        |
-| `partnerName`  | `string`            | 關聯夥伴的名稱，用於顯示。                 |
-| `contractId`   | `string`            | (可選) 關聯到的 `contracts` 集合的文件 ID。|
-| `contractName` | `string`            | (可選) 關聯合約的名稱，用於顯示。          |
-| `type`         | `string` ('receivable', 'payable') | 單據類型：應收或應付。|
-| `amount`       | `number`            | 單據金額。                                 |
-| `description`  | `string`            | 單據的簡短描述或備註。                     |
-| `currentStep`  | `string`            | 單據在對應夥伴工作流程中的目前步驟。       |
-| `createDate`   | `Timestamp`         | 單據的建立日期。                           |
-| `dueDate`      | `Timestamp`         | 單据的到期或付款日期。                     |
-| `history`      | `Array<Map>`        | 記錄流程中每一步變更的歷史。               |
-
+| 欄位          | 類型                | 描述                                       |
+|---------------|---------------------|--------------------------------------------|
+| `partnerId`   | `string`            | 關聯的 `partners` ID。                     |
+| `type`        | `'receivable'`\|`'payable'` | 單據類型。                                 |
+| `amount`      | `number`            | 單據金額。                                 |
+| `currentStep` | `string`            | 在對應工作流程中的目前步驟。               |
+| `dueDate`     | `Timestamp`         | 到期日。                                   |
+| `history`     | `Array<Map>`        | 流程變更歷史。                             |
 
 ### 2.6. `teamMembers`
 
@@ -172,114 +178,135 @@
 | `name`      | `string`        | 成員姓名。                 |
 | `role`      | `string`        | 成員在團隊中的職位。       |
 | `email`     | `string`        | 成員的電子郵件地址。       |
-| `phone`     | `string`        | 成員的聯絡電話。           |
-| `avatarUrl` | `string`        | (可選) 成員頭像的 URL。    |
-| `skillIds`  | `Array<string>` | (可選) 成員擁有的技能 ID 列表。 |
+| `hourlyRate`| `number`        | (可選) 時薪，用於成本計算。|
+| `skillIds`  | `Array<string>` | (可選) 擁有的技能 ID 列表。 |
 
-### 2.7. `skills`
+### 2.7. `schedules`
 
-此集合儲存所有可用於團隊成員的技能。
-
-- **文件 ID**: 自動生成的唯一 ID (`string`)
-- **文件結構**:
-
-| 欄位          | 類型     | 描述               |
-|---------------|----------|--------------------|
-| `name`        | `string` | 技能的名稱。       |
-| `description` | `string` | (可選) 技能的詳細描述。 |
-
-### 2.8. `knowledgeBaseEntries`
-
-此集合儲存所有工法工序庫的條目。
+此集合用於儲存所有的排班記錄。
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
 
-| 欄位        | 類型        | 描述                               |
-|-------------|-------------|------------------------------------|
-| `title`     | `string`    | 工法或程序的標題。                 |
-| `category`  | `string`    | 條目的分類 (例如：結構工程、水電)。 |
-| `content`   | `string`    | 詳細的內容，可支援 Markdown 格式。 |
-| `tags`      | `Array<string>` | (可選) 相關的關鍵字標籤。      |
-| `createdAt` | `Timestamp` | 條目的建立時間。                   |
-| `updatedAt` | `Timestamp` | 條目的最後更新時間。               |
+| 欄位         | 類型      | 描述                                       |
+|--------------|-----------|--------------------------------------------|
+| `memberId`   | `string`  | **[關聯]** `teamMembers` ID。            |
+| `projectId`  | `string`  | **[關聯]** `projects` ID。                 |
+| `taskId`     | `string`  | (可選) **[關聯]** `projects` 內的任務 ID。 |
+| `startDate`  | `Timestamp`| 排班開始時間。                             |
+| `endDate`    | `Timestamp`| 排班結束時間。                             |
 
-### 2.9. `aiTokenLogs`
+### 2.8. `daily_reports`
 
-此集合儲存所有 Genkit AI 流程的 token 消耗紀錄。
-
-- **文件 ID**: 自動生成的唯一 ID (`string`)
-- **文件結構**:
-
-| 欄位        | 類型        | 描述                               |
-|-------------|-------------|------------------------------------|
-| `flowName`  | `string`    | 被呼叫的 Genkit 流程名稱。         |
-| `totalTokens` | `number`    | 該次操作消耗的總 token 數量。     |
-| `status`    | `string` ('succeeded', 'failed') | 操作的最終狀態。|
-| `timestamp` | `Timestamp` | 紀錄的建立時間。                   |
-| `userId`    | `string`    | (可選) 執行此操作的使用者 ID。     |
-| `error`     | `string`    | (可選) 如果狀態為 'failed'，記錄錯誤訊息。|
-
-### 2.10. `posts`
-
-此集合儲存所有部落格文章的資訊。
+此集合儲存所有專案的每日報告。
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
 
-| 欄位         | 類型        | 描述                                        |
-|--------------|-------------|---------------------------------------------|
-| `title`      | `string`    | 文章標題。                                  |
-| `slug`       | `string`    | 用於 URL 的唯一識別符，通常由標題生成。     |
-| `content`    | `string`    | 文章內容，支援 Markdown 格式。              |
-| `excerpt`    | `string`    | (可選) 文章摘要，用於列表頁面顯示。         |
-| `imageUrl`   | `string`    | (可選) 文章的主圖片 URL。                   |
-| `status`     | `string` ('已發布', '草稿', '已封存') | 文章的當前狀態。|
-| `authorId`   | `string`    | 關聯到 `users` 的作者 ID。                  |
-| `authorName` | `string`    | 作者姓名，用於顯示。                        |
-| `publishedAt`| `Timestamp` | (可選) 文章的發布時間。                     |
-| `createdAt`  | `Timestamp` | 文章的建立時間。                            |
-| `updatedAt`  | `Timestamp` | 文章的最後更新時間。                        |
+| 欄位         | 類型         | 描述                                   |
+|--------------|--------------|----------------------------------------|
+| `projectId`  | `string`     | **[關聯]** `projects` ID。           |
+| `reportDate` | `Timestamp`  | 報告對應的日期。                       |
+| `manpower`   | `Array<Map>` | 當日出勤人力記錄 (`memberId`, `hours`)。 |
+| `workLog`    | `string`     | 當日施工項目和進度描述。               |
+| `photos`     | `Array<Map>` | 現場照片 (`storagePath`)。             |
 
+---
 
-### **2.11. `notifications`**
+## 3. 倉儲管理模組
 
-此集合用於驅動應用程式內的通知系統。
+### 3.1. `warehouses`
 
-- **文件 ID**: 自動生成的唯一 ID (`string`)
-- **文件結構**:
+定義了所有實體的倉庫或庫存地點。
 
-| 欄位        | 類型        | 描述                                       |
-|-------------|-------------|--------------------------------------------|
-| `recipientId` | `string`    | 通知的接收者 `users` 文件 ID。             |
-| `type`      | `string`    | 通知的類型，例如：`'new_user_for_approval'`, `'task_assigned'`。 |
-| `message`   | `string`    | 通知的內容，例如：「王小明已註冊，等待您的審核。」 |
-| `link`      | `string`    | (可選) 點擊通知後應導向的頁面路徑。        |
-| `isRead`    | `boolean`   | 標記此通知是否已被讀取，預設為 `false`。   |
-| `createdAt` | `Timestamp` | 通知的建立時間。                           |
+| 欄位   | 類型      | 描述                       |
+|--------|-----------|----------------------------|
+| `name` | `string`  | 倉庫的唯一名稱。           |
+| `isActive` | `boolean` | 標記此倉庫是否仍在運作中。 |
 
-### **2.12. `activity_logs`**
+### 3.2. `inventory_items`
 
-此集合作為審計追蹤，記錄應用程式中的所有重要操作。
+物料的**主檔目錄**，不包含庫存數量。
 
-- **文件 ID**: 自動生成的唯一 ID (`string`)
-- **文件結構**:
+| 欄位     | 類型     | 描述                           |
+|----------|----------|--------------------------------|
+| `name`   | `string` | 物料/工具的名稱。              |
+| `category`| `string` | 物料分類。                     |
+| `unit`   | `string` | 計量單位。                     |
 
-| 欄位         | 類型        | 描述                                       |
-|--------------|-------------|--------------------------------------------|
-| `actorId`    | `string`    | 執行此操作的使用者 `users` 文件 ID。       |
-| `entityType` | `string`    | 被操作的實體類型，例如：`'project'`, `'task'`, `'contract'`。 |
-| `entityId`   | `string`    | 被操作的實體文件 ID。                      |
-| `action`     | `string`    | 執行的具體操作，例如：`'create'`, `'update_status'`。 |
-| `details`    | `Map`       | (可選) 操作的詳細內容，例如：`{ from: '待處理', to: '進行中' }`。 |
-| `timestamp`  | `Timestamp` | 操作發生的時間。                           |
+### 3.3. `inventory_levels`
 
-## 3. 數據完整性與安全性
+**核心庫存集合**。每一份文件代表「一個物料在一個倉庫的庫存量」。
 
-- **客戶端驗證**: 主要由客戶端應用程式的邏輯（例如，表單驗證）來保證。
-- **後端安全規則 (未來)**: 可以通過部署 Firestore 安全規則來在後端強制實施數據驗證和訪問控制，這是提高安全性的關鍵下一步。例如：
-  - 只有 `role` 為 `'Admin'` 的使用者才能寫入 `users` 集合中的 `status` 欄位。
-  - 只有文件的 `ownerId` 或 `Admin` 才能修改或刪除 `projects` 文件。
-- **稽核追蹤**: `activity_logs` 和 `notifications` 集合讓所有重要操作都有據可查，並能通知相關人員。
+- **文件 ID**: `"{itemId}_{warehouseId}"`
+| 欄位        | 類型      | 描述                         |
+|-------------|-----------|------------------------------|
+| `itemId`    | `string`  | **[關聯]** `inventory_items` ID。 |
+| `warehouseId`| `string` | **[關聯]** `warehouses` ID。     |
+| `quantity`  | `number`  | **核心**。當前的實際庫存數量。|
 
-    
+### 3.4. `inventory_movements`
+
+不可變的流水帳，記錄每一次庫存的變動歷史。
+
+| 欄位         | 類型     | 描述                                       |
+|--------------|----------|--------------------------------------------|
+| `itemId`     | `string` | **[關聯]** `inventory_items` ID。          |
+| `type`       | `string` | `inbound`, `outbound`, `transfer-out`, `transfer-in` |
+| `quantity`   | `number` | 變動的數量。                               |
+| `fromWarehouseId` | `string` | (可選) 來源倉庫 ID。                   |
+| `toWarehouseId` | `string` | (可選) 目標倉庫 ID。                   |
+| `transferId` | `string` | (可選) 唯一的調撥操作 ID。                 |
+
+---
+
+## 4. 內容管理模組
+
+### 4.1. `posts`
+儲存所有部落格文章。
+
+| 欄位     | 類型      | 描述                             |
+|----------|-----------|----------------------------------|
+| `title`  | `string`  | 文章標題。                       |
+| `slug`   | `string`  | **[查詢關鍵]** URL 的唯一識別符。|
+| `content`| `string`  | 文章內容。                       |
+| `status` | `string`  | '已發布', '草稿', '已封存'。     |
+
+### 4.2. `job_postings`
+儲存所有職位空缺。
+
+| 欄位   | 類型     | 描述                             |
+|--------|----------|----------------------------------|
+| `title`| `string` | 職位名稱。                       |
+| `status`| `string` | '開放中', '已關閉', '草稿'。     |
+
+### 4.3. `job_applications`
+儲存所有收到的應徵申請。
+
+| 欄位          | 類型     | 描述                         |
+|---------------|----------|------------------------------|
+| `jobId`       | `string` | **[關聯]** `job_postings` ID。 |
+| `applicantName`| `string`| 應徵者姓名。                   |
+| `resumeUrl`   | `string` | 履歷檔案的儲存 URL。         |
+| `status`      | `string` | '待審查', '面試中', etc.      |
+
+### 4.4. `contact_inquiries`
+儲存所有從「聯絡我們」頁面提交的訊息。
+
+| 欄位    | 類型     | 描述                         |
+|---------|----------|------------------------------|
+| `name`  | `string` | 提交者的姓名。               |
+| `email` | `string` | 提交者的電子郵件地址。       |
+| `status`| `string` | 'New', 'InProgress', 'Resolved' |
+
+### 4.5. `structured_content`
+儲存動態頁面內容的無頭 CMS 集合。
+
+- **文件 ID**: `home_page_hero`, `about_page_mission`
+- **文件結構**: 動態的鍵值對。
+```json
+{
+  "title": "領先的精密設備整合服務專家",
+  "subtitle": "從前期評估、客製化設計到無塵室整合與持續維護..."
+}
+```
