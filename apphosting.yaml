@@ -22,6 +22,7 @@ env:
       - BUILD
       - RUNTIME
 
+  # reCAPTCHA 配置
   - variable: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
     value: 6Lcae64rAAAAAGN1IOyTBbbAleUQC2nFdb6pxx_0
     availability:
@@ -66,7 +67,7 @@ env:
       - RUNTIME
 
   - variable: MONGODB_URI
-    secret: MONGODB_URI
+    value: mongodb+srv://7si:m9PIsSOktMQr5X9E@beta.myiv9dp.mongodb.net/beta-db?retryWrites=true&w=majority&appName=Beta
     availability:
       - BUILD
       - RUNTIME
@@ -76,7 +77,6 @@ env:
     availability:
       - BUILD
       - RUNTIME
-
       
   # 其他环境变量可以在这里添加
   # - variable: MESSAGE
