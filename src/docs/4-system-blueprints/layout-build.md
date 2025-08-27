@@ -87,3 +87,21 @@
 2.  **Context 依賴**: 在合併 Provider 時，需確保元件樹的結構正確，所有消費 Context 的子元件都在 `AppProvider` 的包裹之下。
 
 透過遵循上述步驟，我們可以系統性地完成這些優化，為應用程式的長期健康發展奠定更堅實的基礎。
+
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       └── layout.tsx                  # 確保 AppProvider 包裹 children
+├── components/
+│   └── layout/
+│       └── core/
+│           ├── app-header.tsx          # 修改為 Server Component，渲染骨架
+│           ├── app-header-client.tsx   # <-- 新檔案，處理所有互動邏輯
+│           └── app-provider.tsx        # <-- 整合 SidebarProvider 的邏輯
+└── components/
+    └── ui/
+        └── sidebar.tsx                 # 簡化或移除 SidebarProvider
+
+```

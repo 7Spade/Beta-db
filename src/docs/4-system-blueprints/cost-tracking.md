@@ -60,5 +60,31 @@
 - 需要引入更多的圖表元件（如 `recharts`）來繪製成本對比圖和 S 曲線。
 - 需要開發新的 AI 流程用於成本預測。
 
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       └── projects/
+│           └── [id]/
+│               └── (tabs)/
+│                   ├── cost-analysis/      <-- 新路由
+│                   │   └── page.tsx
+│                   └── layout.tsx            <-- 修改現有佈局以包含新標籤頁
+├── components/
+│   └── features/
+│       └── projects/
+│           ├── cost-analysis/              <-- 新目錄
+│           │   ├── cost-analysis-view.tsx  # 主視圖，包含所有圖表和統計
+│           │   ├── budget-vs-actual-chart.tsx
+│           │   └── s-curve-chart.tsx
+│           └── actions/
+│               └── cost-actions.ts         # 用於獲取成本數據的 Server Actions
+└── ai/
+    └── flows/
+        └── predict-project-cost-flow.ts    <-- 新 AI 流程
+
+```
+
 ---
 **結論**: 此監控系統是實現平台「數據驅動」核心價值的關鍵。它將前端收集的零散數據轉化為有意義的、可指導行動的商業洞察，是提升平台對高階管理者吸引力的重要功能。

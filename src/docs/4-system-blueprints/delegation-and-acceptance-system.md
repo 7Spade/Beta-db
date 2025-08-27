@@ -72,5 +72,33 @@
 - **「我的任務中心」頁面**: 需要為所有使用者（包括內部員工和外部合作夥伴的聯絡人）建立一個新的頁面，集中展示所有指派給他們的任務，並允許他們進行操作。
 - **Server Actions**: 所有狀態變更都應透過 Server Actions 執行，以確保業務邏輯和權限檢查在伺服器端完成。
 
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       ├── my-tasks/                   <-- 新路由
+│       │   └── page.tsx
+│       └── projects/
+│           └── [id]/
+│               └── page.tsx              <-- project-details-sheet.tsx 的邏輯會在這裡
+├── components/
+│   └── features/
+│       ├── projects/
+│       │   ├── actions/
+│       │   │   └── assignment-actions.ts <-- 新 Server Actions
+│       │   ├── components/
+│       │   │   ├── task-item.tsx         <-- 重構此元件
+│       │   │   └── delegate-task-dialog.tsx
+│       │   └── types/
+│       │       └── assignment-types.ts   <-- 新類型定義
+│       └── my-tasks/                     <-- 新目錄
+│           └── my-tasks-view.tsx
+└── lib/
+    └── events/
+        └── app-events.ts                 <-- 新增 'task.delegated', 'task.review_requested' 等事件
+
+```
+
 ---
 **結論**: 這個「委派與驗收」系統是平台協作能力的基石。它的實現將使 Beta-db 從一個資訊記錄系統，蛻變為一個真正能夠管理和驅動複雜工程協作流程的強大平台。

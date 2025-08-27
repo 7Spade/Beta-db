@@ -64,5 +64,32 @@
 - 在 `/team/schedule` 頁面開發完整的排班互動邏輯（拖拽、點擊、指派等）。
 - 需要開發新的 AI 流程 `suggest-schedule-members-flow.ts`。
 
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       └── team/
+│           └── schedule/
+│               └── page.tsx
+├── components/
+│   └── features/
+│       └── team/
+│           └── schedule/               <-- 新目錄
+│               ├── actions/
+│               │   └── schedule-actions.ts
+│               ├── components/
+│               │   ├── schedule-calendar.tsx
+│               │   └── assignment-dialog.tsx
+│               ├── types/
+│               │   └── schedule-types.ts
+│               └── views/
+│                   └── schedule-view.tsx
+└── ai/
+    └── flows/
+        └── suggest-schedule-flow.ts      <-- 新 AI 流程
+
+```
+
 ---
 **結論**: 此系統將團隊管理與專案執行緊密結合，是從「靜態記錄」邁向「動態調度」的關鍵步驟，能顯著提升專案的資源管理效率。

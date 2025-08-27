@@ -90,3 +90,36 @@
 - **專案管理**: 在專案的物料清單 (BoM) 中，可以直接關聯到庫存系統的物料。
 - **工地日報**: 在填寫日報的「物料消耗」部分時，可以從庫存中選擇物料，並自動觸發一次「出庫」記錄。
 - **合作夥伴**: 物料可以關聯到 `partners` 集合中的供應商。
+
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       └── inventory/                    <-- 新路由
+│           ├── items/
+│           │   └── page.tsx
+│           ├── movements/
+│           │   └── page.tsx
+│           └── page.tsx                  # 庫存儀表板
+├── components/
+│   └── features/
+│       └── inventory/                    <-- 新目錄
+│           ├── actions/
+│           │   └── inventory-actions.ts
+│           ├── components/
+│           │   └── low-stock-alert.tsx
+│           ├── forms/
+│           │   ├── item-form.tsx
+│           │   └── movement-form.tsx
+│           ├── tables/
+│           │   ├── items-table.tsx
+│           │   └── movements-table.tsx
+│           ├── types/
+│           │   └── inventory-types.ts
+│           └── views/
+│               └── inventory-dashboard-view.tsx
+└── config/
+    └── navigation.config.ts              <-- 新增「庫存管理」導航項目
+
+```

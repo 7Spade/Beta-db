@@ -64,5 +64,32 @@
 ## 4. 相關文件
 
 - **[任務委派與驗收設計藍圖](./delegation-and-acceptance-system.md)**
-- **[事件驅動架構](./events.md)**
-- **[資料庫設計](./database.md)**
+- **[事件驅動架構](../1-architecture/events.md)**
+- **[資料庫設計](../1-architecture/database.md)**
+
+
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       └── projects/
+│           └── page.tsx              # 將從伺服器端獲取數據，並傳遞給 views
+├── components/
+│   └── features/
+│       └── app/                      # --> 建議重命名為 'projects'
+│           ├── actions/              <-- 新目錄，存放 Server Actions
+│           │   ├── project-actions.ts
+│           │   └── task-actions.ts
+│           ├── components/             <-- 新目錄
+│           │   ├── create-project-dialog.tsx
+│           │   ├── project-details-sheet.tsx
+│           │   └── task-item.tsx
+│           ├── views/                <-- 新目錄
+│           │   └── projects-view.tsx
+│           └── types/                <-- 新目錄
+│               └── project-types.ts
+└── context/
+    └── ProjectContext.tsx              <-- 廢棄並刪除此檔案
+
+```

@@ -93,3 +93,37 @@
 - **團隊管理**: 在記錄人力時，需要讀取 `teamMembers` 集合的資料。
 - **庫存系統**: 在記錄物料消耗時，需要讀取 `inventory_items` 的資料，並在未來可能觸發庫存更新。
 - **雲端硬碟**: 上傳的照片將儲存在 Firebase Storage，並由 `cloud-drive` 模組統一管理。
+
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       └── projects/
+│           └── [id]/
+│               ├── reports/              <-- 新路由
+│               │   ├── [reportId]/
+│               │   │   └── page.tsx
+│               │   ├── new/
+│               │   │   └── page.tsx
+│               │   └── page.tsx
+│               └── layout.tsx              <-- 修改現有佈局以包含「日報」標籤頁
+├── components/
+│   └── features/
+│       └── daily-reports/                <-- 新目錄
+│           ├── actions/
+│           │   └── report-actions.ts
+│           ├── components/
+│           │   └── photo-uploader.tsx
+│           ├── forms/
+│           │   └── daily-report-form.tsx
+│           ├── types/
+│           │   └── report-types.ts
+│           └── views/
+│               ├── report-list-view.tsx
+│               └── report-detail-view.tsx
+└── ai/
+    └── flows/
+        └── summarize-daily-report-flow.ts  <-- 新 AI 流程
+
+```

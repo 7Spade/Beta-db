@@ -200,6 +200,7 @@
 │  │  │      login-view.tsx
 │  │  │      profile-view.tsx
 │  │  │      public-profile-view.tsx
+│  │  │      README.md
 │  │  │      register-view.tsx
 │  │  │      social-auth-buttons.tsx
 │  │  │      use-auth.ts
@@ -215,6 +216,8 @@
 │  │  │          posts-list-view.tsx
 │  │  │
 │  │  ├─cloud-drive
+│  │  │  │  README.md
+│  │  │  │
 │  │  │  ├─actions
 │  │  │  │      storage-actions.ts
 │  │  │  │
@@ -451,6 +454,7 @@
 │  │      ├─knowledge-base
 │  │      │  │  entry-form-dialog.tsx
 │  │      │  │  page.tsx
+│  │      │  │  README.md
 │  │      │  │
 │  │      │  └─actions
 │  │      │          index.ts
@@ -559,8 +563,24 @@
 │      README.md
 │
 ├─docs
+│      ai.md
+│      auth.md
+│      blog.md
+│      cloud-drive.md
+│      contracts.md
+│      cost-tracking.md
+│      daily-report.md
 │      database.md
+│      docu-parse.md
+│      events.md
+│      inventory.md
+│      layout-build.md
 │      layout.md
+│      partnerverse.md
+│      progress-billing.md
+│      project.md
+│      resource-scheduling.md
+│      team.md
 │
 ├─hooks
 │      README.md
@@ -624,6 +644,4 @@
     │          README.md
     │
     └─utils
-            date-picker.tsx
-            README.md
             utils.ts

@@ -57,5 +57,39 @@
 - 需要開發一個新的「計價單產生器」介面。
 - 需要增強 `PartnerVerse` 中財務單據的顯示，使其能清晰地展示審批歷史和目前狀態。
 
+### 結構樹 (Structure Tree)
+```
+src/
+├── app/
+│   └── (dashboard)/
+│       ├── billing/                      <-- 新路由
+│       │   ├── page.tsx                  # 計價中心儀表板
+│       │   └── create/
+│       │       └── page.tsx              # 新建計價單
+│       └── contracts/
+│           └── [id]/
+│               └── page.tsx              <-- 在此頁面加入設定付款排程的 UI
+├── components/
+│   └── features/
+│       ├── billing/                      <-- 新目錄
+│       │   ├── actions/
+│       │   │   └── billing-actions.ts
+│       │   ├── components/
+│       │   │   ├── payment-schedule-editor.tsx
+│       │   │   └── task-selector-for-billing.tsx
+│       │   ├── views/
+│       │   │   ├── billing-dashboard-view.tsx
+│       │   │   └── create-bill-view.tsx
+│       │   └── types/
+│       │       └── billing-types.ts
+│       └── partnerverse/
+│           └── workflows/
+│               └── workflow-builder.tsx    <-- 增強此元件以顯示審批細節
+└── lib/
+    └── events/
+        └── app-events.ts                 <-- 新增 'billing.created', 'billing.approved' 等事件
+
+```
+
 ---
 **結論**: 此整合系統是連接工程與財務的橋樑，是平台從「數據記錄」走向「流程自動化」的關鍵一步，具有極高的業務價值。
