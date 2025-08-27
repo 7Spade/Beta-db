@@ -66,6 +66,17 @@ env:
       - BUILD
       - RUNTIME
 
+  - variable: MONGODB_URI
+    secret: MONGODB_URI
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: GEMINI_API_KEY
+    secret: GEMINI_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
   # 其他环境变量可以在这里添加
   # - variable: MESSAGE
   #   value: Hello world!
