@@ -65,7 +65,7 @@
 - 需要開發新的 AI 流程 `suggest-schedule-members-flow.ts`。
 
 ### 結構樹 (Structure Tree)
-`​`​`
+```
 src/
 ├── app/
 │   └── (dashboard)/
@@ -89,7 +89,7 @@ src/
     └── flows/
         └── suggest-schedule-flow.ts      <-- 新 AI 流程
 
-`​`​`
+```
 
 ---
 **結論**: 此系統將團隊管理與專案執行緊密結合，是從「靜態記錄」邁向「動態調度」的關鍵步驟，能顯著提升專案的資源管理效率。

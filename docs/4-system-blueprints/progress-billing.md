@@ -70,7 +70,7 @@
 - 需要增強 `PartnerVerse` 中財務單據的顯示，使其能清晰地展示審批歷史和目前狀態。
 
 ### 結構樹 (Structure Tree)
-`​`​`
+```
 src/
 ├── app/
 │   └── (dashboard)/
@@ -101,7 +101,7 @@ src/
     └── events/
         └── app-events.ts                 <-- 新增 'billing.created', 'billing.approved' 等事件
 
-`​`​`
+```
 
 ---
 **結論**: 此整合系統是連接工程與財務的橋樑，是平台從「數據記錄」走向「流程自動化」的關鍵一步，具有極高的業務價值。

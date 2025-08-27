@@ -95,7 +95,7 @@
 - **雲端硬碟**: 上傳的照片將儲存在 Firebase Storage，並由 `cloud-drive` 模組統一管理。
 
 ### 結構樹 (Structure Tree)
-`​`​`
+```
 src/
 ├── app/
 │   └── (dashboard)/
@@ -126,4 +126,4 @@ src/
     └── flows/
         └── summarize-daily-report-flow.ts  <-- 新 AI 流程
 
-`​`​`
+```
