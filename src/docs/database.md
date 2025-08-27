@@ -36,6 +36,7 @@
 
 | 欄位                   | 類型                                | 描述                                       |
 |------------------------|-------------------------------------|--------------------------------------------|
+| `ownerId`              | `string`                            | **[新增]** 建立此專案的使用者 UID，關聯到 `users` 集合。 |
 | `customId`             | `string`                            | (可選) 自訂的專案編號。                    |
 | `title`                | `string`                            | 專案的標題或名稱。                         |
 | `description`          | `string`                            | 專案的詳細描述。                           |
@@ -53,6 +54,7 @@
 | `id`          | `string`                            | 任務的唯一 ID (客戶端生成)。               |
 | `title`       | `string`                            | 任務的標題。                               |
 | `status`      | `string` ('待處理', '進行中', '已完成') | 任務的當前狀態。                           |
+| `assigneeId`  | `string` &#124; `null`              | **[新增]** 被指派此任務的成員 ID，關聯到 `teamMembers` 集合。 |
 | `lastUpdated` | `string` (ISO 8601)                 | 任務最後一次更新的時間。                   |
 | `quantity`    | `number`                            | 項目數量。                                 |
 | `unitPrice`   | `number`                            | 項目單價。                                 |
@@ -69,6 +71,8 @@
 
 | 欄位                   | 類型                | 描述                                       |
 |------------------------|---------------------|--------------------------------------------|
+| `createdBy`            | `string`            | **[新增]** 建立此合約的使用者 UID，關聯到 `users` 集合。 |
+| `approvedBy`           | `string` &#124; `null` | **[新增]** 核准此合約的管理員 UID，關聯到 `users` 集合。 |
 | `customId`             | `string`            | (可選) 自訂的合約編號。                    |
 | `name`                 | `string`            | 合約的名稱。                               |
 | `contractor`           | `string`            | 承包商的名稱。                             |
@@ -211,10 +215,42 @@
 | `createdAt`  | `Timestamp` | 文章的建立時間。                            |
 | `updatedAt`  | `Timestamp` | 文章的最後更新時間。                        |
 
+### **2.11. `notifications` (新)**
+
+**[新增]** 此集合用於驅動應用程式內的通知系統。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+
+| 欄位        | 類型        | 描述                                       |
+|-------------|-------------|--------------------------------------------|
+| `recipientId` | `string`    | 通知的接收者 `users` 文件 ID。             |
+| `type`      | `string`    | 通知的類型，例如：`'new_user_for_approval'`, `'task_assigned'`。 |
+| `message`   | `string`    | 通知的內容，例如：「王小明已註冊，等待您的審核。」 |
+| `link`      | `string`    | (可選) 點擊通知後應導向的頁面路徑。        |
+| `isRead`    | `boolean`   | 標記此通知是否已被讀取，預設為 `false`。   |
+| `createdAt` | `Timestamp` | 通知的建立時間。                           |
+
+### **2.12. `activity_logs` (新)**
+
+**[新增]** 此集合作為審計追蹤，記錄應用程式中的所有重要操作。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+
+| 欄位         | 類型        | 描述                                       |
+|--------------|-------------|--------------------------------------------|
+| `actorId`    | `string`    | 執行此操作的使用者 `users` 文件 ID。       |
+| `entityType` | `string`    | 被操作的實體類型，例如：`'project'`, `'task'`, `'contract'`。 |
+| `entityId`   | `string`    | 被操作的實體文件 ID。                      |
+| `action`     | `string`    | 執行的具體操作，例如：`'create'`, `'update_status'`。 |
+| `details`    | `Map`       | (可選) 操作的詳細內容，例如：`{ from: '待處理', to: '進行中' }`。 |
+| `timestamp`  | `Timestamp` | 操作發生的時間。                           |
 
 ## 3. 數據完整性
 
 - 目前，數據完整性主要由客戶端應用程式的邏輯（例如，表單驗證）來保證。
 - 未來的版本可以通過部署 Firestore 安全規則來在後端強制實施數據驗證和訪問控制，從而提高安全性。例如，可以規定 `value` 欄位必須是數字，`status` 欄位必須是預定義的幾個字符串之一。
+- 透過 `activity_logs` 和 `notifications` 集合，我們可以更好地追蹤數據變更，並通知相關人員。
 
     
