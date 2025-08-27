@@ -1,6 +1,6 @@
-# 「多倉庫」庫存系統 - 設計藍圖 v2.1
+# 「倉儲管理」系統 - 設計藍圖 v2.1
 
-本文件根據使用者反饋進行了重大更新，旨在設計一個能滿足**多倉庫、跨地區**營運需求的現代化庫存管理系統，特別適用於追蹤工具和耗材。v2.1 版本特別強化了對「跨倉調撥」流程的支援。
+本文件根據使用者反饋進行了重大更新，旨在設計一個能滿足**多倉庫、跨地區**營運需求的現代化倉儲管理系統，特別適用於追蹤工具和耗材。v2.1 版本特別強化了對「跨倉調撥」流程的支援。
 
 ## 1. 核心目標 (Core Objectives)
 
@@ -100,34 +100,34 @@
 src/
 ├── app/
 │   └── (dashboard)/
-│       └── inventory/                    <-- 新路由
+│       └── warehousing/              <-- 新路由 (原 inventory)
 │           ├── items/                    # 物料主檔管理
 │           │   └── page.tsx
 │           ├── movements/                # 出入庫歷史
 │           │   └── page.tsx
 │           ├── warehouses/               # 倉庫管理
 │           │   └── page.tsx
-│           ├── transfers/                <-- 新增調撥專用頁面
+│           ├── transfers/                # 調撥專用頁面
 │           │   └── page.tsx
-│           └── page.tsx                  # 庫存儀表板 (可按倉庫篩選)
+│           └── page.tsx                  # 倉儲儀表板 (可按倉庫篩選)
 ├── components/
 │   └── features/
-│       └── inventory/                    <-- 新目錄
+│       └── warehousing/                <-- 新目錄 (原 inventory)
 │           ├── actions/
-│           │   └── inventory-actions.ts
+│           │   └── warehousing-actions.ts
 │           ├── components/
 │           │   ├── low-stock-alert.tsx
 │           │   └── warehouse-selector.tsx  # 重要的倉庫選擇器元件
 │           ├── forms/
 │           │   ├── item-form.tsx         # 物料主檔表單
 │           │   ├── movement-form.tsx     # 出入庫表單
-│           │   ├── transfer-form.tsx     # <-- 新增調撥表單
+│           │   ├── transfer-form.tsx     # 調撥表單
 │           │   └── warehouse-form.tsx    # 倉庫表單
 │           ├── tables/
 │           │   └── stock-level-table.tsx   # 顯示特定倉庫庫存水平的表格
 │           └── views/
-│               └── inventory-dashboard-view.tsx
+│               └── warehousing-dashboard-view.tsx
 └── config/
-    └── navigation.config.ts              <-- 新增「庫存管理」導航項目
+    └── navigation.config.ts              <-- 修改「庫存管理」為「倉儲管理」
 
 ```

@@ -1,3 +1,4 @@
+
 /**
  * @project Beta-db Integrated Platform - 統一整合平台導航配置
  * @framework Next.js 15+ (App Router)
@@ -119,40 +120,40 @@ export const navigationConfig: NavigationItem[] = [
         ]
     },
     {
-        id: 'inventory',
-        label: '庫存管理',
-        icon: Package,
-        href: '/inventory',
+        id: 'warehousing',
+        label: '倉儲管理',
+        icon: Warehouse,
+        href: '/warehousing',
         children: [
              {
-                id: 'inventory-dashboard',
-                label: '庫存總覽',
+                id: 'warehousing-dashboard',
+                label: '倉儲總覽',
                 icon: BarChart3,
-                href: '/inventory',
+                href: '/warehousing',
             },
             {
                 id: 'inventory-items',
                 label: '物料主檔',
-                icon: ClipboardList,
-                href: '/inventory/items',
+                icon: Package,
+                href: '/warehousing/items',
             },
             {
                 id: 'inventory-movements',
                 label: '出入庫紀錄',
                 icon: ArrowLeftRight,
-                href: '/inventory/movements',
+                href: '/warehousing/movements',
             },
             {
                 id: 'inventory-transfers',
                 label: '跨倉調撥',
                 icon: Truck,
-                href: '/inventory/transfers',
+                href: '/warehousing/transfers',
             },
             {
                 id: 'inventory-warehouses',
                 label: '倉庫管理',
                 icon: Warehouse,
-                href: '/inventory/warehouses',
+                href: '/warehousing/warehouses',
             },
         ]
     },
