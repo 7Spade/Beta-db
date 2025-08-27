@@ -38,7 +38,9 @@ import {
     Package,
     Calculator,
     DollarSign,
-    FolderGit2
+    FolderGit2,
+    Warehouse,
+    Truck,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -126,6 +128,18 @@ export const navigationConfig: NavigationItem[] = [
                 label: '出入庫紀錄',
                 icon: ArrowLeftRight,
                 href: '/inventory/movements',
+            },
+            {
+                id: 'inventory-transfers',
+                label: '跨倉調撥',
+                icon: Truck,
+                href: '/inventory/transfers',
+            },
+            {
+                id: 'inventory-warehouses',
+                label: '倉庫管理',
+                icon: Warehouse,
+                href: '/inventory/warehouses',
             },
         ]
     },
