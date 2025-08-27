@@ -1,4 +1,3 @@
-
 /**
  * @project Beta-db Integrated Platform - 統一整合平台導航配置
  * @framework Next.js 15+ (App Router)
