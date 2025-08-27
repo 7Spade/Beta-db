@@ -1,92 +1,57 @@
 'use client';
 
-import React from 'react';
-import { useAuth } from '@/components/features/auth/use-auth';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { profileSchema, type ProfileValues } from '@/components/features/auth/auth-form-schemas';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { updateUserProfile } from '@/components/features/auth/auth-actions';
+import { ProfileForm } from './profile-form';
 
-export function ProfileView() {
-  const { user, profile, loading } = useAuth();
-  const { toast } = useToast();
-  const [saving, setSaving] = React.useState(false);
-
-  const form = useForm<ProfileValues>({
-    resolver: zodResolver(profileSchema),
-    values: {
-      displayName: profile?.displayName || '',
-    },
-  });
-
-  const onSubmit = async (data: ProfileValues) => {
-    if (!user) return;
-    setSaving(true);
-    const result = await updateUserProfile({ userId: user.uid, updates: { displayName: data.displayName } });
-    setSaving(false);
-    if (result.success) {
-      toast({ title: '已更新', description: '您的個人資料已更新。' });
-    } else {
-      toast({ title: '更新失敗', description: result.error, variant: 'destructive' });
-    }
+type UserData = {
+  uid: string;
+  email: string | null | undefined;
+  profile: {
+    displayName: string;
+    role: string;
+    status: string;
   };
+};
 
-  if (loading) {
-    return <div>載入中…</div>;
-  }
+interface ProfileViewProps {
+  user: UserData;
+}
 
-  if (!user) {
-    return <div>請先登入。</div>;
-  }
-
+export function ProfileView({ user }: ProfileViewProps) {
   return (
-    <Card className="w-full max-w-lg">
-      <CardHeader>
-        <CardTitle>我的個人資料</CardTitle>
-        <CardDescription>更新您的顯示名稱。Email、角色與審核狀態為唯讀。</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-1">
-          <div className="text-sm text-muted-foreground">Email</div>
-          <div>{user.email}</div>
+    <div className="space-y-6 max-w-4xl mx-auto">
+        <div>
+            <h1 className="text-3xl font-bold tracking-tight">我的個人資料</h1>
+            <p className="text-muted-foreground">管理您的帳戶資訊與設定。</p>
         </div>
-        <div className="space-y-1">
-          <div className="text-sm text-muted-foreground">角色</div>
-          <div>{profile?.role || '-'}</div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+                <ProfileForm defaultValues={{ displayName: user.profile.displayName }} />
+            </div>
+            <div className="space-y-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>帳戶資訊</CardTitle>
+                        <CardDescription>這些資訊由系統管理，無法更改。</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4 text-sm">
+                        <div>
+                            <p className="font-medium text-muted-foreground">Email</p>
+                            <p>{user.email}</p>
+                        </div>
+                        <div>
+                            <p className="font-medium text-muted-foreground">角色</p>
+                            <p className="capitalize">{user.profile.role}</p>
+                        </div>
+                        <div>
+                            <p className="font-medium text-muted-foreground">狀態</p>
+                             <p className="capitalize">{user.profile.status}</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
-        <div className="space-y-1">
-          <div className="text-sm text-muted-foreground">審核狀態</div>
-          <div>{profile?.status || '-'}</div>
-        </div>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="displayName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>顯示名稱</FormLabel>
-                  <FormControl>
-                    <Input placeholder="輸入您的顯示名稱" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" disabled={saving}>
-              {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              儲存變更
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    </div>
   );
 }
