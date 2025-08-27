@@ -4,50 +4,53 @@
 
 ## 📖 文件導覽
 
-### 1. 核心架構 (Core Architecture)
-> 定義應用程式的「骨架」，回答「**如何建構**」的問題。
+### 產品與策略 (Product & Strategy)
+> 專案的起點，回答「**為什麼做**」和「**為誰做**」的問題。
 
-- **[架構總覽](./1-architecture/README.md)**
-- **[資料庫設計](./1-architecture/database.md)**
-- **[認證系統](./1-architecture/auth.md)**
-- **[佈局系統](./1-architecture/layout.md)**
-- **[事件驅動架構](./1-architecture/events.md)**
+- **[開發路線圖](./04_project_management/development-roadmap.md)**
 
-### 2. 核心模組 (Core Modules)
-> 介紹應用程式中每一個獨立的、核心的業務功能模組。
+### 設計 (Design)
+> 將需求轉化為使用者體驗，回答「**看起來怎樣**」和「**用起來怎樣**」的問題。
 
-- **[模組總覽](./2-core-modules/README.md)**
-- **[專案管理](./2-core-modules/project.md)**
-- **[合約管理](./2-core-modules/contracts.md)**
-- **[合作夥伴](./2-core-modules/partnerverse.md)**
-- **[內部團隊](./2-core-modules/team.md)**
-- **[部落格](./2-core-modules/blog.md)**
+- **[UI 佈局系統](./02_architecture/layout.md)**
 
-### 3. AI 功能 (AI Features)
-> 集中管理所有與 AI 相關的設計和流程文件。
+### 技術架構 (Architecture)
+> 專案的技術「藍圖」，回答「**如何建構**」的問題。
 
-- **[AI 總覽](./3-ai-features/README.md)**
-- **[雲端硬碟](./3-ai-features/cloud-drive.md)**
-- **[智慧文件解析](./3-ai-features/docu-parse.md)**
+- **[資料庫設計](./02_architecture/database.md)**
+- **[認證系統](./02_architecture/auth.md)**
+- **[事件驅動架構](./02_architecture/events.md)**
 
-### 4. 系統藍圖 (System Blueprints)
-> 存放所有新功能的詳細設計文檔和開發路線圖，回答「**接下來做什麼**」的問題。
+### 開發實踐 (Development)
+> 為開發者準備的「施工手冊」，回答「**程式碼怎麼寫**」的問題。
+- **核心模組**
+  - **[專案管理](./03_development/core-modules/project.md)**
+  - **[合約管理](./03_development/core-modules/contracts.md)**
+  - **[合作夥伴](./03_development/core-modules/partnerverse.md)**
+  - **[內部團隊](./03_development/core-modules/team.md)**
+  - **[部落格](./03_development/core-modules/blog.md)**
+- **AI 功能**
+  - **[AI 總覽](./03_development/ai-features/ai.md)**
+  - **[雲端硬碟](./03_development/ai-features/cloud-drive.md)**
+  - **[智慧文件解析](./03_development/ai-features/docu-parse.md)**
 
-- **[藍圖總覽](./4-system-blueprints/README.md)**
-- **[開發路線圖](./4-system-blueprints/development-roadmap.md)**
-- **[專案管理 v1.0 升級](./4-system-blueprints/project_v1.md)**
-- **[任務委派與驗收](./4-system-blueprints/delegation-and-acceptance-system.md)**
-- **[進度計價與審批](./4-system-blueprints/progress-billing.md)**
-- **[成本與預算追蹤](./4-system-blueprints/cost-tracking.md)**
-- **[工地日報](./4-system-blueprints/daily-report.md)**
-- **[資源與排程](./4-system-blueprints/resource-scheduling.md)**
-- **[倉儲管理](./4-system-blueprints/inventory.md)**
-- **[Web 推播通知](./4-system-blueprints/web-push-notifications.md)**
-- **[動態內容管理 (CMS)](./4-system-blueprints/content-management.md)**
-- **[部落格管理](./4-system-blueprints/blog-management.md)**
-- **[職涯管理](./4-system-blueprints/career-management.md)**
-- **[聯絡管理](./4-system-blueprints/contact-management.md)**
-- **[系統管理](./4-system-blueprints/system-management.md)**
+### 專案管理 (Project Management)
+> 確保專案順利推進的「管理中心」，回答「**接下來做什麼**」的問題。
+
+- **功能藍圖 (Blueprints)**
+  - **[專案管理 v1.0 升級](./04_project_management/project_v1.md)**
+  - **[任務委派與驗收](./04_project_management/delegation-and-acceptance-system.md)**
+  - **[進度計價與審批](./04_project_management/progress-billing.md)**
+  - **[成本與預算追蹤](./04_project_management/cost-tracking.md)**
+  - **[工地日報](./04_project_management/daily-report.md)**
+  - **[資源與排程](./04_project_management/resource-scheduling.md)**
+  - **[倉儲管理](./04_project_management/inventory.md)**
+  - **[Web 推播通知](./04_project_management/web-push-notifications.md)**
+  - **[動態內容管理 (CMS)](./04_project_management/content-management.md)**
+  - **[部落格管理](./04_project_management/blog-management.md)**
+  - **[職涯管理](./04_project_management/career-management.md)**
+  - **[聯絡管理](./04_project_management/contact-management.md)**
+  - **[系統管理](./04_project_management/system-management.md)**
 
 ## ✍️ 如何維護
 
