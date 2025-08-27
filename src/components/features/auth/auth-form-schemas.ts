@@ -24,3 +24,13 @@ export const registerSchema = z.object({
 });
 
 export type RegisterValues = z.infer<typeof registerSchema>;
+
+// 個人資料更新表單的驗證規則
+export const profileSchema = z.object({
+  displayName: z
+    .string()
+    .min(2, { message: '名稱至少需要 2 個字元。' })
+    .max(50, { message: '名稱長度不可超過 50 個字元。' }),
+});
+
+export type ProfileValues = z.infer<typeof profileSchema>;

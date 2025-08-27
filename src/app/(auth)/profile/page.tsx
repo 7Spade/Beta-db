@@ -6,9 +6,10 @@
  * - 職責是渲染 ProfileView 元件。
  */
 
-// import { ProfileView } from '@/components/features/auth';
+'use client';
+
+import { ProfileView } from '@/components/features/auth/profile-view';
 
 export default function ProfilePage() {
-  // return <ProfileView />;
-  return <div>用戶資料頁面內容將在此處實現。</div>;
+  return <ProfileView />;
 }

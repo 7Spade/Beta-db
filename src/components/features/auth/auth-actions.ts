@@ -63,3 +63,24 @@ export async function createUserProfile(user: User): Promise<{ success: boolean;
     return { success: false, error: `建立用戶設定檔失敗: ${errorMessage}` };
   }
 }
+
+// Server Action: update current user's profile (self or Admin)
+// Note: Keep this as a server action for security checks if you move it server-side later.
+export async function updateUserProfile(params: {
+  userId: string;
+  updates: { displayName: string };
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { userId, updates } = params;
+    if (!userId) return { success: false, error: '缺少使用者 ID。' };
+
+    // Minimal client-side update: write to Firestore users/{userId}
+    // In production, validate current auth context on server and enforce self/Admin.
+    const userRef = doc(firestore, 'users', userId);
+    await setDoc(userRef, { displayName: updates.displayName }, { merge: true });
+    return { success: true };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : '發生未知錯誤。';
+    return { success: false, error: `更新個人資料失敗: ${errorMessage}` };
+  }
+}
