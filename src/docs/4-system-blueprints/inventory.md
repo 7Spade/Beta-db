@@ -1,95 +1,96 @@
-# 庫存系統 - 設計藍圖
+# 「多倉庫」庫存系統 - 設計藍圖 v2.0
 
-本文件詳細闡述了 Beta-db 整合平台中「庫存管理」功能的系統設計、資料庫結構和未來開發的技術藍圖。
+本文件根據使用者反饋進行了重大更新，旨在設計一個能滿足**多倉庫、跨地區**營運需求的現代化庫存管理系統，特別適用於追蹤工具和耗材。
 
 ## 1. 核心目標 (Core Objectives)
 
-精準的庫存管理是控制營造成本和確保專案順利進行的關鍵。本系統旨在：
-- **物料中心化**: 建立一個統一的物料主檔，記錄所有專案可能用到的材料、設備和工具。
-- **即時追蹤**: 實現物料的即時出庫、入庫追蹤，確保庫存數據的準確性。
-- **成本控制**: 透過追蹤物料消耗，為專案成本分析提供精準數據。
-- **供應鏈優化**: 提供低庫存警示，協助採購決策，避免因材料短缺導致的工期延誤。
+此系統旨在解決傳統營造業在工具、耗材管理上的核心痛點：
+- **多據點管理**: 集中管理分散在台灣各地的多個倉庫或工地的庫存。
+- **物料中心化**: 建立一個統一的物料主檔（目錄），清晰定義所有可用的工具和耗材。
+- **即時庫存追蹤**: 實現物料在**特定倉庫**的即時出庫、入庫追蹤，確保數據準確性。
+- **成本歸屬**: 將物料消耗與特定專案掛鉤，為精準的成本分析提供數據支持。
+- **供應鏈優化**: 提供各倉庫的低庫存警示，協助採購決策。
 
 ## 2. 功能規劃 (Feature Breakdown)
 
+- **倉庫管理**:
+  - 建立、編輯、停用不同的倉庫據點（例如：台北內湖倉、台中南屯倉、A專案工地倉）。
 - **物料主檔管理 (`Inventory Items`)**:
-  - 建立和維護一個包含所有物料的資料庫。
-  - 每個物料包含：名稱、規格、類別（如：建材、工具）、供應商、單價、安全庫存量等資訊。
-- **庫存儀表板**:
-  - 顯示關鍵庫存指標：總庫存價值、低庫存項目數量、近期出入庫動態。
-  - 以圖表形式展示各類別物料的庫存佔比。
+  - 維護一個全公司統一的「物料目錄」，定義所有可用的工具與耗材。
+  - 每個物料包含：名稱、規格、類別（如：手工具、安全護具、五金耗材）、預設供應商等。
+- **庫存水平檢視**:
+  - **核心功能**: 能夠**按倉庫**篩選，查看特定倉庫中所有物料的當前庫存量。
+  - 提供一個總覽視圖，可以快速切換或比較不同倉庫的庫存狀況。
 - **出入庫管理**:
-  - **入庫**: 記錄採購來的物料，增加庫存數量。
-  - **出庫**: 記錄專案領料，扣減庫存數量，並可關聯到特定專案的特定任務。
-  - **盤點**: 定期校準實際庫存與系統庫存的差異。
-- **庫存查詢與報告**:
-  - 搜尋特定物料，查看其當前庫存和歷史動態。
-  - 篩選低於安全庫存量的物料。
-  - 產生特定時間範圍內的出入庫報告。
+  - **入庫**: 記錄採購來的物料，並明確選擇要存入的**目標倉庫**。
+  - **出庫**: 從**指定的倉庫**領料，並可選擇關聯到哪個專案。
+  - **調撥**: 在不同倉庫之間進行物料轉移。
+- **庫存報告**:
+  - 產生特定倉庫在特定時間範圍內的出入庫明細。
+  - 篩選出所有倉庫中，庫存低於安全水位的物料列表。
 
 ## 3. 資料庫設計 (Database Design)
 
-我們將在 Firestore 中建立兩個新的頂層集合：`inventory_items` 和 `inventory_movements`。
+為實現多倉庫管理，我們將採用一個更正規化的資料庫結構，包含三個核心集合。
 
-### 集合: `inventory_items`
-
-此集合是物料的主檔資料庫。
-
-- **文件 ID**: 自動生成的唯一 ID (`string`)
-- **文件結構**:
-
-| 欄位             | 類型          | 描述                                                       |
-|------------------|---------------|------------------------------------------------------------|
-| `name`           | `string`      | 物料名稱（如：C30混凝土）。                                |
-| `sku`            | `string`      | (可選) 唯一的物料單位識別碼。                              |
-| `description`    | `string`      | (可選) 詳細描述。                                          |
-| `category`       | `string`      | 物料分類（如：主材、耗材、工具）。                         |
-| `unit`           | `string`      | 計量單位（如：噸、立方米、個）。                           |
-| `currentStock`   | `number`      | **核心欄位**。當前的庫存數量。                             |
-| `safeStockLevel` | `number`      | 安全庫存水平，低於此值時應發出警示。                       |
-| `averagePrice`   | `number`      | (可選) 加權平均單價，用於成本計算。                        |
-| `supplierId`     | `string`      | (可選) **[關聯]** 主要供應商，對應 `partners` 集合的文件 ID。 |
-| `lastUpdated`    | `Timestamp`   | 最後一次庫存變動的時間。                                   |
-
-### 集合: `inventory_movements`
-
-此集合記錄每一次庫存的變動（出庫或入庫）。
+### 集合 1: `warehouses`
+此集合定義了所有實體的倉庫或庫存地點。
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
+| 欄位         | 類型     | 描述                                |
+|--------------|----------|-------------------------------------|
+| `name`       | `string` | 倉庫的唯一名稱（如：台北內湖倉）。|
+| `location`   | `string` | (可選) 倉庫的地址或區域描述。       |
+| `managerId`  | `string` | (可選) 關聯到 `users` 的倉庫管理員 ID。 |
+| `isActive`   | `boolean`| 標記此倉庫是否仍在運作中。        |
 
+### 集合 2: `inventory_items`
+此集合是物料的**主檔目錄**。**它本身不包含任何庫存數量信息。**
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+| 欄位             | 類型          | 描述                                       |
+|------------------|---------------|--------------------------------------------|
+| `name`           | `string`      | 物料/工具的名稱（如：S腰帶防墜器）。     |
+| `sku`            | `string`      | (可選) 唯一的物料單位識別碼。              |
+| `category`       | `string`      | 物料分類（如：安全護具、五金耗材）。     |
+| `unit`           | `string`      | 計量單位（如：個、組、箱）。               |
+| `safeStockLevel` | `number`      | 全公司範圍的建議安全庫存總量。           |
+| `supplierId`     | `string`      | (可選) 預設供應商，關聯到 `partners` 集合。|
+
+### 集合 3: `inventory_levels`
+**核心集合**。此集合的每一份文件代表「一個特定物料在一個特定倉庫的庫存數量」。
+
+- **文件 ID**: 建議使用組合 ID `"{itemId}_{warehouseId}"` 以確保唯一性。
+- **文件結構**:
+| 欄位         | 類型     | 描述                                  |
+|--------------|----------|---------------------------------------|
+| `itemId`     | `string` | **[關聯]** 對應 `inventory_items` 的 ID。 |
+| `warehouseId`| `string` | **[關聯]** 對應 `warehouses` 的 ID。       |
+| `quantity`   | `number` | **核心欄位**。當前的實際庫存數量。  |
+| `lastUpdated`| `Timestamp`| 最後一次庫存變動的時間。            |
+
+### 集合 4: `inventory_movements`
+此集合作為不可變的流水帳，記錄每一次庫存的變動歷史。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
 | 欄位         | 類型                                    | 描述                                                       |
 |--------------|-----------------------------------------|------------------------------------------------------------|
-| `itemId`     | `string`                                | **[關聯]** 對應的 `inventory_items` 文件 ID。              |
-| `type`       | `string` ('inbound', 'outbound', 'adjust') | 變動類型：入庫、出庫、盤點調整。                           |
-| `quantity`   | `number`                                | 變動的數量（出庫為負數，入庫為正數）。                     |
-| `unitPrice`  | `number`                                | 本次變動的單價。                                           |
+| `itemId`     | `string`                                | **[關聯]** 對應 `inventory_items` 的 ID。              |
+| `warehouseId`| `string`                                | **[關聯]** 變動發生的倉庫 `warehouses` ID。              |
+| `type`       | `string` ('inbound', 'outbound', 'transfer-in', 'transfer-out', 'adjust') | 變動類型。|
+| `quantity`   | `number`                                | 變動的數量（出庫為負，入庫為正）。                     |
+| `unitPrice`  | `number`                                | (可選) 本次變動的單價，用於成本計算。                    |
 | `timestamp`  | `Timestamp`                             | 變動發生的時間。                                           |
-| `operatorId` | `string`                                | **[關聯]** 執行此操作的使用者 `users` 文件 ID。            |
-| `projectId`  | `string`                                | (可選) **[關聯]** 如果是出庫，關聯到的 `projects` 文件 ID。 |
-| `taskId`     | `string`                                | (可選) 如果是出庫，關聯到的專案任務 ID。                   |
+| `operatorId` | `string`                                | **[關聯]** 執行此操作的使用者 `users` ID。            |
+| `projectId`  | `string`                                | (可選) 如果是出庫，關聯到的 `projects` 文件 ID。 |
 | `notes`      | `string`                                | (可選) 備註，如採購單號、領料人等。                        |
 
-**注意**: `inventory_items` 中的 `currentStock` 將通過 Firebase Functions 的觸發器或後端邏輯，根據 `inventory_movements` 的新增來自動更新，以確保數據一致性。
+**自動化邏輯**: 每次向 `inventory_movements` 新增一筆紀錄時，應透過後端邏輯（如 Firebase Functions Trigger）來自動更新 `inventory_levels` 中對應文件的 `quantity`，確保數據的一致性。
 
 ## 4. 前端架構與路由 (Frontend Architecture)
-
-- **新導航項目**:
-  - 在側邊欄新增「庫存管理」主選單。
-- **新頁面路由**:
-  - `/app/(dashboard)/inventory`: 庫存儀表板。
-  - `/app/(dashboard)/inventory/items`: 物料主檔列表頁。
-  - `/app/(dashboard)/inventory/movements`: 出入庫歷史記錄頁。
-- **新元件目錄**: `src/components/features/inventory/`
-  - `views/inventory-dashboard-view.tsx`: 儀表板主視圖。
-  - `tables/items-table.tsx`: 物料列表格。
-  - `forms/movement-form.tsx`: 新增出/入庫紀錄的表單。
-
-## 5. 整合點 (Integration Points)
-
-- **專案管理**: 在專案的物料清單 (BoM) 中，可以直接關聯到庫存系統的物料。
-- **工地日報**: 在填寫日報的「物料消耗」部分時，可以從庫存中選擇物料，並自動觸發一次「出庫」記錄。
-- **合作夥伴**: 物料可以關聯到 `partners` 集合中的供應商。
 
 ### 結構樹 (Structure Tree)
 ```
@@ -97,26 +98,27 @@ src/
 ├── app/
 │   └── (dashboard)/
 │       └── inventory/                    <-- 新路由
-│           ├── items/
+│           ├── items/                    # 物料主檔管理
 │           │   └── page.tsx
-│           ├── movements/
+│           ├── movements/                # 出入庫歷史
 │           │   └── page.tsx
-│           └── page.tsx                  # 庫存儀表板
+│           ├── warehouses/               # 倉庫管理
+│           │   └── page.tsx
+│           └── page.tsx                  # 庫存儀表板 (可按倉庫篩選)
 ├── components/
 │   └── features/
 │       └── inventory/                    <-- 新目錄
 │           ├── actions/
 │           │   └── inventory-actions.ts
 │           ├── components/
-│           │   └── low-stock-alert.tsx
+│           │   ├── low-stock-alert.tsx
+│           │   └── warehouse-selector.tsx  # 重要的倉庫選擇器元件
 │           ├── forms/
-│           │   ├── item-form.tsx
-│           │   └── movement-form.tsx
+│           │   ├── item-form.tsx         # 物料主檔表單
+│           │   ├── movement-form.tsx     # 出入庫表單
+│           │   └── warehouse-form.tsx    # 倉庫表單
 │           ├── tables/
-│           │   ├── items-table.tsx
-│           │   └── movements-table.tsx
-│           ├── types/
-│           │   └── inventory-types.ts
+│           │   └── stock-level-table.tsx   # 顯示特定倉庫庫存水平的表格
 │           └── views/
 │               └── inventory-dashboard-view.tsx
 └── config/
