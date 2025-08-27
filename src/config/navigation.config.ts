@@ -1,4 +1,5 @@
 
+
 /**
  * @project Beta-db Integrated Platform - 統一整合平台導航配置
  * @framework Next.js 15+ (App Router)
@@ -62,12 +63,6 @@ export const navigationConfig: NavigationItem[] = [
         href: '/quick-actions',
         children: [
             {
-                id: 'kanban',
-                label: '看板',
-                icon: LayoutGrid,
-                href: '/kanban'
-            },
-            {
                 id: 'daily-report',
                 label: '工地日報',
                 icon: Calendar,
@@ -92,6 +87,12 @@ export const navigationConfig: NavigationItem[] = [
         label: '儀表板',
         icon: LayoutDashboard,
         href: '/dashboard'
+    },
+    {
+        id: 'kanban',
+        label: '看板',
+        icon: LayoutGrid,
+        href: '/kanban'
     },
     {
         id: 'projects',
