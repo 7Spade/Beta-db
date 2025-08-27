@@ -1,46 +1,12 @@
-'use client';
-
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { auth } from '@/lib/db/firebase-client/firebase-client';
-import { signOut } from 'firebase/auth';
-import { Clock } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+/**
+ * Pending Approval Page - 帳號待審核頁面
+ *
+ * 功能說明：
+ * - 告知新註冊的使用者其帳號正在等待管理員審核。
+ * - 職責是渲染 PendingApprovalView 元件。
+ */
+import { PendingApprovalView } from '@/components/features/auth/pending-approval-view';
 
 export default function PendingApprovalPage() {
-  const { toast } = useToast();
-  const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
-
-  const handleLogout = async () => {
-    setLoading(true);
-    try {
-      await signOut(auth);
-      toast({ title: '已登出', description: '您已成功登出。' });
-      router.push('/login');
-    } catch (err) {
-      toast({ title: '登出失敗', description: '請稍後再試。', variant: 'destructive' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
-        <div className="mx-auto bg-secondary p-3 rounded-full w-fit">
-            <Clock className="h-8 w-8 text-muted-foreground" />
-        </div>
-        <CardTitle className="mt-4">帳號正在審核中</CardTitle>
-        <CardDescription>您的帳號已成功建立，我們正在進行審核。完成後，您將可以存取儀表板。感謝您的耐心等候。</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Button onClick={handleLogout} disabled={loading} className="w-full" variant="outline">
-          {loading ? '正在登出...' : '返回登入頁面'}
-        </Button>
-      </CardContent>
-    </Card>
-  );
+  return <PendingApprovalView />;
 }
