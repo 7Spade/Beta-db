@@ -79,12 +79,6 @@ export const navigationConfig: NavigationItem[] = [
         ]
     },
     {
-        id: 'dashboard',
-        label: '儀表板',
-        icon: LayoutDashboard,
-        href: '/dashboard'
-    },
-    {
         id: 'projects',
         label: '專案管理',
         icon: FolderKanban,
