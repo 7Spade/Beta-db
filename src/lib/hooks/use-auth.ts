@@ -16,5 +16,52 @@
  * - useRegister: 註冊流程管理
  * - usePermission: 權限檢查管理
  */
+import { useEffect, useState, useMemo } from 'react';
+import { auth, firestore } from '@/lib/firebase-client';
+import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
-// Auth Hook 將在這裡實現
+export type AuthStatus = 'pending' | 'approved' | 'rejected' | 'unknown';
+
+export interface UserProfile {
+  email?: string | null;
+  displayName?: string | null;
+  role?: string;
+  status?: AuthStatus;
+  createdAt?: unknown;
+}
+
+export function useAuth() {
+  const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      setFirebaseUser(user);
+      if (!user) {
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+      try {
+        const ref = doc(firestore, 'users', user.uid);
+        const snap = await getDoc(ref);
+        setProfile((snap.data() as UserProfile) || null);
+      } catch (e) {
+        setError('讀取使用者資料失敗');
+      } finally {
+        setLoading(false);
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const status: AuthStatus = useMemo(() => {
+    if (!firebaseUser) return 'unknown';
+    return (profile?.status as AuthStatus) || 'pending';
+  }, [firebaseUser, profile]);
+
+  return { user: firebaseUser, profile, status, loading, error, signOut: () => signOut(auth) };
+}

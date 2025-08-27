@@ -1,25 +1,22 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { firestore } from '@/lib/firebase-client';
-import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatDate } from '@/lib/utils';
 import { approveUser, rejectUser } from '../actions/user-actions';
 
 interface UserProfile {
   id: string;
-  displayName: string;
-  email: string;
-  role: 'Admin' | 'Member';
+  displayName?: string;
+  email?: string;
+  role?: 'Admin' | 'Member';
   status: 'pending' | 'approved' | 'rejected';
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 export function UserManagementView() {
@@ -33,18 +30,20 @@ export function UserManagementView() {
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const usersData = snapshot.docs.map(doc => {
-        const data = doc.data();
+        const data = doc.data() as any;
         return {
           id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate(),
+          displayName: data.displayName,
+          email: data.email,
+          role: data.role,
+          status: data.status,
+          createdAt: data.createdAt?.toDate?.(),
         } as UserProfile;
       });
       setUsers(usersData);
       setLoading(false);
-    }, (error) => {
-      console.error("獲取待審核用戶時發生錯誤: ", error);
-      toast({ title: "錯誤", description: "無法載入待審核用戶列表。", variant: "destructive" });
+    }, () => {
+      toast({ title: '錯誤', description: '無法載入待審核用戶列表。', variant: 'destructive' });
       setLoading(false);
     });
 
@@ -54,18 +53,18 @@ export function UserManagementView() {
   const handleApprove = async (userId: string) => {
     const result = await approveUser(userId);
     if (result.success) {
-      toast({ title: "用戶已核准" });
+      toast({ title: '用戶已核准' });
     } else {
-      toast({ title: "操作失敗", description: result.error, variant: "destructive"});
+      toast({ title: '操作失敗', description: result.error, variant: 'destructive' });
     }
   };
 
   const handleReject = async (userId: string) => {
     const result = await rejectUser(userId);
-     if (result.success) {
-      toast({ title: "用戶已拒絕" });
+    if (result.success) {
+      toast({ title: '用戶已拒絕' });
     } else {
-      toast({ title: "操作失敗", description: result.error, variant: "destructive"});
+      toast({ title: '操作失敗', description: result.error, variant: 'destructive' });
     }
   };
 
@@ -118,9 +117,9 @@ export function UserManagementView() {
               <TableBody>
                 {users.map((user) => (
                   <TableRow key={user.id}>
-                    <TableCell className="font-medium">{user.displayName}</TableCell>
+                    <TableCell className="font-medium">{user.displayName || user.email || user.id}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>{formatDate(user.createdAt)}</TableCell>
+                    <TableCell>{user.createdAt ? new Date(user.createdAt).toLocaleString() : '-'}</TableCell>
                     <TableCell className="text-right space-x-2">
                        <Button variant="outline" size="sm" onClick={() => handleReject(user.id)}>拒絕</Button>
                        <Button size="sm" onClick={() => handleApprove(user.id)}>核准</Button>
@@ -130,11 +129,11 @@ export function UserManagementView() {
               </TableBody>
             </Table>
           )}
-           {!loading && users.length === 0 && (
-             <div className="text-center py-10">
-                <p className="text-muted-foreground">目前沒有待審核的使用者。</p>
+          {!loading && users.length === 0 && (
+            <div className="text-center py-10">
+              <p className="text-muted-foreground">目前沒有待審核的使用者。</p>
             </div>
-           )}
+          )}
         </CardContent>
       </Card>
     </div>

@@ -1,123 +1,54 @@
-
 'use client';
 
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
-import { auth, firestore } from './firebase-client';
-import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '@/lib/hooks/use-auth';
 
-interface UserProfile {
-  role: 'Admin' | 'Member';
-  status: 'pending' | 'approved' | 'rejected';
-  [key: string]: any;
-}
+const PUBLIC_ROUTES = new Set<string>([
+  '/login',
+  '/register',
+  '/verify-email',
+  '/pending-approval',
+  '/',
+]);
 
-interface AuthContextType {
-  user: User | null;
-  userProfile: UserProfile | null;
-  loading: boolean;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const publicRoutes = ['/login', '/register', '/pending-approval'];
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { user, status, loading, signOut } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (!user) {
-        setUserProfile(null);
-        setLoading(false);
-      }
-    });
+    if (loading) return;
 
-    return () => unsubscribeAuth();
-  }, []);
-
-  useEffect(() => {
-    let unsubscribeProfile: (() => void) | undefined;
-
-    if (user) {
-      const userDocRef = doc(firestore, 'users', user.uid);
-      unsubscribeProfile = onSnapshot(userDocRef, (docSnap) => {
-        if (docSnap.exists()) {
-          setUserProfile(docSnap.data() as UserProfile);
-        } else {
-          // This case might happen if profile creation fails after sign-up
-          setUserProfile(null);
-        }
-        setLoading(false);
-      }, (error) => {
-        console.error("Error fetching user profile:", error);
-        setUserProfile(null);
-        setLoading(false);
-      });
-    }
-
-    return () => {
-      if (unsubscribeProfile) {
-        unsubscribeProfile();
-      }
-    };
-  }, [user]);
-
-  useEffect(() => {
-    if (loading) {
-      return; // Wait until loading is complete
-    }
-
-    const isPublicRoute = publicRoutes.includes(pathname);
-
-    if (!user && !isPublicRoute) {
-      // Not logged in and not on a public page, redirect to login
-      router.push('/login');
+    // Rejected accounts are signed out and redirected to login
+    if (user && status === 'rejected') {
+      signOut().finally(() => router.replace('/login?error=rejected'));
       return;
     }
 
-    if (user && userProfile) {
-      if (userProfile.status === 'pending') {
-        if (pathname !== '/pending-approval') {
-          router.push('/pending-approval');
-        }
-      } else if (userProfile.status === 'approved') {
-        if (isPublicRoute) {
-          router.push('/dashboard');
-        }
-      } else if (userProfile.status === 'rejected') {
-        // Log out rejected user and redirect to login with a message
-        auth.signOut();
-        router.push('/login?error=rejected');
+    // Pending users are forced to pending-approval page
+    if (user && status === 'pending') {
+      if (pathname !== '/pending-approval') {
+        router.replace('/pending-approval');
       }
-    } else if (user && !userProfile) {
-        // User is authenticated but has no profile, might be a fresh registration
-        // Wait for profile to be created or redirect to a safe page.
-        // For now, if they are not on a public page, redirect to login
-        if(!isPublicRoute) {
-            auth.signOut();
-            router.push('/login?error=noprofile');
-        }
+      return;
     }
-  }, [user, userProfile, loading, pathname, router]);
 
-  return (
-    <AuthContext.Provider value={{ user, userProfile, loading }}>
-      {loading ? <div>Loading...</div> : children}
-    </AuthContext.Provider>
-  );
+    // Approved users avoid auth pages
+    if (user && status === 'approved') {
+      if (pathname === '/login' || pathname === '/register') {
+        router.replace('/dashboard');
+      }
+      return;
+    }
+
+    // Unauthenticated users: allow public routes, otherwise go to login
+    if (!user) {
+      if (!PUBLIC_ROUTES.has(pathname)) {
+        router.replace('/login');
+      }
+    }
+  }, [user, status, loading, pathname, router, signOut]);
+
+  return <>{children}</>;
 }
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};

@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import { auth } from '@/lib/firebase-client';
 import {
@@ -18,22 +18,7 @@ export interface AuthActionResponse {
   error?: string;
 }
 
-export async function registerWithEmail(data: RegisterValues): Promise<AuthActionResponse> {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-    // TODO: Send verification email
-    return { success: true, user: userCredential.user };
-  } catch (error: any) {
-    if (error.code === 'auth/email-already-in-use') {
-      return { success: false, error: '這個電子郵件地址已經被註冊了。' };
-    } else if (error.code === 'auth/weak-password') {
-      return { success: false, error: '密碼強度不足，請使用更強的密碼。' };
-    } else if (error.code === 'auth/invalid-email') {
-      return { success: false, error: '電子郵件地址格式不正確。' };
-    }
-    return { success: false, error: '註冊失敗，請稍後再試。' };
-  }
-}
+// We keep createUserProfile for client usage to ensure profile exists
 
 export async function signInWithEmail(data: LoginValues): Promise<AuthActionResponse> {
   try {
