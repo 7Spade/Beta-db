@@ -51,5 +51,3 @@ export function PublicProfileView({ userId }: { userId: string }) {
     </Card>
   );
 }
-
-

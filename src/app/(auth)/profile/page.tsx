@@ -8,7 +8,7 @@
 
 'use client';
 
-import { ProfileView } from '@/components/features/auth/profile-view';
+import { ProfileView } from '@/components/features/profile/profile-view';
 
 export default function ProfilePage() {
   return <ProfileView />;

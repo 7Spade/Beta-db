@@ -4,14 +4,14 @@ import React from 'react';
 import { useAuth } from '@/components/features/auth/use-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { profileSchema, type ProfileValues } from './auth-form-schemas';
+import { profileSchema, type ProfileValues } from '@/components/features/auth/auth-form-schemas';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { updateUserProfile } from './auth-actions';
+import { updateUserProfile } from '@/components/features/auth/auth-actions';
 
 export function ProfileView() {
   const { user, profile, loading } = useAuth();
@@ -90,5 +90,3 @@ export function ProfileView() {
     </Card>
   );
 }
-
-
