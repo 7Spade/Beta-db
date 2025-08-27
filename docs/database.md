@@ -9,7 +9,25 @@
 
 ## 2. 集合 (Collections)
 
-### 2.1. `projects`
+### 2.1. `users`
+
+此集合儲存所有使用者的設定檔、角色和狀態，與 Firebase Auth 的使用者資料對應。
+
+- **文件 ID**: Firebase Auth User UID (`string`)
+- **文件結構**:
+
+| 欄位         | 類型                                    | 描述                                       |
+|--------------|-----------------------------------------|--------------------------------------------|
+| `displayName`| `string`                                | 使用者的顯示名稱。                         |
+| `email`      | `string`                                | 使用者的電子郵件地址。                     |
+| `role`       | `string` ('Admin', 'Member')            | 使用者角色，預設為 'Member'。              |
+| `status`     | `string` ('pending', 'approved', 'rejected') | 帳號狀態，新用戶預設為 'pending'。         |
+| `createdAt`  | `Timestamp`                             | 帳號建立時間。                             |
+| `approvedAt` | `Timestamp`                             | (可選) 帳號被核准的時間。                  |
+| `approvedBy` | `string`                                | (可選) 核准此帳號的管理員 UID。            |
+
+
+### 2.2. `projects`
 
 此集合儲存所有營造專案的資訊。
 
@@ -42,7 +60,7 @@
 | `subTasks`    | `Array<Map>` (Task 物件陣列)        | 巢狀的子任務列表，結構與父任務相同。       |
 
 
-### 2.2. `contracts`
+### 2.3. `contracts`
 
 此集合儲存所有合約的資訊。
 
@@ -65,7 +83,7 @@
 | `changeOrders`         | `Array<Map>`        | 變更單記錄陣列 (目前為空，未來可擴充)。    |
 | `versions`             | `Array<Map>`        | 合約版本歷史記錄。                         |
 
-### 2.3. `partners`
+### 2.4. `partners`
 
 此集合儲存所有合作夥伴（如供應商、下游包商）的資訊。
 
@@ -90,7 +108,7 @@
 | `complianceDocuments` | `Array<Map>`                        | 合規文件記錄 (未來可擴充)。               |
 | `contracts`           | `Array<Map>`                        | 相關合約記錄 (未來可擴充)。               |
 
-### 2.4. `financial_documents`
+### 2.5. `financial_documents`
 
 此集合儲存所有應收與應付單據。
 
@@ -112,7 +130,7 @@
 | `history`      | `Array<Map>`        | 記錄流程中每一步變更的歷史。               |
 
 
-### 2.5. `teamMembers`
+### 2.6. `teamMembers`
 
 此集合儲存內部團隊成員的資訊。
 
@@ -128,7 +146,7 @@
 | `avatarUrl` | `string`        | (可選) 成員頭像的 URL。    |
 | `skillIds`  | `Array<string>` | (可選) 成員擁有的技能 ID 列表。 |
 
-### 2.6. `skills`
+### 2.7. `skills`
 
 此集合儲存所有可用於團隊成員的技能。
 
@@ -140,7 +158,7 @@
 | `name`        | `string` | 技能的名稱。       |
 | `description` | `string` | (可選) 技能的詳細描述。 |
 
-### 2.7. `knowledgeBaseEntries`
+### 2.8. `knowledgeBaseEntries`
 
 此集合儲存所有工法工序庫的條目。
 
@@ -156,7 +174,7 @@
 | `createdAt` | `Timestamp` | 條目的建立時間。                   |
 | `updatedAt` | `Timestamp` | 條目的最後更新時間。               |
 
-### 2.8. `aiTokenLogs`
+### 2.9. `aiTokenLogs`
 
 此集合儲存所有 Genkit AI 流程的 token 消耗紀錄。
 
@@ -172,7 +190,7 @@
 | `userId`    | `string`    | (可選) 執行此操作的使用者 ID。     |
 | `error`     | `string`    | (可選) 如果狀態為 'failed'，記錄錯誤訊息。|
 
-### 2.9. `posts`
+### 2.10. `posts`
 
 此集合儲存所有部落格文章的資訊。
 
@@ -187,7 +205,7 @@
 | `excerpt`    | `string`    | (可選) 文章摘要，用於列表頁面顯示。         |
 | `imageUrl`   | `string`    | (可選) 文章的主圖片 URL。                   |
 | `status`     | `string` ('已發布', '草稿', '已封存') | 文章的當前狀態。|
-| `authorId`   | `string`    | 關聯到 `teamMembers` 的作者 ID。            |
+| `authorId`   | `string`    | 關聯到 `users` 的作者 ID。                  |
 | `authorName` | `string`    | 作者姓名，用於顯示。                        |
 | `publishedAt`| `Timestamp` | (可選) 文章的發布時間。                     |
 | `createdAt`  | `Timestamp` | 文章的建立時間。                            |

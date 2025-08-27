@@ -20,8 +20,8 @@
 |--------------|-----------------------------------------|--------------------------------------------|
 | `displayName`| `string`                                | 使用者的顯示名稱。                         |
 | `email`      | `string`                                | 使用者的電子郵件地址。                     |
-| `role`       | `string` ('Admin', 'Member')            | 使用者角色，預設為 'Member'。              |
-| `status`     | `string` ('pending', 'approved', 'rejected') | 帳號狀態，新用戶預設為 'pending'。         |
+| `role`       | `string` ('Admin', 'Member')            | 使用者角色，用於權限控制，預設為 'Member'。 |
+| `status`     | `string` ('pending', 'approved', 'rejected') | **核心欄位**。帳號審核狀態，新用戶預設為 'pending'。 |
 | `createdAt`  | `Timestamp`                             | 帳號建立時間。                             |
 | `approvedAt` | `Timestamp`                             | (可選) 帳號被核准的時間。                  |
 | `approvedBy` | `string`                                | (可選) 核准此帳號的管理員 UID。            |
@@ -216,3 +216,5 @@
 
 - 目前，數據完整性主要由客戶端應用程式的邏輯（例如，表單驗證）來保證。
 - 未來的版本可以通過部署 Firestore 安全規則來在後端強制實施數據驗證和訪問控制，從而提高安全性。例如，可以規定 `value` 欄位必須是數字，`status` 欄位必須是預定義的幾個字符串之一。
+
+    
