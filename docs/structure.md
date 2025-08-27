@@ -421,6 +421,8 @@
 │  │  │          workflow-builder.tsx
 │  │  │
 │  │  ├─quick-actions
+│  │  │  │  README.md
+│  │  │  │
 │  │  │  ├─daily-report
 │  │  │  │      daily-report-view.tsx
 │  │  │  │      index.ts
@@ -434,9 +436,12 @@
 │  │  │          staff-attendance-view.tsx
 │  │  │
 │  │  ├─settings
+│  │  │      README.md
 │  │  │      settings-view.tsx
 │  │  │
 │  │  ├─storage-manager
+│  │  │  │  README.md
+│  │  │  │
 │  │  │  └─components
 │  │  │          storage-item-card.tsx
 │  │  │
@@ -554,11 +559,8 @@
 │      README.md
 │
 ├─docs
-│      activity-log-v1.md
-│      activity-log.md
 │      database.md
 │      layout.md
-│      notification.md
 │
 ├─hooks
 │      README.md

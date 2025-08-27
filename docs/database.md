@@ -1,6 +1,8 @@
 
 # Constructo - 資料庫設計
 
+**注意：此文件是整個應用的數據模型唯一事實來源 (Single Source of Truth)，所有開發都應以此為基準。**
+
 本文件詳細說明了 Constructo 平台在 Google Firestore 中的資料庫結構。Firestore 是一個 NoSQL、基於文件的資料庫。
 
 ## 1. 資料模型概述
