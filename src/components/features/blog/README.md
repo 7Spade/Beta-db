@@ -2,7 +2,7 @@
 
 ## 概述
 
-此模組負責管理所有與部落格相關的功能，包括後台的文章管理和前台的文章展示。
+此模組負責管理所有與部落格相關的功能，涵蓋了從後台的文章管理到前台的文章展示。
 
 ## 架構設計
 
@@ -10,28 +10,25 @@
 
 ```
 blog/
-├── actions/                  # Server Actions
-├── views/                    # 頁面視圖組件
-│   ├── posts-list-view.tsx     # 後台文章列表
-│   └── post-form-view.tsx      # 後台文章表單
-├── components/               # 可重用組件 (例如 PostCard)
-├── services/                 # 業務邏輯服務 (如果需要)
-└── types/                    # 類型定義
+├── actions/                  # 存放與文章相關的 Server Actions (儲存、刪除)
+│   └── posts.actions.ts
+└── views/                    # 構成部落格頁面的主要 React 元件
+    ├── posts-list-view.tsx     # 後台：文章列表與管理介面
+    └── post-form-view.tsx      # 後台：新增與編輯文章的表單介面
 ```
 
 ### 核心功能
 
-- **文章管理**: 建立、編輯、刪除、發布文章
-- **文章展示**: 公開的部落格列表和文章詳情頁面
-- **分類和標籤**: (未來擴展)
+- **文章管理 (後台)**: 提供給管理員建立、編輯、發布、封存和刪除文章的功能。
+- **文章展示 (前台)**: 在 `/blog` 公開頁面中，以列表形式展示已發布的文章，並提供單篇文章的詳情頁面。
 
 ## 使用方式
 
 ### 後台頁面
-在 `/app/(admin)/blog/` 路由下的頁面中，導入 `views` 中的後台元件。
+在 `/app/(admin)/blog-management/` 路由群組下的頁面中，導入 `views/` 中的後台元件。
 
 ```tsx
-// src/app/(admin)/blog/posts/page.tsx
+// src/app/(admin)/blog-management/posts/page.tsx
 import { PostsListView } from '@/components/features/blog/views/posts-list-view';
 
 export default function AdminBlogPostsPage() {
@@ -40,4 +37,4 @@ export default function AdminBlogPostsPage() {
 ```
 
 ### 前台頁面
-在 `/app/(public)/blog/` 路由下的頁面中，導入 `views` 中的前台元件。
+前台的部落格頁面 (`/app/(public)/blog/`) 目前是靜態的。未來可以重構為從 Firestore 動態獲取 `posts` 集合的資料來渲染。

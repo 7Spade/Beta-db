@@ -2,147 +2,54 @@
 
 ## 概述
 
-合約模組是 Beta-db 整合平台的核心功能之一，負責管理所有營造合約、付款追蹤、變更單和版本控制。
+合約模組是 Beta-db 整合平台的核心功能之一，負責管理所有營造合約、付款追蹤、變更單和版本控制。這是一個高度複雜且功能完整的模組。
 
 ## 架構設計
 
-### 目錄結構
+本模組採用了清晰、可擴展的目錄結構，將不同關注點分離：
 
 ```
 contracts/
-├── types/                    # 類型定義
-├── hooks/                    # 自定義 Hooks
-├── services/                 # 業務邏輯服務
+├── actions/                  # Server Actions (例如: createContract)
+├── components/               # 可在模組內部重用的小型元件 (例如: ContractStatusBadge)
+├── constants/                # 模組內使用的常數 (例如: 合約狀態)
+├── dashboard/                # 專用於合約模組的儀表板元件
+├── dialogs/                  # 對話框元件 (例如: CreateContractDialog)
+├── forms/                    # 表單元件與 Zod 驗證 schemas
+├── hooks/                    # 專用於此模組的自定義 Hooks (例如: useContracts)
+├── providers/                # 狀態管理的 Context Provider (ContractProvider)
+├── services/                 # 核心業務邏輯服務 (例如: contractService)
+├── sheets/                   # 側邊欄 (Sheet) 元件 (例如: ContractDetailsSheet)
+├── tables/                   # 表格元件 (例如: ContractsTable)
+├── types/                    # 核心的 TypeScript 類型定義
 ├── utils/                    # 工具函數
-├── constants/                # 常數定義
-├── components/               # 可重用組件
-├── forms/                    # 表單組件
-├── dialogs/                  # 對話框組件
-├── sheets/                   # 側邊欄組件
-├── tables/                   # 表格組件
-├── dashboard/                # 儀表板組件
-├── views/                    # 頁面視圖組件
-├── providers/                # Context 提供者
-└── actions/                  # Server Actions
+└── views/                    # 構成頁面的主要 React 元件
 ```
 
-### 核心功能
+## 核心功能
 
-- **合約管理**: 創建、編輯、刪除、查看合約
-- **付款追蹤**: 管理付款請求、狀態和進度
-- **變更單管理**: 處理合約修改和修訂
-- **版本控制**: 追蹤合約版本歷史
-- **數據匯出**: 支援 CSV 格式匯出
+- **合約管理**: 創建、編輯、刪除、查看合約。
+- **付款追蹤**: 管理付款請求、狀態和進度。
+- **變更單管理**: 處理合約修改和修訂。
+- **版本控制**: 追蹤合約版本歷史。
+- **數據匯出**: 支援將合約列表匯出為 CSV 格式。
+- **與 DocuParse 整合**: 可以從「智慧文件解析」模組的結果直接創建合約。
 
 ## 使用方式
 
-### 基本使用
+此模組的功能主要由 `ContractsView` 統一呈現，它被用於 `/app/(dashboard)/contracts` 頁面。該視圖內部會組合使用 `ContractDashboard` 和 `ContractsTable` 等元件。
+
+要使用此模組的功能，應將其包裹在 `ContractProvider` 中，以提供必要的狀態和上下文。
 
 ```tsx
-import { ContractsView } from '@/components/features/contracts';
+// src/app/(dashboard)/contracts/layout.tsx
+import { ContractProvider } from '@/components/features/contracts/providers';
 
-function MyPage() {
+export default function ContractsLayout({ children }: { children: React.ReactNode }) {
   return (
     <ContractProvider>
-      <ContractsView />
+      {children}
     </ContractProvider>
   );
 }
 ```
-
-### 使用 Context
-
-```tsx
-import { useContractContext } from '@/components/features/contracts';
-
-function MyComponent() {
-  const { state, dispatch } = useContractContext();
-  
-  // 使用合約狀態
-  const { contracts, loading } = state;
-  
-  return (
-    // 組件內容
-  );
-}
-```
-
-## 組件說明
-
-### 主要組件
-
-- `ContractsView`: 合約主視圖，包含儀表板和列表
-- `ContractDashboard`: 合約統計儀表板
-- `ContractsTable`: 合約列表表格
-- `ContractDetailsSheet`: 合約詳情側邊欄
-- `CreateContractDialog`: 創建合約對話框
-
-### 可重用組件
-
-- `ContractStatusBadge`: 合約狀態標籤
-- `PaymentProgress`: 付款進度條
-- `ChangeOrderItem`: 變更單項目
-- `VersionTimeline`: 版本時間軸
-
-## 類型定義
-
-### 核心類型
-
-- `Contract`: 合約主體
-- `Payment`: 付款記錄
-- `ChangeOrder`: 變更單
-- `ContractVersion`: 合約版本
-
-### 狀態類型
-
-- `ContractStatus`: 合約狀態
-- `PaymentStatus`: 付款狀態
-- `ChangeOrderStatus`: 變更單狀態
-
-## 服務層
-
-### 主要服務
-
-- `ContractService`: 合約 CRUD 操作
-- `PaymentService`: 付款管理
-- `ChangeOrderService`: 變更單管理
-- `ExportService`: 數據匯出
-
-### Server Actions
-
-- `createProjectAndContractFromDocument`: 從文件創建專案和合約
-- `createContractAction`: 創建合約的 Server Action
-
-## 開發指南
-
-### 添加新功能
-
-1. 在適當的目錄下創建新檔案
-2. 更新對應的 `index.ts` 導出
-3. 在主 `index.ts` 中添加導出
-4. 更新 README 文檔
-
-### 測試
-
-```bash
-# 運行測試
-npm test
-
-# 運行特定測試
-npm test -- contracts
-```
-
-## 依賴關係
-
-- **UI 組件**: `@/components/ui/*`
-- **工具函數**: `@/lib/utils`
-- **類型定義**: `@/lib/types`
-- **Firebase**: `@/lib/firebase`
-
-## 注意事項
-
-- 所有組件都使用 TypeScript 嚴格模式
-- 遵循 React 19 最佳實踐
-- 使用 Next.js 15 App Router
-- 支援響應式設計
-- 整合 Firebase 後端服務

@@ -1,12 +1,16 @@
-# 服務目錄 (Services)
+# AI Token 消耗紀錄服務 (ai-token-log) - [已棄用]
 
-此目錄用於存放可在應用程式後端（例如 Server Actions 或 Genkit Flows）重用的模組化服務。
+**注意：此模組的功能已被整合到統一的 `activity-log` 服務中，並將在未來的重構中被移除。**
 
-將這些邏輯提取到獨立的服務中有以下好處：
-- **可重用性**: 同一個服務可以被不同的 Server Action 或 AI Flow 呼叫。
-- **關注點分離**: 讓您的 Action 和 Flow 專注於處理請求和協調流程，而將具體的業務邏輯（如資料庫操作、日誌記錄）委託給服務。
-- **可測試性**: 獨立的服務更容易進行單元測試。
+## 原始職責
 
-## 目前服務
+此服務的原始目的是提供一個 `logAiTokenUsage` 函數，用於非同步地將 Genkit AI 流程的 Token 消耗紀錄寫入資料庫。
 
-- **`logging.service.ts`**: 提供一個 `logAiTokenUsage` 函數，用於非同步地將 AI token 的消耗紀錄寫入 Firestore，而不會阻塞主應用流程。
+## 整合後的架構
+
+在新的事件驅動架構下，AI 流程不再直接呼叫此服務。取而代之的是：
+1. AI 流程在執行完畢後，會廣播一個 `ai_flow.executed` 事件。
+2. `activity-log.listeners.ts` 會訂閱此事件。
+3. 當事件觸發時，監聽器會呼叫 `activity-log.service.ts` 來建立一筆標準化的活動日誌，其中 `entityType` 為 `'ai_flow'`，並在 `details` 欄位中記錄 Token 數量等資訊。
+
+這種方式使得日誌記錄的邏輯更加統一和中心化。

@@ -58,7 +58,7 @@ export default function KnowledgeBasePage() {
 
   const categories = useMemo(() => {
     const allCategories = entries.map(e => e.category);
-    return ['All', ...Array.from(new Set(allCategories))]];
+    return ['All', ...Array.from(new Set(allCategories))];
   }, [entries]);
 
   const filteredEntries = useMemo(() => {

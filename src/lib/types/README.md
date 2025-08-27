@@ -1,15 +1,17 @@
-# 类型定义 (Type Definitions)
+# 全域類型定義 (Global Type Definitions)
 
-TypeScript类型定义和接口声明。
+此目錄存放應用程式中**共享的、全局性的 TypeScript 類型定義**。
 
-## 类型分类
+## 檔案說明
 
-- `contracts/` - 合同相关类型
-- `firebase/` - Firebase服务类型
+- **`types.ts`**:
+  這是最主要的類型定義檔案。它定義了整個應用程式中幾乎所有核心的資料實體結構，例如 `Project`, `Task`, `Partner`, `TeamMember`, `Skill` 等。
+  將這些核心類型集中在此處，可以確保整個應用程式對同一種資料有一致的理解和結構，避免了在不同模組中重複定義相同的類型。
 
-## 使用说明
+- **`contracts/`**:
+  這是一個子目錄，專門用於存放與「合約」這個複雜模組相關的、且可能**僅在服務層**使用的特定類型。這有助於將特定於後端實現的類型（例如包含 Firestore `Timestamp` 的類型）與前端元件使用的類型（通常是 JS `Date` 物件）區分開來。
 
-- 提供类型安全的开发体验
-- 支持IDE智能提示和错误检查
-- 便于API接口的类型约束
+## 使用原則
 
+- 當一個類型需要在多個**功能模組 (`features`)** 之間共享時，它應該被定義在 `types.ts` 中。
+- 如果一個類型僅在單一功能模組內部使用，可以考慮將其定義在該功能模組的 `types` 子目錄下（例如 `/components/features/contracts/types/`）。
