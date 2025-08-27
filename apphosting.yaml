@@ -67,7 +67,7 @@ env:
       - RUNTIME
 
   - variable: MONGODB_URI
-    secret: mongodb+srv://7si:m9PIsSOktMQr5X9E@beta.myiv9dp.mongodb.net/beta-db?retryWrites=true&w=majority&appName=Beta
+    value: mongodb+srv://7si:m9PIsSOktMQr5X9E@beta.myiv9dp.mongodb.net/beta-db?retryWrites=true&w=majority&appName=Beta
     availability:
       - BUILD
       - RUNTIME
