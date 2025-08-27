@@ -1,19 +1,126 @@
-# **App Name**: Twilight Muse
+# Beta-db 整合平台 - 功能藍圖 (Functional Blueprint)
 
-## Core Features:
+本文件旨在概述 Beta-db 整合平台的核心功能、當前狀態以及未來的發展路線圖。這是一個動態文件，將隨著專案的演進而更新。
 
-- Landing Page: Landing page showcasing the application's purpose and features.
-- Color Palette Generation: Color Palette Generator: Accepts a color (such as Future Dusk) as input, and generates a harmonious color palette of analogous colors using AI. It uses the concept of color theory as a tool to decide what output would constitute a useful, pleasing palette.
-- Palette Display: Palette Display: Visually showcases the generated color palette.
-- Hex Code Display: Hex Code Display: Shows the hex codes for each color in the generated palette.
-- Downloadable Palette: Downloadable Palette: Enables users to download the generated palette as an image file (e.g., PNG or JPEG).
+---
 
-## Style Guidelines:
+## 1. 核心願景
 
-- Primary color: Future Dusk, a mysterious and futuristic blue-purple (#575366).
-- Background color: Light, desaturated blue-purple (#F0F0F4).
-- Accent color: A slightly brighter, analogous blue (#665E53).
-- Font: 'Inter', a grotesque-style sans-serif, for both headlines and body text.
-- Use minimalist, geometric icons to complement the modern, futuristic aesthetic.
-- Clean and modern layout with ample spacing to create a sense of spaciousness and sophistication.
-- Subtle transitions and animations for a smooth user experience.
+打造一個以數據和 AI 為驅動的、高度整合的營造業專案管理平台。我們的目標是簡化從文件解析、專案規劃、合約管理到團隊協作的整個工作流程，提高效率、透明度和決策品質。
+
+---
+
+## 2. 現有功能模組 (Current Features)
+
+以下是截至目前，平台已經實現或具備核心框架的功能模組。
+
+### **模組 1：基礎架構與核心系統 (Infrastructure & Core Systems)**
+
+-   **認證與使用者管理**:
+    -   [x] 帳號註冊、登入與登出流程。
+    -   [x] 支援 Email/密碼及 Google 社交登入。
+    -   [x] **管理員審核機制**：新用戶註冊後需由管理員審核，實現了基礎的 RBAC (基於角色的存取控制) 概念。
+    -   [x] 使用者個人資料頁面 (`/profile`)。
+-   **事件驅動架構**:
+    -   [x] 建立了中央事件調度中心 (`lib/events`)，實現模組解耦。
+-   **後台服務系統**:
+    -   [x] **通知系統**: 基於事件驅動，可針對特定事件（如使用者註冊/審核）向相關人員發送即時通知。
+    -   [x] **活動日誌系統**: 基於事件驅動，可自動記錄關鍵系統活動（如使用者審核、AI Token 消耗），為未來的稽核追蹤打下基礎。
+
+### **模組 2：專案與任務管理 (Project & Task Management)**
+
+-   **專案管理**:
+    -   [x] 視覺化的專案列表儀表板。
+    -   [x] 建立新專案。
+    -   [x] 查看專案詳情，包括進度、價值和日期。
+-   **任務管理**:
+    -   [x] 在專案中建立巢狀、無限層級的工料清單 (Tasks)。
+    -   [x] 為每個任務設定數量、單價，並自動計算價值。
+    -   [x] 即時更新任務狀態（待處理、進行中、已完成）。
+-   **AI 輔助**:
+    -   [x] **智慧子任務建議**: 根據母任務標題，由 AI (Genkit) 建議可行的子任務。
+
+### **模組 3：合約管理 (Contract Management)**
+
+-   [x] 統一的合約儀表板，展示關鍵統計數據。
+-   [x] 建立、查看、編輯和刪除合約。
+-   [x] 支援 CSV 格式的資料匯出。
+-   [x] 完整的合約詳情視圖，包含付款、變更單和歷史紀錄的框架。
+
+### **模組 4：智慧文件解析 (DocuParse)**
+
+-   [x] **AI 文件分析**: 能夠接收使用者從雲端硬碟選擇的文件（PDF、DOCX 等）。
+-   [x] **結構化資料提取**: 使用 AI (Genkit) 從文件中自動解析出結構化的工料清單。
+-   [x] **人機協作編輯**: 提供互動式表格，讓使用者在建立專案前，可以對 AI 提取的結果進行編輯和確認。
+-   [x] **一鍵建檔**: 將確認後的工料清單和文件資訊，一鍵轉換為平台中的一個新專案和一份關聯合約。
+
+### **模組 5：內部團隊管理 (Team Management)**
+
+-   [x] **同伴列表**: 建立和管理內部團隊成員的基本資料。
+-   [x] **技能清單**: 建立和管理團隊所需的技能庫，並提供 AI 建議功能。
+-   [x] **工法工序庫 (知識庫)**: 提供一個結構化的知識庫，並能使用 AI 根據標題自動生成內容。
+
+### **模組 6：合作夥伴生態系 (PartnerVerse)**
+
+-   [x] **合作夥伴管理**: 集中管理所有外部合作夥伴（客戶、供應商、下游包商）的資料。
+-   [x] **360° 夥伴視圖**: 透過標籤頁 (Tabs) 整合顯示與夥伴相關的概覽、聯絡人、合約、財務流程等資訊。
+-   [x] **自訂財務流程**: 允許為每個合作夥伴定義客製化的應收/應付工作流程。
+-   [x] **財務單據管理**: 基於定義好的流程，管理應收/應付單據，並可手動推進流程狀態。
+
+---
+
+## 3. 未來功能藍圖 (Future Roadmap) - 務實版
+
+### **階段一：數據化工地現場 (MVP+)**
+
+此階段專注於將工地現場的日常紙本作業數位化，建立數據基礎。
+
+-   **工地日報系統 (Daily Reports)**:
+    -   [ ] **目標**: 在「快捷操作」選單中，實現一個簡單的線上日報表單。
+    -   [ ] **功能**: 讓工地主任或領班能快速記錄每日天氣、出工人数、施工項目、機具使用、材料進場等資訊。
+    -   [ ] **效益**: 取代紙本或 Excel，將每日關鍵數據結構化，方便後續查詢與統計。
+
+-   **進度回報與照片上傳**:
+    -   [ ] **目標**: 強化「專案任務」功能，允許針對特定任務回報進度。
+    -   [ ] **功能**: 使用者可以對著某個任務（如「一樓牆面砌磚」）標記完成百分比，並上傳現場施工照片作為佐證。照片會自動與該任務關聯。
+    -   [ ] **效益**: 讓專案進度追蹤有據可循，圖文並茂，減少溝通落差。
+
+-   **基礎排班與資源檢視**:
+    -   [ ] **目標**: 在 `/team/schedule` 頁面實現一個基礎的視覺化排班日曆。
+    -   [ ] **功能**: 管理者可以手動將「同伴列表」中的成員指派到特定日期的特定「專案」。
+    -   [ ] **效益**: 提供一個集中的視圖，了解誰在哪個專案，避免資源衝突。
+
+### **階段二：數據整合與決策輔助 (Version 2.0)**
+
+此階段專注於將第一階段收集到的數據進行整合，提供有價值的分析與警示。
+
+-   **進階儀表板與報表**:
+    -   [ ] **目標**: 豐富儀表板內容，提供可匯出的報表。
+    -   [ ] **功能**:
+        *   **成本預算追蹤**: 將「專案任務」的預算價值與「日報表」中回報的實際工時和材料消耗進行比對，顯示成本差異。
+        *   **進度差異分析 (S-Curve)**: 根據任務的預計時程與實際回報的進度，自動生成簡易的進度 S 曲線，視覺化呈現專案是提前還是延遲。
+    -   [ ] **效益**: 從「單純記錄」進化到「數據分析」，幫助管理者快速發現問題。
+
+-   **智慧排班建議 (AI-Assisted Scheduling)**:
+    -   [ ] **目標**: 這不是全自動 AI 排班，而是「輔助工具」。
+    -   [ ] **功能**: 當管理者要為一個需要「模板工」和「鋼筋工」的任務排班時，系統會自動從「同伴列表」中，篩選出具備這些「技能」且在該時段「有空」的成員，作為建議清單。
+    -   [ ] **效益**: 節省管理者翻閱資料、逐一詢問的時間，直接提供決策選項。
+
+-   **材料庫存與採購提醒**:
+    -   [ ] **目標**: 建立基礎的材料庫存管理。
+    -   [ ] **功能**: 當「日報表」回報的材料使用量，使庫存低於安全存量時，系統會自動在儀表板上發出採購提醒。
+    -   [ ] **效益**: 避免因材料短缺而導致的停工。
+
+### **階段三：生態系協作與流程自動化 (Ecosystem & Collaboration)**
+
+此階段專注於打通內外部協作流程。
+
+-   **協力廠商進度回報入口**:
+    -   [ ] **目標**: 為合作夥伴（如：下游包商）提供一個受限的檢視與回報入口。
+    -   [ ] **功能**: 下游包商可以登入系統，僅看到自己負責的任務，並在上面回報進度、上傳照片。
+    -   [ ] **效益**: 減少透過 LINE 或電話反覆溝通確認的麻煩，所有進度都在同一平台更新。
+
+-   **基於進度的計價請款**:
+    -   [ ] **目標**: 將「專案進度」與「合作夥伴的財務流程」連結。
+    -   [ ] **功能**: 當下游包商完成某個任務並經我方確認後，系統可以自動觸發其在「PartnerVerse」中的一筆應付款單據，進入請款流程。
+    -   [ ] **效益**: 實現「工程計價」的半自動化，減少人為錯誤，提升雙方信任度。
