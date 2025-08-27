@@ -61,6 +61,12 @@ export const navigationConfig: NavigationItem[] = [
         href: '/quick-actions',
         children: [
             {
+                id: 'kanban',
+                label: '看板',
+                icon: LayoutGrid,
+                href: '/kanban'
+            },
+            {
                 id: 'daily-report',
                 label: '工地日報',
                 icon: Calendar,
@@ -91,12 +97,6 @@ export const navigationConfig: NavigationItem[] = [
         label: '專案管理',
         icon: FolderKanban,
         href: '/projects'
-    },
-     {
-        id: 'kanban',
-        label: '看板',
-        icon: LayoutGrid,
-        href: '/kanban'
     },
     {
         id: 'contracts',
