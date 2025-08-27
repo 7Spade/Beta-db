@@ -6,9 +6,9 @@ import { format } from 'date-fns';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { CreateProjectDialog } from '@/components/features/app/create-project-dialog';
+import { CreateProjectDialog } from '@/components/features/app/components/create-project-dialog';
 import type { Project, Task } from '@/lib/types/types';
-import { ProjectDetailsSheet } from '@/components/features/app/project-details-sheet';
+import { ProjectDetailsSheet } from '@/components/features/app/components/project-details-sheet';
 
 function calculateProgress(tasks: Task[]): { completedValue: number } {
   let completedValue = 0;

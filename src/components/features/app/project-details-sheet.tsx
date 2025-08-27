@@ -1,8 +1,7 @@
 
 'use client';
 
-import React from 'react';
-import { useProjects } from '@/context/ProjectContext';
+import React, { useMemo } from 'react';
 import { TaskItem } from '@/components/features/app/task-item';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
@@ -10,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import type { Task } from '@/lib/types/types';
+import type { Project, Task } from '@/lib/types/types';
 import {
   Sheet,
   SheetContent,
@@ -19,9 +18,11 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useToast } from '@/hooks/use-toast';
+import { addTaskAction } from './actions/project-actions';
 
 interface ProjectDetailsSheetProps {
-  projectId: string;
+  project: Project | undefined;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 }
@@ -31,9 +32,8 @@ function calculateRemainingValue(totalValue: number, tasks: Task[]): number {
     return totalValue - usedValue;
 }
 
-export function ProjectDetailsSheet({ projectId, isOpen, onOpenChange }: ProjectDetailsSheetProps) {
-  const { addTask, findProject } = useProjects();
-  const project = findProject(projectId);
+export function ProjectDetailsSheet({ project, isOpen, onOpenChange }: ProjectDetailsSheetProps) {
+  const { toast } = useToast();
   const [isAddingTask, setIsAddingTask] = React.useState(false);
   const [taskTitle, setTaskTitle] = React.useState('');
   const [taskQuantity, setTaskQuantity] = React.useState(1);
@@ -42,19 +42,27 @@ export function ProjectDetailsSheet({ projectId, isOpen, onOpenChange }: Project
   const remainingValue = project ? calculateRemainingValue(project.value, project.tasks) : 0;
   const taskValue = taskQuantity * taskUnitPrice;
 
-  const handleAddTask = (e: React.FormEvent) => {
+  const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!project) return;
     if(taskTitle.trim() && taskValue > 0) {
         if (taskValue > remainingValue) {
-            alert(`任務價值 (${taskValue.toLocaleString()}) 不可超過剩餘的專案價值 ${remainingValue.toLocaleString()}`);
+            toast({
+              title: '任務價值超過剩餘價值',
+              description: `任務價值 (${taskValue.toLocaleString()}) 不可超過剩餘的專案價值 ${remainingValue.toLocaleString()}`,
+              variant: 'destructive'
+            });
             return;
         }
-        if (!project) return;
-        addTask(project.id, null, taskTitle.trim(), taskQuantity, taskUnitPrice);
-        setTaskTitle('');
-        setTaskQuantity(1);
-        setTaskUnitPrice(0);
-        setIsAddingTask(false);
+        const result = await addTaskAction(project.id, project.tasks, null, taskTitle.trim(), taskQuantity, taskUnitPrice);
+        if (result.success) {
+            setTaskTitle('');
+            setTaskQuantity(1);
+            setTaskUnitPrice(0);
+            setIsAddingTask(false);
+        } else {
+            toast({ title: '新增失敗', description: result.error, variant: 'destructive'});
+        }
     }
   }
   
@@ -80,6 +88,10 @@ export function ProjectDetailsSheet({ projectId, isOpen, onOpenChange }: Project
       </Sheet>
     );
   }
+
+  const findProjectAndTasks = (projectId: string): { project: Project | undefined, tasks: Task[] } => {
+    return { project, tasks: project?.tasks || [] };
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -160,7 +172,7 @@ export function ProjectDetailsSheet({ projectId, isOpen, onOpenChange }: Project
                     {project.tasks.length > 0 ? (
                         <div className="space-y-2">
                         {project.tasks.map((task) => (
-                            <TaskItem key={task.id} task={task} projectId={project.id} />
+                            <TaskItem key={task.id} task={task} project={project} />
                         ))}
                         </div>
                     ) : (

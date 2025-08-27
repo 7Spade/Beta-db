@@ -1,8 +1,8 @@
+
 'use client';
 
-import { useState } from 'react';
-import type { Task, TaskStatus } from '@/lib/types/types';
-import { useProjects } from '@/context/ProjectContext';
+import { useState, useTransition } from 'react';
+import type { Project, Task, TaskStatus } from '@/lib/types/types';
 import {
   CheckCircle2,
   ChevronRight,
@@ -35,10 +35,12 @@ import {
 } from '../../ui/tooltip';
 import { AISubtaskSuggestions } from './ai-subtask-suggestions';
 import { Badge } from '../../ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { addTaskAction, updateTaskStatusAction } from './actions/project-actions';
 
 interface TaskItemProps {
   task: Task;
-  projectId: string;
+  project: Project;
 }
 
 const statusIcons: Record<TaskStatus, React.ReactNode> = {
@@ -58,8 +60,10 @@ function calculateRemainingValue(totalValue: number, tasks: Task[]): number {
     return totalValue - usedValue;
 }
 
-export function TaskItem({ task, projectId }: TaskItemProps) {
-  const { updateTaskStatus, addTask, findProject } = useProjects();
+export function TaskItem({ task, project }: TaskItemProps) {
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+
   const [isAddingSubtask, setIsAddingSubtask] = useState(false);
   const [subtaskTitle, setSubtaskTitle] = useState('');
   const [subtaskQuantity, setSubtaskQuantity] = useState(1);
@@ -68,36 +72,49 @@ export function TaskItem({ task, projectId }: TaskItemProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [showAISuggestions, setShowAISuggestions] = useState(false);
 
-  const project = findProject(projectId);
   const remainingValue = calculateRemainingValue(task.value, task.subTasks);
   const subtaskValue = subtaskQuantity * subtaskUnitPrice;
 
   const handleStatusChange = (status: TaskStatus) => {
-    updateTaskStatus(projectId, task.id, status);
+    startTransition(async () => {
+      await updateTaskStatusAction(project.id, project.tasks, task.id, status);
+    });
   };
 
   const handleAddSubtask = (e: React.FormEvent) => {
     e.preventDefault();
     if (subtaskTitle.trim() && subtaskValue > 0) {
         if (subtaskValue > remainingValue) {
-            alert(`子任務價值 (${subtaskValue.toLocaleString()}) 不可超過剩餘的任務價值 ${remainingValue.toLocaleString()}`);
+            toast({
+              title: '子任務價值超過剩餘價值',
+              description: `子任務價值 (${subtaskValue.toLocaleString()}) 不可超過剩餘的任務價值 ${remainingValue.toLocaleString()}`,
+              variant: 'destructive'
+            });
             return;
         }
-      addTask(projectId, task.id, subtaskTitle.trim(), subtaskQuantity, subtaskUnitPrice);
-      setSubtaskTitle('');
-      setSubtaskQuantity(1);
-      setSubtaskUnitPrice(0);
-      setIsAddingSubtask(false);
-      setIsOpen(true);
+        startTransition(async () => {
+            const result = await addTaskAction(project.id, project.tasks, task.id, subtaskTitle.trim(), subtaskQuantity, subtaskUnitPrice);
+            if (result.success) {
+                setSubtaskTitle('');
+                setSubtaskQuantity(1);
+                setSubtaskUnitPrice(0);
+                setIsAddingSubtask(false);
+                setIsOpen(true);
+            } else {
+                toast({ title: '新增失敗', description: result.error, variant: 'destructive'});
+            }
+        });
     }
   };
 
   const handleAddSuggestedSubtask = (title: string) => {
     const suggestedUnitPrice = Math.min(10, remainingValue);
     if (suggestedUnitPrice > 0) {
-        addTask(projectId, task.id, title, 1, suggestedUnitPrice);
+        startTransition(async () => {
+          await addTaskAction(project.id, project.tasks, task.id, title, 1, suggestedUnitPrice);
+        });
     } else {
-        alert("沒有剩餘價值可以分配給新的子任務。");
+        toast({ title: "沒有剩餘價值", description: "沒有剩餘價值可以分配給新的子任務。", variant: 'destructive' });
     }
   }
 
@@ -111,7 +128,8 @@ export function TaskItem({ task, projectId }: TaskItemProps) {
         <div
           className={cn(
             'flex items-center gap-2 rounded-lg border p-2 pl-3 bg-card',
-            statusColors[task.status]
+            statusColors[task.status],
+            isPending && 'opacity-50'
           )}
         >
           <CollapsibleTrigger asChild>
@@ -143,7 +161,7 @@ export function TaskItem({ task, projectId }: TaskItemProps) {
               <p>上次更新：{new Date(task.lastUpdated).toLocaleString()}</p>
             </TooltipContent>
           </Tooltip>
-          <Select value={task.status} onValueChange={handleStatusChange}>
+          <Select value={task.status} onValueChange={handleStatusChange} disabled={isPending}>
             <SelectTrigger className="w-[150px] h-8">
               <SelectValue placeholder="設定狀態" />
             </SelectTrigger>
@@ -202,7 +220,7 @@ export function TaskItem({ task, projectId }: TaskItemProps) {
 
         <CollapsibleContent className="pl-6 space-y-2">
           {task.subTasks.map((subTask) => (
-            <TaskItem key={subTask.id} task={subTask} projectId={projectId} />
+            <TaskItem key={subTask.id} task={subTask} project={project} />
           ))}
 
           {isAddingSubtask && (
@@ -231,7 +249,7 @@ export function TaskItem({ task, projectId }: TaskItemProps) {
                 <Badge variant="outline" className="h-8 w-28 justify-center bg-background">
                     價值: ${subtaskValue.toLocaleString()}
                 </Badge>
-              <Button type="submit" size="sm" className="bg-primary hover:bg-primary/90 h-8">新增</Button>
+              <Button type="submit" size="sm" className="bg-primary hover:bg-primary/90 h-8" disabled={isPending}>新增</Button>
               <Button
                 type="button"
                 variant="ghost"

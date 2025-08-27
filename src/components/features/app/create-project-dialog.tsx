@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { PlusCircle } from 'lucide-react';
-import { useProjects } from '@/context/ProjectContext';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -25,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
+import { addProjectAction } from './actions/project-actions';
 
 const projectSchema = z.object({
   title: z.string().min(3, '標題至少需要 3 個字元。'),
@@ -40,7 +40,6 @@ const projectSchema = z.object({
 
 export function CreateProjectDialog() {
   const [open, setOpen] = useState(false);
-  const { addProject } = useProjects();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof projectSchema>>({
@@ -52,14 +51,23 @@ export function CreateProjectDialog() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof projectSchema>) {
-    addProject(values);
-    toast({
-      title: '專案已建立！',
-      description: `專案 "${values.title}" 已成功新增。`,
-    });
-    setOpen(false);
-    form.reset();
+  async function onSubmit(values: z.infer<typeof projectSchema>) {
+    const result = await addProjectAction(values);
+
+    if (result.success) {
+      toast({
+        title: '專案已建立！',
+        description: `專案 "${values.title}" 已成功新增。`,
+      });
+      setOpen(false);
+      form.reset();
+    } else {
+        toast({
+            title: '建立失敗',
+            description: result.error,
+            variant: 'destructive'
+        })
+    }
   }
 
   return (
