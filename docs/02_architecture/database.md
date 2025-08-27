@@ -1,8 +1,9 @@
-# Constructo - 資料庫設計 v2.0
+# Firestore 資料庫設計 v2.1
 
-**注意：此文件是整個應用的數據模型唯一事實來源 (Single Source of Truth)，所有開發都應以此為基準。**
+**注意：此文件是 Firestore 資料庫模型的唯一事實來源 (Single Source of Truth)。** 
+對於高頻寫入的流水帳數據（如庫存移動、AI Token 消耗），請參考 [MongoDB 規劃文件](./mongodb.md)。
 
-本文件詳細說明了 Constructo 平台在 Google Firestore 中的資料庫結構。v2.0 版本根據最新的系統藍圖進行了全面更新，以支援更複雜的協作與管理功能。
+本文件詳細說明了 Constructo 平台在 Google Firestore 中的資料庫結構。v2.1 版本根據最新的系統藍圖進行了全面更新，以支援更複雜的協作與管理功能。
 
 ## 1. 核心基礎系統設計
 
@@ -244,19 +245,6 @@
 | `itemId`    | `string`  | **[關聯]** `inventory_items` ID。 |
 | `warehouseId`| `string` | **[關聯]** `warehouses` ID。     |
 | `quantity`  | `number`  | **核心**。當前的實際庫存數量。|
-
-### 3.4. `inventory_movements`
-
-不可變的流水帳，記錄每一次庫存的變動歷史。
-
-| 欄位         | 類型     | 描述                                       |
-|--------------|----------|--------------------------------------------|
-| `itemId`     | `string` | **[關聯]** `inventory_items` ID。          |
-| `type`       | `string` | `inbound`, `outbound`, `transfer-out`, `transfer-in` |
-| `quantity`   | `number` | 變動的數量。                               |
-| `fromWarehouseId` | `string` | (可選) 來源倉庫 ID。                   |
-| `toWarehouseId` | `string` | (可選) 目標倉庫 ID。                   |
-| `transferId` | `string` | (可選) 唯一的調撥操作 ID。                 |
 
 ---
 
