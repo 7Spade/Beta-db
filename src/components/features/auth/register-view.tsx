@@ -21,6 +21,7 @@ import { auth } from '@/lib/db/firebase-client/firebase-client';
 import { registerSchema, type RegisterValues } from './auth-form-schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { dispatch } from '@/lib/events/event-dispatcher';
 import { createUserProfile } from './auth-actions';
 
 function RegisterForm() {
@@ -51,6 +52,8 @@ function RegisterForm() {
         // Do not block registration flow if email fails
         console.warn("Failed to send verification email:", verifyErr);
       }
+      // Broadcast user.registered for admin notifications
+      await dispatch('user.registered', { userId: cred.user.uid, displayName: cred.user.displayName, email: cred.user.email });
       toast({
         title: '註冊成功',
         description: '您的帳號正在等待審核。完成後即可登入。',

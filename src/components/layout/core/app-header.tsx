@@ -13,6 +13,7 @@ import { useAuth } from '@/components/features/auth/use-auth'
 import { auth } from '@/lib/db/firebase-client/firebase-client'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
+import { NotificationCenter } from '@/components/layout/navigation/notification-center'
 
 
 interface AppHeaderProps {
@@ -41,6 +42,7 @@ export function AppHeader({ className }: AppHeaderProps) {
                <div className="hidden md:block">
                  <Breadcrumb />
                </div>
+               <NotificationCenter />
                <UserMenu
                  user={{
                    name: profile?.displayName || user?.email || 'User',

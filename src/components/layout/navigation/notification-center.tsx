@@ -3,37 +3,18 @@
 import * as React from "react"
 import { Bell, Check, X } from "lucide-react"
 import { cn } from "@/lib/utils/utils"
+import { useAuth } from "@/components/features/auth/use-auth"
+import { useNotifications } from "@/hooks/use-notifications"
 
-interface Notification {
-  id: string
-  title: string
-  message: string
-  type: "info" | "success" | "warning" | "error"
-  timestamp: Date
-  read: boolean
-}
-
-interface NotificationCenterProps {
-  className?: string
-  notifications?: Notification[]
-  onMarkAsRead?: (id: string) => void
-  onDismiss?: (id: string) => void
-}
+interface NotificationCenterProps { className?: string }
 
 const NotificationCenter = React.forwardRef<HTMLDivElement, NotificationCenterProps>(
-  ({ className, notifications = [], onMarkAsRead, onDismiss, ...props }, ref) => {
+  ({ className, ...props }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false)
-    const unreadCount = notifications.filter(n => !n.read).length
+    const { user } = useAuth()
+    const { notifications, unreadCount, markAsRead, dismiss } = useNotifications(user?.uid)
 
-    const handleMarkAsRead = (id: string) => {
-      onMarkAsRead?.(id)
-    }
-
-    const handleDismiss = (id: string) => {
-      onDismiss?.(id)
-    }
-
-    const getTypeStyles = (type: Notification["type"]) => {
+    const getTypeStyles = (type: string) => {
       switch (type) {
         case "success":
           return "border-green-200 bg-green-50 text-green-800"
@@ -80,22 +61,22 @@ const NotificationCenter = React.forwardRef<HTMLDivElement, NotificationCenterPr
                     key={notification.id}
                     className={cn(
                       "p-4 border-b last:border-b-0",
-                      getTypeStyles(notification.type),
-                      notification.read && "opacity-60"
+                      getTypeStyles(notification.type || 'info'),
+                      notification.isRead && "opacity-60"
                     )}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="font-medium text-sm">{notification.title}</h4>
+                        <h4 className="font-medium text-sm">{notification.type}</h4>
                         <p className="text-sm mt-1">{notification.message}</p>
                         <p className="text-xs text-muted-foreground mt-2">
-                          {notification.timestamp.toLocaleTimeString()}
+                          {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : ''}
                         </p>
                       </div>
                       <div className="flex items-center gap-1 ml-2">
-                        {!notification.read && (
+                        {!notification.isRead && (
                           <button
-                            onClick={() => handleMarkAsRead(notification.id)}
+                            onClick={() => markAsRead(notification.id)}
                             className="p-1 hover:bg-white/20 rounded transition-colors"
                             title="Mark as read"
                           >
@@ -103,7 +84,7 @@ const NotificationCenter = React.forwardRef<HTMLDivElement, NotificationCenterPr
                           </button>
                         )}
                         <button
-                          onClick={() => handleDismiss(notification.id)}
+                          onClick={() => dismiss(notification.id)}
                           className="p-1 hover:bg-white/20 rounded transition-colors"
                           title="Dismiss"
                         >
@@ -124,5 +105,5 @@ const NotificationCenter = React.forwardRef<HTMLDivElement, NotificationCenterPr
 NotificationCenter.displayName = "NotificationCenter"
 
 export { NotificationCenter }
-export type { Notification }
+// removed invalid type export
 
