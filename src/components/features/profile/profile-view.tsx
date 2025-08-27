@@ -1,7 +1,14 @@
-'use client';
-
+/**
+ * @fileoverview 個人資料主視圖 (伺服器元件)
+ * @description 這是使用者個人資料頁面的主視圖元件。
+ * 它作為一個伺服器元件，負責從後端獲取當前用戶的認證資訊和設定檔資料，
+ * 然後將這些資料傳遞給客戶端子元件進行渲染。
+ */
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProfileForm } from './profile-form';
+import { cookies } from 'next/headers';
+import { adminAuth, adminDb } from '@/lib/db/firebase-admin/firebase-admin';
+import type { UserProfile } from '@/components/features/auth/use-auth';
 
 type UserData = {
   uid: string;
@@ -13,11 +20,54 @@ type UserData = {
   };
 };
 
-interface ProfileViewProps {
-  user: UserData;
+// 獲取當前登入使用者的資料
+async function getUserData(): Promise<UserData | null> {
+  try {
+    const sessionCookie = cookies().get('session')?.value;
+    if (!sessionCookie) return null;
+
+    const decodedToken = await adminAuth.verifySessionCookie(sessionCookie, true);
+    const userRef = adminDb.collection('users').doc(decodedToken.uid);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) return null;
+
+    const profile = userDoc.data() as UserProfile;
+
+    return {
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+      profile: {
+        displayName: profile.displayName || '',
+        role: profile.role || 'Member',
+        status: profile.status || 'unknown'
+      }
+    };
+  } catch (error) {
+    // Session cookie is invalid or expired.
+    console.error("Error fetching user data:", error);
+    return null;
+  }
 }
 
-export function ProfileView({ user }: ProfileViewProps) {
+export async function ProfileView() {
+  const user = await getUserData();
+
+  if (!user) {
+    // 這通常不應該發生，因為有 AuthProvider 保護路由
+    // 但作為一個保險措施，可以顯示一個錯誤或重定向
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>錯誤</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>無法載入使用者資料，請嘗試重新登入。</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
         <div>
