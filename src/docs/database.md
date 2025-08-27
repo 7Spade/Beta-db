@@ -242,7 +242,7 @@
 | `updatedAt`  | `Timestamp` | 文章的最後更新時間。                        |
 
 
-### **2.11. `notifications` (新)**
+### **2.11. `notifications`**
 
 此集合用於驅動應用程式內的通知系統。
 
@@ -258,7 +258,7 @@
 | `isRead`    | `boolean`   | 標記此通知是否已被讀取，預設為 `false`。   |
 | `createdAt` | `Timestamp` | 通知的建立時間。                           |
 
-### **2.12. `activity_logs` (新)**
+### **2.12. `activity_logs`**
 
 此集合作為審計追蹤，記錄應用程式中的所有重要操作。
 
