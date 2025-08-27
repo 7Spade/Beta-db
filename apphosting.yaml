@@ -24,7 +24,7 @@ env:
 
   # reCAPTCHA 配置
   - variable: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
-    value: 6Lcae64rAAAAAGN1IOyTBbbAleUQC2nFdb6pxx_0
+    value: 6LfcULArAAAAAGEu9r_BXXkN3X9ceD1oqQhzcbG0
     availability:
       - BUILD
       - RUNTIME
