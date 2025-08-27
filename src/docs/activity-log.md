@@ -38,15 +38,13 @@ src/
 │   ├── database.md                <-- [修改點] 新增 activity_logs 集合定義
 +│   └── activity-log.md            <-- [新檔案] 本設計文件
 ├── lib/
-│   └── events/
-│       ├── app-events.ts          <-- [修改點] 擴充事件字典
-│       └── event-dispatcher.ts    <-- (無需修改)
-└── services/
-    ├── notification/
-    │   └── ... (通知模組)
-+   └── activity-log/              <-- [新目錄] 活動日誌模組
-+       ├── activity-log.listeners.ts <-- [新檔案] 事件監聽器 (日誌系統的核心)
-+       └── activity-log.service.ts   <-- [新檔案] 負責將日誌寫入資料庫的服務
+│   ├── events/
+│   │   ├── app-events.ts          <-- [修改點] 擴充事件字典
+│   │   └── event-dispatcher.ts    <-- (無需修改)
++│   └── services/
++│       └── activity-log/              <-- [新目錄] 活動日誌模組
++│           ├── activity-log.listeners.ts <-- [新檔案] 事件監聽器 (日誌系統的核心)
++│           └── activity-log.service.ts   <-- [新檔案] 負責將日誌寫入資料庫的服務
 ```
 
 ---
@@ -80,7 +78,7 @@ src/
       // ... 更多事件
     ```
 
-### 4.3. 活動日誌模組 (`services/activity-log/`)
+### 4.3. 活動日誌模組 (`lib/services/activity-log/`)
 
 這是日誌系統的核心業務邏輯。
 
