@@ -5,13 +5,8 @@
 
 import { PostFormView } from '@/components/features/blog/views/post-form-view';
 
-interface PostFormPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function PostFormPage({ params }: PostFormPageProps) {
-  const postId = typeof params.id === 'string' && params.id !== 'create' ? params.id : null;
+export default async function PostFormPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const postId = typeof id === 'string' && id !== 'create' ? id : null;
   return <PostFormView postId={postId} />;
 }

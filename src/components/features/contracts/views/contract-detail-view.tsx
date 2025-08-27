@@ -13,7 +13,7 @@ import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.
 
 interface ContractDetailViewProps {
   contractId: string;
-  router: AppRouterInstance;
+  router?: AppRouterInstance;
 }
 
 const processFirestoreContract = (doc: any): Contract => {
@@ -88,7 +88,7 @@ export function ContractDetailView({ contractId, router }: ContractDetailViewPro
         </div>
       </div>
       <ContractDetailsSheet contract={contract} isOpen={true} onOpenChange={(isOpen) => {
-        if (!isOpen) {
+        if (!isOpen && router) {
           router.back();
         }
       }} />
