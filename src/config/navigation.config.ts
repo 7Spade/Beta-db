@@ -6,43 +6,11 @@
  * @author Beta-db Development Team
  * @created 2025-01-22
  * @updated 2025-01-22
- * @version 1.0.0
+ * @version 1.1.0
  * 
  * @fileoverview 應用程式導航配置和工具函數
- * @description 定義統一側邊欄的導航結構，包含主導航項目、PartnerVerse 子選單配置，
- * 以及相關的導航工具函數。支援平行路由架構和條件渲染。
- * 
- * @tech-stack
- * - Runtime: Node.js 20+
- * - Framework: Next.js 15 (App Router)
- * - Language: TypeScript 5.0+
- * - UI: shadcn/ui + Tailwind CSS 4.0+
- * - Icons: Lucide React
- * - State: Zustand + React Context
- * - Routing: Next.js App Router (Parallel Routes)
- * 
- * @environment
- * - Node: >=20.0.0
- * - Package Manager: pnpm
- * - Build Tool: Turbopack
- * 
- * @features
- * - 統一導航配置管理
- * - 支援巢狀子選單結構
- * - 路徑匹配和活躍狀態檢測
- * - PartnerVerse 模組特殊導航支援
- * - 工具函數提供導航邏輯
- * 
- * @usage
- * '''typescript
- * import { navigationConfig, findNavigationItemByPath } from '@/config/navigation.config'
- * 
- * // 獲取當前路徑對應的導航項目
- * const currentItem = findNavigationItemByPath('/partnerverse/partners')
- * 
- * // 檢查是否應該展開某個區段
- * const shouldExpand = shouldExpandSection('partnerverse', '/partnerverse/workflows')
- * '''
+ * @description 定義統一側邊欄的導航結構，包含主導航項目、子選單配置，
+ * 以及相關的導航工具函數。此版本根據系統藍圖進行了擴展與優化。
  */
 
 import {
@@ -64,10 +32,13 @@ import {
     Shield,
     Briefcase,
     Mail,
-    MessageSquare,
     Cog,
     BarChart3,
     Handshake,
+    Rocket,
+    Package,
+    Calculator,
+    DollarSign
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -83,12 +54,12 @@ export const navigationConfig: NavigationItem[] = [
     {
         id: 'quick-actions',
         label: '快捷操作',
-        icon: Users,
+        icon: Rocket,
         href: '/quick-actions',
         children: [
             {
                 id: 'daily-report',
-                label: '日報表',
+                label: '工地日報',
                 icon: Calendar,
                 href: '/quick-actions/daily-report'
             },
@@ -100,7 +71,7 @@ export const navigationConfig: NavigationItem[] = [
             },
             {
                 id: 'progress',
-                label: '施工進度',
+                label: '進度回報',
                 icon: Activity,
                 href: '/quick-actions/project-progress'
             }
@@ -116,15 +87,7 @@ export const navigationConfig: NavigationItem[] = [
         id: 'projects',
         label: '專案管理',
         icon: FolderKanban,
-        href: '/projects',
-        children: [
-            {
-                id: 'project-list',
-                label: '專案列表',
-                icon: ClipboardList,
-                href: '/projects',
-            }
-        ]
+        href: '/projects'
     },
     {
         id: 'contracts',
@@ -138,13 +101,45 @@ export const navigationConfig: NavigationItem[] = [
                 icon: ClipboardList,
                 href: '/contracts',
             },
+            {
+                id: 'billing',
+                label: '計價作業',
+                icon: Calculator,
+                href: '/billing',
+            }
+        ]
+    },
+    {
+        id: 'inventory',
+        label: '庫存管理',
+        icon: Package,
+        href: '/inventory',
+        children: [
+             {
+                id: 'inventory-dashboard',
+                label: '庫存總覽',
+                icon: BarChart3,
+                href: '/inventory',
+            },
+            {
+                id: 'inventory-items',
+                label: '物料主檔',
+                icon: ClipboardList,
+                href: '/inventory/items',
+            },
+            {
+                id: 'inventory-movements',
+                label: '出入庫紀錄',
+                icon: ArrowLeftRight,
+                href: '/inventory/movements',
+            },
         ]
     },
     {
         id: 'partnerverse',
         label: '合作夥伴',
-        icon: Users,
-        href: '/partnerverse',
+        icon: Handshake,
+        href: '/partnerverse/partners',
         children: [
             {
                 id: 'partners',
@@ -155,7 +150,7 @@ export const navigationConfig: NavigationItem[] = [
             {
                 id: 'workflows',
                 label: '收支流程',
-                icon: ArrowLeftRight,
+                icon: DollarSign,
                 href: '/partnerverse/workflows'
             }
         ]
@@ -164,7 +159,7 @@ export const navigationConfig: NavigationItem[] = [
         id: 'team',
         label: '內部團隊',
         icon: Users,
-        href: '/team',
+        href: '/team/members',
         children: [
             {
                 id: 'schedule',
@@ -190,7 +185,6 @@ export const navigationConfig: NavigationItem[] = [
                 icon: BookOpen,
                 href: '/team/knowledge-base'
             },
-        
         ]
     },
     {
@@ -209,7 +203,7 @@ export const navigationConfig: NavigationItem[] = [
         id: 'admin',
         label: '後台管理',
         icon: Shield,
-        href: '/dashboard-management',
+        href: '/admin',
         children: [
             {
                 id: 'admin-dashboard',
