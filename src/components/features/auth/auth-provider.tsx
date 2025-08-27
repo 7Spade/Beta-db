@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useAuth } from '@/lib/hooks/use-auth';
+import { useAuth } from '@/components/features/auth/use-auth';
 
 const PUBLIC_ROUTES = new Set<string>([
   '/login',
