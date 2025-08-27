@@ -561,59 +561,50 @@
 │      use-mobile.tsx
 │      use-toast.ts
 │
-├─lib
-│  │  firebase-admin.ts
-│  │  firebase-client.ts
-│  │  mongodb.ts
-│  │  README.md
-│  │  types.ts
-│  │  utils.ts
-│  │
-│  ├─services
-│  │  │  README.md
-│  │  │
-│  │  ├─contracts
-│  │  │      contract-api.service.ts
-│  │  │      contract-cache.service.ts
-│  │  │      firebase-contract.service.ts
-│  │  │      index.ts
-│  │  │      README.md
-│  │  │
-│  │  └─firebase
-│  │          auth.service.ts
-│  │          firestore.service.ts
-│  │          functions.service.ts
-│  │          index.ts
-│  │          README.md
-│  │          storage.service.ts
-│  │
-│  └─types
-│      │  README.md
-│      │
-│      ├─contracts
-│      │      change-order.types.ts
-│      │      contract-version.types.ts
-│      │      contract.types.ts
-│      │      index.ts
-│      │      payment.types.ts
-│      │      README.md
-│      │
-│      └─firebase
-│              auth.types.ts
-│              firestore.types.ts
-│              functions.types.ts
-│              index.ts
-│              README.md
-│              storage.types.ts
-│
-├─models
-│      ai-token-log.model.ts
-│      README.md
-│
-├─services
-│      logging.service.ts
-│      README.md
-│
-└─utils
-        date-picker.tsx
-        README.md
+└─lib
+    │  README.md
+    │
+    ├─db
+    │  ├─firebase-admin
+    │  │      firebase-admin.ts
+    │  │
+    │  ├─firebase-client
+    │  │      firebase-client.ts
+    │  │
+    │  └─mongoose
+    │          mongodb.ts
+    │
+    ├─models
+    │      ai-token-log.model.ts
+    │      README.md
+    │
+    ├─services
+    │  │  README.md
+    │  │
+    │  ├─ai-token-log
+    │  │      logging.service.ts
+    │  │      README.md
+    │  │
+    │  └─contracts
+    │          contract-api.service.ts
+    │          contract-cache.service.ts
+    │          firebase-contract.service.ts
+    │          index.ts
+    │          README.md
+    │
+    ├─types
+    │  │  README.md
+    │  │  types.ts
+    │  │
+    │  └─contracts
+    │          change-order.types.ts
+    │          contract-version.types.ts
+    │          contract.types.ts
+    │          index.ts
+    │          payment.types.ts
+    │          README.md
+    │
+    └─utils
+            date-picker.tsx
+            README.md
+            utils.ts
