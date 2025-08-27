@@ -1,7 +1,4 @@
-/**
- * @fileoverview 註冊頁面的主要視圖元件
- * @description 負責組合註冊頁面的所有 UI 元件，形成完整的頁面。
- */
+
 'use client';
 
 import React from 'react';
@@ -22,9 +19,9 @@ import { Loader2 } from 'lucide-react';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '@/lib/firebase-client';
 import { registerSchema, type RegisterValues } from './auth-form-schemas';
-import { SocialAuthButtons } from './social-auth-buttons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createUserProfile } from './auth-actions';
 
 function RegisterForm() {
   const { toast } = useToast();
@@ -44,14 +41,19 @@ function RegisterForm() {
     setLoading(true);
     try {
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      
+      // Create user profile in Firestore
+      await createUserProfile(cred.user);
+
       try {
         await sendEmailVerification(cred.user);
       } catch (verifyErr) {
-        // 即使寄送驗證信失敗，也不阻塞註冊流程
+        // Do not block registration flow if email fails
+        console.warn("Failed to send verification email:", verifyErr);
       }
       toast({
         title: '註冊成功',
-        description: '歡迎加入！請檢查您的信箱以驗證帳戶。正在將您導向登入頁...',
+        description: '您的帳號正在等待審核。完成後即可登入。',
       });
       router.push('/login');
     } catch (error: any) {
@@ -129,24 +131,7 @@ export function RegisterView() {
       </CardHeader>
       <CardContent className="space-y-4">
         <RegisterForm />
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              或使用
-            </span>
-          </div>
-        </div>
-        <SocialAuthButtons 
-          buttonText="使用 Google 帳戶註冊"
-          redirectTo="/dashboard"
-          isRegistration={true}
-        />
-      </CardContent>
-       <CardContent>
-          <div className="text-center text-sm">
+         <div className="mt-4 text-center text-sm">
             已經有帳戶了嗎？{' '}
             <Link href="/login" className="underline">
               登入

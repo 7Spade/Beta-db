@@ -1,14 +1,16 @@
+
+'use server';
+
 import { auth } from '@/lib/firebase-client';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
   type User,
-  type UserCredential,
-  type AuthError,
 } from 'firebase/auth';
 import type { LoginValues, RegisterValues } from './auth-form-schemas';
+import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { firestore } from '@/lib/firebase-client';
+
 
 export interface AuthActionResponse {
   success: boolean;
@@ -22,7 +24,6 @@ export async function registerWithEmail(data: RegisterValues): Promise<AuthActio
     // TODO: Send verification email
     return { success: true, user: userCredential.user };
   } catch (error: any) {
-    // Map Firebase error codes to user-friendly messages
     if (error.code === 'auth/email-already-in-use') {
       return { success: false, error: '這個電子郵件地址已經被註冊了。' };
     } else if (error.code === 'auth/weak-password') {
@@ -50,33 +51,30 @@ export async function signInWithEmail(data: LoginValues): Promise<AuthActionResp
   }
 }
 
-export async function signInWithGoogle(): Promise<UserCredential> {
-  const provider = new GoogleAuthProvider();
-  
-  // 添加額外的 scope 和自定義參數
-  provider.addScope('profile');
-  provider.addScope('email');
-  
+/**
+ * Creates a user profile document in Firestore if it doesn't already exist.
+ * This is used for both email and Google sign-in.
+ */
+export async function createUserProfile(user: User): Promise<{ success: boolean; error?: string }> {
+  const userRef = doc(firestore, 'users', user.uid);
   try {
-    const userCredential = await signInWithPopup(auth, provider);
-    return userCredential;
-  } catch (error: any) {
-    // 根據 Firebase 官方文檔處理錯誤
-    if (error.code === 'auth/popup-closed-by-user') {
-      throw new Error('登入流程被使用者中斷。');
-    } else if (error.code === 'auth/account-exists-with-different-credential') {
-      throw new Error('此電子郵件地址已使用其他方式註冊。');
-    } else if (error.code === 'auth/popup-blocked') {
-      throw new Error('彈出視窗被瀏覽器阻擋，請允許彈出視窗後重試。');
-    } else if (error.code === 'auth/cancelled-popup-request') {
-      throw new Error('登入請求被取消。');
-    } else if (error.code === 'auth/popup-closed-by-user') {
-      throw new Error('登入流程被使用者中斷。');
-    } else if (error.code === 'auth/network-request-failed') {
-      throw new Error('網路連線失敗，請檢查網路連線。');
+    const docSnap = await getDoc(userRef);
+    if (!docSnap.exists()) {
+      // Document doesn't exist, create it
+      await setDoc(userRef, {
+        displayName: user.displayName || user.email?.split('@')[0] || 'New User',
+        email: user.email,
+        role: 'Member', // Default role
+        status: 'pending', // Default status for new users
+        createdAt: serverTimestamp(),
+        approvedAt: null,
+        approvedBy: null,
+      });
     }
-    
-    // 重新拋出錯誤，讓上層處理
-    throw error;
+    // If doc exists, do nothing. The profile is already there.
+    return { success: true };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "發生未知錯誤。";
+    return { success: false, error: `建立用戶設定檔失敗: ${errorMessage}` };
   }
 }

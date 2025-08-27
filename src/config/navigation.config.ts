@@ -1,3 +1,4 @@
+
 /**
  * @project Beta-db Integrated Platform - 統一整合平台導航配置
  * @framework Next.js 15+ (App Router)
@@ -215,6 +216,12 @@ export const navigationConfig: NavigationItem[] = [
                 label: '總覽',
                 icon: LayoutDashboard,
                 href: '/dashboard-management'
+            },
+            {
+                id: 'admin-user-management',
+                label: '使用者管理',
+                icon: Users,
+                href: '/user-management'
             },
             {
                 id: 'admin-blog-management',
