@@ -12,7 +12,6 @@
  * 整合了專案管理數據，提供全面的分析視圖和關鍵績效指標 (KPI) 展示。
  */
 
-'use client';
 
 import { AiUsageLog } from '@/components/features/dashboard/ai-usage-log';
 import { ContractDashboard } from '@/components/features/contracts/dashboard';

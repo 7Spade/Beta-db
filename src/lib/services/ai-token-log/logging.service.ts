@@ -1,9 +1,9 @@
 
 'use server';
 
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+// import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { AiTokenLog as AiTokenLogType } from '@/lib/types/types';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+// import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { connectDB } from '@/lib/db/mongoose/mongodb';
 import AiTokenLog from '@/lib/models/ai-token-log.model';
 
@@ -14,6 +14,7 @@ type LogData = Omit<AiTokenLogType, 'id' | 'timestamp'>;
  * This is a "fire-and-forget" operation and does not re-throw errors.
  * @param logData The data to be logged.
  */
+/*
 async function logToFirestore(logData: LogData): Promise<void> {
     try {
         const logPayload = {
@@ -25,6 +26,7 @@ async function logToFirestore(logData: LogData): Promise<void> {
         console.error("Failed to log AI token usage to Firestore:", error);
     }
 }
+*/
 
 /**
  * Asynchronously logs AI token usage to MongoDB.
@@ -54,6 +56,6 @@ export async function logAiTokenUsage(logData: LogData): Promise<void> {
     // We intentionally don't await these promises here.
     // This allows the logging to happen in the background without blocking
     // the main application flow that called this function.
-    logToFirestore(logData);
+    // logToFirestore(logData);
     logToMongoDB(logData);
 }
