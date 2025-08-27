@@ -117,6 +117,6 @@ src/lib/types/types.ts                  # 主要類型定義 (包含 Project, Ta
 
 ## 📚 相關文件
 
-- [資料庫設計文件](../1-architecture/database.md)
-- [任務委派與驗收系統藍圖](../4-system-blueprints/delegation-and-acceptance-system.md)
-- [專案管理 v1.0 升級藍圖](../4-system-blueprints/project_v1.md)
+- [資料庫設計文件](../../02_architecture/database.md)
+- [任務委派與驗收系統藍圖](../../04_project_management/delegation-and-acceptance-system.md)
+- [專案管理 v1.0 升級藍圖](../../04_project_management/project_v1.md)

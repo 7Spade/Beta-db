@@ -69,5 +69,5 @@ src/app/(public)/blog/
 
 ## 📚 相關文件
 
-- [資料庫設計文件](../1-architecture/database.md) (`posts` 集合)
-- [後台管理導航配置](../../config/navigation.config.ts) (`admin-blog-management`)
+- [資料庫設計文件](../../02_architecture/database.md) (`posts` 集合)
+- [後台管理導航配置](../../../config/navigation.config.ts) (`admin-blog-management`)

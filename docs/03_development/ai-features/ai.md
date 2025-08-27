@@ -81,6 +81,6 @@ src/components/features/team/skills/
 
 ## 📚 相關文件
 
-- [專案相關檔案清單](../2-core-modules/project.md)
-- [合約相關檔案清單](../2-core-modules/contracts.md)
-- [資料庫設計文件](../1-architecture/database.md)
+- [專案相關檔案清單](../core-modules/project.md)
+- [合約相關檔案清單](../core-modules/contracts.md)
+- [資料庫設計文件](../../02_architecture/database.md)

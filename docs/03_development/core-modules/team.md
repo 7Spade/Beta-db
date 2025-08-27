@@ -77,5 +77,5 @@ src/ai/flows/
 
 ## 📚 相關文件
 
-- [資料庫設計文件](../1-architecture/database.md) (`teamMembers`, `skills`, `knowledgeBaseEntries` 集合)
-- [AI 功能檔案清單](../3-ai-features/ai.md)
+- [資料庫設計文件](../../02_architecture/database.md) (`teamMembers`, `skills`, `knowledgeBaseEntries` 集合)
+- [AI 功能檔案清單](../ai-features/ai.md)

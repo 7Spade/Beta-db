@@ -79,5 +79,5 @@ src/app/(dashboard)/partnerverse/
 
 ## 📚 相關文件
 
-- [資料庫設計文件](../1-architecture/database.md) (`partners`, `financial_documents` 集合)
+- [資料庫設計文件](../../02_architecture/database.md) (`partners`, `financial_documents` 集合)
 - [合約相關檔案清單](./contracts.md)
