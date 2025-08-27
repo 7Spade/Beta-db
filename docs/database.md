@@ -7,11 +7,37 @@
 
 我們使用集合 (Collections) 和文件 (Documents) 來組織數據。頂層集合代表了應用的主要實體。
 
+---
+
+## 核心基礎系統設計
+
+除了業務相關的集合，本應用程式還包含三個核心的基礎系統，以確保其安全性、可追溯性和互動性。
+
+### 1. **RBAC (Role-Based Access Control) 系統**
+此系統是應用程式安全性的基礎，負責定義「誰能做什麼」。它不是一個獨立的集合，而是整合在各個業務集合中的一個設計模式，主要依賴 `users` 集合中的 `role` 欄位來實現。
+
+- **核心概念**:
+  - **`users.role`**: 每個使用者都有一個角色 (如 'Admin', 'Member')。
+  - **後端驗證**: 所有關鍵的 Server Actions（如 `approveUser`, `deleteContract`）在執行前，都必須先檢查呼叫者的 `role` 是否有足夠的權限。
+  - **前端渲染**: UI 元件（如側邊欄選單、按鈕）會根據當前使用者的 `role` 來決定是否渲染，提供更簡潔的操作介面。
+
+### 2. **通知系統 (Notifications)**
+此系統用於驅動應用程式內的即時通知，例如通知管理員有新用戶待審核。
+
+- **對應集合**: `notifications` (詳見下方 2.11 節)
+
+### 3. **活動日誌系統 (Activity Logs)**
+此系統作為稽核追蹤，記錄應用程式中的所有重要操作，以確保所有變更都有據可查。
+
+- **對應集合**: `activity_logs` (詳見下方 2.12 節)
+
+---
+
 ## 2. 集合 (Collections)
 
 ### 2.1. `users`
 
-此集合儲存所有使用者的設定檔、角色和狀態，與 Firebase Auth 的使用者資料對應。
+此集合儲存所有使用者的設定檔、角色和狀態，是 **RBAC 系統**的基礎。
 
 - **文件 ID**: Firebase Auth User UID (`string`)
 - **文件結構**:
@@ -20,8 +46,8 @@
 |--------------|-----------------------------------------|--------------------------------------------|
 | `displayName`| `string`                                | 使用者的顯示名稱。                         |
 | `email`      | `string`                                | 使用者的電子郵件地址。                     |
-| `role`       | `string` ('Admin', 'Member')            | 使用者角色，預設為 'Member'。              |
-| `status`     | `string` ('pending', 'approved', 'rejected') | 帳號狀態，新用戶預設為 'pending'。         |
+| `role`       | `string` ('Admin', 'Member')            | **[RBAC 核心]** 使用者角色，用於權限控制，預設為 'Member'。 |
+| `status`     | `string` ('pending', 'approved', 'rejected') | **核心欄位**。帳號審核狀態，新用戶預設為 'pending'。 |
 | `createdAt`  | `Timestamp`                             | 帳號建立時間。                             |
 | `approvedAt` | `Timestamp`                             | (可選) 帳號被核准的時間。                  |
 | `approvedBy` | `string`                                | (可選) 核准此帳號的管理員 UID。            |
@@ -36,6 +62,7 @@
 
 | 欄位                   | 類型                                | 描述                                       |
 |------------------------|-------------------------------------|--------------------------------------------|
+| `ownerId`              | `string`                            | **[RBAC]** 建立此專案的使用者 UID，關聯到 `users` 集合。 |
 | `customId`             | `string`                            | (可選) 自訂的專案編號。                    |
 | `title`                | `string`                            | 專案的標題或名稱。                         |
 | `description`          | `string`                            | 專案的詳細描述。                           |
@@ -53,6 +80,7 @@
 | `id`          | `string`                            | 任務的唯一 ID (客戶端生成)。               |
 | `title`       | `string`                            | 任務的標題。                               |
 | `status`      | `string` ('待處理', '進行中', '已完成') | 任務的當前狀態。                           |
+| `assigneeId`  | `string` &#124; `null`              | **[RBAC]** 被指派此任務的成員 ID，關聯到 `teamMembers` 集合。 |
 | `lastUpdated` | `string` (ISO 8601)                 | 任務最後一次更新的時間。                   |
 | `quantity`    | `number`                            | 項目數量。                                 |
 | `unitPrice`   | `number`                            | 項目單價。                                 |
@@ -69,6 +97,8 @@
 
 | 欄位                   | 類型                | 描述                                       |
 |------------------------|---------------------|--------------------------------------------|
+| `createdBy`            | `string`            | **[RBAC]** 建立此合約的使用者 UID，關聯到 `users` 集合。 |
+| `approvedBy`           | `string` &#124; `null` | **[RBAC]** 核准此合約的管理員 UID，關聯到 `users` 集合。 |
 | `customId`             | `string`            | (可選) 自訂的合約編號。                    |
 | `name`                 | `string`            | 合約的名稱。                               |
 | `contractor`           | `string`            | 承包商的名稱。                             |
@@ -212,7 +242,44 @@
 | `updatedAt`  | `Timestamp` | 文章的最後更新時間。                        |
 
 
-## 3. 數據完整性
+### **2.11. `notifications` (新)**
 
-- 目前，數據完整性主要由客戶端應用程式的邏輯（例如，表單驗證）來保證。
-- 未來的版本可以通過部署 Firestore 安全規則來在後端強制實施數據驗證和訪問控制，從而提高安全性。例如，可以規定 `value` 欄位必須是數字，`status` 欄位必須是預定義的幾個字符串之一。
+此集合用於驅動應用程式內的通知系統。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+
+| 欄位        | 類型        | 描述                                       |
+|-------------|-------------|--------------------------------------------|
+| `recipientId` | `string`    | 通知的接收者 `users` 文件 ID。             |
+| `type`      | `string`    | 通知的類型，例如：`'new_user_for_approval'`, `'task_assigned'`。 |
+| `message`   | `string`    | 通知的內容，例如：「王小明已註冊，等待您的審核。」 |
+| `link`      | `string`    | (可選) 點擊通知後應導向的頁面路徑。        |
+| `isRead`    | `boolean`   | 標記此通知是否已被讀取，預設為 `false`。   |
+| `createdAt` | `Timestamp` | 通知的建立時間。                           |
+
+### **2.12. `activity_logs` (新)**
+
+此集合作為審計追蹤，記錄應用程式中的所有重要操作。
+
+- **文件 ID**: 自動生成的唯一 ID (`string`)
+- **文件結構**:
+
+| 欄位         | 類型        | 描述                                       |
+|--------------|-------------|--------------------------------------------|
+| `actorId`    | `string`    | 執行此操作的使用者 `users` 文件 ID。       |
+| `entityType` | `string`    | 被操作的實體類型，例如：`'project'`, `'task'`, `'contract'`。 |
+| `entityId`   | `string`    | 被操作的實體文件 ID。                      |
+| `action`     | `string`    | 執行的具體操作，例如：`'create'`, `'update_status'`。 |
+| `details`    | `Map`       | (可選) 操作的詳細內容，例如：`{ from: '待處理', to: '進行中' }`。 |
+| `timestamp`  | `Timestamp` | 操作發生的時間。                           |
+
+## 3. 數據完整性與安全性
+
+- **客戶端驗證**: 主要由客戶端應用程式的邏輯（例如，表單驗證）來保證。
+- **後端安全規則 (未來)**: 可以通過部署 Firestore 安全規則來在後端強制實施數據驗證和訪問控制，這是提高安全性的關鍵下一步。例如：
+  - 只有 `role` 為 `'Admin'` 的使用者才能寫入 `users` 集合中的 `status` 欄位。
+  - 只有文件的 `ownerId` 或 `Admin` 才能修改或刪除 `projects` 文件。
+- **稽核追蹤**: `activity_logs` 和 `notifications` 集合讓所有重要操作都有據可查，並能通知相關人員。
+
+    
