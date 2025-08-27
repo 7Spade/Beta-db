@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { CreateProjectDialog } from '@/components/features/app/create-project-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Project, Task } from '@/lib/types/types';
+import type { Task } from '@/lib/types/types';
 import { ProjectDetailsSheet } from '@/components/features/app/project-details-sheet';
 
 function calculateProgress(tasks: Task[]): { completedValue: number } {
@@ -34,18 +34,18 @@ function calculateProgress(tasks: Task[]): { completedValue: number } {
 
 export function ProjectsView() {
   const { projects, loading } = useProjects();
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [isSheetOpen, setSheetOpen] = useState(false);
 
-  const handleViewDetails = (project: Project) => {
-    setSelectedProject(project);
+  const handleViewDetails = (projectId: string) => {
+    setSelectedProjectId(projectId);
     setSheetOpen(true);
   };
   
   const handleSheetOpenChange = (open: boolean) => {
     setSheetOpen(open);
     if (!open) {
-      setSelectedProject(null);
+      setSelectedProjectId(null);
     }
   }
 
@@ -90,7 +90,7 @@ export function ProjectsView() {
           const progressPercentage = project.value > 0 ? (completedValue / project.value) * 100 : 0;
           
           return (
-            <Card key={project.id} className="flex flex-col cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleViewDetails(project)}>
+            <Card key={project.id} className="flex flex-col cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleViewDetails(project.id)}>
               <CardHeader>
                 <CardTitle>{project.title}</CardTitle>
                 <CardDescription className="line-clamp-2">{project.description}</CardDescription>
@@ -120,8 +120,8 @@ export function ProjectsView() {
       </div>
       )}
       
-      {selectedProject && (
-         <ProjectDetailsSheet project={selectedProject} isOpen={isSheetOpen} onOpenChange={handleSheetOpenChange} />
+      {selectedProjectId && (
+         <ProjectDetailsSheet projectId={selectedProjectId} isOpen={isSheetOpen} onOpenChange={handleSheetOpenChange} />
       )}
     </>
   );

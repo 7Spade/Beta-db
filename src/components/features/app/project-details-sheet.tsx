@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import type { Project, Task } from '@/lib/types/types';
+import type { Task } from '@/lib/types/types';
 import {
   Sheet,
   SheetContent,
@@ -21,7 +21,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ProjectDetailsSheetProps {
-  project: Project;
+  projectId: string;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 }
@@ -31,14 +31,15 @@ function calculateRemainingValue(totalValue: number, tasks: Task[]): number {
     return totalValue - usedValue;
 }
 
-export function ProjectDetailsSheet({ project, isOpen, onOpenChange }: ProjectDetailsSheetProps) {
-  const { addTask } = useProjects();
+export function ProjectDetailsSheet({ projectId, isOpen, onOpenChange }: ProjectDetailsSheetProps) {
+  const { addTask, findProject } = useProjects();
+  const project = findProject(projectId);
   const [isAddingTask, setIsAddingTask] = React.useState(false);
   const [taskTitle, setTaskTitle] = React.useState('');
   const [taskQuantity, setTaskQuantity] = React.useState(1);
   const [taskUnitPrice, setTaskUnitPrice] = React.useState(0);
 
-  const remainingValue = calculateRemainingValue(project.value, project.tasks);
+  const remainingValue = project ? calculateRemainingValue(project.value, project.tasks) : 0;
   const taskValue = taskQuantity * taskUnitPrice;
 
   const handleAddTask = (e: React.FormEvent) => {
@@ -48,6 +49,7 @@ export function ProjectDetailsSheet({ project, isOpen, onOpenChange }: ProjectDe
             alert(`任務價值 (${taskValue.toLocaleString()}) 不可超過剩餘的專案價值 ${remainingValue.toLocaleString()}`);
             return;
         }
+        if (!project) return;
         addTask(project.id, null, taskTitle.trim(), taskQuantity, taskUnitPrice);
         setTaskTitle('');
         setTaskQuantity(1);
@@ -65,6 +67,19 @@ export function ProjectDetailsSheet({ project, isOpen, onOpenChange }: ProjectDe
         setTaskUnitPrice(0);
     }
   }, [isOpen]);
+
+  if (!project) {
+    return (
+      <Sheet open={isOpen} onOpenChange={onOpenChange}>
+        <SheetContent side="right" className="sm:max-w-3xl">
+          <SheetHeader>
+            <SheetTitle className="text-2xl">找不到專案</SheetTitle>
+            <SheetDescription>專案不存在或已被刪除。</SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
+    );
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
