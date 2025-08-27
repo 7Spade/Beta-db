@@ -1,6 +1,6 @@
-# 「多倉庫」庫存系統 - 設計藍圖 v2.0
+# 「多倉庫」庫存系統 - 設計藍圖 v2.1
 
-本文件根據使用者反饋進行了重大更新，旨在設計一個能滿足**多倉庫、跨地區**營運需求的現代化庫存管理系統，特別適用於追蹤工具和耗材。
+本文件根據使用者反饋進行了重大更新，旨在設計一個能滿足**多倉庫、跨地區**營運需求的現代化庫存管理系統，特別適用於追蹤工具和耗材。v2.1 版本特別強化了對「跨倉調撥」流程的支援。
 
 ## 1. 核心目標 (Core Objectives)
 
@@ -8,6 +8,7 @@
 - **多據點管理**: 集中管理分散在台灣各地的多個倉庫或工地的庫存。
 - **物料中心化**: 建立一個統一的物料主檔（目錄），清晰定義所有可用的工具和耗材。
 - **即時庫存追蹤**: 實現物料在**特定倉庫**的即時出庫、入庫追蹤，確保數據準確性。
+- **處理跨倉調撥**: 清晰地記錄物料從 A 倉庫取出，歸還至 B 倉庫的場景，並保留完整的追蹤軌跡。
 - **成本歸屬**: 將物料消耗與特定專案掛鉤，為精準的成本分析提供數據支持。
 - **供應鏈優化**: 提供各倉庫的低庫存警示，協助採購決策。
 
@@ -21,10 +22,10 @@
 - **庫存水平檢視**:
   - **核心功能**: 能夠**按倉庫**篩選，查看特定倉庫中所有物料的當前庫存量。
   - 提供一個總覽視圖，可以快速切換或比較不同倉庫的庫存狀況。
-- **出入庫管理**:
+- **出入庫與調撥管理**:
   - **入庫**: 記錄採購來的物料，並明確選擇要存入的**目標倉庫**。
   - **出庫**: 從**指定的倉庫**領料，並可選擇關聯到哪個專案。
-  - **調撥**: 在不同倉庫之間進行物料轉移。
+  - **調撥**: **核心功能**。記錄物料從一個倉庫轉移到另一個倉庫的完整過程。
 - **庫存報告**:
   - 產生特定倉庫在特定時間範圍內的出入庫明細。
   - 篩選出所有倉庫中，庫存低於安全水位的物料列表。
@@ -79,16 +80,18 @@
 | 欄位         | 類型                                    | 描述                                                       |
 |--------------|-----------------------------------------|------------------------------------------------------------|
 | `itemId`     | `string`                                | **[關聯]** 對應 `inventory_items` 的 ID。              |
-| `warehouseId`| `string`                                | **[關聯]** 變動發生的倉庫 `warehouses` ID。              |
-| `type`       | `string` ('inbound', 'outbound', 'transfer-in', 'transfer-out', 'adjust') | 變動類型。|
-| `quantity`   | `number`                                | 變動的數量（出庫為負，入庫為正）。                     |
+| `type`       | `string` ('inbound', 'outbound', 'transfer-out', 'transfer-in', 'adjust') | **核心**。變動類型，新增了對調撥的支援。|
+| `quantity`   | `number`                                | 變動的數量（出庫/調出為負，入庫/調入為正）。                     |
+| `fromWarehouseId` | `string`                           | (可選) **[調撥專用]** 來源倉庫 ID。                          |
+| `toWarehouseId` | `string`                             | (可選) **[調撥專用]** 目標倉庫 ID。                          |
+| `transferId` | `string`                                | (可選) **[調撥專用]** 唯一標識一次調撥操作的 ID，用於將 `transfer-out` 和 `transfer-in` 兩筆紀錄關聯起來。|
 | `unitPrice`  | `number`                                | (可選) 本次變動的單價，用於成本計算。                    |
 | `timestamp`  | `Timestamp`                             | 變動發生的時間。                                           |
 | `operatorId` | `string`                                | **[關聯]** 執行此操作的使用者 `users` ID。            |
 | `projectId`  | `string`                                | (可選) 如果是出庫，關聯到的 `projects` 文件 ID。 |
 | `notes`      | `string`                                | (可選) 備註，如採購單號、領料人等。                        |
 
-**自動化邏輯**: 每次向 `inventory_movements` 新增一筆紀錄時，應透過後端邏輯（如 Firebase Functions Trigger）來自動更新 `inventory_levels` 中對應文件的 `quantity`，確保數據的一致性。
+**自動化邏輯**: 每次向 `inventory_movements` 新增一筆紀錄時，應透過後端邏輯（如 Firebase Functions Trigger）來自動更新 `inventory_levels` 中對應文件的 `quantity`，確保數據的一致性。對於一次「調撥」操作，前端應觸發一個後端 Action，該 Action 會原子性地寫入兩筆 `inventory_movements` 紀錄（一筆 transfer-out，一筆 transfer-in）並更新兩個倉庫的 `inventory_levels`。
 
 ## 4. 前端架構與路由 (Frontend Architecture)
 
@@ -104,6 +107,8 @@ src/
 │           │   └── page.tsx
 │           ├── warehouses/               # 倉庫管理
 │           │   └── page.tsx
+│           ├── transfers/                <-- 新增調撥專用頁面
+│           │   └── page.tsx
 │           └── page.tsx                  # 庫存儀表板 (可按倉庫篩選)
 ├── components/
 │   └── features/
@@ -116,6 +121,7 @@ src/
 │           ├── forms/
 │           │   ├── item-form.tsx         # 物料主檔表單
 │           │   ├── movement-form.tsx     # 出入庫表單
+│           │   ├── transfer-form.tsx     # <-- 新增調撥表單
 │           │   └── warehouse-form.tsx    # 倉庫表單
 │           ├── tables/
 │           │   └── stock-level-table.tsx   # 顯示特定倉庫庫存水平的表格
