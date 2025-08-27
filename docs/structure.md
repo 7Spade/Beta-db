@@ -554,11 +554,16 @@
 │      README.md
 │
 ├─docs
+│      activity-log-v1.md
+│      activity-log.md
 │      database.md
+│      layout.md
+│      notification.md
 │
 ├─hooks
 │      README.md
 │      use-mobile.tsx
+│      use-notifications.ts
 │      use-toast.ts
 │
 └─lib
@@ -574,6 +579,10 @@
     │  └─mongoose
     │          mongodb.ts
     │
+    ├─events
+    │      app-events.ts
+    │      event-dispatcher.ts
+    │
     ├─models
     │      ai-token-log.model.ts
     │      README.md
@@ -585,12 +594,16 @@
     │  │      logging.service.ts
     │  │      README.md
     │  │
-    │  └─contracts
-    │          contract-api.service.ts
-    │          contract-cache.service.ts
-    │          firebase-contract.service.ts
-    │          index.ts
-    │          README.md
+    │  ├─contracts
+    │  │      contract-api.service.ts
+    │  │      contract-cache.service.ts
+    │  │      firebase-contract.service.ts
+    │  │      index.ts
+    │  │      README.md
+    │  │
+    │  └─notification
+    │          notification.listeners.ts
+    │          notification.service.ts
     │
     ├─types
     │  │  README.md
