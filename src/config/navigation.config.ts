@@ -38,7 +38,8 @@ import {
     Rocket,
     Package,
     Calculator,
-    DollarSign
+    DollarSign,
+    FolderGit2
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -188,16 +189,24 @@ export const navigationConfig: NavigationItem[] = [
         ]
     },
     {
-        id: 'docu-parse',
-        label: '文件解析',
-        icon: FileText,
-        href: '/docu-parse'
-    },
-    {
-        id: 'cloud-drive',
-        label: '雲端硬碟',
-        icon: Cloud,
-        href: '/cloud-drive'
+        id: 'app-tools',
+        label: '應用工具',
+        icon: FolderGit2,
+        href: '/tools',
+        children: [
+            {
+                id: 'docu-parse',
+                label: '文件解析',
+                icon: FileText,
+                href: '/docu-parse'
+            },
+            {
+                id: 'cloud-drive',
+                label: '雲端硬碟',
+                icon: Cloud,
+                href: '/cloud-drive'
+            },
+        ]
     },
     {
         id: 'admin',
