@@ -1,7 +1,7 @@
 'use server';
 
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase-client'; // Using client SDK for server components is fine
+import { firestore } from '@/lib/db/firebase-client/firebase-client'; // Using client SDK for server components is fine
 import { revalidatePath } from 'next/cache';
 
 interface ActionResult {

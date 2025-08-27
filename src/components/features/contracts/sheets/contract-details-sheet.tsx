@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 import { UI_CONSTANTS } from '../constants';
 import type { Contract, Payment, ChangeOrder } from '../types';
 import { ContractStatusBadge } from '../components';

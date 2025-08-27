@@ -3,7 +3,7 @@
 
 import type { FC } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import type { Partner } from '@/lib/types';
+import type { Partner } from '@/lib/types/types';
 
 interface OverviewTabProps {
   partner: Partner;

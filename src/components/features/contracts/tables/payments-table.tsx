@@ -12,7 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { Payment } from '../types';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 import { Badge } from '@/components/ui/badge';
 
 interface PaymentsTableProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Task, TaskStatus } from '@/lib/types';
+import type { Task, TaskStatus } from '@/lib/types/types';
 import { useProjects } from '@/context/ProjectContext';
 import {
   CheckCircle2,
@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 import {
   Collapsible,
   CollapsibleContent,

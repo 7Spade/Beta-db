@@ -2,9 +2,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, onSnapshot, addDoc } from 'firebase/firestore';
-import type { TeamMember } from '@/lib/types';
+import type { TeamMember } from '@/lib/types/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

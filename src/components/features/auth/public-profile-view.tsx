@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { doc, getDoc } from 'firebase/firestore';
 
 interface PublicUserProfile {

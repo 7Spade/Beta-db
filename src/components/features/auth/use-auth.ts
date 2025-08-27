@@ -17,7 +17,7 @@
  * - usePermission: 權限檢查管理
  */
 import { useEffect, useState, useMemo } from 'react';
-import { auth, firestore } from '@/lib/firebase-client';
+import { auth, firestore } from '@/lib/db/firebase-client/firebase-client';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 

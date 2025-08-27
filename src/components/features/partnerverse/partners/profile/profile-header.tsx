@@ -3,13 +3,13 @@
 
 import type { FC } from 'react';
 import Image from 'next/image';
-import type { Partner } from '@/lib/types';
+import type { Partner } from '@/lib/types/types';
 import type { Role } from '@/lib/roles';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Globe, Edit, Calendar } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 
 interface ProfileHeaderProps {
   partner: Partner;

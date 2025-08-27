@@ -3,7 +3,7 @@
  */
 
 import { addDoc, updateDoc, deleteDoc, doc, collection, Timestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Contract } from '../types';
 
 export const contractService = {

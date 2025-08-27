@@ -3,7 +3,7 @@
 
 import { useState, type FC, useEffect } from 'react';
 import Image from 'next/image';
-import type { Partner, Contact, Contract } from '@/lib/types';
+import type { Partner, Contact, Contract } from '@/lib/types/types';
 import type { Role } from '@/lib/roles';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,9 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Globe, Edit, Users, DollarSign, Calendar, Star, FileText, ShieldCheck, FileWarning, FileX, Briefcase, Plus, Trash2, ArrowLeft, ExternalLink, Loader2, ArrowLeftRight } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 import Link from 'next/link';
 import { OverviewTab } from '../overview/overview-tab';
 import { ContactsTab } from '../contacts/contacts-tab';

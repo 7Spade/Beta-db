@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Download, MoreHorizontal, Eye } from 'lucide-react';
 import { ContractDetailsSheet } from '../sheets';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 import type { Contract } from '../types';
 import { ContractStatusBadge } from '../components';
 

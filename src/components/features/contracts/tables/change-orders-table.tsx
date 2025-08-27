@@ -12,7 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { ChangeOrder } from '../types';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 import { Badge } from '@/components/ui/badge';
 
 interface ChangeOrdersTableProps {

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/firebase-client';
+import { auth } from '@/lib/db/firebase-client/firebase-client';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (

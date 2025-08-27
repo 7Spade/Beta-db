@@ -5,7 +5,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { adminStorage } from '@/lib/firebase-admin';
+import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
 import type { StorageItem, StorageAction, StorageListResult } from '../types/storage.types';
 
 // 從環境變數讀取儲存桶名稱，如果不存在則拋出錯誤

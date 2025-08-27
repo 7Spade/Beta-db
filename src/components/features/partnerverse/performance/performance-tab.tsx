@@ -4,7 +4,7 @@
 import type { FC } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Star } from 'lucide-react';
-import type { Partner } from '@/lib/types';
+import type { Partner } from '@/lib/types/types';
 
 const RatingStars: FC<{ rating: number }> = ({ rating }) => (
     <div className="flex items-center">

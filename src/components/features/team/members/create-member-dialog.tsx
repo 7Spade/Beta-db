@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import type { TeamMember } from '@/lib/types';
+import type { TeamMember } from '@/lib/types/types';
 
 const memberSchema = z.object({
   name: z.string().min(2, '姓名至少需要 2 個字元。'),

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardDescription } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
-import { formatBytes, formatDate } from '@/lib/utils';
+import { formatBytes, formatDate } from '@/lib/utils/utils';
 import type { StorageItem } from '../types/storage.types';
 import { getSignedUrlAction } from '../actions/storage.actions';
 

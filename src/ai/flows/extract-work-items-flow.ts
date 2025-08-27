@@ -13,9 +13,9 @@
 'use server';
 
 import {ai} from '@/ai/genkit';
-import { logAiTokenUsage } from '@/services/logging.service';
+import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import {z} from 'genkit';
-import { adminStorage } from '@/lib/firebase-admin';
+import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({

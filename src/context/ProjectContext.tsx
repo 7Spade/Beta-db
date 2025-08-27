@@ -2,8 +2,8 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { Project, Task, TaskStatus } from '@/lib/types';
-import { firestore } from '@/lib/firebase-client';
+import type { Project, Task, TaskStatus } from '@/lib/types/types';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, getDocs, doc, writeBatch, Timestamp, onSnapshot } from "firebase/firestore";
 
 interface ProjectContextType {

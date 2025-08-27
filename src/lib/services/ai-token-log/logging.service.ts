@@ -1,11 +1,11 @@
 
 'use server';
 
-import { firestore } from '@/lib/firebase-client';
-import type { AiTokenLog as AiTokenLogType } from '@/lib/types';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import type { AiTokenLog as AiTokenLogType } from '@/lib/types/types';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { connectDB } from '@/lib/mongodb';
-import AiTokenLog from '@/models/ai-token-log.model';
+import { connectDB } from '@/lib/db/mongoose/mongodb';
+import AiTokenLog from '@/lib/models/ai-token-log.model';
 
 type LogData = Omit<AiTokenLogType, 'id' | 'timestamp'>;
 

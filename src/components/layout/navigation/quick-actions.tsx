@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Plus, Search, Settings, User } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 interface QuickAction {
   id: string

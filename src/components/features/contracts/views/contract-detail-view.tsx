@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Contract } from '../types';
 import { ContractDetailsSheet } from '../sheets';
 import { Skeleton } from '@/components/ui/skeleton';

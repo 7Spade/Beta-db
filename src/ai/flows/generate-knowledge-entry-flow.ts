@@ -9,7 +9,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { logAiTokenUsage } from '@/services/logging.service';
+import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import { z } from 'zod';
 
 const GenerateKnowledgeEntryInputSchema = z.object({

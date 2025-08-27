@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
 import { UserMenu } from '@/components/layout/navigation/user-menu'
 import { useAuth } from '@/components/features/auth/use-auth'
-import { auth } from '@/lib/firebase-client'
+import { auth } from '@/lib/db/firebase-client/firebase-client'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 

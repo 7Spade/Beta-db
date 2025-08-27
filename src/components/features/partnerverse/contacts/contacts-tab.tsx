@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import type { Partner, Contact } from '@/lib/types';
+import type { Partner, Contact } from '@/lib/types/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';

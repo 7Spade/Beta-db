@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import type { Project, Task } from '@/lib/types';
+import type { Project, Task } from '@/lib/types/types';
 import {
   Sheet,
   SheetContent,

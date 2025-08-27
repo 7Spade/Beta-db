@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DatePicker } from '@/utils/date-picker';
+import { DatePicker } from '@/lib/utils/date-picker';
 import { CONTRACT_STATUSES } from '../constants';
 import type { ContractFormValues } from './form-schemas';
 

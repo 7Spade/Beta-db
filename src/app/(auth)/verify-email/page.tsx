@@ -11,7 +11,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { auth } from '@/lib/firebase-client';
+import { auth } from '@/lib/db/firebase-client/firebase-client';
 import { sendEmailVerification } from 'firebase/auth';
 import Link from 'next/link';
 

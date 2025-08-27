@@ -2,7 +2,7 @@
  * @fileoverview Knowledge Base Server Actions 相關類型定義
  */
 
-import type { KnowledgeBaseEntry } from '@/lib/types';
+import type { KnowledgeBaseEntry } from '@/lib/types/types';
 
 // 操作結果類型
 export type SaveResult = {

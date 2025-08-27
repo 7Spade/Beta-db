@@ -2,10 +2,10 @@
 
 import { useState, useEffect, type FC } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, onSnapshot, addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 
-import type { Partner, Contact } from '@/lib/types';
+import type { Partner, Contact } from '@/lib/types/types';
 import type { Role } from '@/lib/roles';
 
 import { Skeleton } from '@/components/ui/skeleton';

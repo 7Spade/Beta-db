@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 import { Inter } from 'next/font/google';
 import { FolderKanban } from 'lucide-react';
 import Link from 'next/link';

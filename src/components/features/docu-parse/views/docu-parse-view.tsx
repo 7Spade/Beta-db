@@ -22,8 +22,8 @@
 import { useActionState, useState, useMemo, useEffect, startTransition, Key } from "react";
 import { useSearchParams, useRouter } from 'next/navigation';
 import { collection, getDocs } from "firebase/firestore";
-import { firestore } from "@/lib/firebase-client";
-import type { Partner } from "@/lib/types";
+import { firestore } from "@/lib/db/firebase-client/firebase-client";
+import type { Partner } from "@/lib/types/types";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";

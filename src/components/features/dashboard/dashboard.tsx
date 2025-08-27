@@ -12,12 +12,12 @@
  */
 'use client';
 
-import type { Contract } from '@/lib/types';
+import type { Contract } from '@/lib/types/types';
 import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
 
 interface ContractDashboardProps {

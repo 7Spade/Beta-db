@@ -2,9 +2,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, onSnapshot, addDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import type { Skill } from '@/lib/types';
+import type { Skill } from '@/lib/types/types';
 import { useToast } from '@/hooks/use-toast';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

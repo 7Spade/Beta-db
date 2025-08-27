@@ -6,9 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import type { Partner } from '@/lib/types';
+import type { Partner } from '@/lib/types/types';
 import { doc, setDoc } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { Save, PlusCircle, Trash2, GripVertical } from 'lucide-react';
 
 

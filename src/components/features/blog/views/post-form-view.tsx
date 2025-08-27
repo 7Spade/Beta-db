@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { doc, getDoc, Timestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { useToast } from '@/hooks/use-toast';
 import { savePost, type PostFormValues } from '@/components/features/blog/actions/posts.actions';
 

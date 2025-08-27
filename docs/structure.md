@@ -50,13 +50,19 @@
 │  │  ├─dashboard-management
 │  │  │      page.tsx
 │  │  │
-│  │  └─system-management
+│  │  ├─system-management
+│  │  │      page.tsx
+│  │  │
+│  │  └─user-management
 │  │          page.tsx
 │  │
 │  ├─(auth)
 │  │  │  layout.tsx
 │  │  │
 │  │  ├─login
+│  │  │      page.tsx
+│  │  │
+│  │  ├─pending-approval
 │  │  │      page.tsx
 │  │  │
 │  │  ├─profile
@@ -81,9 +87,6 @@
 │  │  ├─cloud-drive
 │  │  │      page.tsx
 │  │  │
-│  │  ├─cloud-storage
-│  │  │      page.tsx
-│  │  │
 │  │  ├─contracts
 │  │  │  │  layout.tsx
 │  │  │  │  page.tsx
@@ -97,7 +100,7 @@
 │  │  ├─dashboard
 │  │  │      page.tsx
 │  │  │
-│  │  ├─documents
+│  │  ├─docu-parse
 │  │  │      page.tsx
 │  │  │
 │  │  ├─partnerverse
@@ -136,34 +139,32 @@
 │  │      └─skills
 │  │              page.tsx
 │  │
-│  ├─(public)
-│  │  │  layout.tsx
-│  │  │  page.tsx
-│  │  │  README.md
-│  │  │
-│  │  ├─about
-│  │  │      page.tsx
-│  │  │
-│  │  ├─blog
-│  │  │  │  page.tsx
-│  │  │  │
-│  │  │  └─[slug]
-│  │  │          page.tsx
-│  │  │
-│  │  ├─careers
-│  │  │      page.tsx
-│  │  │
-│  │  ├─contact
-│  │  │      page.tsx
-│  │  │
-│  │  ├─privacy-policy
-│  │  │      page.tsx
-│  │  │
-│  │  └─terms-of-service
-│  │          page.tsx
-│  │
-│  └─api
-│      └─storage
+│  └─(public)
+│      │  layout.tsx
+│      │  page.tsx
+│      │  README.md
+│      │
+│      ├─about
+│      │      page.tsx
+│      │
+│      ├─blog
+│      │  │  page.tsx
+│      │  │
+│      │  └─[slug]
+│      │          page.tsx
+│      │
+│      ├─careers
+│      │      page.tsx
+│      │
+│      ├─contact
+│      │      page.tsx
+│      │
+│      ├─privacy-policy
+│      │      page.tsx
+│      │
+│      └─terms-of-service
+│              page.tsx
+│
 ├─components
 │  │  README.md
 │  │
@@ -174,8 +175,12 @@
 │  │  ├─admin
 │  │  │  │  README.md
 │  │  │  │
+│  │  │  ├─actions
+│  │  │  │      user-actions.ts
+│  │  │  │
 │  │  │  └─views
 │  │  │          admin-dashboard-view.tsx
+│  │  │          user-management-view.tsx
 │  │  │
 │  │  ├─app
 │  │  │      ai-subtask-suggestions.tsx
@@ -186,37 +191,18 @@
 │  │  │      task-item.tsx
 │  │  │
 │  │  ├─auth
-│  │  │  │  index.ts
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      auth-actions.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─components
-│  │  │  │      index.ts
-│  │  │  │      login-form.tsx
-│  │  │  │      register-form.tsx
-│  │  │  │      social-auth-buttons.tsx
-│  │  │  │
-│  │  │  ├─forms
-│  │  │  │      auth-form-schemas.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─hooks
-│  │  │  │      index.ts
-│  │  │  │      use-auth-state.ts
-│  │  │  │
-│  │  │  ├─providers
-│  │  │  │      auth-provider.tsx
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─types
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          index.ts
-│  │  │          login-view.tsx
-│  │  │          register-view.tsx
+│  │  │      auth-actions.ts
+│  │  │      auth-form-schemas.ts
+│  │  │      auth-provider.tsx
+│  │  │      auth.config.ts
+│  │  │      auth.utils.ts
+│  │  │      index.ts
+│  │  │      login-view.tsx
+│  │  │      profile-view.tsx
+│  │  │      public-profile-view.tsx
+│  │  │      register-view.tsx
+│  │  │      social-auth-buttons.tsx
+│  │  │      use-auth.ts
 │  │  │
 │  │  ├─blog
 │  │  │  │  README.md
@@ -246,29 +232,6 @@
 │  │  │  │
 │  │  │  └─views
 │  │  │          cloud-drive-view.tsx
-│  │  │
-│  │  ├─cloud-storage
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      storage.actions.ts
-│  │  │  │
-│  │  │  ├─components
-│  │  │  │      create-folder-dialog.tsx
-│  │  │  │      file-browser.tsx
-│  │  │  │      rename-dialog.tsx
-│  │  │  │      storage-item-card.tsx
-│  │  │  │      upload-button.tsx
-│  │  │  │
-│  │  │  ├─types
-│  │  │  │      storage.types.ts
-│  │  │  │
-│  │  │  ├─utils
-│  │  │  │      path.utils.ts
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  └─views
-│  │  │          cloud-storage-view.tsx
 │  │  │
 │  │  ├─contracts
 │  │  │  │  index.ts
@@ -369,15 +332,15 @@
 │  │  │      dashboard.tsx
 │  │  │      README.md
 │  │  │
-│  │  ├─documents
+│  │  ├─docu-parse
 │  │  │  │  index.ts
 │  │  │  │  README.md
 │  │  │  │
 │  │  │  ├─actions
-│  │  │  │      document-actions.ts
+│  │  │  │      docu-parse-actions.ts
 │  │  │  │
 │  │  │  ├─components
-│  │  │  │      storage-file-selector.tsx
+│  │  │  │      file-selector.tsx
 │  │  │  │
 │  │  │  ├─constants
 │  │  │  │      file-constants.ts
@@ -388,7 +351,7 @@
 │  │  │  │      work-items-table.tsx
 │  │  │  │
 │  │  │  ├─types
-│  │  │  │      document.types.ts
+│  │  │  │      docu-parse.types.ts
 │  │  │  │      index.ts
 │  │  │  │
 │  │  │  ├─utils
@@ -396,7 +359,7 @@
 │  │  │  │      index.ts
 │  │  │  │
 │  │  │  └─views
-│  │  │          documents-view.tsx
+│  │  │          docu-parse-view.tsx
 │  │  │
 │  │  ├─partnerverse
 │  │  │  │  README.md
@@ -472,6 +435,10 @@
 │  │  │
 │  │  ├─settings
 │  │  │      settings-view.tsx
+│  │  │
+│  │  ├─storage-manager
+│  │  │  └─components
+│  │  │          storage-item-card.tsx
 │  │  │
 │  │  └─team
 │  │      │  index.ts
@@ -586,6 +553,9 @@
 │      ProjectContext.tsx
 │      README.md
 │
+├─docs
+│      database.md
+│
 ├─hooks
 │      README.md
 │      use-mobile.tsx
@@ -596,25 +566,8 @@
 │  │  firebase-client.ts
 │  │  mongodb.ts
 │  │  README.md
-│  │  roles.ts
 │  │  types.ts
 │  │  utils.ts
-│  │
-│  ├─config
-│  │      auth.config.ts
-│  │      firebase.config.ts
-│  │      firestore.config.ts
-│  │      functions.config.ts
-│  │      index.ts
-│  │      README.md
-│  │      storage.config.ts
-│  │
-│  ├─hooks
-│  │      index.ts
-│  │      use-auth.ts
-│  │      use-firestore.ts
-│  │      use-functions.ts
-│  │      use-storage.ts
 │  │
 │  ├─services
 │  │  │  README.md
@@ -634,32 +587,24 @@
 │  │          README.md
 │  │          storage.service.ts
 │  │
-│  ├─types
-│  │  │  README.md
-│  │  │
-│  │  ├─contracts
-│  │  │      change-order.types.ts
-│  │  │      contract-version.types.ts
-│  │  │      contract.types.ts
-│  │  │      index.ts
-│  │  │      payment.types.ts
-│  │  │      README.md
-│  │  │
-│  │  └─firebase
-│  │          auth.types.ts
-│  │          firestore.types.ts
-│  │          functions.types.ts
-│  │          index.ts
-│  │          README.md
-│  │          storage.types.ts
-│  │
-│  └─utils
-│          auth.utils.ts
-│          firestore.utils.ts
-│          index.ts
-│          README.md
-│          storage.utils.ts
-│          validation.utils.ts
+│  └─types
+│      │  README.md
+│      │
+│      ├─contracts
+│      │      change-order.types.ts
+│      │      contract-version.types.ts
+│      │      contract.types.ts
+│      │      index.ts
+│      │      payment.types.ts
+│      │      README.md
+│      │
+│      └─firebase
+│              auth.types.ts
+│              firestore.types.ts
+│              functions.types.ts
+│              index.ts
+│              README.md
+│              storage.types.ts
 │
 ├─models
 │      ai-token-log.model.ts

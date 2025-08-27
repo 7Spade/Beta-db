@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { CreateProjectDialog } from '@/components/features/app/create-project-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Project, Task } from '@/lib/types';
+import type { Project, Task } from '@/lib/types/types';
 import { ProjectDetailsSheet } from '@/components/features/app/project-details-sheet';
 
 function calculateProgress(tasks: Task[]): { completedValue: number } {

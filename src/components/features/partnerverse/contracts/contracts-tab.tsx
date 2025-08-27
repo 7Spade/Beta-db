@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
-import type { Partner, Contract } from '@/lib/types';
-import { firestore } from '@/lib/firebase-client';
+import type { Partner, Contract } from '@/lib/types/types';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 import Link from 'next/link';
 
 interface ContractsTabProps {

@@ -10,14 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import type { Partner, FinancialDocument, ReceivablePayableType, Contract, Transaction } from '@/lib/types';
+import type { Partner, FinancialDocument, ReceivablePayableType, Contract, Transaction } from '@/lib/types/types';
 import { ArrowLeftRight, PlusCircle, Save, Trash2, FileText, DollarSign, Briefcase, CheckCircle, GripVertical, Wand2 } from 'lucide-react';
 
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, getDocs, addDoc, doc, setDoc, updateDoc, onSnapshot, query, where, Timestamp, getDoc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils/utils';
 import Link from 'next/link';
 
 // Component for managing financial documents

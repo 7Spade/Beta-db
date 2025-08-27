@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { firestore } from '@/lib/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
-import type { KnowledgeBaseEntry } from '@/lib/types';
+import type { KnowledgeBaseEntry } from '@/lib/types/types';
 import { useToast } from '@/hooks/use-toast';
 import { handleSaveKnowledgeBaseEntry } from '@/components/features/team';
 

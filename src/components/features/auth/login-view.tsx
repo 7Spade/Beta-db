@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '@/lib/firebase-client';
+import { auth } from '@/lib/db/firebase-client/firebase-client';
 import { loginSchema, type LoginValues } from './auth-form-schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

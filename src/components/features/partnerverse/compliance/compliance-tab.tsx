@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, FileWarning, FileX } from 'lucide-react';
-import type { Partner } from '@/lib/types';
+import type { Partner } from '@/lib/types/types';
 
 const ComplianceStatusIcon: FC<{ status: '有效' | '即將到期' | '已過期' }> = ({ status }) => {
     switch (status) {
