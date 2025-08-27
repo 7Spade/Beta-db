@@ -1,6 +1,6 @@
 "use server";
 
-import { writeBatch, collection, doc, Timestamp } from "firebase/firestore";
+import { writeBatch, collection, doc, Timestamp, setDoc } from "firebase/firestore";
 import { firestore } from "@/lib/db/firebase-client/firebase-client";
 import type { Task, Project } from "@/lib/types/types";
 import type { Contract } from '../types';
@@ -29,6 +29,26 @@ function workItemsToTasks(items: WorkItem[]): Task[] {
         value: item.quantity * item.unitPrice, // Calculate total value
         subTasks: [],
     }));
+}
+
+// Helper to convert work items to a readable scope string for contracts
+function workItemsToScope(items: WorkItem[], contractName: string): string {
+    const lines: string[] = [];
+    lines.push(`「${contractName}」工作範疇（依文件解析生成）：`);
+    lines.push('');
+    items.forEach((item, index) => {
+        const lineNumber = item.id || String(index + 1);
+        const quantity = Number.isFinite(item.quantity) ? item.quantity : 0;
+        const unitPrice = Number.isFinite(item.unitPrice) ? item.unitPrice : 0;
+        const subtotal = quantity * unitPrice;
+        lines.push(
+            `${lineNumber}. ${item.name}（數量：${quantity}，單價：${unitPrice}，小計：${subtotal}）`
+        );
+    });
+    const total = items.reduce((sum, it) => sum + (it.quantity * it.unitPrice), 0);
+    lines.push('');
+    lines.push(`合計金額（依項目小計相加）：${total}`);
+    return lines.join('\n');
 }
 
 /**
@@ -72,7 +92,7 @@ export async function createProjectAndContractFromDocument(input: ActionInput): 
             clientRepresentative: docDetails.clientRepresentative,
             totalValue: totalValue,
             status: "啟用中",
-            scope: `基於文件 "${docDetails.name}" 的工作項目。`,
+            scope: workItemsToScope(workItems, docDetails.name),
             startDate: projectData.startDate,
             endDate: projectData.endDate,
             payments: [],
@@ -120,7 +140,7 @@ export async function createContractAction(data: Omit<Contract, 'id' | 'payments
             }]
         };
 
-        await newContractRef.set(contractData);
+        await setDoc(newContractRef, contractData);
 
         return { success: true, contractId };
     } catch (e) {
