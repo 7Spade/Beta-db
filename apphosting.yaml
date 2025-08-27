@@ -72,6 +72,12 @@ env:
       - BUILD
       - RUNTIME
 
+  - variable: REDIS_URL
+    value: "redis://default:aMWKj78CuAkUxQJ8ERtnnnBrOA77FvDK@redis-13739.c292.ap-southeast-1-1.ec2.redns.redis-cloud.com:13739"
+    availability:
+      - BUILD
+      - RUNTIME
+      
   - variable: GEMINI_API_KEY
     secret: GEMINI_API_KEY
     availability:
