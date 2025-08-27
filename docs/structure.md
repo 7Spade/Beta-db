@@ -590,6 +590,10 @@
     ├─services
     │  │  README.md
     │  │
+    │  ├─activity-log
+    │  │      activity-log.listeners.ts
+    │  │      activity-log.service.ts
+    │  │
     │  ├─ai-token-log
     │  │      logging.service.ts
     │  │      README.md
