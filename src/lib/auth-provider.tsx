@@ -34,9 +34,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Approved users avoid auth pages
+    // Approved users avoid auth pages and leave pending page
     if (user && status === 'approved') {
-      if (pathname === '/login' || pathname === '/register') {
+      if (pathname === '/login' || pathname === '/register' || pathname === '/pending-approval') {
         router.replace('/dashboard');
       }
       return;

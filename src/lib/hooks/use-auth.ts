@@ -19,7 +19,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { auth, firestore } from '@/lib/firebase-client';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 export type AuthStatus = 'pending' | 'approved' | 'rejected' | 'unknown';
 
@@ -38,8 +38,13 @@ export function useAuth() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    let unsubscribeProfile: (() => void) | null = null;
+    const unsubAuth = onAuthStateChanged(auth, async (user) => {
       setFirebaseUser(user);
+      if (unsubscribeProfile) {
+        unsubscribeProfile();
+        unsubscribeProfile = null;
+      }
       if (!user) {
         setProfile(null);
         setLoading(false);
@@ -47,20 +52,28 @@ export function useAuth() {
       }
       try {
         const ref = doc(firestore, 'users', user.uid);
-        const snap = await getDoc(ref);
-        setProfile((snap.data() as UserProfile) || null);
+        unsubscribeProfile = onSnapshot(ref, (snap) => {
+          setProfile((snap.data() as UserProfile) || null);
+          setLoading(false);
+        }, () => {
+          setError('讀取使用者資料失敗');
+          setLoading(false);
+        });
       } catch (e) {
         setError('讀取使用者資料失敗');
-      } finally {
         setLoading(false);
       }
     });
-    return () => unsub();
+    return () => {
+      unsubAuth();
+      if (unsubscribeProfile) unsubscribeProfile();
+    };
   }, []);
 
   const status: AuthStatus = useMemo(() => {
     if (!firebaseUser) return 'unknown';
-    return (profile?.status as AuthStatus) || 'pending';
+    const s = profile?.status as AuthStatus | undefined;
+    return s && (s === 'pending' || s === 'approved' || s === 'rejected') ? s : 'pending';
   }, [firebaseUser, profile]);
 
   return { user: firebaseUser, profile, status, loading, error, signOut: () => signOut(auth) };
