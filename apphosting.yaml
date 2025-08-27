@@ -77,6 +77,18 @@ env:
     availability:
       - BUILD
       - RUNTIME
+
+  # Supabase 公開環境變數
+  - variable: NEXT_PUBLIC_SUPABASE_URL
+    value: "https://dyghxnilkfrtjbefeecx.supabase.co"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_SUPABASE_ANON_KEY
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Z2h4bmlsa2ZydGpiZWZlZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxOTU1NTcsImV4cCI6MjA3MDc3MTU1N30.cIEVkm-5MJpds6T0sP7uarRKUevZDH0YPvo_ZAbZIqQ"
+    availability:
+      - BUILD
+      - RUNTIME
       
   # 其他环境变量可以在这里添加
   # - variable: MESSAGE
