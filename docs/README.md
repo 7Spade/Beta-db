@@ -1,29 +1,40 @@
 # 專案文件 (Project Documentation)
 
-此目錄是 Beta-db 整合平台所有規劃、架構和設計文件的**唯一事實來源 (Single Source of Truth)**。保持這些文件的更新對於團隊協作和專案的長期維護至關重要。
+此目錄是 Beta-db 整合平台所有規劃、架構和設計文件的**唯一事實來源 (Single Source of Truth)**。它遵循一個清晰的、可擴展的分類體系，旨在全面地支持專案的開發、使用、維護和傳承。
 
 ## 📖 文件導覽
 
 ### 1. 核心架構 (Core Architecture)
-- **[認證系統 (Authentication)](./1-architecture/auth.md)**: 描述使用者註冊、登入和權限管理的完整流程。
-- **[資料庫設計 (Database)](./1-architecture/database.md)**: 所有 Firestore 集合的結構定義，是專案的數據模型唯一事實來源。
-- **[事件驅動架構 (Events)](./1-architecture/events.md)**: 解釋了應用程式如何透過事件實現模組解耦。
-- **[佈局系統 (Layout)](./1-architecture/layout.md)**: 概述了應用程式的 UI 佈局、元件層級和響應式設計策略。
+> 定義應用程式的「骨架」，回答「**如何建構**」的問題。
+
+- **[架構總覽](./1-architecture/README.md)**
+- **[資料庫設計](./1-architecture/database.md)**
+- **[認證系統](./1-architecture/auth.md)**
+- **[佈局系統](./1-architecture/layout.md)**
+- **[事件驅動架構](./1-architecture/events.md)**
 
 ### 2. 核心模組 (Core Modules)
-- **[專案管理 (Projects)](./2-core-modules/project.md)**
-- **[合約管理 (Contracts)](./2-core-modules/contracts.md)**
-- **[合作夥伴 (PartnerVerse)](./2-core-modules/partnerverse.md)**
-- **[內部團隊 (Team)](./2-core-modules/team.md)**
-- **[部落格 (Blog)](./2-core-modules/blog.md)**
+> 介紹應用程式中每一個獨立的、核心的業務功能模組。
+
+- **[模組總覽](./2-core-modules/README.md)**
+- **[專案管理](./2-core-modules/project.md)**
+- **[合約管理](./2-core-modules/contracts.md)**
+- **[合作夥伴](./2-core-modules/partnerverse.md)**
+- **[內部團隊](./2-core-modules/team.md)**
+- **[部落格](./2-core-modules/blog.md)**
 
 ### 3. AI 功能 (AI Features)
-- **[AI 總覽 (Overview)](./3-ai-features/ai.md)**
-- **[雲端硬碟 (Cloud Drive)](./3-ai-features/cloud-drive.md)**
-- **[智慧文件解析 (DocuParse)](./3-ai-features/docu-parse.md)**
+> 集中管理所有與 AI 相關的設計和流程文件。
+
+- **[AI 總覽](./3-ai-features/README.md)**
+- **[雲端硬碟](./3-ai-features/cloud-drive.md)**
+- **[智慧文件解析](./3-ai-features/docu-parse.md)**
 
 ### 4. 系統藍圖 (System Blueprints)
-- **[開發路線圖 (Roadmap)](./4-system-blueprints/development-roadmap.md)**
+> 存放所有新功能的詳細設計文檔和開發路線圖，回答「**接下來做什麼**」的問題。
+
+- **[藍圖總覽](./4-system-blueprints/README.md)**
+- **[開發路線圖](./4-system-blueprints/development-roadmap.md)**
 - **[專案管理 v1.0 升級](./4-system-blueprints/project_v1.md)**
 - **[任務委派與驗收](./4-system-blueprints/delegation-and-acceptance-system.md)**
 - **[進度計價與審批](./4-system-blueprints/progress-billing.md)**
