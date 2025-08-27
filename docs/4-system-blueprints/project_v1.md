@@ -77,7 +77,7 @@ src/
 │           └── page.tsx              # 將從伺服器端獲取數據，並傳遞給 views
 ├── components/
 │   └── features/
-│       └── app/                      # --> 建議重命名為 'projects'
+│       └── projects/                 # 原 app 目錄
 │           ├── actions/              <-- 新目錄，存放 Server Actions
 │           │   ├── project-actions.ts
 │           │   └── task-actions.ts

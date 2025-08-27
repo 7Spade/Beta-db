@@ -24,7 +24,6 @@ src/ai/flows/
 ### 3. AI 服務與模型 (AI Services and Models)
 ```
 src/lib/services/ai-token-log/
-├── README.md                           # AI Token 紀錄服務說明
 └── logging.service.ts                  # 記錄 Token 消耗的服務
 
 src/lib/models/
@@ -42,7 +41,7 @@ src/components/features/docu-parse/
 
 #### 4.2 專案管理 (Project Management)
 ```
-src/components/features/app/
+src/components/features/projects/components/
 └── ai-subtask-suggestions.tsx          # AI 子任務建議元件
 ```
 
@@ -82,6 +81,6 @@ src/components/features/team/skills/
 
 ## 📚 相關文件
 
-- [專案相關檔案清單](./project.md)
-- [合約相關檔案清單](./contracts.md)
-- [資料庫設計文件](./database.md)
+- [專案相關檔案清單](../2-core-modules/project.md)
+- [合約相關檔案清單](../2-core-modules/contracts.md)
+- [資料庫設計文件](../1-architecture/database.md)

@@ -119,6 +119,6 @@ src/components/features/dashboard/
 
 ## 📚 相關文件
 
-- [專案架構文件](./project.md)
-- [資料庫設計文件](./database.md)
-- [系統架構文件](./layout.md)
+- [專案架構文件](../1-architecture/project.md)
+- [資料庫設計文件](../1-architecture/database.md)
+- [系統架構文件](../1-architecture/layout.md)
