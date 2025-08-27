@@ -1,4 +1,3 @@
-
 # Constructo - 資料庫設計
 
 **注意：此文件是整個應用的數據模型唯一事實來源 (Single Source of Truth)，所有開發都應以此為基準。**
@@ -283,5 +282,3 @@
   - 只有 `role` 為 `'Admin'` 的使用者才能寫入 `users` 集合中的 `status` 欄位。
   - 只有文件的 `ownerId` 或 `Admin` 才能修改或刪除 `projects` 文件。
 - **稽核追蹤**: `activity_logs` 和 `notifications` 集合讓所有重要操作都有據可查，並能通知相關人員。
-
-    
