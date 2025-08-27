@@ -1,3 +1,4 @@
+
 # 「倉儲管理」系統 - 設計藍圖 v2.1
 
 本文件根據使用者反饋進行了重大更新，旨在設計一個能滿足**多倉庫、跨地區**營運需求的現代化倉儲管理系統，特別適用於追蹤工具和耗材。v2.1 版本特別強化了對「跨倉調撥」流程的支援。
@@ -32,9 +33,11 @@
 
 ## 3. 資料庫設計 (Database Design)
 
-為實現多倉庫管理，我們將採用一個更正規化的資料庫結構，包含三個核心集合。
+為實現多倉庫管理與成本效益，我們將採用一個**混合數據庫策略**。核心主檔和需要即時同步前端的數據存放在 Firestore，而高頻寫入的流水帳則存放在 MongoDB。
 
-### 集合 1: `warehouses`
+### Firestore 集合
+
+#### 集合 1: `warehouses`
 此集合定義了所有實體的倉庫或庫存地點。
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
@@ -46,7 +49,7 @@
 | `managerId`  | `string` | (可選) 關聯到 `users` 的倉庫管理員 ID。 |
 | `isActive`   | `boolean`| 標記此倉庫是否仍在運作中。        |
 
-### 集合 2: `inventory_items`
+#### 集合 2: `inventory_items`
 此集合是物料的**主檔目錄**。**它本身不包含任何庫存數量信息。**
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
@@ -60,8 +63,8 @@
 | `safeStockLevel` | `number`      | 全公司範圍的建議安全庫存總量。           |
 | `supplierId`     | `string`      | (可選) 預設供應商，關聯到 `partners` 集合。|
 
-### 集合 3: `inventory_levels`
-**核心集合**。此集合的每一份文件代表「一個特定物料在一個特定倉庫的庫存數量」。
+#### 集合 3: `inventory_levels`
+**核心庫存集合**。此集合的每一份文件代表「一個特定物料在一個特定倉庫的庫存數量」。
 
 - **文件 ID**: 建議使用組合 ID `"{itemId}_{warehouseId}"` 以確保唯一性。
 - **文件結構**:
@@ -72,8 +75,12 @@
 | `quantity`   | `number` | **核心欄位**。當前的實際庫存數量。  |
 | `lastUpdated`| `Timestamp`| 最後一次庫存變動的時間。            |
 
-### 集合 4: `inventory_movements`
-此集合作為不可變的流水帳，記錄每一次庫存的變動歷史。
+---
+
+### MongoDB 集合
+
+#### 集合 4: `inventory_movements`
+此集合作為不可變的流水帳，記錄每一次庫存的變動歷史。**由於其高頻寫入的特性，此集合應儲存在 MongoDB 中以優化成本和性能。**
 
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
@@ -91,7 +98,7 @@
 | `projectId`  | `string`                                | (可選) 如果是出庫，關聯到的 `projects` 文件 ID。 |
 | `notes`      | `string`                                | (可選) 備註，如採購單號、領料人等。                        |
 
-**自動化邏輯**: 每次向 `inventory_movements` 新增一筆紀錄時，應透過後端邏輯（如 Firebase Functions Trigger）來自動更新 `inventory_levels` 中對應文件的 `quantity`，確保數據的一致性。對於一次「調撥」操作，前端應觸發一個後端 Action，該 Action 會原子性地寫入兩筆 `inventory_movements` 紀錄（一筆 transfer-out，一筆 transfer-in）並更新兩個倉庫的 `inventory_levels`。
+**自動化邏輯**: 每次向 MongoDB 的 `inventory_movements` 新增一筆紀錄時，應透過後端邏輯（如 Firebase Functions Trigger 或在同一個 Server Action 中）來自動更新 Firestore 中 `inventory_levels` 中對應文件的 `quantity`，確保數據的一致性。對於一次「調撥」操作，前端應觸發一個後端 Action，該 Action 會原子性地寫入兩筆 `inventory_movements` 紀錄（一筆 transfer-out，一筆 transfer-in）並更新兩個倉庫的 `inventory_levels`。
 
 ## 4. 前端架構與路由 (Frontend Architecture)
 
