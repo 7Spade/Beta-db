@@ -77,6 +77,14 @@ env:
     availability:
       - BUILD
       - RUNTIME
+
+  - variable: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    secret: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+
+      
   # 其他环境变量可以在这里添加
   # - variable: MESSAGE
   #   value: Hello world!
