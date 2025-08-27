@@ -8,6 +8,11 @@ import { Breadcrumb } from '../navigation/breadcrumb'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
+import { UserMenu } from '@/components/layout/navigation/user-menu'
+import { useAuth } from '@/components/features/auth/use-auth'
+import { auth } from '@/lib/firebase-client'
+import { signOut } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
 
 
 interface AppHeaderProps {
@@ -16,6 +21,8 @@ interface AppHeaderProps {
 
 export function AppHeader({ className }: AppHeaderProps) {
     const { toggleSidebar } = useSidebar();
+    const { user, profile } = useAuth();
+    const router = useRouter();
     return (
         <header className={`flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 ${className}`}>
             <div className="flex items-center gap-2 px-4">
@@ -34,6 +41,19 @@ export function AppHeader({ className }: AppHeaderProps) {
                <div className="hidden md:block">
                  <Breadcrumb />
                </div>
+               <UserMenu
+                 user={{
+                   name: profile?.displayName || user?.email || 'User',
+                   email: user?.email || undefined,
+                   avatar: (profile as any)?.avatarUrl,
+                 }}
+                 onProfileClick={() => router.push('/profile')}
+                 onSettingsClick={() => router.push('/settings')}
+                 onLogoutClick={async () => {
+                   await signOut(auth);
+                   router.push('/login');
+                 }}
+               />
             </div>
         </header>
     )
