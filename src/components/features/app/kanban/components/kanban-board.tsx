@@ -1,18 +1,11 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   DndContext,
   type DragEndEvent,
   type DragOverEvent,
   DragOverlay,
   type DragStartEvent,
-  useSensor,
-  useSensors,
-  KeyboardSensor,
-  Announcements,
-  UniqueIdentifier,
-  TouchSensor,
-  MouseSensor,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { KanbanCard, type KanbanCardProps } from "./kanban-card";
@@ -36,13 +29,6 @@ export const KanbanBoard = ({ columns, tasks }: KanbanBoardProps) => {
     activeTask,
     columnsId,
   } = useKanban(columns, tasks);
-  
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
 
   return (
     <DndContext
@@ -60,7 +46,7 @@ export const KanbanBoard = ({ columns, tasks }: KanbanBoardProps) => {
         </SortableContext>
       </div>
 
-      {isClient && createPortal(
+      {createPortal(
         <DragOverlay>
           {activeColumn && (
             <KanbanColumn column={activeColumn} tasks={tasks.filter(task => task.status === activeColumn.id)} />
