@@ -19,13 +19,13 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { signInWithEmail } from './auth-actions';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase-client';
 import { loginSchema, type LoginValues } from './auth-form-schemas';
-import { Separator } from '@/components/ui/separator';
+// import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '@/lib/firebase-client';
 
 function LoginForm() {
   const { toast } = useToast();
@@ -42,21 +42,25 @@ function LoginForm() {
 
   const onSubmit = async (data: LoginValues) => {
     setLoading(true);
-    const result = await signInWithEmail(data);
-    setLoading(false);
-
-    if (result.error) {
-      toast({
-        title: '登入失敗',
-        description: result.error,
-        variant: 'destructive',
-      });
-    } else {
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password);
       toast({
         title: '登入成功',
         description: '歡迎回來！正在將您導向儀表板...',
       });
-       router.push('/dashboard');
+      router.push('/dashboard');
+    } catch (error: any) {
+      let message = '登入失敗，請稍後再試。';
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        message = '電子郵件或密碼不正確。';
+      } else if (error.code === 'auth/user-disabled') {
+        message = '此帳戶已被停用。';
+      } else if (error.code === 'auth/too-many-requests') {
+        message = '登入嘗試次數過多，請稍後再試。';
+      }
+      toast({ title: '登入失敗', description: message, variant: 'destructive' });
+    } finally {
+      setLoading(false);
     }
   };
 

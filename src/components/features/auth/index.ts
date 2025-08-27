@@ -10,14 +10,6 @@ export { RegisterView } from './register-view';
 // 社交認證元件
 export { SocialAuthButtons } from './social-auth-buttons';
 
-// 認證動作函數
-export { 
-  registerWithEmail, 
-  signInWithEmail, 
-  signInWithGoogle,
-  type AuthActionResponse 
-} from './auth-actions';
-
 // 表單驗證 Schema
 export { 
   loginSchema, 

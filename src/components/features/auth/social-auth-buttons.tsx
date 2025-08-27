@@ -8,8 +8,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { signInWithGoogle } from './auth-actions';
 import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase-client';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px" {...props}>
@@ -37,29 +38,39 @@ export function SocialAuthButtons({
 
     const handleGoogleSignIn = async () => {
         setLoading(true);
-        const result = await signInWithGoogle();
-        setLoading(false);
-
-        if (result.error) {
-            toast({
-                title: 'Google 登入失敗',
-                description: result.error,
-                variant: 'destructive',
-            });
-        } else {
-            const successMessage = isRegistration 
-              ? 'Google 註冊成功！正在將您導向儀表板...'
-              : 'Google 登入成功！正在將您導向儀表板...';
-            
-            toast({
-                title: isRegistration ? 'Google 註冊成功' : 'Google 登入成功',
-                description: successMessage,
-            });
-            
-            // 重定向到指定頁面
-            if (redirectTo) {
-              router.push(redirectTo);
-            }
+        const provider = new GoogleAuthProvider();
+        try {
+          await signInWithPopup(auth, provider);
+          const successMessage = isRegistration 
+            ? 'Google 註冊成功！正在將您導向儀表板...'
+            : 'Google 登入成功！正在將您導向儀表板...';
+          toast({
+            title: isRegistration ? 'Google 註冊成功' : 'Google 登入成功',
+            description: successMessage,
+          });
+          if (redirectTo) {
+            router.push(redirectTo);
+          }
+        } catch (error: any) {
+          let errorMessage = 'Google 登入失敗，請稍後再試。';
+          if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = '登入流程被使用者中斷。';
+          } else if (error.code === 'auth/account-exists-with-different-credential') {
+            errorMessage = '此電子郵件地址已使用其他方式註冊。';
+          } else if (error.code === 'auth/popup-blocked') {
+            errorMessage = '彈出視窗被瀏覽器阻擋，請允許彈出視窗後重試。';
+          } else if (error.code === 'auth/cancelled-popup-request') {
+            errorMessage = '登入請求被取消。';
+          } else if (error.code === 'auth/network-request-failed') {
+            errorMessage = '網路連線失敗，請檢查網路連線。';
+          }
+          toast({
+            title: 'Google 登入失敗',
+            description: errorMessage,
+            variant: 'destructive',
+          });
+        } finally {
+          setLoading(false);
         }
     };
 
