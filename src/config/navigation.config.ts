@@ -63,6 +63,12 @@ export const navigationConfig: NavigationItem[] = [
         href: '/quick-actions',
         children: [
             {
+                id: 'dashboard',
+                label: '儀表板',
+                icon: LayoutDashboard,
+                href: '/dashboard'
+            },
+            {
                 id: 'daily-report',
                 label: '工地日報',
                 icon: Calendar,
@@ -87,12 +93,6 @@ export const navigationConfig: NavigationItem[] = [
                 href: '/kanban'
             },
         ]
-    },
-    {
-        id: 'dashboard',
-        label: '儀表板',
-        icon: LayoutDashboard,
-        href: '/dashboard'
     },
     {
         id: 'projects',
