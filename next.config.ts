@@ -2,10 +2,12 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   typescript: {
-    ignoreBuildErrors: true,
+    // 開發時啟用類型檢查，生產環境可選擇忽略
+    ignoreBuildErrors: process.env.NODE_ENV === 'production',
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    // 開發時啟用 ESLint 檢查，生產環境可選擇忽略
+    ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
   images: {
     remotePatterns: [
