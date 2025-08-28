@@ -33,9 +33,6 @@ export * from './contracts';
 // Dashboard Features
 export * from './dashboard/dashboard-view';
 
-// Documents Features
-export * from './documents';
-
 // PartnerVerse Features
 export * from './partnerverse/partners/partners-view';
 export * from './partnerverse/workflows/workflow-builder';
