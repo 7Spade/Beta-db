@@ -42,6 +42,7 @@ const processFirestoreContract = (doc: any): Contract => {
 export function ContractDetailView({ contractId, router }: ContractDetailViewProps) {
   const [contract, setContract] = useState<Contract | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (!contractId) return;
@@ -87,11 +88,16 @@ export function ContractDetailView({ contractId, router }: ContractDetailViewPro
           </p>
         </div>
       </div>
-      <ContractDetailsSheet contract={contract} isOpen={true} onOpenChange={(isOpen) => {
-        if (!isOpen && router) {
-          router.back();
-        }
-      }} />
+      <ContractDetailsSheet
+        contract={contract}
+        isOpen={isOpen}
+        onOpenChange={(nextOpen) => {
+          setIsOpen(nextOpen);
+          if (!nextOpen && router) {
+            router.back();
+          }
+        }}
+      />
     </>
   );
 }

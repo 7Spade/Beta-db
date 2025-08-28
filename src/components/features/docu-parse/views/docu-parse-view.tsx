@@ -131,7 +131,7 @@ export function DocuParseView() {
              toast({ variant: "destructive", title: "建立失敗", description: result.error });
         } else {
              toast({ title: "成功！", description: `專案與合約 "${docDetails.name}" 已成功建立。` });
-             router.push(`/contracts/${result.contractId}`);
+             // 停留在本頁，讓使用者自行前往合約或專案
         }
     } catch (e) {
         const error = e instanceof Error ? e.message : "發生未知錯誤";
