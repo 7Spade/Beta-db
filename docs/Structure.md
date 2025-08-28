@@ -650,10 +650,12 @@
     │  │
     │  ├─firebase-admin
     │  │      firebase-admin.ts
+    │  │      index.ts
     │  │      README.md
     │  │
     │  ├─firebase-client
     │  │      firebase-client.ts
+    │  │      index.ts
     │  │      README.md
     │  │
     │  ├─mongoose
@@ -716,4 +718,5 @@
     │          README.md
     │
     └─utils
+            index.ts
             utils.ts
