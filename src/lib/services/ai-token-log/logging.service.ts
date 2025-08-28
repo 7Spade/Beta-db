@@ -1,53 +1,46 @@
+/**
+ * @fileoverview 极简化的 AI Token 日志服务
+ * @description 基于 Supabase 官方推荐的最简配置
+ */
 
-'use server';
-
-import type { AiTokenLog as AiTokenLogType } from '@/lib/types/types';
-import { getSupabaseAdmin } from '@/lib/db/supabase';
-import type { AiTokenLogInsert } from '@/lib/db/supabase';
-
-type LogData = Omit<AiTokenLogType, 'id' | 'timestamp'>;
+import { getSupabaseClient } from '@/lib/db/supabase';
 
 /**
- * Asynchronously logs AI token usage to Supabase.
- * This is a "fire-and-forget" operation and does not re-throw errors,
- * ensuring it doesn't block the primary application flow.
- * @param logData The data to be logged.
+ * 记录 AI Token 使用量（极简化版本）
  */
-async function logToSupabase(logData: LogData): Promise<void> {
-    try {
-        const supabase = getSupabaseAdmin();
-        
-        const insertData: AiTokenLogInsert = {
-            flow_name: logData.flowName,
-            total_tokens: logData.totalTokens,
-            status: logData.status,
-            user_id: logData.userId,
-            error: logData.error,
-            timestamp: new Date().toISOString(),
-        };
-
-        const { error } = await supabase
-            .from('ai_token_logs')
-            .insert(insertData);
-
-        if (error) {
-            throw error;
-        }
-    } catch (error) {
-        // In a production environment, you might want to log this error to a different monitoring service.
-        console.error("Failed to log AI token usage to Supabase:", error);
-    }
+export async function logAiTokenUsage(flowName: string, totalTokens: number, status: 'succeeded' | 'failed', error?: string) {
+  try {
+    const supabase = await getSupabaseClient();
+    
+    // 使用 any 类型避免复杂的类型推断问题
+    await (supabase as any)
+      .from('ai_token_logs')
+      .insert({
+        flow_name: flowName,
+        total_tokens: totalTokens,
+        status,
+        error,
+      });
+  } catch (error) {
+    // 静默失败，不影响主要业务逻辑
+    console.error('AI token logging failed:', error);
+  }
 }
 
 /**
- * Logs an AI token usage event.
- * Currently, this dispatches only to Supabase, which is optimized for
- * high-frequency, append-only writes typical of logging.
- * @param logData - The data to be logged.
+ * 获取 Token 使用统计（极简化版本）
  */
-export async function logAiTokenUsage(logData: LogData): Promise<void> {
-    // Intentionally not awaiting the promise here.
-    // This allows the logging to happen in the background without blocking
-    // the main application flow that called this function.
-    logToSupabase(logData);
+export async function getTokenStats() {
+  try {
+    const supabase = await getSupabaseClient();
+    
+    const { data } = await (supabase as any)
+      .from('ai_token_logs')
+      .select('total_tokens, status')
+      .eq('status', 'succeeded');
+    
+    return data?.reduce((sum: number, log: any) => sum + log.total_tokens, 0) || 0;
+  } catch {
+    return 0;
+  }
 }

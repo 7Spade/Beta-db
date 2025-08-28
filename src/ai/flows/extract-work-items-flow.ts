@@ -111,26 +111,18 @@ const extractWorkItemsFlow = ai.defineFlow(
       }
       
       const totalTokens = result.usage?.totalTokens || 0;
-      // 記錄 AI Token 使用量（成功時）
-      await logAiTokenUsage({
-        flowName: 'extractWorkItemsFlow',
-        totalTokens: totalTokens,
-        status: 'succeeded',
-      });
+      
+      // 极简化的 token 日志记录
+      logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'succeeded');
       
       return {
         ...output,
         totalTokens: totalTokens,
       };
     } catch (error) {
-        // 記錄 AI Token 使用量（失敗時）
+        // 极简化的失败日志记录
         const totalTokens = result?.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'extractWorkItemsFlow',
-            totalTokens: totalTokens,
-            status: 'failed',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        });
+        logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
         // 向上拋出錯誤
         throw error;
     }

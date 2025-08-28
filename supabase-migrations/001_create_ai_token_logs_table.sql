@@ -1,4 +1,4 @@
--- Create ai_token_logs table for logging AI token usage
+-- 极简化的 AI Token 日志表
 CREATE TABLE IF NOT EXISTS public.ai_token_logs (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     flow_name TEXT NOT NULL,
@@ -9,23 +9,13 @@ CREATE TABLE IF NOT EXISTS public.ai_token_logs (
     timestamp TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
--- Create indexes for better query performance
-CREATE INDEX IF NOT EXISTS idx_ai_token_logs_timestamp ON public.ai_token_logs(timestamp DESC);
-CREATE INDEX IF NOT EXISTS idx_ai_token_logs_user_id ON public.ai_token_logs(user_id);
-CREATE INDEX IF NOT EXISTS idx_ai_token_logs_status ON public.ai_token_logs(status);
-CREATE INDEX IF NOT EXISTS idx_ai_token_logs_flow_name ON public.ai_token_logs(flow_name);
-
--- Enable Row Level Security (RLS)
+-- 启用 RLS 并创建简单策略
 ALTER TABLE public.ai_token_logs ENABLE ROW LEVEL SECURITY;
 
--- Create policy to allow authenticated users to read their own logs
-CREATE POLICY "Users can read their own AI token logs" ON public.ai_token_logs
-    FOR SELECT USING (auth.uid()::text = user_id);
+-- 允许所有认证用户访问（简化策略）
+CREATE POLICY "Allow authenticated access" ON public.ai_token_logs
+    FOR ALL USING (auth.role() = 'authenticated');
 
--- Create policy to allow service role to insert logs (for server-side operations)
-CREATE POLICY "Service role can insert AI token logs" ON public.ai_token_logs
-    FOR INSERT WITH CHECK (true);
-
--- Grant necessary permissions
+-- 授予权限
 GRANT ALL ON public.ai_token_logs TO authenticated;
 GRANT ALL ON public.ai_token_logs TO service_role;

@@ -69,11 +69,8 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
         }
 
         const totalTokens = result.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'generateKnowledgeEntryFlow',
-            totalTokens: totalTokens,
-            status: 'succeeded',
-        });
+        // 极简化的 token 日志记录
+        logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'succeeded');
 
         return {
             ...output,
@@ -81,12 +78,8 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
         };
     } catch (error) {
         const totalTokens = result?.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'generateKnowledgeEntryFlow',
-            totalTokens: totalTokens,
-            status: 'failed',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        });
+        // 极简化的失败日志记录
+        logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
         throw error;
     }
   }

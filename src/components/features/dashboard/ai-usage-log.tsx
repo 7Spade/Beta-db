@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Cpu, CheckCircle, XCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
-import { getSupabaseAdmin } from '@/lib/db/supabase';
+import { getSupabaseClient } from '@/lib/db/supabase';
 import type { AiTokenLogRow } from '@/lib/db/supabase';
 
 type ViewRow = {
@@ -17,7 +17,7 @@ type ViewRow = {
 };
 
 export async function AiUsageLog() {
-  const supabase = getSupabaseAdmin();
+  const supabase = await getSupabaseClient();
   
   const { data: docs, error } = await supabase
     .from('ai_token_logs')
