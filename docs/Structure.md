@@ -653,7 +653,12 @@
     │  │      redis-client.ts
     │  │
     │  └─supabase
-    │          supabase-client.ts
+    │          client.ts
+    │          index.ts
+    │          middleware.ts
+    │          README.md
+    │          server.ts
+    │          types.ts
     │
     ├─events
     │      app-events.ts
@@ -672,7 +677,6 @@
     │  │
     │  ├─ai-token-log
     │  │      logging.service.ts
-    │  │      README.md
     │  │
     │  ├─contracts
     │  │      contract-api.service.ts
@@ -687,8 +691,8 @@
     │          README.md
     │
     ├─types
+    │  │  env.types.ts
     │  │  README.md
-    │  │  supabase.types.ts
     │  │  types.ts
     │  │
     │  └─contracts
