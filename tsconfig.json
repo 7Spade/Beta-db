@@ -75,13 +75,13 @@
       "@/types/*": ["./src/lib/types/*"],
       "@/utils/*": ["./src/lib/utils/*"],
       
-      // 应用路由映射
+      // 应用路由映射 (页面层面)
       "@/admin-routes/*": ["./src/app/(admin)/*"],
       "@/auth-routes/*": ["./src/app/(auth)/*"],
       "@/dashboard-routes/*": ["./src/app/(dashboard)/*"],
       "@/public-routes/*": ["./src/app/(public)/*"],
       
-      // 快速操作路由映射
+      // 功能路由映射 (页面层面)
       "@/quick-actions/*": ["./src/app/(dashboard)/quick-actions/*"],
       "@/contracts-routes/*": ["./src/app/(dashboard)/contracts/*"],
       "@/warehousing/*": ["./src/app/(dashboard)/warehousing/*"],
