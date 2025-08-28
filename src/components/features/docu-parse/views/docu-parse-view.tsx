@@ -38,6 +38,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { File, Loader2, Cpu, FileCog, Info, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { FileSelector } from "@/components/features/docu-parse/components/file-selector";
+import DocumentPreview from "@/components/layout/shared/document-preview";
 
 const initialState = {
   data: undefined,
@@ -215,6 +216,11 @@ export function DocuParseView() {
               </div>
           </CardHeader>
           <CardContent>
+            {selectedFilePath && (
+              <div className="w-full h-[60vh] mb-6">
+                <DocumentPreview src={selectedFilePath} className="w-full h-full" />
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div className="space-y-2">
                   <Label htmlFor="customId">名稱</Label>

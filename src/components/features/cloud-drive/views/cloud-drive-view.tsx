@@ -15,8 +15,9 @@ import { Input } from '@/components/ui/input';
 import { FolderPlus } from 'lucide-react';
 import { FileBrowser } from '@/cloud-drive/components/file-browser';
 import { UploadButton } from '@/cloud-drive/components/upload-button';
-import { listItems, createFolder, deleteItem, renameItem } from '@/cloud-drive/actions/storage-actions';
+import { listItems, createFolder, deleteItem, renameItem, getSignedUrl } from '@/cloud-drive/actions/storage-actions';
 import type { StorageItem } from '@/cloud-drive/types/storage.types';
+import DocumentPreview from '@/components/layout/shared/document-preview';
 
 export function CloudDriveView() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export function CloudDriveView() {
   const [isCreateFolderOpen, setCreateFolderOpen] = React.useState(false);
   const [newFolderName, setNewFolderName] = React.useState('');
   const [newItemName, setNewItemName] = React.useState('');
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
   const currentPath = React.useMemo(() => searchParams.get('path') || '', [searchParams]);
 
@@ -54,9 +56,17 @@ export function CloudDriveView() {
     router.push(`${pathname}?path=${path}`);
   };
 
-  const handleItemClick = (item: StorageItem) => {
+  const handleItemClick = async (item: StorageItem) => {
     if (item.type === 'folder') {
       handleNavigate(item.fullPath);
+    } else {
+      const { url, error } = await getSignedUrl(item.fullPath);
+      if (error || !url) {
+        toast({ variant: 'destructive', title: '無法預覽', description: error || '取得檔案連結失敗。' });
+        setPreviewUrl(null);
+        return;
+      }
+      setPreviewUrl(url);
     }
   };
   
@@ -160,6 +170,19 @@ export function CloudDriveView() {
           />
         </CardContent>
       </Card>
+
+      {previewUrl && (
+        <Card>
+          <CardHeader>
+            <CardTitle>預覽</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="w-full h-[70vh]">
+              <DocumentPreview src={previewUrl} className="w-full h-full" />
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
         <AlertDialogContent>
