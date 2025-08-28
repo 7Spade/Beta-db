@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -33,6 +34,30 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
   const getStatusVariant = (status: Payment['status'] | ChangeOrder['status']) => {
      return UI_CONSTANTS.STATUS_VARIANTS[status] || 'secondary';
   }
+
+  // 將合約的文字版「工作範疇」解析為結構化清單
+  const scopeItems = useMemo(() => {
+    const lines = (contract.scope || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const items: Array<{ id: string; name: string; quantity: number; unitPrice: number; subtotal: number }> = [];
+
+    const itemLineRegex = /^([^.]+)\.\s*(.+?)（\s*數量：([\d.]+)\s*，\s*單價：([\d.]+)\s*，\s*小計：([\d.]+)\s*）$/;
+
+    for (const line of lines) {
+      const match = line.match(itemLineRegex);
+      if (match) {
+        const id = String(match[1]).trim();
+        const name = String(match[2]).trim();
+        const quantity = Number(match[3]);
+        const unitPrice = Number(match[4]);
+        const subtotal = Number(match[5]);
+        if (!Number.isNaN(quantity) && !Number.isNaN(unitPrice)) {
+          items.push({ id, name, quantity, unitPrice, subtotal: Number.isNaN(subtotal) ? quantity * unitPrice : subtotal });
+        }
+      }
+    }
+
+    return items;
+  }, [contract.scope]);
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -83,7 +108,27 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
                   <Separator />
                    <div>
                       <h3 className="text-sm font-medium text-muted-foreground">工作範疇</h3>
-                      <p className="text-sm mt-1">{contract.scope}</p>
+                      <div className="mt-2 space-y-2">
+                        {scopeItems.length > 0 ? (
+                          scopeItems.map((item) => (
+                            <div key={item.id} className="flex items-center justify-between rounded-lg border bg-card p-2 pl-3">
+                              <div className="flex items-center gap-2">
+                                <div className="h-6 w-6 flex items-center justify-center text-xs rounded bg-muted text-muted-foreground">
+                                  {item.id}
+                                </div>
+                                <div className="font-medium">{item.name}</div>
+                              </div>
+                              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                <div>數量: <span className="font-semibold text-foreground">{item.quantity}</span></div>
+                                <div>單價: <span className="font-semibold text-foreground">${item.unitPrice.toLocaleString()}</span></div>
+                                <div className="rounded border px-2 py-0.5 text-foreground">小計: ${item.subtotal.toLocaleString()}</div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-sm whitespace-pre-wrap">{contract.scope}</p>
+                        )}
+                      </div>
                     </div>
                 </CardContent>
               </Card>
