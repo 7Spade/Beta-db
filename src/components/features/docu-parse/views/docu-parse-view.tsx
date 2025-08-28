@@ -217,8 +217,8 @@ export function DocuParseView() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div className="space-y-2">
-                  <Label htmlFor="customId">編號</Label>
-                  <Input id="customId" placeholder="文件 ID" value={docDetails.customId} onChange={(e) => handleDetailChange('customId', e.target.value)} />
+                  <Label htmlFor="customId">名稱</Label>
+                  <Input id="customId" placeholder="文件名稱" value={docDetails.customId} onChange={(e) => handleDetailChange('customId', e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="name">名稱</Label>
