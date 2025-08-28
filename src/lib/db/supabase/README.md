@@ -1,121 +1,411 @@
-# Supabase 极简配置说明(除錯完成可用)
+# Supabase Configuration
 
-## 概述
+This directory contains the Supabase configuration for both client-side and server-side operations. Supabase provides a powerful open-source alternative to Firebase with PostgreSQL database, real-time subscriptions, and built-in authentication.
 
-本项目使用 Supabase 官方推荐的 `@supabase/ssr` 包，实现了**极简的自己初始化自己连接**的配置，专门用于记录和显示 AI Token 消耗。
+## Features
 
-## 🚀 极简特性
+- **PostgreSQL Database**: Full PostgreSQL database with real-time capabilities
+- **Built-in Authentication**: User management with multiple providers
+- **Real-time Subscriptions**: Live data updates with WebSocket connections
+- **Row Level Security**: Advanced security with RLS policies
+- **Type Safety**: Full TypeScript support with generated types
 
-- **自动初始化**: 无需手动配置，自动从环境变量获取连接信息
-- **自动连接**: 自动选择客户端或服务端环境
-- **自动记录**: AI 流程自动记录 token 消耗
-- **自动显示**: 面板自动显示使用记录
+## Configuration
 
-## 📁 文件结构
-
-```
-src/lib/db/supabase/
-├── index.ts          # 自动选择客户端
-├── client.ts         # 浏览器端自动初始化
-├── server.ts         # 服务端自动初始化
-├── middleware.ts     # 自动认证处理
-└── README.md         # 本说明文档
-```
-
-## ⚙️ 配置说明
-
-### 1. 环境变量（必需）
-
-在 `.env.local` 文件中配置：
+### Environment Variables
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Required
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+
+# Server-side (for server actions and API routes)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Optional
+SUPABASE_DB_PASSWORD=your-database-password
+SUPABASE_JWT_SECRET=your-jwt-secret
 ```
 
-### 2. 自动使用
+### Project Setup
 
-**无需手动导入，自动工作：**
+1. **Create Supabase Project**: [supabase.com](https://supabase.com)
+2. **Get API Keys**: From Project Settings > API
+3. **Configure Environment Variables**: Add to `.env.local`
+4. **Enable Row Level Security**: In Authentication > Policies
+
+## Initialization
+
+### Client-Side Client
 
 ```typescript
-// 在任何地方直接使用
-import { getSupabaseClient } from '@/lib/db/supabase'
+// client.ts
+import { createClient } from '@supabase/supabase-js';
 
-// 自动选择客户端或服务端
-const supabase = await getSupabaseClient()
+export function createClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// 自动记录 AI Token 消耗
-import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service'
-await logAiTokenUsage('flowName', totalTokens, 'succeeded')
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
+    realtime: {
+      params: {
+        eventsPerSecond: 10,
+      },
+    },
+  });
+}
 ```
 
-## 🗄️ 数据库设置
+### Server-Side Client
 
-### 运行迁移文件
+```typescript
+// server.ts
+import { createClient } from '@supabase/supabase-js';
 
-选择以下任一迁移文件：
+export function createClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-1. **`003_ultra_simple_ai_token_logs.sql`** - 超极简版本（推荐）
-2. **`002_simple_ai_token_logs_table.sql`** - 简化版本
-3. **`001_create_ai_token_logs_table.sql`** - 完整版本
+  return createClient(supabaseUrl, supabaseServiceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+```
 
-### 推荐使用超极简版本
+## Usage Examples
+
+### Basic Database Operations
+
+```typescript
+import { createClient } from '@/lib/db/supabase/client';
+
+const supabase = createClient();
+
+// Insert data
+const { data, error } = await supabase
+  .from('users')
+  .insert([
+    { name: 'John Doe', email: 'john@example.com' }
+  ]);
+
+if (error) {
+  console.error('Insert error:', error);
+} else {
+  console.log('Inserted:', data);
+}
+
+// Query data
+const { data: users, error: queryError } = await supabase
+  .from('users')
+  .select('*')
+  .eq('active', true);
+
+if (queryError) {
+  console.error('Query error:', queryError);
+} else {
+  console.log('Users:', users);
+}
+```
+
+### Authentication
+
+```typescript
+import { createClient } from '@/lib/db/supabase/client';
+
+const supabase = createClient();
+
+// Sign up
+const { data, error } = await supabase.auth.signUp({
+  email: 'user@example.com',
+  password: 'password123',
+});
+
+// Sign in
+const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+  email: 'user@example.com',
+  password: 'password123',
+});
+
+// Sign out
+await supabase.auth.signOut();
+
+// Get current user
+const { data: { user } } = await supabase.auth.getUser();
+```
+
+### Real-time Subscriptions
+
+```typescript
+import { createClient } from '@/lib/db/supabase/client';
+
+const supabase = createClient();
+
+// Subscribe to real-time changes
+const subscription = supabase
+  .channel('public:users')
+  .on('postgres_changes', 
+    { event: '*', schema: 'public', table: 'users' },
+    (payload) => {
+      console.log('Change received!', payload);
+    }
+  )
+  .subscribe();
+
+// Unsubscribe when done
+subscription.unsubscribe();
+```
+
+### API Route with Supabase
+
+```typescript
+// pages/api/users.ts
+import { createClient } from '@/lib/db/supabase/server';
+
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    try {
+      const supabase = createClient();
+      
+      const { data: users, error } = await supabase
+        .from('users')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        throw error;
+      }
+      
+      res.status(200).json(users);
+    } catch (error) {
+      console.error('API error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  } else {
+    res.setHeader('Allow', ['GET']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}
+```
+
+### Server Action with Supabase
+
+```typescript
+// app/actions/user-actions.ts
+'use server';
+
+import { createClient } from '@/lib/db/supabase/server';
+
+export async function createUser(userData: { name: string; email: string }) {
+  try {
+    const supabase = createClient();
+    
+    const { data, error } = await supabase
+      .from('users')
+      .insert([userData])
+      .select()
+      .single();
+    
+    if (error) {
+      throw error;
+    }
+    
+    return { success: true, user: data };
+  } catch (error) {
+    console.error('Create user error:', error);
+    throw new Error('Failed to create user');
+  }
+}
+
+export async function getUsers() {
+  try {
+    const supabase = createClient();
+    
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      throw error;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Get users error:', error);
+    throw new Error('Failed to get users');
+  }
+}
+```
+
+## Advanced Features
+
+### Row Level Security (RLS)
 
 ```sql
--- 在 Supabase SQL 编辑器中运行
--- 文件：supabase-migrations/003_ultra_simple_ai_token_logs.sql
+-- Enable RLS on users table
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Users can only see their own data
+CREATE POLICY "Users can view own data" ON users
+  FOR SELECT USING (auth.uid() = id);
+
+-- Policy: Users can update their own data
+CREATE POLICY "Users can update own data" ON users
+  FOR UPDATE USING (auth.uid() = id);
 ```
 
-## 📊 AI Token 记录
+### Database Functions
 
-### 自动记录
+```sql
+-- Create a function to get user profile
+CREATE OR REPLACE FUNCTION get_user_profile(user_id UUID)
+RETURNS TABLE (
+  id UUID,
+  name TEXT,
+  email TEXT,
+  created_at TIMESTAMPTZ
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT u.id, u.name, u.email, u.created_at
+  FROM users u
+  WHERE u.id = user_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+```
 
-AI 流程会自动记录：
+## Error Handling
+
+### Database Errors
 
 ```typescript
-// 成功时
-logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'succeeded')
+import { createClient } from '@/lib/db/supabase/client';
 
-// 失败时
-logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'failed', errorMessage)
+try {
+  const { data, error } = await supabase
+    .from('users')
+    .insert([userData]);
+  
+  if (error) {
+    if (error.code === '23505') {
+      throw new Error('User already exists');
+    } else if (error.code === '23503') {
+      throw new Error('Referenced record not found');
+    } else {
+      throw new Error(`Database error: ${error.message}`);
+    }
+  }
+  
+  return data;
+} catch (error) {
+  console.error('Operation failed:', error);
+  throw error;
+}
 ```
 
-### 自动显示
-
-在面板中自动显示：
+### Authentication Errors
 
 ```typescript
-// 组件自动获取并显示记录
-<AiUsageLog />
+try {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  
+  if (error) {
+    if (error.message.includes('Invalid login credentials')) {
+      throw new Error('Invalid email or password');
+    } else if (error.message.includes('Email not confirmed')) {
+      throw new Error('Please confirm your email address');
+    } else {
+      throw new Error(`Authentication error: ${error.message}`);
+    }
+  }
+  
+  return data;
+} catch (error) {
+  console.error('Auth failed:', error);
+  throw error;
+}
 ```
 
-## 🎯 使用场景
+## Best Practices
 
-1. **AI 流程监控**: 自动记录每个 AI 流程的 token 消耗
-2. **成本追踪**: 实时监控 AI 使用成本
-3. **性能分析**: 分析不同流程的 token 效率
-4. **用户统计**: 了解用户使用模式
+### Security
 
-## ✨ 优势
+1. **Use RLS Policies**: Implement row-level security for all tables
+2. **Service Role Key**: Only use service role key on server-side
+3. **Input Validation**: Validate all inputs before database operations
+4. **Error Messages**: Don't expose sensitive information in error messages
 
-1. **零配置**: 安装后即可使用
-2. **自动工作**: 无需手动管理连接
-3. **类型安全**: 完整的 TypeScript 支持
-4. **性能优化**: 自动缓存和优化
-5. **错误处理**: 静默处理，不影响主业务
+### Performance
 
-## 🚨 注意事项
+1. **Selective Queries**: Only select needed columns
+2. **Indexes**: Create indexes for frequently queried columns
+3. **Pagination**: Implement pagination for large datasets
+4. **Real-time**: Use real-time subscriptions sparingly
 
-1. 确保环境变量正确配置
-2. 先运行数据库迁移文件
-3. 组件会自动处理错误状态
-4. 日志记录不会阻塞主要业务逻辑
+### Development
 
-## 🔧 故障排除
+1. **Type Safety**: Use generated types from Supabase CLI
+2. **Environment Variables**: Use different keys for development/production
+3. **Local Development**: Use Supabase CLI for local development
+4. **Migrations**: Version control your database schema
 
-如果遇到问题：
+## Troubleshooting
 
-1. 检查环境变量是否正确
-2. 确认数据库表是否创建成功
-3. 查看浏览器控制台错误信息
-4. 使用超极简迁移文件重新创建表
+### Common Issues
+
+1. **CORS Errors**: Check Supabase project settings
+2. **RLS Blocking**: Verify RLS policies are correct
+3. **Type Errors**: Regenerate types with Supabase CLI
+4. **Connection Issues**: Verify environment variables
+
+### Connection Testing
+
+Test your Supabase connection:
+
+```typescript
+import { createClient } from '@/lib/db/supabase/client';
+
+async function testConnection() {
+  try {
+    const supabase = createClient();
+    
+    // Test basic query
+    const { data, error } = await supabase
+      .from('users')
+      .select('count')
+      .limit(1);
+    
+    if (error) {
+      throw error;
+    }
+    
+    console.log('✅ Supabase connection successful');
+    return true;
+  } catch (error) {
+    console.error('❌ Supabase connection failed:', error);
+    return false;
+  }
+}
+
+testConnection();
+```
+
+## Related Documentation
+
+- [Supabase Documentation](https://supabase.com/docs)
+- [Supabase JavaScript Client](https://supabase.com/docs/reference/javascript)
+- [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
+- [Database Functions](https://supabase.com/docs/guides/database/functions)
+- [Edge Functions](https://supabase.com/docs/guides/functions)
+- [Next.js Integration](https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs)
