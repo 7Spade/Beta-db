@@ -20,7 +20,6 @@ import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Partner } from '@/lib/types/types';
 import { Users, CheckCircle, Clock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
 import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
 
 interface DashboardProps {

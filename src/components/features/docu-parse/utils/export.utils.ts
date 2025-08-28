@@ -34,7 +34,7 @@ export const exportToCSV = (data: WorkItem[], fileName: string = EXPORT_FILE_NAM
  */
 export const exportToJSON = (data: WorkItem[], fileName: string = EXPORT_FILE_NAMES.WORK_ITEMS) => {
     // 移除前端計算的 total 欄位
-    const jsonContent = JSON.stringify(data.map(({total: _, ...rest}) => rest), null, 2);
+    const jsonContent = JSON.stringify(data.map(({total: _total, ...rest}) => rest), null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);

@@ -15,8 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatDate } from '@/lib/utils/utils';
-import { UI_CONSTANTS } from '@/contracts/constants';
-import type { Contract, Payment, ChangeOrder } from '@/contracts/types';
+import type { Contract } from '@/contracts/types';
 import { ContractStatusBadge } from '@/contracts/components';
 
 interface ContractDetailsSheetProps {
@@ -86,11 +85,11 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">開始日期</h3>
-                      <p className="font-semibold">{formatDate(contract.startDate)}</p>
+                      <p className="font-semibold">{formatDate(contract.startDate instanceof Date ? contract.startDate : contract.startDate?.toDate())}</p>
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">結束日期</h3>
-                      <p className="font-semibold">{formatDate(contract.endDate)}</p>
+                      <p className="font-semibold">{formatDate(contract.endDate instanceof Date ? contract.endDate : contract.endDate?.toDate())}</p>
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">總價值</h3>
@@ -156,9 +155,9 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
                       {contract.payments.length > 0 ? contract.payments.map((payment) => (
                         <TableRow key={payment.id}>
                           <TableCell>${payment.amount.toLocaleString()}</TableCell>
-                          <TableCell>{formatDate(payment.requestDate)}</TableCell>
-                          <TableCell><ContractStatusBadge status={payment.status as any} /></TableCell>
-                          <TableCell>{payment.paidDate ? formatDate(payment.paidDate) : '未付款'}</TableCell>
+                          <TableCell>{formatDate(payment.requestDate instanceof Date ? payment.requestDate : payment.requestDate?.toDate())}</TableCell>
+                          <TableCell><ContractStatusBadge status={payment.status as '啟用中' | '已完成' | '暫停中' | '已終止'} /></TableCell>
+                          <TableCell>{payment.paidDate ? formatDate(payment.paidDate instanceof Date ? payment.paidDate : payment.paidDate?.toDate()) : '未付款'}</TableCell>
                         </TableRow>
                       )) : (
                         <TableRow><TableCell colSpan={4} className="text-center h-24">尚無付款紀錄</TableCell></TableRow>
@@ -188,8 +187,8 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
                       {contract.changeOrders.length > 0 ? contract.changeOrders.map((order) => (
                         <TableRow key={order.id}>
                           <TableCell className="font-medium">{order.title}</TableCell>
-                           <TableCell>{formatDate(order.date)}</TableCell>
-                           <TableCell><ContractStatusBadge status={order.status as any} /></TableCell>
+                           <TableCell>{formatDate(order.date instanceof Date ? order.date : order.date?.toDate())}</TableCell>
+                           <TableCell><ContractStatusBadge status={order.status as '啟用中' | '已完成' | '暫停中' | '已終止'} /></TableCell>
                           <TableCell>${order.impact.cost.toLocaleString()}</TableCell>
                         </TableRow>
                       )) : (
@@ -217,7 +216,7 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
                           {index < contract.versions.length - 1 && <div className="h-10 w-px bg-border" />}
                         </div>
                         <div>
-                          <p className="font-semibold">{formatDate(version.date)}</p>
+                          <p className="font-semibold">{formatDate(version.date instanceof Date ? version.date : version.date?.toDate())}</p>
                           <p className="text-sm text-muted-foreground">{version.changeSummary}</p>
                         </div>
                       </div>

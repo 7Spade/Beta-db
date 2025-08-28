@@ -89,7 +89,7 @@ export async function createFolder(path: string): Promise<StorageAction> {
     
     revalidatePath(`/cloud-drive?path=${getParentPath(path)}`, 'page');
     return { success: true };
-  } catch (error: unknown) {
+  } catch {
     return { success: false, error: '建立資料夾失敗。' };
   }
 }
@@ -107,7 +107,7 @@ export async function deleteItem(path: string, type: 'file' | 'folder'): Promise
     
     revalidatePath(`/cloud-drive?path=${getParentPath(path)}`, 'page');
     return { success: true };
-  } catch (error: unknown) {
+  } catch {
     return { success: false, error: '刪除失敗。' };
   }
 }
@@ -129,7 +129,7 @@ export async function uploadFile(formData: FormData): Promise<StorageAction> {
     
     revalidatePath(`/cloud-drive?path=${currentPath}`, 'page');
     return { success: true };
-  } catch (error: unknown) {
+  } catch {
     return { success: false, error: '上傳失敗。' };
   }
 }
@@ -144,7 +144,7 @@ export async function getSignedUrl(path: string): Promise<{ url?: string, error?
             expires: Date.now() + 15 * 60 * 1000, // 15 minutes
         });
         return { url };
-    } catch (error) {
+    } catch {
         return { error: '無法取得下載連結。' };
     }
 }

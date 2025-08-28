@@ -16,7 +16,7 @@ import { Input } from '@/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { createUserWithEmailAndPassword, sendEmailVerification, type AuthError } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '@/firebase-client/firebase-client';
 import { registerSchema, type RegisterValues } from './auth-form-schemas';
 import Link from 'next/link';

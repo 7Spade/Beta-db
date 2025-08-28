@@ -10,7 +10,9 @@ export function isFirebaseAuthError(error: unknown): error is AuthError {
     return false;
   }
   
-  if (!('code' in error) || typeof (error as any).code !== 'string') {
+  // 使用类型断言进行安全的属性访问
+  const errorObj = error as Record<string, unknown>;
+  if (!('code' in errorObj) || typeof errorObj.code !== 'string') {
     return false;
   }
   

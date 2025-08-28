@@ -21,8 +21,9 @@ if (!admin.apps.length) {
 
   // 在雲端（App Hosting/Cloud Run）會有預設憑證；本地優先 serviceAccountKey.json
   try {
-    const serviceAccount = require('@root/serviceAccountKey.json');
-    config.credential = admin.credential.cert(serviceAccount);
+    // 使用动态导入替代require
+    const serviceAccount = await import('@root/serviceAccountKey.json');
+    config.credential = admin.credential.cert(serviceAccount.default as admin.ServiceAccount);
   } catch {
     config.credential = admin.credential.applicationDefault();
   }
@@ -113,7 +114,9 @@ export const enforceAppCheck = async (req: { headers: Record<string, string | st
       });
     }
 
-    const verificationResult = await verifyAppCheckToken(appCheckToken);
+    const verificationResult = await verifyAppCheckToken(
+      Array.isArray(appCheckToken) ? appCheckToken[0] : appCheckToken
+    );
     
     if (!verificationResult.success) {
       return res.status(401).json({ 

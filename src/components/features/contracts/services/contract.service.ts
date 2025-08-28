@@ -11,8 +11,8 @@ export const contractService = {
     try {
       const newContractData = {
         ...data,
-        startDate: Timestamp.fromDate(data.startDate),
-        endDate: Timestamp.fromDate(data.endDate),
+        startDate: Timestamp.fromDate(data.startDate as Date),
+        endDate: Timestamp.fromDate(data.endDate as Date),
         payments: [],
         changeOrders: [],
         versions: [{
@@ -36,10 +36,18 @@ export const contractService = {
       const updateData: Partial<Omit<Contract, 'id'>> = { ...data };
       
       if (data.startDate) {
-        updateData.startDate = Timestamp.fromDate(data.startDate);
+        if (data.startDate instanceof Date) {
+          updateData.startDate = Timestamp.fromDate(data.startDate);
+        } else {
+          updateData.startDate = data.startDate;
+        }
       }
       if (data.endDate) {
-        updateData.endDate = Timestamp.fromDate(data.endDate);
+        if (data.endDate instanceof Date) {
+          updateData.endDate = Timestamp.fromDate(data.endDate);
+        } else {
+          updateData.endDate = data.endDate;
+        }
       }
 
       await updateDoc(docRef, updateData);

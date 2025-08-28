@@ -120,7 +120,7 @@ const FinancialDocumentsManager: FC<{ partners: Partner[], isLoading: boolean }>
             if (currentStepIndex + 1 < workflow.length - 1) {
                 toast({ title: "流程更新", description: `單據已移至下一步驟: ${nextStep}` });
             }
-        } catch (error) {
+        } catch {
             toast({ variant: 'destructive', title: '錯誤', description: '更新流程失敗。' });
         }
     };

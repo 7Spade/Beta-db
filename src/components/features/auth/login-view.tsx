@@ -16,11 +16,10 @@ import { Input } from '@/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, type AuthError } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/firebase-client/firebase-client';
 import { loginSchema, type LoginValues } from './auth-form-schemas';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { createUserProfile } from './auth-actions';
 import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 

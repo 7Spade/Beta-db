@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useEffect, useState } from "react";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";

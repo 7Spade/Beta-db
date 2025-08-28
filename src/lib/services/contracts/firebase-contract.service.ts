@@ -5,14 +5,58 @@
 import { adminDb as firestore } from '@/db/firebase-admin';
 import type { Contract } from '@/contracts/types';
 import { Timestamp } from 'firebase-admin/firestore';
-import type { DocumentData } from 'firebase/firestore';
+
+// 定义Firestore文档数据类型
+interface FirestoreContractData {
+  id?: string;
+  customId?: string;
+  name: string;
+  contractor: string;
+  client: string;
+  clientRepresentative?: string;
+  startDate: Timestamp;
+  endDate: Timestamp;
+  totalValue: number;
+  status: string;
+  scope: string;
+  payments: Array<{
+    id: string;
+    amount: number;
+    status: string;
+    requestDate: Timestamp;
+    paidDate?: Timestamp;
+    description?: string;
+  }>;
+  changeOrders: Array<{
+    id: string;
+    title: string;
+    description: string;
+    status: string;
+    date: Timestamp;
+    impact: {
+      cost: number;
+      scheduleDays: number;
+    };
+    approvedBy?: string;
+    approvedDate?: Timestamp;
+  }>;
+  versions: Array<{
+    version: number;
+    date: Timestamp;
+    changeSummary: string;
+    changedBy?: string;
+    approvalStatus?: string;
+    approvalDate?: Timestamp;
+    approvalBy?: string;
+  }>;
+}
 
 export class FirebaseContractService {
   private readonly collectionName = 'contracts';
 
   async createContract(data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>): Promise<string> {
     try {
-      const newContractData = {
+      const newContractData: FirestoreContractData = {
         ...data,
         startDate: Timestamp.fromDate(data.startDate as Date),
         endDate: Timestamp.fromDate(data.endDate as Date),
@@ -25,7 +69,7 @@ export class FirebaseContractService {
         }]
       };
 
-      const docRef = await firestore.collection(this.collectionName).add(newContractData as any);
+      const docRef = await firestore.collection(this.collectionName).add(newContractData);
       return docRef.id as string;
     } catch (error) {
       console.error("創建合約時發生錯誤：", error);
@@ -39,22 +83,22 @@ export class FirebaseContractService {
       const docSnap = await docRef.get();
       
       if (docSnap.exists) {
-        const data = docSnap.data() as any;
+        const data = docSnap.data() as FirestoreContractData;
         return {
           ...data,
           id: docSnap.id,
           startDate: data.startDate?.toDate(),
           endDate: data.endDate?.toDate(),
-          payments: data.payments?.map((p: any) => ({
+          payments: data.payments?.map((p) => ({
             ...p,
             requestDate: p.requestDate?.toDate(),
             paidDate: p.paidDate?.toDate(),
           })) || [],
-          changeOrders: data.changeOrders?.map((co: any) => ({
+          changeOrders: data.changeOrders?.map((co) => ({
             ...co,
             date: co.date?.toDate(),
           })) || [],
-          versions: data.versions?.map((v: any) => ({
+          versions: data.versions?.map((v) => ({
             ...v,
             date: v.date?.toDate(),
           })) || [],
@@ -75,22 +119,22 @@ export class FirebaseContractService {
         .orderBy('startDate', 'desc')
         .get();
       return querySnapshot.docs.map(doc => {
-        const data = doc.data() as any;
+        const data = doc.data() as FirestoreContractData;
         return {
           ...data,
           id: doc.id,
           startDate: data.startDate?.toDate(),
           endDate: data.endDate?.toDate(),
-          payments: data.payments?.map((p: any) => ({
+          payments: data.payments?.map((p) => ({
             ...p,
             requestDate: p.requestDate?.toDate(),
             paidDate: p.paidDate?.toDate(),
           })) || [],
-          changeOrders: data.changeOrders?.map((co: any) => ({
+          changeOrders: data.changeOrders?.map((co) => ({
             ...co,
             date: co.date?.toDate(),
           })) || [],
-          versions: data.versions?.map((v: any) => ({
+          versions: data.versions?.map((v) => ({
             ...v,
             date: v.date?.toDate(),
           })) || [],

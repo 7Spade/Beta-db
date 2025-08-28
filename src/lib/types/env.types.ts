@@ -47,6 +47,7 @@ export interface EnvironmentVariables {
   POSTGRES_DATABASE: string;
 }
 
+// 使用模块扩展而不是命名空间
 declare global {
   namespace NodeJS {
     interface ProcessEnv extends EnvironmentVariables {}
