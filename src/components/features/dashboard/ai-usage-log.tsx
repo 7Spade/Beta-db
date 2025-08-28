@@ -5,8 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Cpu, CheckCircle, XCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
-import { connectDB } from '@/lib/db/mongoose/mongodb';
-import AiTokenLog from '@/lib/models/ai-token-log.model';
+import { getSupabaseAdmin } from '@/lib/db/supabase';
+import type { AiTokenLogRow } from '@/lib/db/supabase';
 
 type ViewRow = {
   id: string;
@@ -17,12 +17,31 @@ type ViewRow = {
 };
 
 export async function AiUsageLog() {
-  await connectDB();
-  const docs = await AiTokenLog.find().sort({ timestamp: -1 }).limit(10).lean();
-  const logs: ViewRow[] = (docs as any[]).map((d) => ({
-    id: (d._id as any)?.toString?.() ?? Math.random().toString(36).slice(2),
-    flowName: d.flowName,
-    totalTokens: d.totalTokens,
+  const supabase = getSupabaseAdmin();
+  
+  const { data: docs, error } = await supabase
+    .from('ai_token_logs')
+    .select('*')
+    .order('timestamp', { ascending: false })
+    .limit(10);
+
+  if (error) {
+    console.error('Failed to fetch AI token logs:', error);
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center text-destructive">
+            載入 AI 使用紀錄時發生錯誤。
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const logs: ViewRow[] = (docs as AiTokenLogRow[] || []).map((d) => ({
+    id: d.id,
+    flowName: d.flow_name,
+    totalTokens: d.total_tokens,
     status: d.status,
     timestamp: d.timestamp ? new Date(d.timestamp) : null,
   }));
