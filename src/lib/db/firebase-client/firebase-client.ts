@@ -13,13 +13,13 @@ import { getFunctions } from "firebase/functions";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 export const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyCJ-eayGjJwBKsNIh3oEAG2GjbfTrvAMEI",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "elite-chiller-455712-c4.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "elite-chiller-455712-c4",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "elite-chiller-455712-c4.firebasestorage.app",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:7807661688:web:cbf779797bd21f5a1d1f8d",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-3FLE19K97P",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "7807661688",
 };
 
 // Initialize Firebase for the client
@@ -36,7 +36,7 @@ const analytics = typeof window !== 'undefined' ? isSupported().then(yes => yes 
 if (typeof window !== "undefined") {
   import("firebase/app-check")
     .then(({ initializeAppCheck, ReCaptchaV3Provider }) => {
-      const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
+      const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfcULArAAAAAGEu9r_BXXkN3X9ceD1oqQhzcbG0";
       if (!recaptchaSiteKey) {
         console.warn("Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY; App Check will initialize without a provider.");
         return;
