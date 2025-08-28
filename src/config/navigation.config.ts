@@ -92,6 +92,18 @@ export const navigationConfig: NavigationItem[] = [
                 icon: LayoutGrid,
                 href: '/kanban'
             },
+            {
+                id: 'docu-parse',
+                label: '文件解析',
+                icon: FileText,
+                href: '/tools/docu-parse'
+            },
+            {
+                id: 'cloud-drive',
+                label: '雲端硬碟',
+                icon: Cloud,
+                href: '/tools/cloud-drive'
+            },
         ]
     },
     {
@@ -207,26 +219,6 @@ export const navigationConfig: NavigationItem[] = [
                 label: '工法工序庫',
                 icon: BookOpen,
                 href: '/team/knowledge-base'
-            },
-        ]
-    },
-    {
-        id: 'app-tools',
-        label: '應用工具',
-        icon: FolderGit2,
-        href: '/tools',
-        children: [
-            {
-                id: 'docu-parse',
-                label: '文件解析',
-                icon: FileText,
-                href: '/tools/docu-parse'
-            },
-            {
-                id: 'cloud-drive',
-                label: '雲端硬碟',
-                icon: Cloud,
-                href: '/tools/cloud-drive'
             },
         ]
     },
