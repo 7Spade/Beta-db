@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import type { Partner, Contact } from '@/lib/types/types';
+import type { Partner, Contact } from '@/types/types';
 import type { Role } from '@/lib/roles';
 import { Button } from '@/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';

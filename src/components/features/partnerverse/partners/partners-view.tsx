@@ -5,10 +5,10 @@ import { useToast } from '@/hooks/use-toast';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, onSnapshot, addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 
-import type { Partner, Contact } from '@/lib/types/types';
+import type { Partner, Contact } from '@/types/types';
 import type { Role } from '@/lib/roles';
 
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import { PartnerList } from './list/partner-list';
 import { PartnerProfile } from './profile/partner-profile';
 import { PartnerForm } from './forms/partner-form';

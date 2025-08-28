@@ -47,9 +47,11 @@ export interface EnvironmentVariables {
   POSTGRES_DATABASE: string;
 }
 
-// 使用模块扩展而不是命名空间
+// 使用模組擴展而不是命名空間 - 這是 TypeScript 推薦的方式
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface ProcessEnv extends EnvironmentVariables {}
   }
 }

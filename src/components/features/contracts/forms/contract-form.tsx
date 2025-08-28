@@ -4,16 +4,16 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
+import { Input } from '@/ui/input';
+import { Textarea } from '@/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
+import { Calendar } from '@/ui/calendar';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/button';
 import { format } from 'date-fns';
-import { CONTRACT_STATUSES } from '@/components/features/contracts/constants';
+import { CONTRACT_STATUSES } from '@/contracts/constants';
 import type { ContractFormValues } from './form-schemas';
 
 export function ContractForm() {

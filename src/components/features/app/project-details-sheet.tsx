@@ -19,7 +19,7 @@ import {
 } from '@/ui/sheet';
 import { ScrollArea } from '@/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { addTaskAction } from './actions/project-actions';
+import { addTaskAction } from '@/app-features/actions/project-actions';
 
 interface ProjectDetailsSheetProps {
   project: Project | undefined;

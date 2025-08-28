@@ -5,7 +5,7 @@
 'use client';
 
 import type { FC } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import { FileCard } from './file-card';
 import { FolderCard } from './folder-card';
 import type { StorageItem } from '@/cloud-drive/types/storage.types';

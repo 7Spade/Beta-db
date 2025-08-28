@@ -24,7 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Calendar } from '@/ui/calendar';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
-import { addProjectAction } from './actions/project-actions';
+import { addProjectAction } from '@/app-features/actions/project-actions';
 
 const projectSchema = z.object({
   title: z.string().min(3, '標題至少需要 3 個字元。'),

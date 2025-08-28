@@ -2,10 +2,10 @@
 'use client';
 
 import { type FC } from 'react';
-import type { Partner, Contact } from '@/lib/types/types';
+import type { Partner, Contact } from '@/types/types';
 import type { Role } from '@/lib/roles';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import { Users, Star, ShieldCheck, Briefcase, DollarSign, ArrowLeft, ArrowLeftRight } from 'lucide-react';
 import { OverviewTab } from '@/partnerverse/overview/overview-tab';
 import { ContactsTab } from '@/partnerverse/contacts/contacts-tab';

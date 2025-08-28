@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import type { Partner } from '@/lib/types/types';
+import type { Partner } from '@/types/types';
 import { WorkflowDesigner } from './workflow-designer';
 
 interface FinancialsTabProps {
