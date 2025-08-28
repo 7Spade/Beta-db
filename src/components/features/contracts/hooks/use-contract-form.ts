@@ -5,9 +5,9 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { contractSchema, type ContractFormValues } from '../forms';
-import { CONTRACT_STATUSES } from '../constants';
-import type { Contract } from '../types';
+import { contractSchema, type ContractFormValues } from '@/components/features/contracts/forms';
+import { CONTRACT_STATUSES } from '@/components/features/contracts/constants';
+import type { Contract } from '@/components/features/contracts/types';
 import { useEffect } from 'react';
 
 export function useContractForm(contract?: Contract | null) {

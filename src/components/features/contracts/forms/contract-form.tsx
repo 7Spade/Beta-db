@@ -13,7 +13,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import { CONTRACT_STATUSES } from '../constants';
+import { CONTRACT_STATUSES } from '@/components/features/contracts/constants';
 import type { ContractFormValues } from './form-schemas';
 
 export function ContractForm() {

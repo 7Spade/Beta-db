@@ -4,7 +4,7 @@
 
 import { addDoc, updateDoc, deleteDoc, doc, collection, Timestamp } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import type { Contract } from '../types';
+import type { Contract } from '@/components/features/contracts/types';
 
 export const contractService = {
   createContract: async (data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>): Promise<string> => {

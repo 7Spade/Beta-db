@@ -9,9 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import type { Partner } from '@/lib/types/types';
 import type { Role } from '@/lib/roles';
-import { Button } from '../../../../ui/button';
+import { Button } from '@/components/ui/button';
 import { Plus, Search } from 'lucide-react';
-import { Dashboard } from '../../dashboard/dashboard';
+import { Dashboard } from '@/components/features/partnerverse/dashboard/dashboard';
 
 interface PartnerListProps {
   partners: Partner[];

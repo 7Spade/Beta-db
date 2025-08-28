@@ -29,7 +29,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { extractWorkItemsFromDocument, WorkItem, DocDetails } from "@/components/features/docu-parse";
 import { createProjectAndContractFromDocument } from "@/components/features/contracts";
-import { WorkItemsTable } from "../tables";
+import { WorkItemsTable } from "@/components/features/docu-parse/tables";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { File, Loader2, Cpu, FileCog, Info, RefreshCcw } from "lucide-react";
 import Link from "next/link";
-import { FileSelector } from "../components/file-selector";
+import { FileSelector } from "@/components/features/docu-parse/components/file-selector";
 
 const initialState = {
   data: undefined,

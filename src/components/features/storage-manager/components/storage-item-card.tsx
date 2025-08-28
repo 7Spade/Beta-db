@@ -9,8 +9,8 @@ import { Card, CardContent, CardFooter, CardDescription } from '@/components/ui/
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { formatBytes, formatDate } from '@/lib/utils/utils';
-import type { StorageItem } from '../../cloud-drive/types/storage.types';
-import { getSignedUrl } from '../../cloud-drive/actions/storage-actions';
+import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
+import { getSignedUrl } from '@/components/features/cloud-drive/actions/storage-actions';
 
 interface StorageItemCardProps {
   item: StorageItem;

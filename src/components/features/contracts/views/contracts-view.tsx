@@ -6,12 +6,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { contractService } from '../services';
-import { useContracts } from '../hooks';
-import { CreateContractDialog } from '../dialogs';
-import { ContractDashboard } from '../dashboard';
-import { ContractsTable } from '../tables';
-import type { Contract } from '../types';
+import { contractService } from '@/components/features/contracts/services';
+import { useContracts } from '@/components/features/contracts/hooks';
+import { CreateContractDialog } from '@/components/features/contracts/dialogs';
+import { ContractDashboard } from '@/components/features/contracts/dashboard';
+import { ContractsTable } from '@/components/features/contracts/tables';
+import type { Contract } from '@/components/features/contracts/types';
 
 export function ContractsView() {
   const { contracts, loading } = useContracts();

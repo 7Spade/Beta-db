@@ -5,8 +5,8 @@
 'use client';
 
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import type { Contract } from '../types';
-import { useContracts as useContractsHook } from '../hooks';
+import type { Contract } from '@/components/features/contracts/types';
+import { useContracts as useContractsHook } from '@/components/features/contracts/hooks';
 
 interface ContractState {
   contracts: Contract[];

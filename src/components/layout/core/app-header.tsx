@@ -4,7 +4,7 @@
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Separator } from '@/components/ui/separator'
 import { Logo } from '@/components/layout/shared/logo'
-import { Breadcrumb } from '../navigation/breadcrumb'
+import { Breadcrumb } from '@/components/layout/navigation/breadcrumb'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'

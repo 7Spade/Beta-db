@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { CONTRACT_STATUSES } from '../constants';
+import { CONTRACT_STATUSES } from '@/components/features/contracts/constants';
 
 export const contractSchema = z.object({
   customId: z.string().optional(),

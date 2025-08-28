@@ -12,7 +12,7 @@ import { listItems } from '@/components/features/cloud-drive/actions/storage-act
 import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Folder, File as FileIcon } from 'lucide-react';
-import { SUPPORTED_FILE_TYPES } from '../constants';
+import { SUPPORTED_FILE_TYPES } from '@/components/features/docu-parse/constants';
 
 interface FileSelectorProps {
   onFileSelect: (filePath: string) => void;

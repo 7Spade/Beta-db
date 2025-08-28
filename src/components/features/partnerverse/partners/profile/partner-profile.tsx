@@ -20,8 +20,8 @@ import { ContactsTab } from '@/components/features/partnerverse/contacts/contact
 import { FinancialsTab } from '@/components/features/partnerverse/financials/financials-tab';
 import { PerformanceTab } from '@/components/features/partnerverse/performance/performance-tab';
 import { ComplianceTab } from '@/components/features/partnerverse/compliance/compliance-tab';
-import { ContractsTab } from '../../contracts/contracts-tab';
-import { TransactionsTab } from '../../transactions/transactions-tab';
+import { ContractsTab } from '@/components/features/partnerverse/contracts/contracts-tab';
+import { TransactionsTab } from '@/components/features/partnerverse/transactions/transactions-tab';
 import { ProfileHeader } from './profile-header';
 
 
