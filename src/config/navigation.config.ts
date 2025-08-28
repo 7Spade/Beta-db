@@ -82,7 +82,7 @@ export const navigationConfig: NavigationItem[] = [
             },
             {
                 id: 'kanban',
-                label: '記事看板',
+                label: '速記看板',
                 icon: LayoutGrid,
                 href: '/quick-actions/kanban'
             },

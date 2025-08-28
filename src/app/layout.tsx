@@ -13,6 +13,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Constructo - 專案管理平台',
   description: '專業的營造專案管理應用程式',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

@@ -1,69 +1,36 @@
-import { type Column, type Task } from "../types";
+import { type Note, NOTE_COLORS } from "../types";
 
-export const columns: Column[] = [
+export const notes: Note[] = [
   {
-    id: "todo",
-    title: "Todo",
+    id: "note-1",
+    title: "專案會議重點",
+    content: "討論新功能的開發時程\n需要與設計團隊協調",
+    color: NOTE_COLORS[6],
+    isPinned: true,
+    createdAt: new Date("2025-01-20")
   },
   {
-    id: "in-progress",
-    title: "In Progress",
+    id: "note-2",
+    title: "週末購物清單",
+    content: "牛奶\n麵包\n雞蛋\n水果",
+    color: NOTE_COLORS[8],
+    isPinned: false,
+    createdAt: new Date("2025-01-21")
   },
   {
-    id: "done",
-    title: "Done",
-  },
-];
-
-export const tasks: Task[] = [
-  {
-    id: "task-1",
-    status: "todo",
-    title: "Implement user authentication",
+    id: "note-3",
+    title: "新功能想法",
+    content: "可以加入拖拽排序功能\n支援標籤分類",
+    color: NOTE_COLORS[3],
+    isPinned: true,
+    createdAt: new Date("2025-01-19")
   },
   {
-    id: "task-2",
-    status: "todo",
-    title: "Design database schema",
-  },
-  {
-    id: "task-3",
-    status: "in-progress",
-    title: "Develop API for task management",
-  },
-  {
-    id: "task-4",
-    status: "in-progress",
-    title: "Create UI components for kanban board",
-  },
-  {
-    id: "task-5",
-    status: "done",
-    title: "Set up project structure",
-  },
-  {
-    id: "task-6",
-    status: "done",
-    title: "Deploy staging environment",
-  },
-  {
-    id: "task-7",
-    status: "todo",
-    title: "Write documentation for API endpoints",
-  },
-  {
-    id: "task-8",
-    status: "todo",
-    title: "Implement drag-and-drop functionality",
-  },
-  {
-    id: "task-9",
-    status: "in-progress",
-    title: "Test user authentication flow",
-  },
-  {
-    id: "task-10",
-    status: "done",
-    title: "Configure CI/CD pipeline",
-  },
+    id: "note-4",
+    title: "讀書筆記",
+    content: "《原子習慣》\n- 小改變帶來大結果\n- 習慣堆疊的重要性",
+    color: NOTE_COLORS[4],
+    isPinned: false,
+    createdAt: new Date("2025-01-18")
+  }
 ];
