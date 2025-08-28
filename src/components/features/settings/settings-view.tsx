@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Label } from '@/components/ui/label'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card'
+import { RadioGroup, RadioGroupItem } from '@/ui/radio-group'
+import { Label } from '@/ui/label'
+import { Skeleton } from '@/ui/skeleton'
 
 export function SettingsView() {
   const [mounted, setMounted] = useState(false)

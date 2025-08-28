@@ -10,10 +10,10 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+} from '@/ui/table';
+import { Input } from '@/ui/input';
+import { Button } from '@/ui/button';
+import { Badge } from '@/ui/badge';
 import type { WorkItem } from '@/components/features/docu-parse/types';
 import { exportToCSV, exportToJSON } from '@/components/features/docu-parse/utils';
 

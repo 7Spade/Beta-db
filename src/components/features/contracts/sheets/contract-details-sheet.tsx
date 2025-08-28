@@ -7,13 +7,13 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-} from '@/components/ui/sheet';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from '@/ui/sheet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
+import { Separator } from '@/ui/separator';
+import { Progress } from '@/ui/progress';
+import { ScrollArea } from '@/ui/scroll-area';
 import { formatDate } from '@/lib/utils/utils';
 import type { Contract } from '@/contracts/types';
 import { ContractStatusBadge } from '@/contracts/components';

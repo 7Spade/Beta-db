@@ -7,14 +7,14 @@ import type { KnowledgeBaseEntry } from '@/lib/types/types';
 import { useToast } from '@/hooks/use-toast';
 import { handleSaveKnowledgeBaseEntry } from '@/components/features/team';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Input } from '@/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
 import { PlusCircle, Search } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import { EntryFormDialog } from '@/components/features/team/knowledge-base/entry-form-dialog';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/ui/badge';
 
 export default function KnowledgeBasePage() {
   const [entries, setEntries] = useState<KnowledgeBaseEntry[]>([]);

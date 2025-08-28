@@ -11,7 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@/ui/breadcrumb'
 import { navigationConfig } from '@/config/navigation.config'
 
 export function Breadcrumb() {

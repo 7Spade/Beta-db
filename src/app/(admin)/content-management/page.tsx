@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
 import { FileText, BookOpen, Cloud } from 'lucide-react';
 import Link from 'next/link';
 

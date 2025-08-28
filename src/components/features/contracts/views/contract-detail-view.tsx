@@ -8,7 +8,7 @@ import { doc, onSnapshot, DocumentSnapshot, DocumentData } from 'firebase/firest
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Contract } from '@/contracts/types';
 import { ContractDetailsSheet } from '@/contracts/sheets';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 interface ContractDetailViewProps {

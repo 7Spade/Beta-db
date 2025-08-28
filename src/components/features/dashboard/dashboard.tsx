@@ -14,7 +14,7 @@
 
 import type { Contract } from '@/lib/types/types';
 import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';

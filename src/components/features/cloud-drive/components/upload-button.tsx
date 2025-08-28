@@ -6,7 +6,7 @@
 
 import { useState, useRef, type FC } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/button';
 import { Loader2, Upload } from 'lucide-react';
 import { uploadFile } from '@/cloud-drive/actions/storage-actions';
 

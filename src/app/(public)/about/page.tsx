@@ -1,5 +1,5 @@
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardTitle } from '@/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/ui/avatar';
 import { Goal, Handshake } from 'lucide-react';
 import Image from 'next/image';
 

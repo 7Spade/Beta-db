@@ -2,19 +2,19 @@
 'use client';
 
 import { useState, type FC, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Input } from '@/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/ui/dialog';
+import { Textarea } from '@/ui/textarea';
+import { Badge } from '@/ui/badge';
 import type { Partner, FinancialDocument, ReceivablePayableType, Contract, Transaction } from '@/lib/types/types';
 import { PlusCircle, FileText, DollarSign, Briefcase } from 'lucide-react';
 
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, getDocs, addDoc, doc, updateDoc, onSnapshot, query, where, Timestamp, getDoc } from 'firebase/firestore';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/lib/utils/utils';
 import Link from 'next/link';

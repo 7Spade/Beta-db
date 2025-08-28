@@ -4,7 +4,7 @@
  */
 import { CloudDriveView } from '@/components/features/cloud-drive/views/cloud-drive-view';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 
 export default function CloudDrivePage() {
   return (

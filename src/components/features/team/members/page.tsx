@@ -5,13 +5,13 @@ import { useState, useEffect } from 'react';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, onSnapshot, addDoc } from 'firebase/firestore';
 import type { TeamMember } from '@/lib/types/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/ui/avatar';
 import { Mail, Phone, PlusCircle } from 'lucide-react';
 import { CreateMemberDialog } from '@/components/features/team/members/create-member-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 
 export default function TeamMembersPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);

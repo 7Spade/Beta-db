@@ -3,13 +3,13 @@
 
 import { useState, useMemo, type FC } from 'react';
 import Image from 'next/image';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Input } from '@/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/ui/card';
+import { Badge } from '@/ui/badge';
 import type { Partner } from '@/lib/types/types';
 import type { Role } from '@/lib/roles';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/button';
 import { Plus, Search } from 'lucide-react';
 import { Dashboard } from '@/components/features/partnerverse/dashboard/dashboard';
 

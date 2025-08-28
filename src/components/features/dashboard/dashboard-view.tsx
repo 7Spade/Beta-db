@@ -16,7 +16,7 @@
 import { AiUsageLog } from '@/components/features/dashboard/ai-usage-log';
 import { ContractDashboard } from '@/components/features/contracts/dashboard';
 import { Dashboard as PartnerDashboard } from '@/components/features/partnerverse/dashboard/dashboard';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/ui/separator';
 
 export function DashboardView() {
 

@@ -4,9 +4,9 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Progress } from '@/ui/progress';
 import { CreateProjectDialog } from '@/components/features/app/create-project-dialog';
 import type { Project, Task } from '@/lib/types/types';
 import { ProjectDetailsSheet } from '@/components/features/app/project-details-sheet';

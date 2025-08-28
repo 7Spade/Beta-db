@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import type { Skill } from '@/lib/types/types';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -14,16 +14,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+} from '@/ui/dialog';
+import { Input } from '@/ui/input';
+import { Textarea } from '@/ui/textarea';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { generateSkillSuggestion } from '@/ai/flows/generate-skill-flow';
 import { Loader2, Wand2, Cpu } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Label } from '@/components/ui/label';
+import { Badge } from '@/ui/badge';
+import { Alert, AlertDescription, AlertTitle } from '@/ui/alert';
+import { Label } from '@/ui/label';
 
 const skillSchema = z.object({
   name: z.string().min(2, '技能名稱至少需要 2 個字元。'),

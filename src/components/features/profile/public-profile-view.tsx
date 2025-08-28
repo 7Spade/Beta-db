@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 

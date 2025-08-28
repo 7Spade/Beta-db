@@ -4,9 +4,9 @@
 import { type FC } from 'react';
 import { useRouter } from 'next/navigation';
 import { File, Folder, MoreVertical, Download, Trash2, Edit, Cpu } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardFooter } from '@/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { formatBytes } from '@/lib/utils/utils';
 import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';

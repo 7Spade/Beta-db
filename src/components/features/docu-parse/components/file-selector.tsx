@@ -6,11 +6,11 @@
 
 import * as React from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent } from '@/components/ui/card';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { Card, CardContent } from '@/ui/card';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/ui/breadcrumb';
 import { listItems } from '@/components/features/cloud-drive/actions/storage-actions';
 import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import { Folder, File as FileIcon } from 'lucide-react';
 import { SUPPORTED_FILE_TYPES, type SupportedFileType } from '@/components/features/docu-parse/constants';
 

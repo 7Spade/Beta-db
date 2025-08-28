@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
+import { Skeleton } from '@/ui/skeleton';
 import { approveUser, rejectUser } from '@/admin/actions/user-actions';
 import { DocumentData } from 'firebase/firestore';
 

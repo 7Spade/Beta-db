@@ -6,9 +6,9 @@
 
 import { useState, useEffect, type FC } from 'react';
 import { File as FileIcon, MoreVertical, Download, Trash2, ExternalLink, Edit } from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Card, CardContent, CardFooter } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/ui/dropdown-menu';
 import { formatBytes } from '@/lib/utils/utils';
 import type { StorageItem } from '@/cloud-drive/types/storage.types';
 import { getSignedUrl } from '@/cloud-drive/actions/storage-actions';

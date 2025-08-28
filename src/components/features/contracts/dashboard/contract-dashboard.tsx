@@ -5,7 +5,7 @@
 'use client';
 
 import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/skeleton';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
 import { useContracts } from '@/contracts/hooks';
 

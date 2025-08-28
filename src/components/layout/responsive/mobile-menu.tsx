@@ -7,8 +7,8 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
-} from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
+} from '@/ui/sheet'
+import { Button } from '@/ui/button'
 import { UnifiedSidebar } from '@/components/layout/navigation/unified-sidebar'
 
 export function MobileMenu() {

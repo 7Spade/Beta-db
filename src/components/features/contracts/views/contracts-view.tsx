@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@/ui/card';
+import { Button } from '@/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { contractService } from '@/components/features/contracts/services';
 import { useContracts } from '@/components/features/contracts/hooks';

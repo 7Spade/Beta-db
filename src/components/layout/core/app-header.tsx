@@ -1,12 +1,12 @@
 
 'use client'
 
-import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Separator } from '@/components/ui/separator'
+import { SidebarTrigger } from '@/ui/sidebar'
+import { Separator } from '@/ui/separator'
 import { Logo } from '@/components/layout/shared/logo'
 import { Breadcrumb } from '@/components/layout/navigation/breadcrumb'
-import { useSidebar } from '@/components/ui/sidebar'
-import { Button } from '@/components/ui/button'
+import { useSidebar } from '@/ui/sidebar'
+import { Button } from '@/ui/button'
 import { Menu } from 'lucide-react'
 import { UserMenu } from '@/components/layout/navigation/user-menu'
 import { useAuth } from '@/components/features/auth/use-auth'

@@ -8,8 +8,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton
-} from '@/components/ui/sidebar'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+} from '@/ui/sidebar'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/ui/collapsible'
 import type { NavigationItem } from '@/config/navigation.config'
 
 interface NavigationMenuItemProps {

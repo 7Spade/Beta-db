@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card'
 import { Wrench, ShieldCheck, Activity, CheckCircle, Users, Award } from 'lucide-react'
 import Link from 'next/link'
 import { Metadata } from 'next'

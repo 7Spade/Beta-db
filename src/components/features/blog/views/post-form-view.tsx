@@ -11,13 +11,13 @@ import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { useToast } from '@/hooks/use-toast';
 import { savePost, type PostFormValues } from '@/components/features/blog/actions/posts.actions';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Input } from '@/ui/input';
+import { Textarea } from '@/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
+import { Skeleton } from '@/ui/skeleton';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { DocumentData } from 'firebase/firestore';
 

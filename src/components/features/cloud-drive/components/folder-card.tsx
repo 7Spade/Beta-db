@@ -6,9 +6,9 @@
 
 import type { FC } from 'react';
 import { Folder as FolderIcon, MoreVertical, Trash2, Edit, FolderOpen } from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Card, CardContent, CardFooter } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/ui/dropdown-menu';
 import type { StorageItem } from '@/cloud-drive/types/storage.types';
 
 interface FolderCardProps {

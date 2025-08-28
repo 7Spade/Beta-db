@@ -2,9 +2,9 @@
 'use client';
 
 import { useState, useEffect, type FC } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
+import { Badge } from '@/ui/badge';
 import { Loader2 } from 'lucide-react';
 import type { Partner, Contract } from '@/lib/types/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';

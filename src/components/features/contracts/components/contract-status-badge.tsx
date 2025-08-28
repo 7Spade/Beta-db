@@ -2,7 +2,7 @@
  * @fileoverview 合約狀態標籤組件
  */
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/ui/badge';
 import { getStatusVariant } from '@/contracts/utils';
 import type { ContractStatus } from '@/contracts/types';
 

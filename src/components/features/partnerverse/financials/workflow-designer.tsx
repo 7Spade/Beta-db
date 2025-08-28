@@ -2,9 +2,9 @@
 'use client';
 
 import { useState, type FC, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Input } from '@/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import type { Partner } from '@/lib/types/types';
 import { doc, setDoc } from 'firebase/firestore';
