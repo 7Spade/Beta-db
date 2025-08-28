@@ -1,6 +1,8 @@
-import type { AppEventName, AppEventPayloadMap } from '@/events/app-events';
+import type { AppEventName, AppEventPayloadMap } from '@/lib/events/app-events';
 
-type Listener<T extends AppEventName> = (payload: AppEventPayloadMap[T]) => void | Promise<void>;
+type Listener<T extends AppEventName> = (
+  payload: AppEventPayloadMap[T]
+) => void | Promise<void>;
 
 type DispatcherStore = {
   listeners: Map<AppEventName, Set<Listener<AppEventName>>>;
@@ -16,7 +18,10 @@ function getStore(): DispatcherStore {
   return g[globalKey] as DispatcherStore;
 }
 
-export function subscribe<T extends AppEventName>(name: T, listener: Listener<T>): () => void {
+export function subscribe<T extends AppEventName>(
+  name: T,
+  listener: Listener<T>
+): () => void {
   const store = getStore();
   const set = store.listeners.get(name) || new Set();
   set.add(listener as Listener<AppEventName>);
@@ -26,7 +31,10 @@ export function subscribe<T extends AppEventName>(name: T, listener: Listener<T>
   };
 }
 
-export async function dispatch<T extends AppEventName>(name: T, payload: AppEventPayloadMap[T]): Promise<void> {
+export async function dispatch<T extends AppEventName>(
+  name: T,
+  payload: AppEventPayloadMap[T]
+): Promise<void> {
   const store = getStore();
   const set = store.listeners.get(name);
   if (!set) return;
@@ -34,5 +42,3 @@ export async function dispatch<T extends AppEventName>(name: T, payload: AppEven
     await Promise.resolve(listener(payload));
   }
 }
-
-

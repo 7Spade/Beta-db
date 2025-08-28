@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -13,15 +12,25 @@ import {
 } from '@/ui/card';
 import { Button } from '@/ui/button';
 import { Input } from '@/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth } from '@/firebase-client/firebase-client';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from 'firebase/auth';
+import { auth } from '@/lib/db/firebase-client/firebase-client';
 import { registerSchema, type RegisterValues } from './auth-form-schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { dispatch } from '@/events/event-dispatcher';
+import { dispatch } from '@/lib/events/event-dispatcher';
 import { createUserProfile } from './auth-actions';
 import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 
@@ -42,8 +51,12 @@ function RegisterForm() {
   const onSubmit = async (data: RegisterValues) => {
     setLoading(true);
     try {
-      const cred = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      
+      const cred = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+
       // Create user profile in Firestore
       await createUserProfile(cred.user);
 
@@ -51,10 +64,14 @@ function RegisterForm() {
         await sendEmailVerification(cred.user);
       } catch (verifyErr) {
         // Do not block registration flow if email fails
-        console.warn("Failed to send verification email:", verifyErr);
+        console.warn('Failed to send verification email:', verifyErr);
       }
       // Broadcast user.registered for admin notifications
-      await dispatch('user.registered', { userId: cred.user.uid, displayName: cred.user.displayName, email: cred.user.email });
+      await dispatch('user.registered', {
+        userId: cred.user.uid,
+        displayName: cred.user.displayName,
+        email: cred.user.email,
+      });
       toast({
         title: '註冊成功',
         description: '您的帳號正在等待審核。完成後即可登入。',
@@ -71,7 +88,11 @@ function RegisterForm() {
           message = '電子郵件地址格式不正確。';
         }
       }
-      toast({ title: '註冊失敗', description: message, variant: 'destructive' });
+      toast({
+        title: '註冊失敗',
+        description: message,
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -137,12 +158,12 @@ export function RegisterView() {
       </CardHeader>
       <CardContent className="space-y-4">
         <RegisterForm />
-         <div className="mt-4 text-center text-sm">
-            已經有帳戶了嗎？{' '}
-            <Link href="/login" className="underline">
-              登入
-            </Link>
-          </div>
+        <div className="mt-4 text-center text-sm">
+          已經有帳戶了嗎？{' '}
+          <Link href="/login" className="underline">
+            登入
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

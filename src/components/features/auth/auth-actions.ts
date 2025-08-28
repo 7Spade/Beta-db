@@ -1,6 +1,6 @@
 'use client';
 
-import { auth } from '@/firebase-client/firebase-client';
+import { auth } from '@/lib/db/firebase-client/firebase-client';
 import {
   signInWithEmailAndPassword,
   type User,
@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import type { LoginValues } from './auth-form-schemas';
 import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
-import { firestore } from '@/firebase-client/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 
 // 类型守卫函数
 function isFirebaseAuthError(error: unknown): error is AuthError {

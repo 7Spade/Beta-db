@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '@/db/firebase-client';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
 
 export interface CreateNotificationInput {
   recipientId: string;
@@ -19,5 +19,3 @@ export async function createNotification(input: CreateNotificationInput) {
     createdAt: serverTimestamp(),
   });
 }
-
-

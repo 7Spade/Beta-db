@@ -1,6 +1,6 @@
-import { subscribe } from '@/events/event-dispatcher';
-import type { AppEventPayloadMap } from '@/events/app-events';
-import { createNotification } from '@/services/notification/notification.service';
+import { subscribe } from '@/lib/events/event-dispatcher';
+import type { AppEventPayloadMap } from '@/lib/events/app-events';
+import { createNotification } from '@/lib/services/notification/notification.service';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 
@@ -16,7 +16,9 @@ function onUserRegistered(payload: AppEventPayloadMap['user.registered']) {
       createNotification({
         recipientId: adminId,
         type: 'new_user_for_approval',
-        message: `新用戶 ${payload.displayName || payload.email || payload.userId} 等待審核。`,
+        message: `新用戶 ${
+          payload.displayName || payload.email || payload.userId
+        } 等待審核。`,
         link: '/user-management',
       });
     });
@@ -45,5 +47,3 @@ function onUserRejected(payload: AppEventPayloadMap['user.rejected']) {
 subscribe('user.registered', onUserRegistered);
 subscribe('user.approved', onUserApproved);
 subscribe('user.rejected', onUserRejected);
-
-
