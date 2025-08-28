@@ -18,7 +18,7 @@ export * from '@/admin/views/admin-dashboard-view';
 export * from '@/app-features/projects-view';
 
 // Auth Features
-export * from '@/auth';
+export * from '@/auth/index';
 
 // Blog Features
 export * from '@/blog/views/posts-list-view';
@@ -28,7 +28,7 @@ export * from '@/blog/views/post-form-view';
 export * from '@/cloud-drive/views/cloud-drive-view';
 
 // Contracts Features
-export * from '@/contracts';
+export * from '@/contracts/index';
 
 // Dashboard Features
 export * from '@/dashboard/dashboard-view';
@@ -46,4 +46,4 @@ export * from '@/quick-actions-features/staff-attendance';
 export * from '@/settings/settings-view';
 
 // Team Features
-export * from '@/team';
+export * from '@/team/index';

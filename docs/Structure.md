@@ -642,18 +642,26 @@
 │
 └─lib
     │  README.md
+    │  roles.ts
     │
+    ├─config
     ├─db
+    │  │  README.md
+    │  │
     │  ├─firebase-admin
     │  │      firebase-admin.ts
+    │  │      README.md
     │  │
     │  ├─firebase-client
     │  │      firebase-client.ts
+    │  │      README.md
     │  │
     │  ├─mongoose
     │  │      mongodb.ts
+    │  │      README.md
     │  │
     │  ├─redis
+    │  │      README.md
     │  │      redis-client.ts
     │  │
     │  └─supabase

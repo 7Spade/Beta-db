@@ -24,6 +24,19 @@ export function ContractForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
               control={form.control}
+              name="customId"
+              render={({ field }) => (
+                  <FormItem>
+                  <FormLabel>合約編號 (可選)</FormLabel>
+                  <FormControl>
+                      <Input placeholder="例如：CTR-2024-001" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  </FormItem>
+              )}
+              />
+          <FormField
+              control={form.control}
               name="name"
               render={({ field }) => (
                   <FormItem>
@@ -41,7 +54,7 @@ export function ContractForm() {
               render={({ field }) => (
                   <FormItem>
                       <FormLabel>狀態</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                               <SelectTrigger>
                                   <SelectValue placeholder="選擇合約狀態" />
@@ -104,7 +117,11 @@ export function ContractForm() {
                   <FormItem>
                   <FormLabel>合約總價值</FormLabel>
                   <FormControl>
-                      <Input type="number" placeholder="例如：5000000" {...field} />
+                      <Input 
+                        type="number" 
+                        placeholder="例如：5000000" 
+                        {...field}
+                      />
                   </FormControl>
                   <FormMessage />
                   </FormItem>

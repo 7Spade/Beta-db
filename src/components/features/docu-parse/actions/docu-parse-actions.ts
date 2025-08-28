@@ -37,7 +37,8 @@ export async function extractWorkItemsFromDocument(
   try {
     const file = getStorage().bucket().file(filePath);
     const [metadata] = await file.getMetadata();
-    const fileName = metadata.name.split('/').pop() || '未知檔案';
+    const safeName = (metadata && typeof metadata.name === 'string') ? metadata.name : '';
+    const fileName = safeName.split('/').pop() || '未知檔案';
 
     // 步驟 1: 調用 Genkit AI 流程以提取工作項目
     const result = await extractWorkItems({ storagePath: filePath });

@@ -23,7 +23,8 @@ type UserData = {
 // 獲取當前登入使用者的資料
 async function getUserData(): Promise<UserData | null> {
   try {
-    const sessionCookie = cookies().get('session')?.value;
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get('session')?.value;
     if (!sessionCookie) return null;
 
     const decodedToken = await adminAuth.verifySessionCookie(sessionCookie, true);

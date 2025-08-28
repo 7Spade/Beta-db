@@ -143,7 +143,7 @@ export function DocuParseView() {
   
   const handleReset = () => {
     setSelectedFilePath(null);
-    router.replace('/docu-parse'); // Clear URL params
+    router.replace('/quick-actions/docu-parse'); // Clear URL params - 修正路由路径
     // Reset all local states
     setWorkItems([]);
     setDocDetails({ customId: '', name: '', client: '', clientRepresentative: '' });

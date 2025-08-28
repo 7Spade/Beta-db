@@ -21,13 +21,8 @@ const mockPost = {
   `,
 };
 
-interface BlogPostPageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   // 在真實應用中，您會使用 params.slug 從後端獲取對應的文章資料
   const post = mockPost;
 

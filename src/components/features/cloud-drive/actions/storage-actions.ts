@@ -46,7 +46,10 @@ export async function listItems(path: string): Promise<StorageListResult> {
       maxResults: 1000,
     });
 
-    const folders: StorageItem[] = (apiResponse.prefixes || []).map((folderPath: string) => ({
+    type GcsGetFilesResponse = { prefixes?: string[] };
+    const response = (apiResponse as unknown as GcsGetFilesResponse) || {};
+
+    const folders: StorageItem[] = (response.prefixes || []).map((folderPath: string) => ({
       name: folderPath.replace(prefix, '').replace('/', ''),
       fullPath: folderPath.slice(0, -1),
       type: 'folder',

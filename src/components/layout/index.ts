@@ -24,5 +24,4 @@ export { SectionDivider } from "@/shared/section-divider"
 export { StatusIndicator } from "@/shared/status-indicator"
 
 // Types
-export type { Notification } from "@/navigation/notification-center"
 export type { QuickAction } from "@/navigation/quick-actions"
