@@ -1,97 +1,95 @@
-# For detailed configuration reference documentation, visit:
+# 詳細配置參考文檔，請訪問：
 # https://supabase.com/docs/guides/local-development/cli/config
-# A string used to distinguish different Supabase projects on the same host. Defaults to the
-# working directory name when running `supabase init`.
+# 用於在同一主機上區分不同 Supabase 項目的字串。預設為執行 `supabase init` 時的工作目錄名稱。
 project_id = "Beta-db"
 
 [api]
 enabled = true
-# Port to use for the API URL.
+# API URL 使用的埠號
 port = 54321
-# Schemas to expose in your API. Tables, views and stored procedures in this schema will get API
-# endpoints. `public` and `graphql_public` schemas are included by default.
+# 在 API 中公開的架構。此架構中的表格、視圖和預存程序將獲得 API 端點。
+# 預設包含 `public` 和 `graphql_public` 架構。
 schemas = ["public", "graphql_public"]
-# Extra schemas to add to the search_path of every request.
+# 為每個請求的 search_path 添加的額外架構。
 extra_search_path = ["public", "extensions"]
-# The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
-# for accidental or malicious requests.
+# 從視圖、表格或預存程序返回的最大行數。限制意外或惡意請求的有效負載大小
 max_rows = 1000
 
 [api.tls]
-# Enable HTTPS endpoints locally using a self-signed certificate.
+# 使用自簽名憑證在本地啟用 HTTPS 端點
 enabled = false
 
 [db]
-# Port to use for the local database URL.
+# 本地資料庫 URL 使用的埠號
 port = 54322
-# Port used by db diff command to initialize the shadow database.
+# db diff 命令用於初始化陰影資料庫的埠號
 shadow_port = 54320
-# The database major version to use. This has to be the same as your remote database's. Run `SHOW
-# server_version;` on the remote database to check.
+# 要使用的資料庫主要版本。這必須與您的遠端資料庫相同。在遠端資料庫上執行 `SHOW server_version;` 來檢查。
 major_version = 17
 
 [db.pooler]
 enabled = false
-# Port to use for the local connection pooler.
+# 本地連線池使用的埠號
 port = 54329
-# Specifies when a server connection can be reused by other clients.
-# Configure one of the supported pooler modes: `transaction`, `session`.
+# 指定何時可以重複使用伺服器連線。
+# 配置支援的連線池模式之一：`transaction`、`session`
 pool_mode = "transaction"
-# How many server connections to allow per user/database pair.
+# 每個使用者/資料庫對允許的伺服器連線數量
 default_pool_size = 20
-# Maximum number of client connections allowed.
+# 允許的最大客戶端連線數量
 max_client_conn = 100
 
 # [db.vault]
 # secret_key = "env(SECRET_VALUE)"
 
 [db.migrations]
-# If disabled, migrations will be skipped during a db push or reset.
+# 如果停用，在 db push 或 reset 期間將跳過遷移
 enabled = true
-# Specifies an ordered list of schema files that describe your database.
-# Supports glob patterns relative to supabase directory: "./schemas/*.sql"
-schema_paths = []
+# 指定描述您資料庫的架構檔案的有序列表
+# 支援相對於 supabase 目錄的 glob 模式："./schemas/*.sql"
+schema_paths = [
+    "./supabase-migrations/*.sql"   # 包含所有遷移檔案（表格結構 + 種子數據）
+]
 
 [db.seed]
-# If enabled, seeds the database after migrations during a db reset.
-enabled = true
-# Specifies an ordered list of seed files to load during db reset.
-# Supports glob patterns relative to supabase directory: "./seeds/*.sql"
-sql_paths = ["./seed.sql"]
+# 如果啟用，在 db reset 期間的遷移後會播種資料庫
+enabled = false
+# 種子數據已整合到遷移檔案中，無需單獨配置
+# sql_paths = []
 
 [db.network_restrictions]
-# Enable management of network restrictions.
+# 啟用網路限制管理
 enabled = false
-# List of IPv4 CIDR blocks allowed to connect to the database.
-# Defaults to allow all IPv4 connections. Set empty array to block all IPs.
+# 允許連線到資料庫的 IPv4 CIDR 區塊列表
+# 預設允許所有 IPv4 連線。設定空陣列以封鎖所有 IP
 allowed_cidrs = ["0.0.0.0/0"]
-# List of IPv6 CIDR blocks allowed to connect to the database.
-# Defaults to allow all IPv6 connections. Set empty array to block all IPs.
+# 允許連線到資料庫的 IPv6 CIDR 區塊列表
+# 預設允許所有 IPv6 連線。設定空陣列以封鎖所有 IP
 allowed_cidrs_v6 = ["::/0"]
 
 [realtime]
 enabled = true
-# Bind realtime via either IPv4 or IPv6. (default: IPv4)
+# 透過 IPv4 或 IPv6 綁定即時功能（預設：IPv4）
 # ip_version = "IPv6"
-# The maximum length in bytes of HTTP request headers. (default: 4096)
+# HTTP 請求標頭的最大長度（位元組）（預設：4096）
 # max_header_length = 4096
 
 [studio]
 enabled = true
-# Port to use for Supabase Studio.
+# Supabase Studio 使用的埠號
 port = 54323
-# External URL of the API server that frontend connects to.
+# 前端連線的 API 伺服器外部 URL
 api_url = "http://127.0.0.1"
-# OpenAI API Key to use for Supabase AI in the Supabase Studio.
+# 在 Supabase Studio 中使用 Supabase AI 的 OpenAI API 金鑰
 openai_api_key = "env(OPENAI_API_KEY)"
 
-# Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
-# are monitored, and you can view the emails that would have been sent from the web interface.
+# 電子郵件測試伺服器。使用本地開發設定發送的電子郵件實際上不會發送 - 而是會被監控，
+# 您可以從網頁介面查看本應發送的電子郵件。
 [inbucket]
 enabled = true
-# Port to use for the email testing server web interface.
+# 電子郵件測試伺服器網頁介面使用的埠號
 port = 54324
-# Uncomment to expose additional ports for testing user applications that send emails.
+# 取消註解以公開用於測試發送電子郵件的使用者應用程式的額外埠
 # smtp_port = 54325
 # pop3_port = 54326
 # admin_email = "admin@email.com"
@@ -99,14 +97,14 @@ port = 54324
 
 [storage]
 enabled = true
-# The maximum file size allowed (e.g. "5MB", "500KB").
+# 允許的最大檔案大小（例如 "5MB"、"500KB"）
 file_size_limit = "50MiB"
 
-# Image transformation API is available to Supabase Pro plan.
+# 影像轉換 API 適用於 Supabase Pro 方案
 # [storage.image_transformation]
 # enabled = true
 
-# Uncomment to configure local storage buckets
+# 取消註解以配置本地儲存桶
 # [storage.buckets.images]
 # public = false
 # file_size_limit = "50MiB"
@@ -115,72 +113,71 @@ file_size_limit = "50MiB"
 
 [auth]
 enabled = true
-# The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
-# in emails.
+# 您網站的基礎 URL。用於重定向的允許清單和構建電子郵件中使用的 URL
 site_url = "http://127.0.0.1:9002"
-# A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
+# 身份驗證提供者允許在身份驗證後重定向到的 *確切* URL 列表
 additional_redirect_urls = ["https://127.0.0.1:9002"]
-# How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
+# 令牌有效的時間（秒）。預設為 3600（1 小時），最大 604,800（1 週）
 jwt_expiry = 3600
-# Path to JWT signing key. DO NOT commit your signing keys file to git.
+# JWT 簽名金鑰的路徑。請勿將您的簽名金鑰檔案提交到 git
 # signing_keys_path = "./signing_keys.json"
-# If disabled, the refresh token will never expire.
+# 如果停用，重新整理令牌將永不過期
 enable_refresh_token_rotation = true
-# Allows refresh tokens to be reused after expiry, up to the specified interval in seconds.
-# Requires enable_refresh_token_rotation = true.
+# 允許重新整理令牌在過期後重複使用，最多到指定的間隔（秒）
+# 需要 enable_refresh_token_rotation = true
 refresh_token_reuse_interval = 10
-# Allow/disallow new user signups to your project.
+# 允許/禁止新使用者註冊到您的專案
 enable_signup = true
-# Allow/disallow anonymous sign-ins to your project.
+# 允許/禁止匿名登入到您的專案
 enable_anonymous_sign_ins = false
-# Allow/disallow testing manual linking of accounts
+# 允許/禁止測試手動連結帳戶
 enable_manual_linking = false
-# Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
+# 短於此值的密碼將被拒絕為弱密碼。最少 6 個，建議 8 個或更多
 minimum_password_length = 6
-# Passwords that do not meet the following requirements will be rejected as weak. Supported values
-# are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
+# 不符合以下要求的密碼將被拒絕為弱密碼。支援的值
+# 是：`letters_digits`、`lower_upper_letters_digits`、`lower_upper_letters_digits_symbols`
 password_requirements = ""
 
 [auth.rate_limit]
-# Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
+# 每小時可以發送的電子郵件數量。需要啟用 auth.email.smtp
 email_sent = 2
-# Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
+# 每小時可以發送的簡訊數量。需要啟用 auth.sms
 sms_sent = 30
-# Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
+# 每個 IP 地址每小時可以進行的匿名登入數量。需要 enable_anonymous_sign_ins = true
 anonymous_users = 30
-# Number of sessions that can be refreshed in a 5 minute interval per IP address.
+# 每個 IP 地址在 5 分鐘間隔內可以重新整理的會話數量
 token_refresh = 150
-# Number of sign up and sign-in requests that can be made in a 5 minute interval per IP address (excludes anonymous users).
+# 每個 IP 地址在 5 分鐘間隔內可以進行的註冊和登入請求數量（不包括匿名使用者）
 sign_in_sign_ups = 30
-# Number of OTP / Magic link verifications that can be made in a 5 minute interval per IP address.
+# 每個 IP 地址在 5 分鐘間隔內可以進行的 OTP / 魔法連結驗證數量
 token_verifications = 30
-# Number of Web3 logins that can be made in a 5 minute interval per IP address.
+# 每個 IP 地址在 5 分鐘間隔內可以進行的 Web3 登入數量
 web3 = 30
 
-# Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.
+# 配置支援的驗證碼提供者之一：`hcaptcha`、`turnstile`
 # [auth.captcha]
 # enabled = true
 # provider = "hcaptcha"
 # secret = ""
 
 [auth.email]
-# Allow/disallow new user signups via email to your project.
+# 允許/禁止透過電子郵件向您的專案註冊新使用者
 enable_signup = true
-# If enabled, a user will be required to confirm any email change on both the old, and new email
-# addresses. If disabled, only the new email is required to confirm.
+# 如果啟用，使用者將需要確認舊電子郵件和新電子郵件地址上的任何電子郵件變更
+# 如果停用，只需要確認新電子郵件
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
+# 如果啟用，使用者在登入前需要確認其電子郵件地址
 enable_confirmations = false
-# If enabled, users will need to reauthenticate or have logged in recently to change their password.
+# 如果啟用，使用者將需要重新驗證或最近登入才能變更密碼
 secure_password_change = false
-# Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
+# 控制發送另一個註冊確認或密碼重設電子郵件之前必須經過的最短時間
 max_frequency = "1s"
-# Number of characters used in the email OTP.
+# 電子郵件 OTP 中使用的字元數量
 otp_length = 6
-# Number of seconds before the email OTP expires (defaults to 1 hour).
+# 電子郵件 OTP 過期前的秒數（預設為 1 小時）
 otp_expiry = 3600
 
-# Use a production-ready SMTP server
+# 使用生產就緒的 SMTP 伺服器
 # [auth.email.smtp]
 # enabled = true
 # host = "smtp.sendgrid.net"
@@ -190,126 +187,126 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# Uncomment to customize email template
+# 取消註解以自訂電子郵件範本
 # [auth.email.template.invite]
-# subject = "You have been invited"
+# subject = "您已被邀請"
 # content_path = "./supabase/templates/invite.html"
 
 [auth.sms]
-# Allow/disallow new user signups via SMS to your project.
+# 允許/禁止透過簡訊向您的專案註冊新使用者
 enable_signup = false
-# If enabled, users need to confirm their phone number before signing in.
+# 如果啟用，使用者在登入前需要確認其電話號碼
 enable_confirmations = false
-# Template for sending OTP to users
-template = "Your code is {{ .Code }}"
-# Controls the minimum amount of time that must pass before sending another sms otp.
+# 向使用者發送 OTP 的範本
+template = "您的驗證碼是 {{ .Code }}"
+# 控制發送另一個簡訊 OTP 之前必須經過的最短時間
 max_frequency = "5s"
 
-# Use pre-defined map of phone number to OTP for testing.
+# 使用預定義的電話號碼到 OTP 的對應進行測試
 # [auth.sms.test_otp]
 # 4152127777 = "123456"
 
-# Configure logged in session timeouts.
+# 配置已登入會話逾時
 # [auth.sessions]
-# Force log out after the specified duration.
+# 在指定持續時間後強制登出
 # timebox = "24h"
-# Force log out if the user has been inactive longer than the specified duration.
+# 如果使用者不活躍時間超過指定持續時間，則強制登出
 # inactivity_timeout = "8h"
 
-# This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.
+# 此鉤子在建立新使用者之前執行，允許開發者根據傳入的使用者物件拒絕請求
 # [auth.hook.before_user_created]
 # enabled = true
 # uri = "pg-functions://postgres/auth/before-user-created-hook"
 
-# This hook runs before a token is issued and allows you to add additional claims based on the authentication method used.
+# 此鉤子在發行令牌之前執行，允許您根據使用的身份驗證方法添加額外的聲明
 # [auth.hook.custom_access_token]
 # enabled = true
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
-# Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
+# 配置支援的簡訊提供者之一：`twilio`、`twilio_verify`、`messagebird`、`textlocal`、`vonage`
 [auth.sms.twilio]
 enabled = false
 account_sid = ""
 message_service_sid = ""
-# DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
+# 請勿將您的 Twilio 驗證令牌提交到 git。請改用環境變數替換：
 auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 
-# Multi-factor-authentication is available to Supabase Pro plan.
+# 多因素身份驗證適用於 Supabase Pro 方案
 [auth.mfa]
-# Control how many MFA factors can be enrolled at once per user.
+# 控制每個使用者一次可以註冊多少個 MFA 因素
 max_enrolled_factors = 10
 
-# Control MFA via App Authenticator (TOTP)
+# 透過應用程式驗證器控制 MFA (TOTP)
 [auth.mfa.totp]
 enroll_enabled = false
 verify_enabled = false
 
-# Configure MFA via Phone Messaging
+# 配置透過電話簡訊的 MFA
 [auth.mfa.phone]
 enroll_enabled = false
 verify_enabled = false
 otp_length = 6
-template = "Your code is {{ .Code }}"
+template = "您的驗證碼是 {{ .Code }}"
 max_frequency = "5s"
 
-# Configure MFA via WebAuthn
+# 配置透過 WebAuthn 的 MFA
 # [auth.mfa.web_authn]
 # enroll_enabled = true
 # verify_enabled = true
 
-# Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
-# `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
-# `twitter`, `slack`, `spotify`, `workos`, `zoom`.
+# 使用外部 OAuth 提供者。提供者的完整列表是：`apple`、`azure`、`bitbucket`、
+# `discord`、`facebook`、`github`、`gitlab`、`google`、`keycloak`、`linkedin_oidc`、`notion`、`twitch`、
+# `twitter`、`slack`、`spotify`、`workos`、`zoom`
 [auth.external.apple]
 enabled = false
 client_id = ""
-# DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
+# 請勿將您的 OAuth 提供者密鑰提交到 git。請改用環境變數替換：
 secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
-# Overrides the default auth redirectUrl.
+# 覆寫預設的身份驗證 redirectUrl
 redirect_uri = ""
-# Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
-# or any other third-party OIDC providers.
+# 覆寫預設的身份驗證提供者 URL。用於支援自託管的 gitlab、單一租戶 Azure、
+# 或任何其他第三方 OIDC 提供者
 url = ""
-# If enabled, the nonce check will be skipped. Required for local sign in with Google auth.
+# 如果啟用，將跳過 nonce 檢查。使用 Google 身份驗證進行本地登入需要
 skip_nonce_check = false
 
-# Allow Solana wallet holders to sign in to your project via the Sign in with Solana (SIWS, EIP-4361) standard.
-# You can configure "web3" rate limit in the [auth.rate_limit] section and set up [auth.captcha] if self-hosting.
+# 允許 Solana 錢包持有者透過 Sign in with Solana (SIWS, EIP-4361) 標準登入到您的專案
+# 您可以在 [auth.rate_limit] 區段中配置 "web3" 速率限制，如果自託管，可以設定 [auth.captcha]
 [auth.web3.solana]
 enabled = false
 
-# Use Firebase Auth as a third-party provider alongside Supabase Auth.
+# 使用 Firebase Auth 作為 Supabase Auth 的第三方提供者
 [auth.third_party.firebase]
 enabled = false
 # project_id = "my-firebase-project"
 
-# Use Auth0 as a third-party provider alongside Supabase Auth.
+# 使用 Auth0 作為 Supabase Auth 的第三方提供者
 [auth.third_party.auth0]
 enabled = false
 # tenant = "my-auth0-tenant"
 # tenant_region = "us"
 
-# Use AWS Cognito (Amplify) as a third-party provider alongside Supabase Auth.
+# 使用 AWS Cognito (Amplify) 作為 Supabase Auth 的第三方提供者
 [auth.third_party.aws_cognito]
 enabled = false
 # user_pool_id = "my-user-pool-id"
 # user_pool_region = "us-east-1"
 
-# Use Clerk as a third-party provider alongside Supabase Auth.
+# 使用 Clerk 作為 Supabase Auth 的第三方提供者
 [auth.third_party.clerk]
 enabled = false
-# Obtain from https://clerk.com/setup/supabase
+# 從 https://clerk.com/setup/supabase 取得
 # domain = "example.clerk.accounts.dev"
 
 [edge_runtime]
 enabled = true
-# Supported request policies: `oneshot`, `per_worker`.
-# `per_worker` (default) — enables hot reload during local development.
-# `oneshot` — fallback mode if hot reload causes issues (e.g. in large repos or with symlinks).
+# 支援的請求政策：`oneshot`、`per_worker`
+# `per_worker`（預設）— 在本地開發期間啟用熱重載
+# `oneshot` — 如果熱重載造成問題（例如在大型儲存庫或使用符號連結）時的後備模式
 policy = "per_worker"
-# Port to attach the Chrome inspector for debugging edge functions.
+# 附加 Chrome 檢查器以除錯邊緣函式的埠號
 inspector_port = 8083
-# The Deno major version to use.
+# 要使用的 Deno 主要版本
 deno_version = 2
 
 # [edge_runtime.secrets]
@@ -318,18 +315,18 @@ deno_version = 2
 [analytics]
 enabled = true
 port = 54327
-# Configure one of the supported backends: `postgres`, `bigquery`.
+# 配置支援的後端之一：`postgres`、`bigquery`
 backend = "postgres"
 
-# Experimental features may be deprecated any time
+# 實驗性功能可能隨時被棄用
 [experimental]
-# Configures Postgres storage engine to use OrioleDB (S3)
+# 配置 Postgres 儲存引擎使用 OrioleDB (S3)
 orioledb_version = ""
-# Configures S3 bucket URL, eg. <bucket_name>.s3-<region>.amazonaws.com
+# 配置 S3 儲存桶 URL，例如 <bucket_name>.s3-<region>.amazonaws.com
 s3_host = "env(S3_HOST)"
-# Configures S3 bucket region, eg. us-east-1
+# 配置 S3 儲存桶區域，例如 us-east-1
 s3_region = "env(S3_REGION)"
-# Configures AWS_ACCESS_KEY_ID for S3 bucket
+# 為 S3 儲存桶配置 AWS_ACCESS_KEY_ID
 s3_access_key = "env(S3_ACCESS_KEY)"
-# Configures AWS_SECRET_ACCESS_KEY for S3 bucket
+# 為 S3 儲存桶配置 AWS_SECRET_ACCESS_KEY
 s3_secret_key = "env(S3_SECRET_KEY)"
