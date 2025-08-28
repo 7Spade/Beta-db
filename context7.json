@@ -1,0 +1,48 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Beta-db",
+  "description": "Beta-db is a Next.js project with custom modules, functions, documentation, and src code for web application development",
+  "folders": [
+    "./src/**",
+    "./docs/**",
+    "./config/**",
+    "./functions/**",
+    "./supabase-migrations/**"
+  ],
+  "excludeFolders": [
+    "node_modules",
+    ".next",
+    "public",
+    "scripts",
+    ".github",
+    ".cursor",
+    ".firebase"
+  ],
+  "excludeFiles": [
+    ".cursorignore",
+    ".env.local",
+    ".firebaserc",
+    ".gitignore",
+    ".modified",
+    "apphosting.emulator.yaml",
+    "apphosting.yaml",
+    "components.json",
+    "firebase.json",
+    "firestore-debug.log",
+    "firestore.indexes.json",
+    "firestore.rules",
+    "middleware.ts",
+    "next-env.d.ts",
+    "next.config.ts",
+    "package-lock.json",
+    "package.json",
+    "postcss.config.mjs",
+    "README.md",
+    "remoteconfig.template.json",
+    "serviceAccountKey.json",
+    "storage.rules",
+    "tailwind.config.ts",
+    "tsconfig.json",
+    "tsconfig.tsbuildinfo"
+  ]
+}

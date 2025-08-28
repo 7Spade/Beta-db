@@ -6,6 +6,7 @@
  */
 
 import admin from 'firebase-admin';
+import { getAppCheck } from 'firebase-admin/app-check';
 
 // Initialize Firebase Admin SDK for the server
 if (!admin.apps.length) {
@@ -33,4 +34,122 @@ const adminAuth = admin.auth();
 const adminDb = admin.firestore();
 const adminStorage = admin.storage();
 
-export { adminAuth, adminDb, adminStorage };
+// 初始化App Check Admin SDK
+const adminAppCheck = getAppCheck();
+
+// App Check token验证函数（强制模式）
+export const verifyAppCheckToken = async (token: string, options?: { consume?: boolean }) => {
+  try {
+    if (!token) {
+      throw new Error('App Check token is required');
+    }
+
+    const result = await adminAppCheck.verifyToken(token, options);
+    
+    // 验证成功，返回解码后的token信息
+    return {
+      success: true,
+      appId: result.appId,
+      token: result.token,
+      alreadyConsumed: result.alreadyConsumed || false,
+      // 检查token是否过期
+      isExpired: result.token.exp * 1000 < Date.now(),
+      // 检查token的发行者
+      issuer: result.token.iss,
+      // 检查token的受众
+      audience: result.token.aud,
+    };
+    
+  } catch (error: any) {
+    console.error('App Check token verification failed:', error);
+    
+    // 根据错误类型返回相应的错误信息
+    if (error.code === 'app-check-token-invalid') {
+      throw new Error('Invalid App Check token');
+    } else if (error.code === 'app-check-token-expired') {
+      throw new Error('App Check token has expired');
+    } else if (error.code === 'app-check-token-consumed') {
+      throw new Error('App Check token has already been consumed');
+    } else {
+      throw new Error(`App Check verification failed: ${error.message}`);
+    }
+  }
+};
+
+// 创建自定义App Check token（用于测试或特殊用途）
+export const createAppCheckToken = async (appId: string, options?: { ttlMillis?: number }) => {
+  try {
+    const token = await adminAppCheck.createToken(appId, options);
+    return {
+      success: true,
+      token: token.token,
+      ttlMillis: token.ttlMillis,
+      expiresAt: new Date(Date.now() + token.ttlMillis),
+    };
+  } catch (error: any) {
+    console.error('Failed to create App Check token:', error);
+    throw new Error(`Failed to create App Check token: ${error.message}`);
+  }
+};
+
+// 强制模式中间件函数（用于API路由）
+export const enforceAppCheck = async (req: any, res: any, next: any) => {
+  try {
+    const appCheckToken = req.headers['x-firebase-appcheck'] || req.body?.appCheckToken;
+    
+    if (!appCheckToken) {
+      return res.status(401).json({ 
+        error: 'App Check token is required',
+        code: 'APP_CHECK_TOKEN_MISSING'
+      });
+    }
+
+    const verificationResult = await verifyAppCheckToken(appCheckToken);
+    
+    if (!verificationResult.success) {
+      return res.status(401).json({ 
+        error: 'App Check verification failed',
+        code: 'APP_CHECK_VERIFICATION_FAILED'
+      });
+    }
+
+    // 将验证结果添加到请求对象中，供后续中间件使用
+    req.appCheck = verificationResult;
+    next();
+    
+  } catch (error: any) {
+    return res.status(401).json({ 
+      error: error.message,
+      code: 'APP_CHECK_ERROR'
+    });
+  }
+};
+
+// 强制模式验证函数（用于Server Actions）
+export const validateAppCheckInServerAction = async (appCheckToken: string) => {
+  try {
+    const result = await verifyAppCheckToken(appCheckToken);
+    
+    if (!result.success) {
+      throw new Error('App Check validation failed');
+    }
+    
+    // 检查token是否过期
+    if (result.isExpired) {
+      throw new Error('App Check token has expired');
+    }
+    
+    // 检查是否已被消费（如果设置了consume选项）
+    if (result.alreadyConsumed) {
+      throw new Error('App Check token has already been consumed');
+    }
+    
+    return result;
+    
+  } catch (error: any) {
+    console.error('App Check validation in Server Action failed:', error);
+    throw error;
+  }
+};
+
+export { adminAuth, adminDb, adminStorage, adminAppCheck };
