@@ -2,9 +2,10 @@
  * @fileoverview Firebase 合約服務
  */
 
-import { Timestamp } from 'firebase-admin/firestore';
 import { adminDb as firestore } from '@/db/firebase-admin';
 import type { Contract } from '@/contracts/types';
+import { Timestamp } from 'firebase-admin/firestore';
+import type { DocumentData } from 'firebase/firestore';
 
 export class FirebaseContractService {
   private readonly collectionName = 'contracts';
@@ -13,8 +14,8 @@ export class FirebaseContractService {
     try {
       const newContractData = {
         ...data,
-        startDate: Timestamp.fromDate(data.startDate),
-        endDate: Timestamp.fromDate(data.endDate),
+        startDate: Timestamp.fromDate(data.startDate as Date),
+        endDate: Timestamp.fromDate(data.endDate as Date),
         payments: [],
         changeOrders: [],
         versions: [{
@@ -104,13 +105,25 @@ export class FirebaseContractService {
   async updateContract(id: string, data: Partial<Contract>): Promise<void> {
     try {
       const docRef = firestore.collection(this.collectionName).doc(id);
-      const updateData = { ...data } as any;
+      const updateData: Partial<Contract> = { ...data };
       
       if (data.startDate) {
-        updateData.startDate = Timestamp.fromDate(data.startDate);
+        // 确保startDate是Date类型
+        if (data.startDate instanceof Date) {
+          updateData.startDate = Timestamp.fromDate(data.startDate);
+        } else {
+          // 如果已经是Timestamp，直接使用
+          updateData.startDate = data.startDate;
+        }
       }
       if (data.endDate) {
-        updateData.endDate = Timestamp.fromDate(data.endDate);
+        // 确保endDate是Date类型
+        if (data.endDate instanceof Date) {
+          updateData.endDate = Timestamp.fromDate(data.endDate);
+        } else {
+          // 如果已经是Timestamp，直接使用
+          updateData.endDate = data.endDate;
+        }
       }
 
       await docRef.update(updateData);

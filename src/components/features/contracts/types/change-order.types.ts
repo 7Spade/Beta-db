@@ -1,6 +1,7 @@
 /**
  * @fileoverview 變更單相關類型定義
  */
+import type { Timestamp } from 'firebase-admin/firestore';
 
 export type ChangeOrderStatus = "已核准" | "待處理" | "已拒絕";
 
@@ -9,13 +10,13 @@ export interface ChangeOrder {
   title: string;
   description: string;
   status: ChangeOrderStatus;
-  date: Date;
+  date: Date | Timestamp;
   impact: {
     cost: number;
     scheduleDays: number;
   };
   approvedBy?: string;
-  approvedDate?: Date;
+  approvedDate?: Date | Timestamp;
 }
 
 export interface ChangeOrderSummary {

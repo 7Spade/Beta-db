@@ -4,6 +4,7 @@
 import type { Payment } from './payment.types';
 import type { ChangeOrder } from './change-order.types';
 import type { ContractVersion } from './contract-version.types';
+import type { Timestamp } from 'firebase-admin/firestore';
 
 export type ContractStatus = "啟用中" | "已完成" | "暫停中" | "已終止";
 
@@ -14,8 +15,8 @@ export interface Contract {
   contractor: string;
   client: string;
   clientRepresentative?: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | Timestamp;
+  endDate: Date | Timestamp;
   totalValue: number;
   status: ContractStatus;
   scope: string;
@@ -29,8 +30,8 @@ export interface ContractSummary {
   name: string;
   contractor: string;
   client: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | Timestamp;
+  endDate: Date | Timestamp;
   totalValue: number;
   status: ContractStatus;
 }
