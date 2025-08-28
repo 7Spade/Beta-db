@@ -86,51 +86,51 @@ env:
 
   # Supabase 公開環境變數
   - variable: NEXT_PUBLIC_SUPABASE_URL
-    value: "https://dyghxnilkfrtjbefeecx.supabase.co"
+    value: "https://padruumtxwszlstefyhg.supabase.co"
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_SUPABASE_ANON_KEY
-    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Z2h4bmlsa2ZydGpiZWZlZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxOTU1NTcsImV4cCI6MjA3MDc3MTU1N30.cIEVkm-5MJpds6T0sP7uarRKUevZDH0YPvo_ZAbZIqQ"
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZHJ1dW10eHdzemxzdGVmeWhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzNzM4OTksImV4cCI6MjA3MTk0OTg5OX0.xGIhO4SqQIRZlg7MebtwgjTBXVOABmubcHLcZ4elNpg"
     availability:
       - BUILD
       - RUNTIME
 
   # Supabase 服務端環境變數
   - variable: SUPABASE_URL
-    value: "https://dyghxnilkfrtjbefeecx.supabase.co"
+    value: "https://padruumtxwszlstefyhg.supabase.co"
     availability:
       - BUILD
       - RUNTIME
   - variable: SUPABASE_ANON_KEY
-    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Z2h4bmlsa2ZydGpiZWZlZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxOTU1NTcsImV4cCI6MjA3MDc3MTU1N30.cIEVkm-5MJpds6T0sP7uarRKUevZDH0YPvo_ZAbZIqQ"
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZHJ1dW10eHdzemxzdGVmeWhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzNzM4OTksImV4cCI6MjA3MTk0OTg5OX0.xGIhO4SqQIRZlg7MebtwgjTBXVOABmubcHLcZ4elNpg"
     availability:
       - BUILD
       - RUNTIME
   - variable: SUPABASE_SERVICE_ROLE_KEY
-    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Z2h4bmlsa2ZydGpiZWZlZWN4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTE5NTU1NywiZXhwIjoyMDcwNzcxNTU3fQ.Dlfkbp_eBkMB_CC1-YFZb8dOsZ3d0Tp_t0-ZCu2i5WE"
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZHJ1dW10eHdzemxzdGVmeWhnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjM3Mzg5OSwiZXhwIjoyMDcxOTQ5ODk5fQ.aJj9d_DeEItbTNz_AfVdrMEhfPaIEtMlq3PM5p-Wumg"
     availability:
       - BUILD
       - RUNTIME
   - variable: SUPABASE_JWT_SECRET
-    value: "bn1f/k5RsY7/e8nmnV9CBzEtqlyopjxzU3P8fpFkBFPR1kL1Fb9DFotzkbXwxIsc5xX/SW4Kzi9sDtnmgeUm1Q=="
+    value: "byp6gX8Vq1dTCUnxifajrX/q1UUO3FLOpqTEt+7atcIeCyQKb4HOZ1QCyovJHbnik5Z8MGX4MAy6hslrZUmPJg=="
     availability:
       - BUILD
       - RUNTIME
 
   # Supabase 數據庫連接配置
   - variable: POSTGRES_URL
-    value: "postgres://postgres.dyghxnilkfrtjbefeecx:wXnNQAgmRZXauzIp@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
+    value: "postgres://postgres.padruumtxwszlstefyhg:pRzGOqNup7OB8d5I@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
     availability:
       - BUILD
       - RUNTIME
   - variable: POSTGRES_URL_NON_POOLING
-    value: "postgres://postgres.dyghxnilkfrtjbefeecx:wXnNQAgmRZXauzIp@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
+    value: "postgres://postgres.padruumtxwszlstefyhg:pRzGOqNup7OB8d5I@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
     availability:
       - BUILD
       - RUNTIME
   - variable: POSTGRES_PRISMA_URL
-    value: "postgres://postgres.dyghxnilkfrtjbefeecx:wXnNQAgmRZXauzIp@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
+    value: "postgres://postgres.padruumtxwszlstefyhg:pRzGOqNup7OB8d5I@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
     availability:
       - BUILD
       - RUNTIME
@@ -140,12 +140,12 @@ env:
       - BUILD
       - RUNTIME
   - variable: POSTGRES_PASSWORD
-    value: "wXnNQAgmRZXauzIp"
+    value: "pRzGOqNup7OB8d5I"
     availability:
       - BUILD
       - RUNTIME
   - variable: POSTGRES_HOST
-    value: "db.dyghxnilkfrtjbefeecx.supabase.co"
+    value: "db.padruumtxwszlstefyhg.supabase.co"
     availability:
       - BUILD
       - RUNTIME
