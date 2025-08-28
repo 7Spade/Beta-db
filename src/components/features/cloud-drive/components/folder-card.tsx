@@ -5,7 +5,7 @@
 'use client';
 
 import type { FC } from 'react';
-import { Folder as FolderIcon, MoreVertical, Trash2, Edit } from 'lucide-react';
+import { Folder as FolderIcon, MoreVertical, Trash2, Edit, FolderOpen } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
@@ -24,7 +24,7 @@ export const FolderCard: FC<FolderCardProps> = ({ folder, onClick, onDelete, onR
         className="transition-all duration-200 hover:shadow-md group cursor-pointer"
         onDoubleClick={onClick}
     >
-      <CardContent className="p-4 aspect-square flex items-center justify-center">
+      <CardContent className="p-4 aspect-square flex items-center justify-center" onClick={onClick}>
         <FolderIcon className="h-12 w-12 text-primary/70" />
       </CardContent>
       <CardFooter className="p-2">
@@ -39,6 +39,10 @@ export const FolderCard: FC<FolderCardProps> = ({ folder, onClick, onDelete, onR
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem onClick={onClick}>
+                    <FolderOpen className="mr-2 h-4 w-4" /> 開啟
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onRename}>
                     <Edit className="mr-2 h-4 w-4" /> 重新命名
                 </DropdownMenuItem>
