@@ -5,6 +5,9 @@
  */
 import { ProfileView } from '@/components/features/profile/profile-view';
 
+// 強制動態渲染，因為此頁面需要訪問 cookies 進行用戶認證
+export const dynamic = 'force-dynamic';
+
 export default function ProfilePage() {
   // 此頁面只負責渲染主視圖元件，保持入口點的乾淨。
   // 資料獲取邏輯已移至 ProfileView 伺服器元件中。
