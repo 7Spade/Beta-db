@@ -9,8 +9,8 @@ import { Card, CardContent, CardFooter, CardDescription } from '@/components/ui/
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { formatBytes, formatDate } from '@/lib/utils/utils';
-import type { StorageItem } from '../types/storage.types';
-import { getSignedUrlAction } from '../actions/storage.actions';
+import type { StorageItem } from '../../cloud-drive/types/storage.types';
+import { getSignedUrl } from '../../cloud-drive/actions/storage-actions';
 
 interface StorageItemCardProps {
   item: StorageItem;
@@ -42,7 +42,7 @@ export const StorageItemCard: FC<StorageItemCardProps> = ({ item, onNavigate, on
   };
   
   const handleDocuParse = () => {
-    router.push(`/docu-parse?filePath=${encodeURIComponent(item.fullPath)}`);
+    router.push(`/quick-actions/docu-parse?filePath=${encodeURIComponent(item.fullPath)}`);
   };
 
   return (
@@ -70,7 +70,7 @@ export const StorageItemCard: FC<StorageItemCardProps> = ({ item, onNavigate, on
             </DropdownMenuItem>
             {item.type === 'file' && (
               <>
-                <DropdownMenuItem onClick={() => handleAction(() => getSignedUrlAction(item.fullPath))}>
+                <DropdownMenuItem onClick={() => handleAction(() => getSignedUrl(item.fullPath))}>
                   <Download className="mr-2 h-4 w-4" /> 下載
                 </DropdownMenuItem>
                  <DropdownMenuSeparator />
