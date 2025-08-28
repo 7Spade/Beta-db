@@ -79,7 +79,13 @@ export const navigationConfig: NavigationItem[] = [
                 label: '進度回報',
                 icon: Activity,
                 href: '/quick-actions/project-progress'
-            }
+            },
+            {
+                id: 'kanban',
+                label: '看板',
+                icon: LayoutGrid,
+                href: '/kanban'
+            },
         ]
     },
     {
@@ -87,12 +93,6 @@ export const navigationConfig: NavigationItem[] = [
         label: '儀表板',
         icon: LayoutDashboard,
         href: '/dashboard'
-    },
-    {
-        id: 'kanban',
-        label: '看板',
-        icon: LayoutGrid,
-        href: '/kanban'
     },
     {
         id: 'projects',
@@ -110,13 +110,13 @@ export const navigationConfig: NavigationItem[] = [
                 id: 'contract-list',
                 label: '合約列表',
                 icon: ClipboardList,
-                href: '/contracts',
+                href: '/contracts/contracts',
             },
             {
                 id: 'billing',
                 label: '計價作業',
                 icon: Calculator,
-                href: '/billing',
+                href: '/contracts/billing',
             }
         ]
     },
@@ -220,13 +220,13 @@ export const navigationConfig: NavigationItem[] = [
                 id: 'docu-parse',
                 label: '文件解析',
                 icon: FileText,
-                href: '/docu-parse'
+                href: '/tools/docu-parse'
             },
             {
                 id: 'cloud-drive',
                 label: '雲端硬碟',
                 icon: Cloud,
-                href: '/cloud-drive'
+                href: '/tools/cloud-drive'
             },
         ]
     },
