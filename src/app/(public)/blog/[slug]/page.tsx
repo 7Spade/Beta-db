@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 // 這是模擬的單篇文章資料
 const mockPost = {
@@ -49,9 +50,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       </div>
 
       <div className="overflow-hidden mb-8">
-        <img
+        <Image
           src={post.imageUrl}
           alt={post.title}
+          width={1200}
+          height={600}
           className="w-full h-auto object-cover"
           data-ai-hint="construction technology"
         />

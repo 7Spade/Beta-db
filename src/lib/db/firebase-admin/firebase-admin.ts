@@ -60,19 +60,25 @@ export const verifyAppCheckToken = async (token: string, options?: { consume?: b
       audience: result.token.aud,
     };
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('App Check token verification failed:', error);
     
     // 根据错误类型返回相应的错误信息
-    if (error.code === 'app-check-token-invalid') {
-      throw new Error('Invalid App Check token');
-    } else if (error.code === 'app-check-token-expired') {
-      throw new Error('App Check token has expired');
-    } else if (error.code === 'app-check-token-consumed') {
-      throw new Error('App Check token has already been consumed');
-    } else {
-      throw new Error(`App Check verification failed: ${error.message}`);
+    if (error && typeof error === 'object' && 'code' in error && typeof error.code === 'string') {
+      if (error.code === 'app-check-token-invalid') {
+        throw new Error('Invalid App Check token');
+      } else if (error.code === 'app-check-token-expired') {
+        throw new Error('App Check token has expired');
+      } else if (error.code === 'app-check-token-consumed') {
+        throw new Error('App Check token has already been consumed');
+      }
     }
+    
+    // 处理其他错误
+    const errorMessage = error && typeof error === 'object' && 'message' in error 
+      ? String(error.message) 
+      : 'Unknown error';
+    throw new Error(`App Check verification failed: ${errorMessage}`);
   }
 };
 
@@ -86,14 +92,17 @@ export const createAppCheckToken = async (appId: string, options?: { ttlMillis?:
       ttlMillis: token.ttlMillis,
       expiresAt: new Date(Date.now() + token.ttlMillis),
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to create App Check token:', error);
-    throw new Error(`Failed to create App Check token: ${error.message}`);
+    const errorMessage = error && typeof error === 'object' && 'message' in error 
+      ? String(error.message) 
+      : 'Unknown error';
+    throw new Error(`Failed to create App Check token: ${errorMessage}`);
   }
 };
 
 // 强制模式中间件函数（用于API路由）
-export const enforceAppCheck = async (req: any, res: any, next: any) => {
+export const enforceAppCheck = async (req: { headers: Record<string, string | string[] | undefined>; body?: { appCheckToken?: string }; appCheck?: unknown }, res: { status: (code: number) => { json: (data: unknown) => void } }, next: () => void) => {
   try {
     const appCheckToken = req.headers['x-firebase-appcheck'] || req.body?.appCheckToken;
     
@@ -117,9 +126,12 @@ export const enforceAppCheck = async (req: any, res: any, next: any) => {
     req.appCheck = verificationResult;
     next();
     
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error && typeof error === 'object' && 'message' in error 
+      ? String(error.message) 
+      : 'Unknown error';
     return res.status(401).json({ 
-      error: error.message,
+      error: errorMessage,
       code: 'APP_CHECK_ERROR'
     });
   }
@@ -146,7 +158,7 @@ export const validateAppCheckInServerAction = async (appCheckToken: string) => {
     
     return result;
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('App Check validation in Server Action failed:', error);
     throw error;
   }

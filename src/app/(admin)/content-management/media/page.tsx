@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Cloud, Upload, Search, Image, FileText, Video } from 'lucide-react';
+import { Cloud, Upload, Search, FileText, Video } from 'lucide-react';
+import NextImage from 'next/image';
 
 export default function MediaManagementPage() {
   const mediaFiles = [
@@ -46,7 +47,7 @@ export default function MediaManagementPage() {
   const getFileIcon = (type: string) => {
     switch (type) {
       case 'image':
-        return <Image className="h-8 w-8 text-blue-500" />;
+        return <FileText className="h-8 w-8 text-blue-500" />;
       case 'document':
         return <FileText className="h-8 w-8 text-green-500" />;
       case 'video':
@@ -84,7 +85,13 @@ export default function MediaManagementPage() {
           <Card key={file.id} className="overflow-hidden">
             <div className="aspect-video bg-muted flex items-center justify-center">
               {file.type === 'image' ? (
-                <img src={file.url} alt={file.name} className="w-full h-full object-cover" />
+                <NextImage 
+                  src={file.url} 
+                  alt={file.name} 
+                  width={400}
+                  height={225}
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 getFileIcon(file.type)
               )}

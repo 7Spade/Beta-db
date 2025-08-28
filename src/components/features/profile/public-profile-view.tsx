@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, DocumentData } from 'firebase/firestore';
 
 interface PublicUserProfile {
   displayName?: string;
@@ -20,7 +20,7 @@ export function PublicProfileView({ userId }: { userId: string }) {
         const ref = doc(firestore, 'users', userId);
         const snap = await getDoc(ref);
         if (snap.exists()) {
-          const data = snap.data() as any;
+          const data = snap.data() as DocumentData;
           // 僅挑選公開欄位
           setProfile({ displayName: data.displayName, role: data.role });
         } else {

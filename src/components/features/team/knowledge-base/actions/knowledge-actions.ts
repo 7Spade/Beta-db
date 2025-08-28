@@ -65,7 +65,10 @@ export async function handleBatchKnowledgeBaseOperation(
         
         entryIds.forEach(entryId => {
             const entryRef = doc(firestore, 'knowledgeBaseEntries', entryId);
-            const updateData: any = {
+            const updateData: {
+                updatedAt: any;
+                status?: 'archived' | 'published' | 'draft';
+            } = {
                 updatedAt: serverTimestamp(),
             };
             

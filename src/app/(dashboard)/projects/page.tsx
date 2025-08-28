@@ -2,13 +2,13 @@
 import { ProjectsView } from '@/components/features/app/views/projects-view';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Project, Task } from '@/lib/types/types';
-import { collection, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, Timestamp, DocumentData } from 'firebase/firestore';
 
 async function getProjects(): Promise<Project[]> {
     const projectsCollection = collection(firestore, 'projects');
     const projectSnapshot = await getDocs(projectsCollection);
     
-    const processFirestoreTasks = (tasks: any[]): Task[] => {
+    const processFirestoreTasks = (tasks: DocumentData[]): Task[] => {
       return tasks.map(task => ({
           ...task,
           lastUpdated: task.lastUpdated, // Should already be ISO string

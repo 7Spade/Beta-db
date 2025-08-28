@@ -47,7 +47,7 @@ export function AppHeader({ className }: AppHeaderProps) {
                  user={{
                    name: profile?.displayName || user?.email || 'User',
                    email: user?.email || undefined,
-                   avatar: (profile as any)?.avatarUrl,
+                   avatar: profile?.avatarUrl,
                  }}
                  onProfileClick={() => router.push('/profile')}
                  onSettingsClick={() => router.push('/settings')}

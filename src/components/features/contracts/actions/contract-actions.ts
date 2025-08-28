@@ -84,7 +84,7 @@ export async function createProjectAndContractFromDocument(input: ActionInput): 
         const newContractRef = doc(collection(firestore, "contracts"));
         const contractId = newContractRef.id;
 
-        const contractData: Omit<Contract, "id" | "startDate" | "endDate" | "payments" | "changeOrders" | "versions"> & { startDate: Timestamp, endDate: Timestamp, payments: [], changeOrders: [], versions: any[] } = {
+        const contractData: Omit<Contract, "id" | "startDate" | "endDate" | "payments" | "changeOrders" | "versions"> & { startDate: Timestamp, endDate: Timestamp, payments: [], changeOrders: [], versions: Array<{ version: number; date: Timestamp; changeSummary: string }> } = {
             customId: docDetails.customId,
             name: docDetails.name,
             contractor: "本公司", // Placeholder value

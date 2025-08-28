@@ -7,6 +7,15 @@ import { formatDistanceToNow } from 'date-fns'
 import { zhTW } from 'date-fns/locale'
 import { getSupabaseClient } from '@/lib/db/supabase'
 
+// 定义AI Token日志类型
+interface AiTokenLog {
+  id: string;
+  flow_name: string;
+  timestamp: string;
+  total_tokens: number;
+  status: string;
+}
+
 // 极简配置：自动显示 AI Token 消耗记录
 export async function AiUsageLog() {
   try {
@@ -46,7 +55,7 @@ export async function AiUsageLog() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(logs || []).map((log: any) => (
+              {(logs || []).map((log: AiTokenLog) => (
                 <TableRow key={log.id}>
                   <TableCell className="font-medium">{log.flow_name}</TableCell>
                   <TableCell className="text-muted-foreground">

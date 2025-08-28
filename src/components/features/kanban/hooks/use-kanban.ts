@@ -7,6 +7,9 @@ import {
   KeyboardSensor,
   TouchSensor,
   MouseSensor,
+  DragStartEvent,
+  DragOverEvent,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { type Task, type Column } from "@/kanban/types";
@@ -36,7 +39,7 @@ export const useKanban = (
     useSensor(KeyboardSensor, {})
   );
 
-  function onDragStart(event: any) {
+  function onDragStart(event: DragStartEvent) {
     if (event.active.data.current?.type === "Column") {
       setActiveColumn(event.active.data.current.column);
       return;
@@ -48,7 +51,7 @@ export const useKanban = (
     }
   }
 
-  function onDragOver(event: any) {
+  function onDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (!over) return;
 
@@ -89,7 +92,7 @@ export const useKanban = (
     }
   }
 
-  function onDragEnd(event: any) {
+  function onDragEnd(event: DragEndEvent) {
     setActiveColumn(null);
     setActiveTask(null);
 

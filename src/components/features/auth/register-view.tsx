@@ -16,13 +16,14 @@ import { Input } from '@/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, type AuthError } from 'firebase/auth';
 import { auth } from '@/firebase-client/firebase-client';
 import { registerSchema, type RegisterValues } from './auth-form-schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { dispatch } from '@/events/event-dispatcher';
 import { createUserProfile } from './auth-actions';
+import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 
 function RegisterForm() {
   const { toast } = useToast();
@@ -59,14 +60,16 @@ function RegisterForm() {
         description: '您的帳號正在等待審核。完成後即可登入。',
       });
       router.push('/login');
-    } catch (error: any) {
+    } catch (error: unknown) {
       let message = '註冊失敗，請稍後再試。';
-      if (error.code === 'auth/email-already-in-use') {
-        message = '這個電子郵件地址已經被註冊了。';
-      } else if (error.code === 'auth/weak-password') {
-        message = '密碼強度不足，請使用更強的密碼。';
-      } else if (error.code === 'auth/invalid-email') {
-        message = '電子郵件地址格式不正確。';
+      if (isFirebaseAuthError(error)) {
+        if (error.code === 'auth/email-already-in-use') {
+          message = '這個電子郵件地址已經被註冊了。';
+        } else if (error.code === 'auth/weak-password') {
+          message = '密碼強度不足，請使用更強的密碼。';
+        } else if (error.code === 'auth/invalid-email') {
+          message = '電子郵件地址格式不正確。';
+        }
       }
       toast({ title: '註冊失敗', description: message, variant: 'destructive' });
     } finally {

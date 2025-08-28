@@ -3,14 +3,14 @@
  */
 'use client';
 
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { contractSchema, type ContractFormValues } from './form-schemas';
 import { ContractForm } from './contract-form';
 
 interface CreateContractFormProps {
   onSubmit: (values: ContractFormValues) => void;
-  children: (form: any) => React.ReactNode;
+  children: (form: UseFormReturn<ContractFormValues>) => React.ReactNode;
 }
 
 export function CreateContractForm({ onSubmit, children }: CreateContractFormProps) {

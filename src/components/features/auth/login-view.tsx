@@ -16,12 +16,13 @@ import { Input } from '@/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, type AuthError } from 'firebase/auth';
 import { auth } from '@/firebase-client/firebase-client';
 import { loginSchema, type LoginValues } from './auth-form-schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createUserProfile } from './auth-actions';
+import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 
 function LoginForm() {
   const { toast } = useToast();
@@ -47,14 +48,16 @@ function LoginForm() {
       });
       // Let AuthProvider handle the redirect
       // router.push('/dashboard'); 
-    } catch (error: any) {
+    } catch (error: unknown) {
       let message = '登入失敗，請稍後再試。';
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-        message = '電子郵件或密碼不正確。';
-      } else if (error.code === 'auth/user-disabled') {
-        message = '此帳戶已被停用。';
-      } else if (error.code === 'auth/too-many-requests') {
-        message = '登入嘗試次數過多，請稍後再試。';
+      if (isFirebaseAuthError(error)) {
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+          message = '電子郵件或密碼不正確。';
+        } else if (error.code === 'auth/user-disabled') {
+          message = '此帳戶已被停用。';
+        } else if (error.code === 'auth/too-many-requests') {
+          message = '登入嘗試次數過多，請稍後再試。';
+        }
       }
       toast({ title: '登入失敗', description: message, variant: 'destructive' });
     } finally {
@@ -123,10 +126,12 @@ function SocialAuthButtons() {
                 title: 'Google 登入成功',
                 description: '正在驗證您的存取權限...',
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             let errorMessage = 'Google 登入失敗，請稍後再試。';
-            if (error.code === 'auth/popup-closed-by-user') {
-                errorMessage = '登入流程被使用者中斷。';
+            if (isFirebaseAuthError(error)) {
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = '登入流程被使用者中斷。';
+                }
             }
             toast({
                 title: 'Google 登入失敗',

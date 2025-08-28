@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 // 這是模擬的部落格文章列表資料
 const mockPosts = [
@@ -48,7 +49,14 @@ export default function BlogListPage() {
         {mockPosts.map((post) => (
           <Card key={post.slug} className="flex flex-col overflow-hidden group">
             <div className="flex-shrink-0">
-              <img className="h-48 w-full object-cover" src={post.imageUrl} alt={post.title} data-ai-hint="construction technology" />
+              <Image 
+                className="h-48 w-full object-cover" 
+                src={post.imageUrl} 
+                alt={post.title} 
+                width={600}
+                height={400}
+                data-ai-hint="construction technology" 
+              />
             </div>
             <div className="flex-1 bg-background p-6 flex flex-col justify-between">
               <div className="flex-1">

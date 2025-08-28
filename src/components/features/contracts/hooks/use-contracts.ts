@@ -3,28 +3,32 @@
  */
 
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { collection, onSnapshot, query, DocumentData, DocumentSnapshot } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Contract } from '@/components/features/contracts/types';
 
 // Helper function to convert Firestore Timestamps to Dates
-const processFirestoreContract = (doc: any): Contract => {
+const processFirestoreContract = (doc: DocumentSnapshot<DocumentData>): Contract => {
   const data = doc.data();
+  if (!data) {
+    throw new Error('Document data is undefined');
+  }
+  
   return {
     ...data,
     id: doc.id,
     startDate: data.startDate?.toDate(),
     endDate: data.endDate?.toDate(),
-    payments: data.payments?.map((p: any) => ({
+    payments: data.payments?.map((p: DocumentData) => ({
       ...p,
       requestDate: p.requestDate?.toDate(),
       paidDate: p.paidDate?.toDate(),
     })) || [],
-    changeOrders: data.changeOrders?.map((co: any) => ({
+    changeOrders: data.changeOrders?.map((co: DocumentData) => ({
       ...co,
       date: co.date?.toDate(),
     })) || [],
-    versions: data.versions?.map((v: any) => ({
+    versions: data.versions?.map((v: DocumentData) => ({
       ...v,
       date: v.date?.toDate(),
     })) || [],

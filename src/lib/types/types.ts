@@ -166,8 +166,8 @@ export interface KnowledgeBaseEntry {
   category: string;
   content: string;
   tags?: string[];
-  createdAt: any; // Firestore Timestamp
-  updatedAt: any; // Firestore Timestamp
+  createdAt: Date | string; // Firestore Timestamp or ISO string
+  updatedAt: Date | string; // Firestore Timestamp or ISO string
 }
 
 export interface AiTokenLog {

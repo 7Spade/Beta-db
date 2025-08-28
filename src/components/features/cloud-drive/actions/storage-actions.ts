@@ -89,7 +89,7 @@ export async function createFolder(path: string): Promise<StorageAction> {
     
     revalidatePath(`/cloud-drive?path=${getParentPath(path)}`, 'page');
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { success: false, error: '建立資料夾失敗。' };
   }
 }
@@ -107,7 +107,7 @@ export async function deleteItem(path: string, type: 'file' | 'folder'): Promise
     
     revalidatePath(`/cloud-drive?path=${getParentPath(path)}`, 'page');
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { success: false, error: '刪除失敗。' };
   }
 }
@@ -129,7 +129,7 @@ export async function uploadFile(formData: FormData): Promise<StorageAction> {
     
     revalidatePath(`/cloud-drive?path=${currentPath}`, 'page');
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { success: false, error: '上傳失敗。' };
   }
 }

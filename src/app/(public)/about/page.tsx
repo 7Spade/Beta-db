@@ -1,6 +1,7 @@
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Goal, Handshake } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AboutPage() {
   return (
@@ -18,9 +19,11 @@ export default function AboutPage() {
         <Card className="overflow-hidden">
           <div className="md:flex">
             <div className="md:w-1/2">
-               <img
+               <Image
                   src="https://placehold.co/600x400.png"
                   alt="團隊合作"
+                  width={600}
+                  height={400}
                   className="h-full w-full object-cover"
                   data-ai-hint="team collaboration"
                 />
@@ -42,9 +45,11 @@ export default function AboutPage() {
         <Card className="overflow-hidden">
           <div className="md:flex md:flex-row-reverse">
              <div className="md:w-1/2">
-               <img
+               <Image
                   src="https://placehold.co/600x400.png"
                   alt="我們的價值觀"
+                  width={600}
+                  height={400}
                   className="h-full w-full object-cover"
                   data-ai-hint="values integrity"
                 />

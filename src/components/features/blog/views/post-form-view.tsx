@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { DocumentData } from 'firebase/firestore';
 
 const postSchema = z.object({
     title: z.string().min(3, '標題至少需要 3 個字元。'),
@@ -77,7 +78,7 @@ export function PostFormView({ postId }: PostFormViewProps) {
                 const docRef = doc(firestore, 'posts', postId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    const data = docSnap.data() as any;
+                    const data = docSnap.data() as DocumentData;
                     form.reset({
                       ...data,
                       // Firestore timestamps need to be converted to Dates for the form

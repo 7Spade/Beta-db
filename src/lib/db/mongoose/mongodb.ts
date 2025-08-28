@@ -4,14 +4,22 @@ import mongoose from "mongoose";
 // 注意：不要在模組載入時就讀取或驗證環境變數，避免在
 // Next.js build/prerender 階段觸發連線或丟出錯誤。
 
+interface CachedConnection {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
+
 /**
  * 確保 MongoDB 連線可重用 (避免 hot reload 時多次連線)
  */
-let cached = (global as any).mongoose;
+let cached = (global as { mongoose?: CachedConnection }).mongoose;
 
 if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+  cached = (global as { mongoose?: CachedConnection }).mongoose = { conn: null, promise: null };
 }
+
+// 类型断言：确保cached不为undefined
+const cachedConnection = cached as CachedConnection;
 
 export async function connectDB() {
   const mongoUri = process.env.MONGODB_URI;
@@ -30,16 +38,16 @@ export async function connectDB() {
     );
   }
 
-  if (cached.conn) {
-    return cached.conn;
+  if (cachedConnection.conn) {
+    return cachedConnection.conn;
   }
 
-  if (!cached.promise) {
+  if (!cachedConnection.promise) {
     const opts = {
       bufferCommands: false,
     };
     
-    cached.promise = mongoose.connect(mongoUri!, opts).then((mongoose) => {
+    cachedConnection.promise = mongoose.connect(mongoUri!, opts).then((mongoose) => {
       console.log("MongoDB 連線成功！");
       return mongoose;
     }).catch(err => {
@@ -49,11 +57,11 @@ export async function connectDB() {
   }
 
   try {
-    cached.conn = await cached.promise;
+    cachedConnection.conn = await cachedConnection.promise;
   } catch (e) {
-    cached.promise = null; // 在失敗時重置 promise，以便下次可以重試
+    cachedConnection.promise = null; // 在失敗時重置 promise，以便下次可以重試
     throw e;
   }
   
-  return cached.conn;
+  return cachedConnection.conn;
 }

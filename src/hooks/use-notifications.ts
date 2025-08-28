@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc, where, DocumentData } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 
 export interface NotificationDoc {
@@ -31,7 +31,7 @@ export function useNotifications(userId?: string | null) {
     );
     const unsub = onSnapshot(q, (snap) => {
       const data: NotificationDoc[] = snap.docs.map((d) => {
-        const v = d.data() as any;
+        const v = d.data() as DocumentData;
         return {
           id: d.id,
           recipientId: v.recipientId,

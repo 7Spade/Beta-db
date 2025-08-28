@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { approveUser, rejectUser } from '@/admin/actions/user-actions';
+import { DocumentData } from 'firebase/firestore';
 
 interface UserProfile {
   id: string;
@@ -30,7 +31,7 @@ export function UserManagementView() {
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const usersData = snapshot.docs.map(doc => {
-        const data = doc.data() as any;
+        const data = doc.data() as DocumentData;
         return {
           id: doc.id,
           displayName: data.displayName,

@@ -10,7 +10,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/db/firebase-client/firebase-client';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, type AuthError } from 'firebase/auth';
+import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px" {...props}>
@@ -51,18 +52,20 @@ export function SocialAuthButtons({
           if (redirectTo) {
             router.push(redirectTo);
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           let errorMessage = 'Google 登入失敗，請稍後再試。';
-          if (error.code === 'auth/popup-closed-by-user') {
-            errorMessage = '登入流程被使用者中斷。';
-          } else if (error.code === 'auth/account-exists-with-different-credential') {
-            errorMessage = '此電子郵件地址已使用其他方式註冊。';
-          } else if (error.code === 'auth/popup-blocked') {
-            errorMessage = '彈出視窗被瀏覽器阻擋，請允許彈出視窗後重試。';
-          } else if (error.code === 'auth/cancelled-popup-request') {
-            errorMessage = '登入請求被取消。';
-          } else if (error.code === 'auth/network-request-failed') {
-            errorMessage = '網路連線失敗，請檢查網路連線。';
+          if (isFirebaseAuthError(error)) {
+            if (error.code === 'auth/popup-closed-by-user') {
+              errorMessage = '登入流程被使用者中斷。';
+            } else if (error.code === 'auth/account-exists-with-different-credential') {
+              errorMessage = '此電子郵件地址已使用其他方式註冊。';
+            } else if (error.code === 'auth/popup-blocked') {
+              errorMessage = '彈出視窗被瀏覽器阻擋，請允許彈出視窗後重試。';
+            } else if (error.code === 'auth/cancelled-popup-request') {
+              errorMessage = '登入請求被取消。';
+            } else if (error.code === 'auth/network-request-failed') {
+              errorMessage = '網路連線失敗，請檢查網路連線。';
+            }
           }
           toast({
             title: 'Google 登入失敗',

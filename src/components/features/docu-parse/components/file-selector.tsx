@@ -12,7 +12,7 @@ import { listItems } from '@/components/features/cloud-drive/actions/storage-act
 import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Folder, File as FileIcon } from 'lucide-react';
-import { SUPPORTED_FILE_TYPES } from '@/components/features/docu-parse/constants';
+import { SUPPORTED_FILE_TYPES, type SupportedFileType } from '@/components/features/docu-parse/constants';
 
 interface FileSelectorProps {
   onFileSelect: (filePath: string) => void;
@@ -44,7 +44,7 @@ export function FileSelector({ onFileSelect }: FileSelectorProps) {
     if (item.type === 'folder') {
       setCurrentPath(item.fullPath);
     } else {
-      if (item.contentType && SUPPORTED_FILE_TYPES.includes(item.contentType as any)) {
+      if (item.contentType && SUPPORTED_FILE_TYPES.includes(item.contentType as SupportedFileType)) {
         onFileSelect(item.fullPath);
       } else {
         toast({
@@ -97,7 +97,7 @@ export function FileSelector({ onFileSelect }: FileSelectorProps) {
                   <button
                     onClick={() => handleItemClick(item)}
                     className="w-full flex items-center gap-3 p-2 rounded-md text-left hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={item.type === 'file' && !SUPPORTED_FILE_TYPES.includes(item.contentType as any)}
+                    disabled={item.type === 'file' && !SUPPORTED_FILE_TYPES.includes(item.contentType as SupportedFileType)}
                   >
                     {item.type === 'folder' ? (
                       <Folder className="h-5 w-5 text-blue-500" />
@@ -105,7 +105,7 @@ export function FileSelector({ onFileSelect }: FileSelectorProps) {
                       <FileIcon className="h-5 w-5 text-muted-foreground" />
                     )}
                     <span>{item.name}</span>
-                    {item.type === 'file' && !SUPPORTED_FILE_TYPES.includes(item.contentType as any) && (
+                    {item.type === 'file' && !SUPPORTED_FILE_TYPES.includes(item.contentType as SupportedFileType) && (
                         <span className="text-xs text-destructive/80 ml-auto">(不支援)</span>
                     )}
                   </button>

@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { formatBytes } from '@/lib/utils/utils';
 import type { StorageItem } from '@/cloud-drive/types/storage.types';
 import { getSignedUrl } from '@/cloud-drive/actions/storage-actions';
+import Image from 'next/image';
 
 interface FileCardProps {
   file: StorageItem;
@@ -52,7 +53,14 @@ export const FileCard: FC<FileCardProps> = ({ file, onDelete, onRename }) => {
     >
       <CardContent className="p-0 aspect-square flex items-center justify-center bg-muted rounded-t-lg">
         {isImage && previewUrl ? (
-          <img src={previewUrl} alt={file.name} className="w-full h-full object-cover rounded-t-lg" data-ai-hint="file image" />
+          <Image 
+            src={previewUrl} 
+            alt={file.name} 
+            width={200}
+            height={200}
+            className="w-full h-full object-cover rounded-t-lg" 
+            data-ai-hint="file image" 
+          />
         ) : (
           <FileIcon className="h-10 w-10 text-muted-foreground" />
         )}

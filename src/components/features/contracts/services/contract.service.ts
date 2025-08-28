@@ -33,7 +33,7 @@ export const contractService = {
   updateContract: async (id: string, data: Partial<Omit<Contract, 'id'>>): Promise<void> => {
     try {
       const docRef = doc(firestore, 'contracts', id);
-      const updateData: any = { ...data };
+      const updateData: Partial<Omit<Contract, 'id'>> = { ...data };
       
       if (data.startDate) {
         updateData.startDate = Timestamp.fromDate(data.startDate);
