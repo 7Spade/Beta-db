@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Briefcase, UserCheck } from 'lucide-react';
+import { Briefcase, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CareerManagementPage() {

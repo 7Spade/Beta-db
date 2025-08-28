@@ -170,8 +170,8 @@ export async function renameItem(oldPath: string, newName: string, type: 'file' 
     
     revalidatePath(`/cloud-drive?path=${parentPath}`, 'page');
     return { success: true };
-  } catch (error: any) {
-    console.error("重新命名失敗:", error);
+  } catch {
+    console.error("重新命名失敗");
     return { success: false, error: '重新命名失敗。' };
   }
 }

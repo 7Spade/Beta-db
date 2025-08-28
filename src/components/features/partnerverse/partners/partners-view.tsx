@@ -22,7 +22,7 @@ export const PartnersView: FC = () => {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const [partnerToEdit, setPartnerToEdit] = useState<Partner | null>(null);
   const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
-  const [userRole, setUserRole] = useState<Role>('Admin');
+  const [userRole] = useState<Role>('Admin');
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 

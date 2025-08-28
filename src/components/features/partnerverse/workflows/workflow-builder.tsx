@@ -2,19 +2,18 @@
 'use client';
 
 import { useState, type FC, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import type { Partner, FinancialDocument, ReceivablePayableType, Contract, Transaction } from '@/lib/types/types';
-import { ArrowLeftRight, PlusCircle, Save, Trash2, FileText, DollarSign, Briefcase, CheckCircle, GripVertical, Wand2 } from 'lucide-react';
+import { PlusCircle, FileText, DollarSign, Briefcase } from 'lucide-react';
 
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { collection, getDocs, addDoc, doc, setDoc, updateDoc, onSnapshot, query, where, Timestamp, getDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, updateDoc, onSnapshot, query, where, Timestamp, getDoc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/lib/utils/utils';

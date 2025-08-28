@@ -15,12 +15,10 @@
  */
 
 import {
-    LayoutDashboard,
     FolderKanban,
     Building2,
     FileText,
     Users,
-    Settings,
     ClipboardList,
     CalendarDays,
     ArrowLeftRight,
@@ -40,7 +38,6 @@ import {
     Package,
     Calculator,
     DollarSign,
-    FolderGit2,
     Warehouse,
     Truck,
     LayoutGrid,
@@ -225,7 +222,7 @@ export const navigationConfig: NavigationItem[] = [
             {
                 id: 'admin-dashboard',
                 label: '總覽',
-                icon: LayoutDashboard,
+                icon: LayoutGrid,
                 href: '/dashboard-management'
             },
             {

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Search, Command } from "lucide-react"
+import { Search } from "lucide-react"
 import { cn } from "@/lib/utils/utils"
 
 interface SearchCommandProps {

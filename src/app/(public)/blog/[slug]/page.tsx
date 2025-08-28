@@ -1,6 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, User } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 // 這是模擬的單篇文章資料
@@ -22,8 +21,7 @@ const mockPost = {
 };
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  // 在真實應用中，您會使用 params.slug 從後端獲取對應的文章資料
+  await params; // 在真實應用中，您會使用 params.slug 從後端獲取對應的文章資料
   const post = mockPost;
 
   return (
@@ -50,14 +48,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
 
-      <Card className="overflow-hidden mb-8">
+      <div className="overflow-hidden mb-8">
         <img
           src={post.imageUrl}
           alt={post.title}
           className="w-full h-auto object-cover"
           data-ai-hint="construction technology"
         />
-      </Card>
+      </div>
       
       <div 
         className="prose prose-lg dark:prose-invert max-w-none"

@@ -3,7 +3,6 @@
  */
 
 import type { Contract } from '@/contracts/types';
-import type { WorkItem } from "@/components/features/docu-parse/types";
 
 export interface CreateContractActionInput {
     data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>;

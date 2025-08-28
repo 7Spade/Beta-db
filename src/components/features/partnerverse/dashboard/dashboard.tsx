@@ -30,7 +30,6 @@ interface DashboardProps {
 export const Dashboard: FC<DashboardProps> = ({ partners: initialPartners }) => {
     const [partners, setPartners] = useState<Partner[]>(initialPartners || []);
     const [isLoading, setIsLoading] = useState(!initialPartners);
-    const router = useRouter();
 
     useEffect(() => {
         if (!initialPartners) {

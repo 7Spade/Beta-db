@@ -65,7 +65,7 @@ export function Breadcrumb() {
             <Link href="/dashboard">儀表板</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {breadcrumbs.map((crumb, index) => (
+        {breadcrumbs.map((crumb) => (
           <Fragment key={crumb.href}>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

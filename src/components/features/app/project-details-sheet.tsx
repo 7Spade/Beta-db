@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { TaskItem } from '@/app-features/task-item';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { format } from 'date-fns';
@@ -88,10 +88,6 @@ export function ProjectDetailsSheet({ project, isOpen, onOpenChange }: ProjectDe
       </Sheet>
     );
   }
-
-  const findProjectAndTasks = (projectId: string): { project: Project | undefined, tasks: Task[] } => {
-    return { project, tasks: project?.tasks || [] };
-  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>

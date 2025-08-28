@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Goal, Handshake } from 'lucide-react';
+import { Goal, Handshake } from 'lucide-react';
 
 export default function AboutPage() {
   return (

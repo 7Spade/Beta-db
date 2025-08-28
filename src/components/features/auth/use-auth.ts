@@ -59,7 +59,7 @@ export function useAuth() {
           setError('讀取使用者資料失敗');
           setLoading(false);
         });
-      } catch (e) {
+      } catch {
         setError('讀取使用者資料失敗');
         setLoading(false);
       }

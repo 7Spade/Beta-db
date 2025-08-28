@@ -35,8 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { File, Loader2, Cpu, FileCog, Info, RefreshCcw } from "lucide-react";
-import Link from "next/link";
+import { File, Loader2, Cpu, FileCog, RefreshCcw } from "lucide-react";
 import { FileSelector } from "@/components/features/docu-parse/components/file-selector";
 import DocumentPreview from "@/components/layout/shared/document-preview";
 

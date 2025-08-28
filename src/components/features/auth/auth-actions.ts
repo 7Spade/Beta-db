@@ -3,11 +3,10 @@
 
 import { auth } from '@/firebase-client/firebase-client';
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   type User,
 } from 'firebase/auth';
-import type { LoginValues, RegisterValues } from './auth-form-schemas';
+import type { LoginValues } from './auth-form-schemas';
 import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { firestore } from '@/firebase-client/firebase-client';
 

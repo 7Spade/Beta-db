@@ -1,20 +1,12 @@
 
 'use client';
 
-import { useState, type FC, useEffect } from 'react';
-import Image from 'next/image';
-import type { Partner, Contact, Contract } from '@/lib/types/types';
+import { type FC } from 'react';
+import type { Partner, Contact } from '@/lib/types/types';
 import type { Role } from '@/lib/roles';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Globe, Edit, Users, DollarSign, Calendar, Star, FileText, ShieldCheck, FileWarning, FileX, Briefcase, Plus, Trash2, ArrowLeft, ExternalLink, Loader2, ArrowLeftRight } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { formatDate } from '@/lib/utils/utils';
-import Link from 'next/link';
+import { Users, Star, ShieldCheck, Briefcase, DollarSign, ArrowLeft, ArrowLeftRight } from 'lucide-react';
 import { OverviewTab } from '@/partnerverse/overview/overview-tab';
 import { ContactsTab } from '@/partnerverse/contacts/contacts-tab';
 import { FinancialsTab } from '@/partnerverse/financials/financials-tab';

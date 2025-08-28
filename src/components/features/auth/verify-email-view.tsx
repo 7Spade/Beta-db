@@ -22,7 +22,7 @@ export function VerifyEmailView() {
     try {
       await sendEmailVerification(user);
       toast({ title: '驗證信已寄出', description: '請至信箱查收並完成驗證。' });
-    } catch (err) {
+    } catch {
       toast({ title: '寄送失敗', description: '請稍後再試。', variant: 'destructive' });
     } finally {
       setLoading(false);

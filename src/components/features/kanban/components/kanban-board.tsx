@@ -1,22 +1,9 @@
 
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  DndContext,
-  type DragEndEvent,
-  type DragOverEvent,
-  DragOverlay,
-  type DragStartEvent,
-  useSensor,
-  useSensors,
-  KeyboardSensor,
-  Announcements,
-  UniqueIdentifier,
-  TouchSensor,
-  MouseSensor,
-} from "@dnd-kit/core";
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { KanbanCard, type KanbanCardProps } from "./kanban-card";
+import React, { useEffect, useState } from "react";
+import { DndContext } from "@dnd-kit/core";
+import { SortableContext } from "@dnd-kit/sortable";
+import { KanbanCard } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";
 import { type Column, Task } from "@/kanban/types";
 import { useKanban } from "@/kanban/hooks/use-kanban";

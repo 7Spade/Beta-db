@@ -2,20 +2,13 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import {
-  DndContext,
-  type DragEndEvent,
-  type DragOverEvent,
-  DragOverlay,
-  type DragStartEvent,
   useSensor,
   useSensors,
   KeyboardSensor,
-  Announcements,
-  UniqueIdentifier,
   TouchSensor,
   MouseSensor,
 } from "@dnd-kit/core";
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import { type Task, type Column } from "@/kanban/types";
 
 export const useKanban = (
@@ -43,7 +36,7 @@ export const useKanban = (
     useSensor(KeyboardSensor, {})
   );
 
-  function onDragStart(event: DragStartEvent) {
+  function onDragStart(event: any) {
     if (event.active.data.current?.type === "Column") {
       setActiveColumn(event.active.data.current.column);
       return;
@@ -55,7 +48,7 @@ export const useKanban = (
     }
   }
 
-  function onDragOver(event: DragOverEvent) {
+  function onDragOver(event: any) {
     const { active, over } = event;
     if (!over) return;
 
@@ -96,7 +89,7 @@ export const useKanban = (
     }
   }
 
-  function onDragEnd(event: DragEndEvent) {
+  function onDragEnd(event: any) {
     setActiveColumn(null);
     setActiveTask(null);
 

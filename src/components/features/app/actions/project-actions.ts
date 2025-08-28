@@ -3,12 +3,11 @@
 
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Project, Task, TaskStatus } from '@/lib/types/types';
-import { collection, addDoc, doc, updateDoc, Timestamp, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 
 export async function addProjectAction(project: Omit<Project, 'id' | 'tasks'>): Promise<{ success: boolean; error?: string }> {
   try {
-    const newProjectRef = doc(collection(firestore, "projects"));
     const projectDataForFirestore = {
         ...project,
         startDate: Timestamp.fromDate(project.startDate),

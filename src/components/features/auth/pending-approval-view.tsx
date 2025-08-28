@@ -20,7 +20,7 @@ export function PendingApprovalView() {
       await signOut(auth);
       toast({ title: '已登出', description: '您已成功登出。' });
       router.push('/login');
-    } catch (err) {
+    } catch {
       toast({ title: '登出失敗', description: '請稍後再試。', variant: 'destructive' });
     } finally {
       setLoading(false);

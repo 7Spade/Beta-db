@@ -26,7 +26,6 @@ import { createUserProfile } from './auth-actions';
 function LoginForm() {
   const { toast } = useToast();
   const [loading, setLoading] = React.useState(false);
-  const router = useRouter();
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -39,7 +38,7 @@ function LoginForm() {
   const onSubmit = async (data: LoginValues) => {
     setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+      await signInWithEmailAndPassword(auth, data.email, data.password);
       
       // We don't need to check profile here, AuthProvider will handle routing
       toast({

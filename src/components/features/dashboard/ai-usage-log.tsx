@@ -73,7 +73,7 @@ export async function AiUsageLog() {
         </CardContent>
       </Card>
     )
-  } catch (error) {
+  } catch {
     return (
       <Card>
         <CardContent className="p-6">

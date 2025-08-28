@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, MessageSquare, Handshake } from 'lucide-react';
+import { MessageSquare, Handshake } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ContactManagementPage() {

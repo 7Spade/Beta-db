@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from '@/components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { listItems } from '@/components/features/cloud-drive/actions/storage-actions';
 import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
 import { Skeleton } from '@/components/ui/skeleton';

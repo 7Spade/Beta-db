@@ -31,10 +31,6 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
     .reduce((acc, p) => acc + p.amount, 0);
   const paymentProgress = contract.totalValue > 0 ? (totalPaid / contract.totalValue) * 100 : 0;
 
-  const getStatusVariant = (status: Payment['status'] | ChangeOrder['status']) => {
-     return UI_CONSTANTS.STATUS_VARIANTS[status] || 'secondary';
-  }
-
   // 將合約的文字版「工作範疇」解析為結構化清單
   const scopeItems = useMemo(() => {
     const lines = (contract.scope || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);

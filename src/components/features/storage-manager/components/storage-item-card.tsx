@@ -1,14 +1,14 @@
 
 'use client';
 
-import { useState, type FC } from 'react';
+import { type FC } from 'react';
 import { useRouter } from 'next/navigation';
-import { File, Folder, MoreVertical, Download, Trash2, Edit, Cpu, ExternalLink } from 'lucide-react';
+import { File, Folder, MoreVertical, Download, Trash2, Edit, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
-import { formatBytes, formatDate } from '@/lib/utils/utils';
+import { formatBytes } from '@/lib/utils/utils';
 import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
 import { getSignedUrl } from '@/components/features/cloud-drive/actions/storage-actions';
 
@@ -22,7 +22,6 @@ interface StorageItemCardProps {
 export const StorageItemCard: FC<StorageItemCardProps> = ({ item, onNavigate, onDelete, onRename }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [isUrlLoading, setIsUrlLoading] = useState(false);
 
   const handleDoubleClick = () => {
     if (item.type === 'folder') {
@@ -31,14 +30,12 @@ export const StorageItemCard: FC<StorageItemCardProps> = ({ item, onNavigate, on
   };
 
   const handleAction = async (action: () => Promise<{ url?: string, error?: string } | void>) => {
-    setIsUrlLoading(true);
     const result = await action();
     if (result && result.url) {
       window.open(result.url, '_blank');
     } else if (result && result.error) {
       toast({ variant: 'destructive', title: '錯誤', description: result.error });
     }
-    setIsUrlLoading(false);
   };
   
   const handleDocuParse = () => {

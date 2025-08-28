@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
 import { Button } from "@/ui/button";
-import { GripVertical, Plus, Trash2, MoreVertical } from "lucide-react";
+import { GripVertical, Plus, MoreVertical } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/ui/card";
 import { Input } from "@/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";

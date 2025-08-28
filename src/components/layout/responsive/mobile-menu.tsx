@@ -6,7 +6,6 @@ import { Menu } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'

@@ -13,7 +13,7 @@ interface ResponsiveWrapperProps {
 }
 
 const ResponsiveWrapper = React.forwardRef<HTMLDivElement, ResponsiveWrapperProps>(
-  ({ children, className, breakpoint = "md", mobile, tablet, desktop, ...props }, ref) => {
+  ({ children, className, mobile, tablet, desktop, ...props }, ref) => {
     const [isMobile, setIsMobile] = React.useState(false)
     const [isTablet, setIsTablet] = React.useState(false)
 
