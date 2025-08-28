@@ -41,7 +41,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { extractWorkItemsFromDocument } from '@/docu-parse/actions/docu-parse-actions';
 import type { WorkItem, DocDetails } from '@/docu-parse/types/docu-parse.types';
-import { createProjectAndContractFromDocument } from '@/contracts/actions/contract-actions';
+import { createProjectAndContractFromParsedData } from '@/docu-parse/actions/docu-parse-commit.actions';
 import { WorkItemsTable } from '@/docu-parse/tables';
 import { Button } from '@/ui/button';
 import { Badge } from '@/ui/badge';
@@ -170,7 +170,7 @@ export function DocuParseView() {
     }
     setIsCreating(true);
     try {
-      const result = await createProjectAndContractFromDocument({
+      const result = await createProjectAndContractFromParsedData({
         docDetails,
         workItems,
       });
