@@ -206,7 +206,38 @@
 │      └─biometric-auth                 # 生物辨識 - 指紋、臉部辨識登入
 ```
 
-### 10. 多租戶支援 🏢 Multi-Tenant Support
+### 10. 網站內容管理 🌐 Website Content Management System (CMS)
+```
+├─website-cms                           # 網站內容管理主模組
+│  ├─page-management                    # 頁面管理
+│  │  ├─about-us                        # 關於我們 - 公司介紹、團隊資訊
+│  │  ├─contact-us                      # 聯絡我們 - 聯絡表單、公司資訊
+│  │  ├─case-studies                    # 查看案例 - 成功案例展示與分類
+│  │  └─careers                         # 企業徵才 - 職缺發布與應徵管理
+│  ├─blog-system                        # 部落格系統
+│  │  ├─article-editor                  # 文章編輯器 - 富文本編輯與發布
+│  │  ├─category-management             # 分類管理 - 文章標籤與分類
+│  │  ├─comment-system                  # 留言系統 - 讀者互動與管理
+│  │  └─seo-optimization                # SEO優化 - 關鍵字、描述、標籤
+│  ├─media-library                      # 媒體庫管理
+│  │  ├─image-gallery                   # 圖片庫 - 圖片上傳、編輯、分類
+│  │  ├─document-storage                # 文件儲存 - PDF、Word等檔案管理
+│  │  └─video-management                # 影片管理 - 影片上傳與嵌入
+│  ├─legal-pages                        # 法律頁面管理
+│  │  ├─privacy-policy                  # 隱私權政策 - GDPR合規內容管理
+│  │  ├─terms-of-service               # 服務條款 - 使用條款與免責聲明
+│  │  └─legal-notices                   # 法律聲明 - 版權、商標等聲明
+│  ├─navigation-menu                    # 導航選單管理
+│  │  ├─header-menu                     # 頂部選單 - 主導航結構設定
+│  │  ├─footer-menu                     # 底部選單 - 頁腳連結管理
+│  │  └─breadcrumb                      # 麵包屑 - 頁面路徑導航
+│  └─website-settings                   # 網站設定
+│      ├─theme-customization            # 主題客製化 - 色彩、字體、版面
+│      ├─contact-forms                  # 聯絡表單 - 客製化表單建立
+│      └─analytics-tracking             # 分析追蹤 - Google Analytics整合
+```
+
+### 11. 多租戶支援 🏢 Multi-Tenant Support
 ```
 ├─multi-tenancy                         # 多租戶主模組
 │  ├─tenant-management                  # 租戶管理
@@ -235,7 +266,8 @@
 ### 中優先級 (3-6個月)
 1. **HRM系統** - 人力資源管理，組織效能提升
 2. **工作流程自動化** - 提升效率，降低人工錯誤
-3. **安全與合規** - 風險控制，法規遵循
+3. **網站CMS系統** - 官網內容管理，品牌形象維護
+4. **安全與合規** - 風險控制，法規遵循
 
 ### 低優先級 (6個月以上)
 1. **系統整合** - 擴展生態，第三方服務整合
