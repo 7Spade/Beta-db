@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useMemo, useState } from "react";
 import {
@@ -19,15 +20,12 @@ import { type Task, type Column } from "../types";
 
 export const useKanban = (
   initialColumns: Column[],
-  initialTasks: Task[]
+  initialTasks: Task[],
+  setColumns: React.Dispatch<React.SetStateAction<Column[]>>,
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
 ) => {
-  const [columns, setColumns] = useState<Column[]>(initialColumns);
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
-
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
+  const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
-
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -127,10 +125,6 @@ export const useKanban = (
     onDragEnd,
     activeColumn,
     activeTask,
-    columns,
-    setColumns,
-    tasks,
-    setTasks,
     columnsId,
   };
 };

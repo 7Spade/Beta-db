@@ -1,21 +1,30 @@
+
 "use client";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { KanbanCard, type KanbanCardProps } from "./kanban-card";
+import { KanbanCard } from "./kanban-card";
 import { type Column, type Task } from "../types";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
 import { Button } from "@/components/ui/button";
-import { GripVertical } from "lucide-react";
+import { GripVertical, Plus, Trash2, MoreVertical } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+
 
 interface KanbanColumnProps {
   column: Column;
-  tasks: KanbanCardProps["task"][];
+  tasks: Task[];
+  onAddTask: (columnId: string, title: string) => void;
+  onDeleteTask: (taskId: string) => void;
+  onDeleteColumn: (columnId: string) => void;
 }
 
-export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
+export function KanbanColumn({ column, tasks, onAddTask, onDeleteTask, onDeleteColumn }: KanbanColumnProps) {
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
@@ -41,7 +50,7 @@ export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
   };
 
   const containerStyle = cva(
-    "w-full max-w-sm flex flex-col flex-shrink-0",
+    "w-full max-w-sm flex flex-col flex-shrink-0 h-full",
     {
       variants: {
         dragging: {
@@ -51,6 +60,13 @@ export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
       },
     }
   );
+  
+  const handleAddTask = () => {
+    if(newTaskTitle.trim()) {
+      onAddTask(column.id as string, newTaskTitle.trim());
+      setNewTaskTitle('');
+    }
+  }
 
   return (
     <Card
@@ -61,7 +77,32 @@ export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
       })}
     >
       <CardHeader className="p-4 font-semibold border-b flex flex-row items-center justify-between">
-        <span>{column.title}</span>
+        <span className="flex-grow">{column.title} ({tasks.length})</span>
+        <AlertDialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-secondary-foreground/50">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>重新命名</DropdownMenuItem>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem onSelect={e => e.preventDefault()} className="text-destructive">刪除欄位</DropdownMenuItem>
+              </AlertDialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>確定要刪除「{column.title}」嗎？</AlertDialogTitle>
+              <AlertDialogDescription>此操作無法復原。這將永久刪除此欄位及其所有任務。</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onDeleteColumn(column.id as string)}>繼續刪除</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <Button
           variant={"ghost"}
           {...attributes}
@@ -72,13 +113,26 @@ export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
           <GripVertical />
         </Button>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 p-4">
+      <CardContent className="flex flex-col gap-4 p-4 overflow-y-auto">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
-            <KanbanCard key={task.id} task={task} />
+            <KanbanCard key={task.id} task={task} onDeleteTask={onDeleteTask} />
           ))}
         </SortableContext>
       </CardContent>
+       <CardContent className="border-t p-4 mt-auto">
+          <div className="flex items-center gap-2">
+            <Input 
+                placeholder="新增任務..." 
+                value={newTaskTitle}
+                onChange={e => setNewTaskTitle(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleAddTask()}
+            />
+            <Button size="icon" onClick={handleAddTask}>
+                <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+       </CardContent>
     </Card>
   );
 }

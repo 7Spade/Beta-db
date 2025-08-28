@@ -1,3 +1,4 @@
+
 "use client";
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
@@ -5,16 +6,20 @@ import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cva } from "class-variance-authority";
-import { GripVertical } from "lucide-react";
+import { GripVertical, MoreVertical, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { type Task } from "../types";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+
 
 export interface KanbanCardProps {
   task: Task;
   isOverlay?: boolean;
+  onDeleteTask: (taskId: string) => void;
 }
 
-export const KanbanCard = ({ task, isOverlay }: KanbanCardProps) => {
+export const KanbanCard = ({ task, isOverlay, onDeleteTask }: KanbanCardProps) => {
   const {
     setNodeRef,
     attributes,
@@ -35,7 +40,7 @@ export const KanbanCard = ({ task, isOverlay }: KanbanCardProps) => {
     transform: CSS.Transform.toString(transform),
   };
 
-  const containerStyle = cva("px-4 py-2", {
+  const containerStyle = cva("px-3 py-2", {
     variants: {
       dragging: {
         over: "ring-2 opacity-30",
@@ -52,18 +57,43 @@ export const KanbanCard = ({ task, isOverlay }: KanbanCardProps) => {
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })}
     >
-      <CardHeader className="px-0 py-2 relative">
+      <CardHeader className="p-0 relative flex flex-row justify-end items-center">
         <Button
           variant={"ghost"}
           {...attributes}
           {...listeners}
-          className="p-1 -ml-2 h-auto cursor-grab absolute right-0"
+          className="p-1 h-auto cursor-grab"
         >
           <span className="sr-only">Move task</span>
-          <GripVertical />
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
         </Button>
+        <AlertDialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-7 w-7">
+                    <MoreVertical className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuItem>編輯任務</DropdownMenuItem>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem className="text-destructive" onSelect={(e) => e.preventDefault()}>刪除任務</DropdownMenuItem>
+                </AlertDialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>確定要刪除此任務嗎？</AlertDialogTitle>
+              <AlertDialogDescription>此操作無法復原。</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onDeleteTask(task.id as string)}>繼續刪除</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardHeader>
-      <CardContent className="px-0 py-2 text-sm whitespace-pre-wrap">
+      <CardContent className="px-0 py-1 text-sm whitespace-pre-wrap">
         {task.title}
       </CardContent>
     </Card>
