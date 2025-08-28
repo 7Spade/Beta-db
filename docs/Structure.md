@@ -395,11 +395,15 @@
 │  │  ├─kanban
 │  │  │  │  index.ts
 │  │  │  │  README.md
+│  │  │  │  types.ts
 │  │  │  │
 │  │  │  ├─components
 │  │  │  │      kanban-board.tsx
 │  │  │  │      kanban-card.tsx
 │  │  │  │      kanban-column.tsx
+│  │  │  │      note-card.tsx
+│  │  │  │      notes-grid.tsx
+│  │  │  │      quick-note.tsx
 │  │  │  │
 │  │  │  ├─data
 │  │  │  │      index.ts
