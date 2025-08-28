@@ -5,10 +5,10 @@
 'use client';
 
 import { useState, useEffect, type FC } from 'react';
-import { File as FileIcon, MoreVertical, Download, Trash2, ExternalLink } from 'lucide-react';
+import { File as FileIcon, MoreVertical, Download, Trash2, ExternalLink, Edit } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { formatBytes } from '@/lib/utils/utils';
 import type { StorageItem } from '../types/storage.types';
 import { getSignedUrl } from '../actions/storage-actions';
@@ -16,27 +16,28 @@ import { getSignedUrl } from '../actions/storage-actions';
 interface FileCardProps {
   file: StorageItem;
   onDelete: () => void;
+  onRename: () => void;
 }
 
-export const FileCard: FC<FileCardProps> = ({ file, onDelete }) => {
-  const [url, setUrl] = useState<string | null>(null);
+export const FileCard: FC<FileCardProps> = ({ file, onDelete, onRename }) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     // 只有當滑鼠懸停且檔案是圖片時，才去獲取 URL
-    if (isHovered && file.contentType?.startsWith('image/') && !url) {
+    if (isHovered && file.contentType?.startsWith('image/') && !previewUrl) {
       getSignedUrl(file.fullPath).then(result => {
         if (result.url) {
-          setUrl(result.url);
+          setPreviewUrl(result.url);
         }
       });
     }
-  }, [isHovered, file, url]);
+  }, [isHovered, file, previewUrl]);
   
-  const handleDownload = async () => {
+  const handleOpen = async () => {
     const result = await getSignedUrl(file.fullPath);
     if (result.url) {
-      // 透過在新分頁開啟來觸發下載，避免 CORS 和其他瀏覽器限制
+      // 透過在新分頁開啟來觸發下載或預覽
       window.open(result.url, '_blank');
     }
   };
@@ -50,8 +51,8 @@ export const FileCard: FC<FileCardProps> = ({ file, onDelete }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardContent className="p-0 aspect-square flex items-center justify-center bg-muted rounded-t-lg">
-        {isImage && url ? (
-          <img src={url} alt={file.name} className="w-full h-full object-cover rounded-t-lg" data-ai-hint="file image" />
+        {isImage && previewUrl ? (
+          <img src={previewUrl} alt={file.name} className="w-full h-full object-cover rounded-t-lg" data-ai-hint="file image" />
         ) : (
           <FileIcon className="h-10 w-10 text-muted-foreground" />
         )}
@@ -70,9 +71,17 @@ export const FileCard: FC<FileCardProps> = ({ file, onDelete }) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleDownload}>
+                <DropdownMenuItem onClick={handleOpen}>
+                    <ExternalLink className="mr-2 h-4 w-4" /> 在新分頁開啟
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleOpen}>
                     <Download className="mr-2 h-4 w-4" /> 下載
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={onRename}>
+                    <Edit className="mr-2 h-4 w-4" /> 重新命名
+                </DropdownMenuItem>
+                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onDelete} className="text-destructive">
                     <Trash2 className="mr-2 h-4 w-4" /> 刪除
                 </DropdownMenuItem>

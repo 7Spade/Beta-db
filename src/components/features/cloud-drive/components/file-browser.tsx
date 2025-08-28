@@ -16,9 +16,10 @@ interface FileBrowserProps {
   isLoading: boolean;
   onItemClick: (item: StorageItem) => void;
   onDeleteItem: (item: StorageItem) => void;
+  onRenameItem: (item: StorageItem) => void;
 }
 
-export const FileBrowser: FC<FileBrowserProps> = ({ items, isLoading, onItemClick, onDeleteItem }) => {
+export const FileBrowser: FC<FileBrowserProps> = ({ items, isLoading, onItemClick, onDeleteItem, onRenameItem }) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -43,9 +44,9 @@ export const FileBrowser: FC<FileBrowserProps> = ({ items, isLoading, onItemClic
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
       {items.map((item) =>
         item.type === 'folder' ? (
-          <FolderCard key={item.fullPath} folder={item} onClick={() => onItemClick(item)} onDelete={() => onDeleteItem(item)} />
+          <FolderCard key={item.fullPath} folder={item} onClick={() => onItemClick(item)} onDelete={() => onDeleteItem(item)} onRename={() => onRenameItem(item)} />
         ) : (
-          <FileCard key={item.fullPath} file={item} onDelete={() => onDeleteItem(item)} />
+          <FileCard key={item.fullPath} file={item} onDelete={() => onDeleteItem(item)} onRename={() => onRenameItem(item)} />
         )
       )}
     </div>

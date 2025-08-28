@@ -145,3 +145,30 @@ export async function getSignedUrl(path: string): Promise<{ url?: string, error?
         return { error: '無法取得下載連結。' };
     }
 }
+
+/**
+ * 重新命名檔案或資料夾
+ */
+export async function renameItem(oldPath: string, newName: string, type: 'file' | 'folder'): Promise<StorageAction> {
+  try {
+    const parentPath = getParentPath(oldPath);
+    const newPath = buildFullPath(parentPath, newName);
+
+    if (type === 'folder') {
+      const [files] = await bucket.getFiles({ prefix: `${oldPath}/` });
+      for (const file of files) {
+        const relativePath = file.name.substring(oldPath.length);
+        const destination = `${newPath}${relativePath}`;
+        await file.move(destination);
+      }
+    } else {
+      await bucket.file(oldPath).move(newPath);
+    }
+    
+    revalidatePath(`/cloud-drive?path=${parentPath}`, 'page');
+    return { success: true };
+  } catch (error: any) {
+    console.error("重新命名失敗:", error);
+    return { success: false, error: '重新命名失敗。' };
+  }
+}

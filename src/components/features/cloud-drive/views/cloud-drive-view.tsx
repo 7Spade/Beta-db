@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { FolderPlus } from 'lucide-react';
 import { FileBrowser } from '../components/file-browser';
 import { UploadButton } from '../components/upload-button';
-import { listItems, createFolder, deleteItem } from '../actions/storage-actions';
+import { listItems, createFolder, deleteItem, renameItem } from '../actions/storage-actions';
 import type { StorageItem } from '../types/storage.types';
 
 export function CloudDriveView() {
@@ -27,8 +27,10 @@ export function CloudDriveView() {
   const [items, setItems] = React.useState<StorageItem[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [itemToDelete, setItemToDelete] = React.useState<StorageItem | null>(null);
+  const [itemToRename, setItemToRename] = React.useState<StorageItem | null>(null);
   const [isCreateFolderOpen, setCreateFolderOpen] = React.useState(false);
   const [newFolderName, setNewFolderName] = React.useState('');
+  const [newItemName, setNewItemName] = React.useState('');
 
   const currentPath = React.useMemo(() => searchParams.get('path') || '', [searchParams]);
 
@@ -68,6 +70,24 @@ export function CloudDriveView() {
       toast({ variant: 'destructive', title: '錯誤', description: result.error });
     }
     setItemToDelete(null);
+  };
+
+  const handleOpenRenameDialog = (item: StorageItem) => {
+    setItemToRename(item);
+    setNewItemName(item.name);
+  };
+  
+  const handleConfirmRename = async () => {
+    if (!itemToRename || !newItemName) return;
+    const result = await renameItem(itemToRename.fullPath, newItemName, itemToRename.type);
+    if (result.success) {
+      toast({ title: '成功', description: '項目已重新命名。'});
+      fetchItems();
+    } else {
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
+    }
+    setItemToRename(null);
+    setNewItemName('');
   };
   
   const handleCreateFolder = async () => {
@@ -136,6 +156,7 @@ export function CloudDriveView() {
             isLoading={isLoading}
             onItemClick={handleItemClick}
             onDeleteItem={(item) => setItemToDelete(item)}
+            onRenameItem={handleOpenRenameDialog}
           />
         </CardContent>
       </Card>
@@ -151,6 +172,28 @@ export function CloudDriveView() {
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setItemToDelete(null)}>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmDelete}>繼續</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!itemToRename} onOpenChange={(open) => !open && setItemToRename(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>重新命名</AlertDialogTitle>
+            <AlertDialogDescription>
+              為「{itemToRename?.name}」輸入一個新名稱。
+            </AlertDialogDescription>
+            <Input 
+              value={newItemName}
+              onChange={(e) => setNewItemName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleConfirmRename()}
+              className="mt-4"
+              autoFocus
+            />
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setItemToRename(null)}>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmRename}>儲存</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

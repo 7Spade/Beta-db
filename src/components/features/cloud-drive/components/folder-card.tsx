@@ -5,19 +5,20 @@
 'use client';
 
 import type { FC } from 'react';
-import { Folder as FolderIcon, MoreVertical, Trash2 } from 'lucide-react';
+import { Folder as FolderIcon, MoreVertical, Trash2, Edit } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { StorageItem } from '../types/storage.types';
 
 interface FolderCardProps {
   folder: StorageItem;
   onClick: () => void;
   onDelete: () => void;
+  onRename: () => void;
 }
 
-export const FolderCard: FC<FolderCardProps> = ({ folder, onClick, onDelete }) => {
+export const FolderCard: FC<FolderCardProps> = ({ folder, onClick, onDelete, onRename }) => {
   return (
     <Card 
         className="transition-all duration-200 hover:shadow-md group cursor-pointer"
@@ -38,6 +39,10 @@ export const FolderCard: FC<FolderCardProps> = ({ folder, onClick, onDelete }) =
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem onClick={onRename}>
+                    <Edit className="mr-2 h-4 w-4" /> 重新命名
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onDelete} className="text-destructive">
                     <Trash2 className="mr-2 h-4 w-4" /> 刪除
                 </DropdownMenuItem>
