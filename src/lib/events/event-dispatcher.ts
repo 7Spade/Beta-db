@@ -1,4 +1,4 @@
-import type { AppEventName, AppEventPayloadMap } from './app-events';
+import type { AppEventName, AppEventPayloadMap } from '@/events/app-events';
 
 type Listener<T extends AppEventName> = (payload: AppEventPayloadMap[T]) => void | Promise<void>;
 

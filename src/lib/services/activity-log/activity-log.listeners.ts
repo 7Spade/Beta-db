@@ -1,5 +1,5 @@
-import { subscribe } from '@/lib/events/event-dispatcher';
-import { createLogEntry } from './activity-log.service';
+import { subscribe } from '@/events/event-dispatcher';
+import { createLogEntry } from '@/services/activity-log/activity-log.service';
 
 // user.registered → actor 是該 user 自己
 subscribe('user.registered', async ({ userId, email, displayName }) => {

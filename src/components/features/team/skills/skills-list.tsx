@@ -2,16 +2,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { firestore } from '@/firebase-client/firebase-client';
 import { collection, onSnapshot, addDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import type { Skill } from '@/lib/types/types';
+import type { Skill } from '@/types/types';
 import { useToast } from '@/hooks/use-toast';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Button } from '@/ui/button';
 import { PlusCircle, Trash2, Edit } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Skeleton } from '@/ui/skeleton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { SkillFormDialog } from './skill-form-dialog';
 
 export function SkillsList() {

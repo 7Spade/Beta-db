@@ -6,8 +6,8 @@
 import { useEffect, useState } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import type { Contract } from '../types';
-import { ContractDetailsSheet } from '../sheets';
+import type { Contract } from '@/contracts/types';
+import { ContractDetailsSheet } from '@/contracts/sheets';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 

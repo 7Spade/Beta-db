@@ -18,8 +18,8 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { KanbanCard, type KanbanCardProps } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";
-import { type Column, Task } from "../types";
-import { useKanban } from "../hooks/use-kanban";
+import { type Column, Task } from "@/kanban/types";
+import { useKanban } from "@/kanban/hooks/use-kanban";
 import { createPortal } from "react-dom";
 
 interface KanbanBoardProps {
@@ -83,7 +83,7 @@ export const KanbanBoard = ({ columns, tasks, setColumns, setTasks, onAddTask, o
               onDeleteColumn={onDeleteColumn}
             />
           )}
-          {activeTask && <KanbanCard task={activeTask} />}
+          {activeTask && <KanbanCard task={activeTask} onDeleteTask={onDeleteTask} />}
         </DragOverlay>,
         document.body
       )}

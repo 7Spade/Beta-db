@@ -58,7 +58,7 @@ export const adminStorage = getStorage();
 
 ```typescript
 import { initializeApp, cert } from 'firebase-admin/app';
-import serviceAccount from '../../serviceAccountKey.json';
+import serviceAccount from '@root/serviceAccountKey.json';
 
 const app = initializeApp({
   credential: cert(serviceAccount),

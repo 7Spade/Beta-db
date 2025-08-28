@@ -4,11 +4,11 @@
  * 它作為一個伺服器元件，負責從後端獲取當前用戶的認證資訊和設定檔資料，
  * 然後將這些資料傳遞給客戶端子元件進行渲染。
  */
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { ProfileForm } from './profile-form';
 import { cookies } from 'next/headers';
-import { adminAuth, adminDb } from '@/lib/db/firebase-admin/firebase-admin';
-import type { UserProfile } from '@/components/features/auth/use-auth';
+import { adminAuth, adminDb } from '@/firebase-admin/firebase-admin';
+import type { UserProfile } from '@/auth/use-auth';
 
 type UserData = {
   uid: string;

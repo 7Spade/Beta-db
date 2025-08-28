@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Pin, MoreVertical, Trash2, Edit3 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { type Note, NOTE_COLORS } from "../types";
+import { type Note, NOTE_COLORS } from "@/kanban/types";
 import { cn } from "@/lib/utils/utils";
 
 interface NoteCardProps {

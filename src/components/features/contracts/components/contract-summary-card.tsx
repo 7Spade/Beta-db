@@ -4,7 +4,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import type { Contract } from '../types';
+import type { Contract } from '@/contracts/types';
 
 interface ContractSummaryCardProps {
   contract: Contract;

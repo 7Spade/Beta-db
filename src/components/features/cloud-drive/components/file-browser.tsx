@@ -8,7 +8,7 @@ import type { FC } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileCard } from './file-card';
 import { FolderCard } from './folder-card';
-import type { StorageItem } from '../types/storage.types';
+import type { StorageItem } from '@/cloud-drive/types/storage.types';
 import { File } from 'lucide-react';
 
 interface FileBrowserProps {

@@ -2,22 +2,22 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { TaskItem } from '@/components/features/app/task-item';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { TaskItem } from '@/app-features/task-item';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import type { Project, Task } from '@/lib/types/types';
+import { Input } from '@/ui/input';
+import { Badge } from '@/ui/badge';
+import type { Project, Task } from '@/types/types';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetDescription,
-} from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from '@/ui/sheet';
+import { ScrollArea } from '@/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { addTaskAction } from './actions/project-actions';
 

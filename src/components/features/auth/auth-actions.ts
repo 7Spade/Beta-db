@@ -1,7 +1,7 @@
 
 'use client';
 
-import { auth } from '@/lib/db/firebase-client/firebase-client';
+import { auth } from '@/firebase-client/firebase-client';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -9,7 +9,7 @@ import {
 } from 'firebase/auth';
 import type { LoginValues, RegisterValues } from './auth-form-schemas';
 import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { firestore } from '@/firebase-client/firebase-client';
 
 
 export interface AuthActionResponse {

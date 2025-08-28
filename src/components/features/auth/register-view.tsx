@@ -10,18 +10,18 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+} from '@/ui/card';
+import { Button } from '@/ui/button';
+import { Input } from '@/ui/input';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth } from '@/lib/db/firebase-client/firebase-client';
+import { auth } from '@/firebase-client/firebase-client';
 import { registerSchema, type RegisterValues } from './auth-form-schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { dispatch } from '@/lib/events/event-dispatcher';
+import { dispatch } from '@/events/event-dispatcher';
 import { createUserProfile } from './auth-actions';
 
 function RegisterForm() {

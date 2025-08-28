@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { firestore } from '@/firebase-client';
 
 export interface CreateLogInput {
   actorId: string;

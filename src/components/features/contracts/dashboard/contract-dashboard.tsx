@@ -7,7 +7,7 @@
 import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
-import { useContracts } from '../hooks';
+import { useContracts } from '@/contracts/hooks';
 
 export function ContractDashboard() {
   const { contracts, loading } = useContracts();

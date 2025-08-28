@@ -11,7 +11,7 @@ import type { Partner } from '@/lib/types/types';
 import type { Role } from '@/lib/roles';
 import { Button } from '@/components/ui/button';
 import { Plus, Search } from 'lucide-react';
-import { Dashboard } from '../dashboard/dashboard';
+import { Dashboard } from '@/partnerverse/dashboard/dashboard';
 
 interface PartnerListProps {
   partners: Partner[];

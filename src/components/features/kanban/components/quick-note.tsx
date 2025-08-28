@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
-import { NOTE_COLORS } from "../types";
+import { NOTE_COLORS } from "@/kanban/types";
 
 interface QuickNoteProps {
   onAddNote: (title: string, content: string, color: string) => void;

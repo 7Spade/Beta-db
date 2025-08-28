@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import type { Project, Task, TaskStatus } from '@/lib/types/types';
+import type { Project, Task, TaskStatus } from '@/types/types';
 import {
   CheckCircle2,
   ChevronRight,
@@ -11,30 +11,30 @@ import {
   Plus,
   Sparkles,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { cn } from '@/lib/utils/utils';
+} from '@/ui/select';
+import { cn } from '@/utils/utils';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/ui/collapsible';
 import { formatDistanceToNow } from 'date-fns';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/ui/input';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { AISubtaskSuggestions } from './ai-subtask-suggestions';
-import { Badge } from '@/components/ui/badge';
+} from '@/ui/tooltip';
+import { AISubtaskSuggestions } from '@/app-features/ai-subtask-suggestions';
+import { Badge } from '@/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { addTaskAction, updateTaskStatusAction } from './actions/project-actions';
 

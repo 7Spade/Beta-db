@@ -9,14 +9,14 @@ import {
   SidebarHeader,
   SidebarContent,
   SidebarFooter,
-} from '@/components/ui/sidebar'
-import { Button } from '@/components/ui/button'
+} from '@/ui/sidebar'
+import { Button } from '@/ui/button'
 import { Package2 } from 'lucide-react'
 import {
   navigationConfig,
   footerNavigationConfig,
   shouldExpandSection,
-} from '@/config/navigation.config'
+} from '@/config-navigation/navigation.config'
 import { NavigationMenu } from './navigation-menu'
 import type { ComponentProps } from 'react'
 

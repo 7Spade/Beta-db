@@ -9,7 +9,6 @@ export { RegisterView } from './register-view';
 export { PendingApprovalView } from './pending-approval-view';
 export { VerifyEmailView } from './verify-email-view';
 
-
 // 社交認證元件
 export { SocialAuthButtons } from './social-auth-buttons';
 

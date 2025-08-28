@@ -5,8 +5,8 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { contractService } from '../services';
-import type { Contract } from '../types';
+import { contractService } from '@/contracts/services';
+import type { Contract } from '@/contracts/types';
 
 export function useContractActions() {
   const { toast } = useToast();

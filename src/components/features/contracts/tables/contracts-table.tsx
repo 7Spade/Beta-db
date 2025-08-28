@@ -24,10 +24,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Download, MoreHorizontal, Eye } from 'lucide-react';
-import { ContractDetailsSheet } from '../sheets';
+import { ContractDetailsSheet } from '@/contracts/sheets';
 import { formatDate } from '@/lib/utils/utils';
-import type { Contract } from '../types';
-import { ContractStatusBadge } from '../components';
+import type { Contract } from '@/contracts/types';
+import { ContractStatusBadge } from '@/contracts/components';
 
 interface ContractsTableProps {
   contracts: Contract[];

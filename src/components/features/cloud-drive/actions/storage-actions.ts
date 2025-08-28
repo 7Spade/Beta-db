@@ -6,7 +6,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
-import type { StorageItem, StorageAction, StorageListResult } from '../types/storage.types';
+import type { StorageItem, StorageAction, StorageListResult } from '@/cloud-drive/types/storage.types';
 
 // 從環境變數讀取儲存桶名稱，如果不存在則拋出錯誤
 const BUCKET_NAME = process.env.FIREBASE_STORAGE_BUCKET;

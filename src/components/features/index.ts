@@ -12,38 +12,38 @@
  */
 
 // Admin Features
-export * from './admin/views/admin-dashboard-view';
+export * from '@/admin/views/admin-dashboard-view';
 
 // Core App Features
-export * from './app/projects-view';
+export * from '@/app-features/projects-view';
 
 // Auth Features
-export * from './auth';
+export * from '@/auth';
 
 // Blog Features
-export * from './blog/views/posts-list-view';
-export * from './blog/views/post-form-view';
+export * from '@/blog/views/posts-list-view';
+export * from '@/blog/views/post-form-view';
 
 // Cloud Drive Features
-export * from './cloud-drive/views/cloud-drive-view';
+export * from '@/cloud-drive/views/cloud-drive-view';
 
 // Contracts Features
-export * from './contracts';
+export * from '@/contracts';
 
 // Dashboard Features
-export * from './dashboard/dashboard-view';
+export * from '@/dashboard/dashboard-view';
 
 // PartnerVerse Features
-export * from './partnerverse/partners/partners-view';
-export * from './partnerverse/workflows/workflow-builder';
+export * from '@/partnerverse/partners/partners-view';
+export * from '@/partnerverse/workflows/workflow-builder';
 
 // Quick Actions Features
-export * from './quick-actions/daily-report';
-export * from './quick-actions/project-progress';
-export * from './quick-actions/staff-attendance';
+export * from '@/quick-actions-features/daily-report';
+export * from '@/quick-actions-features/project-progress';
+export * from '@/quick-actions-features/staff-attendance';
 
 // Settings Features
-export * from './settings/settings-view';
+export * from '@/settings/settings-view';
 
 // Team Features
-export * from './team';
+export * from '@/team';

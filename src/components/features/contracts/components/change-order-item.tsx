@@ -4,7 +4,7 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import type { ChangeOrder } from '../types';
+import type { ChangeOrder } from '@/contracts/types';
 
 interface ChangeOrderItemProps {
   changeOrder: ChangeOrder;

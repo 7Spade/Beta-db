@@ -12,9 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { contractSchema, type ContractFormValues } from '../forms';
-import { ContractForm } from '../forms/contract-form';
-import type { Contract } from '../types';
+import { contractSchema, type ContractFormValues } from '@/contracts/forms';
+import { ContractForm } from '@/contracts/forms/contract-form';
+import type { Contract } from '@/contracts/types';
 
 interface CreateContractDialogProps {
     isOpen: boolean;

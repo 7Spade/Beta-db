@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { ChangeOrder } from '../types';
+import type { ChangeOrder } from '@/contracts/types';
 import { formatDate } from '@/lib/utils/utils';
 import { Badge } from '@/components/ui/badge';
 

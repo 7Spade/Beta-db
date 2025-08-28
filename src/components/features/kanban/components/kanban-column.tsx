@@ -2,16 +2,16 @@
 "use client";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { KanbanCard } from "./kanban-card";
-import { type Column, type Task } from "../types";
+import { type Column, type Task } from "@/kanban/types";
 import { useMemo, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { GripVertical, Plus, Trash2, MoreVertical } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Card, CardContent, CardHeader } from "@/ui/card";
+import { Input } from "@/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 
 
 interface KanbanColumnProps {

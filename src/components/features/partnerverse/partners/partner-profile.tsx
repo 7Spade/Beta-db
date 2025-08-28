@@ -15,13 +15,13 @@ import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { formatDate } from '@/lib/utils/utils';
 import Link from 'next/link';
-import { OverviewTab } from '../overview/overview-tab';
-import { ContactsTab } from '../contacts/contacts-tab';
-import { FinancialsTab } from '../financials/financials-tab';
-import { PerformanceTab } from '../performance/performance-tab';
-import { ComplianceTab } from '../compliance/compliance-tab';
-import { ContractsTab } from '../contracts/contracts-tab';
-import { TransactionsTab } from '../transactions/transactions-tab';
+import { OverviewTab } from '@/partnerverse/overview/overview-tab';
+import { ContactsTab } from '@/partnerverse/contacts/contacts-tab';
+import { FinancialsTab } from '@/partnerverse/financials/financials-tab';
+import { PerformanceTab } from '@/partnerverse/performance/performance-tab';
+import { ComplianceTab } from '@/partnerverse/compliance/compliance-tab';
+import { ContractsTab } from '@/partnerverse/contracts/contracts-tab';
+import { TransactionsTab } from '@/partnerverse/transactions/transactions-tab';
 import { ProfileHeader } from './profile/profile-header';
 
 

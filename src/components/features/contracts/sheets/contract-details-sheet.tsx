@@ -15,9 +15,9 @@ import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatDate } from '@/lib/utils/utils';
-import { UI_CONSTANTS } from '../constants';
-import type { Contract, Payment, ChangeOrder } from '../types';
-import { ContractStatusBadge } from '../components';
+import { UI_CONSTANTS } from '@/contracts/constants';
+import type { Contract, Payment, ChangeOrder } from '@/contracts/types';
+import { ContractStatusBadge } from '@/contracts/components';
 
 interface ContractDetailsSheetProps {
   contract: Contract;

@@ -1,4 +1,4 @@
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/ui/sidebar';
 import { ThemeProvider } from './theme-provider';
 
 

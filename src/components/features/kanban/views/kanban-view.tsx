@@ -2,10 +2,10 @@
 'use client';
 
 import { useState } from 'react';
-import { QuickNote } from "../components/quick-note";
-import { NotesGrid } from "../components/notes-grid";
-import { notes as initialNotes } from "../data";
-import type { Note } from '../types';
+import { QuickNote } from "@/kanban/components/quick-note";
+import { NotesGrid } from "@/kanban/components/notes-grid";
+import { notes as initialNotes } from "@/kanban/data";
+import type { Note } from '@/kanban/types';
 
 export const KanbanView = () => {
     const [notes, setNotes] = useState<Note[]>(initialNotes);

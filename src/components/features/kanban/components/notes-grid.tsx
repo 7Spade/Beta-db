@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { NoteCard } from "./note-card";
-import { type Note } from "../types";
-import { Input } from "@/components/ui/input";
+import { type Note } from "@/kanban/types";
+import { Input } from "@/ui/input";
 import { Search } from "lucide-react";
 
 interface NotesGridProps {

@@ -1,8 +1,8 @@
 'use client'
 
-import { SidebarMenu } from '@/components/ui/sidebar'
+import { SidebarMenu } from '@/ui/sidebar'
 import { NavigationMenuItem } from './navigation-menu-item'
-import type { NavigationItem } from '@/config/navigation.config'
+import type { NavigationItem } from '@/config-navigation/navigation.config'
 
 interface NavigationMenuProps {
   items: NavigationItem[]

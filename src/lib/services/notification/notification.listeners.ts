@@ -1,6 +1,6 @@
-import { subscribe } from '@/lib/events/event-dispatcher';
-import type { AppEventPayloadMap } from '@/lib/events/app-events';
-import { createNotification } from './notification.service';
+import { subscribe } from '@/events/event-dispatcher';
+import type { AppEventPayloadMap } from '@/events/app-events';
+import { createNotification } from '@/services/notification/notification.service';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 

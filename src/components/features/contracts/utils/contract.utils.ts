@@ -2,7 +2,7 @@
  * @fileoverview 合約相關工具函數
  */
 
-import type { Contract } from '../types';
+import type { Contract } from '@/contracts/types';
 
 // Placeholder for contract utility functions.
 export const contractUtils = {

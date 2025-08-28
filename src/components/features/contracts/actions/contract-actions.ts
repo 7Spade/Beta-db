@@ -3,7 +3,7 @@
 import { writeBatch, collection, doc, Timestamp, setDoc } from "firebase/firestore";
 import { firestore } from "@/lib/db/firebase-client/firebase-client";
 import type { Task, Project } from "@/lib/types/types";
-import type { Contract } from '../types';
+import type { Contract } from '@/contracts/types';
 import type { WorkItem, DocDetails } from "@/components/features/docu-parse/types";
 
 interface ActionInput {

@@ -3,7 +3,7 @@
  * @description 基于 Supabase 官方推荐的最简配置
  */
 
-import { getSupabaseClient } from '@/lib/db/supabase'
+import { getSupabaseClient } from '@/db/supabase'
 
 // 自动记录 AI Token 使用情况
 export async function logAiTokenUsage(

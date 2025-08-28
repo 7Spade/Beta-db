@@ -1,4 +1,4 @@
-import { type Note, NOTE_COLORS } from "../types";
+import { type Note, NOTE_COLORS } from "@/kanban/types";
 
 export const notes: Note[] = [
   {

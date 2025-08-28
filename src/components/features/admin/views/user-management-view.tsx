@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { approveUser, rejectUser } from '../actions/user-actions';
+import { approveUser, rejectUser } from '@/admin/actions/user-actions';
 
 interface UserProfile {
   id: string;

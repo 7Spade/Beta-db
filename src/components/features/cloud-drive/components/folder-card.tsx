@@ -9,7 +9,7 @@ import { Folder as FolderIcon, MoreVertical, Trash2, Edit, FolderOpen } from 'lu
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import type { StorageItem } from '../types/storage.types';
+import type { StorageItem } from '@/cloud-drive/types/storage.types';
 
 interface FolderCardProps {
   folder: StorageItem;

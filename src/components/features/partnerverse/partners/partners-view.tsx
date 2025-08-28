@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { PartnerList } from './list/partner-list';
 import { PartnerProfile } from './profile/partner-profile';
 import { PartnerForm } from './forms/partner-form';
-import { ContactForm } from '../contacts/forms/contact-form';
+import { ContactForm } from '@/partnerverse/contacts/forms/contact-form';
 
 
 export const PartnersView: FC = () => {

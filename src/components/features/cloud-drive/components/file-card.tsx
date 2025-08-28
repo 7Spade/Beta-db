@@ -10,8 +10,8 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { formatBytes } from '@/lib/utils/utils';
-import type { StorageItem } from '../types/storage.types';
-import { getSignedUrl } from '../actions/storage-actions';
+import type { StorageItem } from '@/cloud-drive/types/storage.types';
+import { getSignedUrl } from '@/cloud-drive/actions/storage-actions';
 
 interface FileCardProps {
   file: StorageItem;

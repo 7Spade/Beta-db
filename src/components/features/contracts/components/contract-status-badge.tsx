@@ -3,8 +3,8 @@
  */
 
 import { Badge } from '@/components/ui/badge';
-import { getStatusVariant } from '../utils';
-import type { ContractStatus } from '../types';
+import { getStatusVariant } from '@/contracts/utils';
+import type { ContractStatus } from '@/contracts/types';
 
 interface ContractStatusBadgeProps {
   status: ContractStatus;

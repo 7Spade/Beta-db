@@ -16,7 +16,7 @@ import {
   MouseSensor,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { type Task, type Column } from "../types";
+import { type Task, type Column } from "@/kanban/types";
 
 export const useKanban = (
   initialColumns: Column[],

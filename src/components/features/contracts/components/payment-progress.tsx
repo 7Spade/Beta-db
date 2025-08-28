@@ -4,7 +4,7 @@
 'use client';
 
 import { Progress } from '@/components/ui/progress';
-import type { Contract } from '../types';
+import type { Contract } from '@/contracts/types';
 
 interface PaymentProgressProps {
   contract: Contract;

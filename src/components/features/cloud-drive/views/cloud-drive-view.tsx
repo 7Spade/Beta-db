@@ -13,10 +13,10 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { FolderPlus } from 'lucide-react';
-import { FileBrowser } from '../components/file-browser';
-import { UploadButton } from '../components/upload-button';
-import { listItems, createFolder, deleteItem, renameItem } from '../actions/storage-actions';
-import type { StorageItem } from '../types/storage.types';
+import { FileBrowser } from '@/cloud-drive/components/file-browser';
+import { UploadButton } from '@/cloud-drive/components/upload-button';
+import { listItems, createFolder, deleteItem, renameItem } from '@/cloud-drive/actions/storage-actions';
+import type { StorageItem } from '@/cloud-drive/types/storage.types';
 
 export function CloudDriveView() {
   const router = useRouter();

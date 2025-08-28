@@ -1,7 +1,7 @@
 /**
  * @fileoverview 狀態處理工具
  */
-import type { ContractStatus } from '../types';
+import type { ContractStatus } from '@/contracts/types';
 
 export const getStatusVariant = (status: ContractStatus): 'default' | 'secondary' | 'outline' | 'destructive' => {
   switch (status) {
