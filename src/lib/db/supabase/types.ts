@@ -25,7 +25,7 @@ export interface AiTokenLogRow {
   flow_name: string
   total_tokens: number
   status: 'succeeded' | 'failed'
-  user_id?: string
+  user_id?: string  // 使用 string 类型避免 UUID 类型问题
   error?: string
   timestamp: string
 }
@@ -35,7 +35,7 @@ export interface AiTokenLogInsert {
   flow_name: string
   total_tokens: number
   status: 'succeeded' | 'failed'
-  user_id?: string
+  user_id?: string  // 使用 string 类型避免 UUID 类型问题
   error?: string
   timestamp?: string
 }
@@ -45,7 +45,7 @@ export interface AiTokenLogUpdate {
   flow_name?: string
   total_tokens?: number
   status?: 'succeeded' | 'failed'
-  user_id?: string
+  user_id?: string  // 使用 string 类型避免 UUID 类型问题
   error?: string
   timestamp?: string
 }

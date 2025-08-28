@@ -3,44 +3,51 @@
  * @description 基于 Supabase 官方推荐的最简配置
  */
 
-import { getSupabaseClient } from '@/lib/db/supabase';
+import { getSupabaseClient } from '@/lib/db/supabase'
 
-/**
- * 记录 AI Token 使用量（极简化版本）
- */
-export async function logAiTokenUsage(flowName: string, totalTokens: number, status: 'succeeded' | 'failed', error?: string) {
+// 自动记录 AI Token 使用情况
+export async function logAiTokenUsage(
+  flowName: string,
+  totalTokens: number,
+  status: 'succeeded' | 'failed',
+  error?: string
+): Promise<void> {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await getSupabaseClient()
     
-    // 使用 any 类型避免复杂的类型推断问题
-    await (supabase as any)
+    // 自动插入日志记录
+    await supabase
       .from('ai_token_logs')
       .insert({
         flow_name: flowName,
         total_tokens: totalTokens,
-        status,
-        error,
-      });
+        status: status,
+        error: error,
+        timestamp: new Date().toISOString(),
+      })
   } catch (error) {
-    // 静默失败，不影响主要业务逻辑
-    console.error('AI token logging failed:', error);
+    // 静默处理错误，不影响主要业务逻辑
+    console.error('AI token logging failed:', error)
   }
 }
 
-/**
- * 获取 Token 使用统计（极简化版本）
- */
-export async function getTokenStats() {
+// 自动获取 Token 使用统计
+export async function getAiTokenUsageStats(days: number = 30) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await getSupabaseClient()
     
-    const { data } = await (supabase as any)
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - days)
+    
+    const { data } = await supabase
       .from('ai_token_logs')
-      .select('total_tokens, status')
-      .eq('status', 'succeeded');
-    
-    return data?.reduce((sum: number, log: any) => sum + log.total_tokens, 0) || 0;
-  } catch {
-    return 0;
+      .select('*')
+      .gte('timestamp', startDate.toISOString())
+      .order('timestamp', { ascending: false })
+
+    return data || []
+  } catch (error) {
+    console.error('Failed to get AI token stats:', error)
+    return []
   }
 }

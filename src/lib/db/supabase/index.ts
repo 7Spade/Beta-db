@@ -11,32 +11,24 @@ export type { Database, AiTokenLogRow, AiTokenLogInsert, AiTokenLogUpdate } from
 // ============================================================================
 // 客户端导出
 // ============================================================================
-export { createClient as createBrowserClient } from './client';
-export { createClient as createServerClient } from './server';
+// 极简配置：自动选择客户端
 
-// ============================================================================
-// 便捷函数
-// ============================================================================
+// 导出客户端创建函数
+export { createClient as createBrowserClient } from './client'
+export { createClient as createServerClient } from './server'
 
-/**
- * 检查是否为服务端环境
- */
-export const isServer = typeof window === 'undefined';
-
-/**
- * 根据环境获取合适的客户端
- */
+// 自动获取合适的客户端
 export async function getSupabaseClient() {
-  if (isServer) {
-    const { createClient } = await import('./server');
-    return createClient();
+  if (typeof window === 'undefined') {
+    // 服务端
+    const { createClient } = await import('./server')
+    return createClient()
   } else {
-    const { createClient } = await import('./client');
-    return createClient();
+    // 客户端
+    const { createClient } = await import('./client')
+    return createClient()
   }
 }
 
-// ============================================================================
-// 默认导出
-// ============================================================================
-export { createClient as default } from './client';
+// 默认导出浏览器客户端
+export { createClient as default } from './client'

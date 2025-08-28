@@ -1,9 +1,14 @@
 import { createBrowserClient } from '@supabase/ssr'
-import type { Database } from './types'
 
+// 极简配置：自动初始化连接
 export function createClient() {
-  return createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  // 自动从环境变量获取配置
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase environment variables')
+  }
+  
+  return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
