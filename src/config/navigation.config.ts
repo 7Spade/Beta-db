@@ -90,13 +90,13 @@ export const navigationConfig: NavigationItem[] = [
                 id: 'docu-parse',
                 label: '文件解析',
                 icon: FileText,
-                href: '/tools/docu-parse'
+                href: '/quick-actions/docu-parse'
             },
             {
                 id: 'cloud-drive',
                 label: '雲端硬碟',
                 icon: Cloud,
-                href: '/tools/cloud-drive'
+                href: '/quick-actions/cloud-drive'
             },
         ]
     },
