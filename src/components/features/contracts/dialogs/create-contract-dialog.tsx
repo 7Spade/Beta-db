@@ -12,8 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { contractSchema, type ContractFormValues } from '@/components/features/contracts/forms';
-import { ContractForm } from '@/components/features/contracts/forms/contract-form';
+import { contractSchema, type ContractFormValues, ContractForm } from '@/components/features/contracts/forms';
 import type { Contract } from '@/components/features/contracts/types';
 
 interface CreateContractDialogProps {
