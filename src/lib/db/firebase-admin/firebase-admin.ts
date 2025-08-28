@@ -21,7 +21,7 @@ if (!admin.apps.length) {
 
   // 在雲端（App Hosting/Cloud Run）會有預設憑證；本地優先 serviceAccountKey.json
   try {
-    const serviceAccount = require('../../serviceAccountKey.json');
+    const serviceAccount = require('../../../../serviceAccountKey.json');
     config.credential = admin.credential.cert(serviceAccount);
   } catch {
     config.credential = admin.credential.applicationDefault();
