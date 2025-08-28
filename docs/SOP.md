@@ -6,7 +6,10 @@
 - 用戶管理與權限控制 - User & Permission Management
 - 合約管理系統 - Contract Management
 - 項目管理與看板 - Project Management & Kanban
+  - 專案拆分任務 - Project Task Breakdown Structure
+  - 任務拆子任務 - Sub-task Management & Hierarchical Tasks
 - 團隊協作與知識庫 - Team Collaboration & Knowledge Base
+  - 工法工序庫 - Standard Operating Procedures Library
 - 倉儲管理 - Warehouse Management
 - AI 整合功能 - AI Integration
 - 文件解析 - Document Processing
@@ -65,6 +68,7 @@
 │  ├─employees                          # 員工資料管理
 │  │  ├─employee-profiles               # 員工檔案 - 個人資料與職涯記錄
 │  │  ├─employment-history              # 任職歷史 - 職位異動與晉升記錄
+│  │  ├─skills-management               # 技能清單管理 - 員工技能評估與認證
 │  │  └─document-management             # 文件管理 - 合約、證書等文件
 │  ├─payroll                            # 薪資管理系統
 │  │  ├─salary-calculation              # 薪資計算 - 基本薪資與獎金計算
@@ -77,11 +81,16 @@
 │  ├─time-attendance                    # 出勤管理系統
 │  │  ├─time-tracking                   # 工時記錄 - 打卡與工作時數統計
 │  │  ├─leave-management                # 請假管理 - 假勤申請與核准流程
-│  │  └─overtime-tracking               # 加班管理 - 加班時數與費用計算
-│  └─recruitment                        # 招聘管理系統
-│      ├─job-postings                   # 職缺發布 - 內外部招聘公告
-│      ├─applicant-tracking             # 應徵者追蹤 - 履歷篩選與面試安排
-│      └─interview-scheduling           # 面試排程 - 面試官與時間協調
+│  │  ├─overtime-tracking               # 加班管理 - 加班時數與費用計算
+│  │  └─shift-scheduling                # 排班表管理 - 員工輪班安排與調度
+│  ├─recruitment                        # 招聘管理系統
+│  │  ├─job-postings                    # 職缺發布 - 內外部招聘公告
+│  │  ├─applicant-tracking              # 應徵者追蹤 - 履歷篩選與面試安排
+│  │  └─interview-scheduling            # 面試排程 - 面試官與時間協調
+│  └─work-logging                       # 工作記錄系統
+│      ├─daily-journals                 # 每日日誌 - 員工工作記錄與心得
+│      ├─activity-tracking              # 活動追蹤 - 工作時間與任務記錄
+│      └─productivity-metrics           # 生產力指標 - 工作效率分析
 ```
 
 ### 4. 庫存管理增強 📦 Enhanced Inventory Management
@@ -108,6 +117,16 @@
 ### 5. 報表與商業智能 📈 Business Intelligence & Reporting
 ```
 ├─business-intelligence                 # 商業智能主模組
+│  ├─data-collection                    # 數據採集系統
+│  │  ├─sensor-data-collection          # 感測器數據採集 - IoT設備數據收集
+│  │  ├─user-behavior-tracking          # 用戶行為追蹤 - 操作軌跡與習慣分析
+│  │  ├─system-performance-metrics      # 系統性能指標 - 服務器、應用性能監控
+│  │  └─business-process-data           # 業務流程數據 - 各環節執行數據收集
+│  ├─ai-analytics-preparation           # AI分析準備
+│  │  ├─data-preprocessing              # 數據預處理 - 清洗、標準化、特徵工程
+│  │  ├─training-data-management        # 訓練數據管理 - 標註、版本控制、質量檢查
+│  │  ├─model-feature-extraction        # 模型特徵提取 - 自動特徵選擇與工程
+│  │  └─data-labeling-tools             # 數據標註工具 - 人工標註與自動標註
 │  ├─report-builder                     # 報表建立器
 │  │  ├─custom-reports                  # 自定義報表 - 拖拉式報表設計
 │  │  ├─report-templates                # 報表範本 - 常用報表格式庫
