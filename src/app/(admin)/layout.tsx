@@ -10,7 +10,11 @@ import { AppShell } from '@/components/layout/core/app-shell';
  *   - 例如，可以有一個專門為管理員設計的側邊欄或頁首。
  * - 目前為了快速建立骨架，我們重用主應用程式的 AppShell。
  */
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <AppProvider>
       <AppShell>{children}</AppShell>

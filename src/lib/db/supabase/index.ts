@@ -6,7 +6,12 @@
 // ============================================================================
 // 类型导出
 // ============================================================================
-export type { Database, AiTokenLogRow, AiTokenLogInsert, AiTokenLogUpdate } from '@/supabase/types';
+export type {
+  Database,
+  AiTokenLogRow,
+  AiTokenLogInsert,
+  AiTokenLogUpdate,
+} from '@/supabase/types';
 
 // ============================================================================
 // 客户端导出
@@ -14,21 +19,21 @@ export type { Database, AiTokenLogRow, AiTokenLogInsert, AiTokenLogUpdate } from
 // 极简配置：自动选择客户端
 
 // 导出客户端创建函数
-export { createClient as createBrowserClient } from '@/supabase/client'
-export { createClient as createServerClient } from '@/supabase/server'
+export { createClient as createBrowserClient } from '@/supabase/client';
+export { createClient as createServerClient } from '@/supabase/server';
 
 // 自动获取合适的客户端
 export async function getSupabaseClient() {
   if (typeof window === 'undefined') {
     // 服务端
-    const { createClient } = await import('@/supabase/server')
-    return createClient()
+    const { createClient } = await import('@/supabase/server');
+    return createClient();
   } else {
     // 客户端
-    const { createClient } = await import('@/supabase/client')
-    return createClient()
+    const { createClient } = await import('@/supabase/client');
+    return createClient();
   }
 }
 
 // 默认导出浏览器客户端
-export { createClient as default } from '@/supabase/client'
+export { createClient as default } from '@/supabase/client';

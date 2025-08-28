@@ -1,4 +1,1 @@
 export * from './firebase-client';
-
-
-
