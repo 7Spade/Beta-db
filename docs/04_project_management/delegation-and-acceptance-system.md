@@ -73,7 +73,7 @@
 - **Server Actions**: 所有狀態變更都應透過 Server Actions 執行，以確保業務邏輯和權限檢查在伺服器端完成。
 
 ### 結構樹 (Structure Tree)
-```
+```text
 src/
 ├── app/
 │   └── (dashboard)/

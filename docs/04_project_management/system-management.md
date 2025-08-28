@@ -48,7 +48,7 @@
 
 此模組的功能將完全體現在後台。
 
-```
+```text
 src/
 └── app/
     └── (admin)/
@@ -63,7 +63,8 @@ src/
             └── integrations/
                 └── page.tsx            <-- API 整合管理頁面
 ```
-```
+
+```text
 src/
 └── components/
     └── features/
