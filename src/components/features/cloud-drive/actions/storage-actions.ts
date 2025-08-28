@@ -73,8 +73,8 @@ export async function listItems(path: string): Promise<StorageListResult> {
     });
 
     return { items: allItems };
-  } catch (error: any) {
-    console.error('列出項目時發生錯誤:', error);
+  } catch {
+    console.error('列出項目時發生錯誤');
     return { items: [], error: '無法載入檔案列表。' };
   }
 }
