@@ -4,5 +4,6 @@
 
 export * from './contract.types';
 export * from './payment.types';
+export * from './receipt.types';
 export * from './change-order.types';
 export * from './contract-version.types';

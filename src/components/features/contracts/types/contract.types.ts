@@ -2,6 +2,7 @@
  * @fileoverview 合約核心類型定義
  */
 import type { Payment } from './payment.types';
+import type { Receipt } from './receipt.types';
 import type { ChangeOrder } from './change-order.types';
 import type { ContractVersion } from './contract-version.types';
 import type { Timestamp } from 'firebase-admin/firestore';
@@ -21,6 +22,7 @@ export interface Contract {
   status: ContractStatus;
   scope: string;
   payments: Payment[];
+  receipts: Receipt[];
   changeOrders: ChangeOrder[];
   versions: ContractVersion[];
 }

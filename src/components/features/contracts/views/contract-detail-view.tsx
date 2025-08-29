@@ -32,6 +32,11 @@ const processFirestoreContract = (doc: DocumentSnapshot<DocumentData>): Contract
       requestDate: p.requestDate?.toDate(),
       paidDate: p.paidDate?.toDate(),
     })) || [],
+    receipts: data.receipts?.map((r: DocumentData) => ({
+      ...r,
+      requestDate: r.requestDate?.toDate(),
+      receivedDate: r.receivedDate?.toDate(),
+    })) || [],
     changeOrders: data.changeOrders?.map((co: DocumentData) => ({
       ...co,
       date: co.date?.toDate(),

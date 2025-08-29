@@ -3,3 +3,4 @@
  */
 
 export * from './contracts-table';
+export * from './receipts-table';

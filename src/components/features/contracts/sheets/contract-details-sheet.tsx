@@ -17,6 +17,7 @@ import { ScrollArea } from '@/ui/scroll-area';
 import { formatDate } from '@/lib/utils/utils';
 import type { Contract } from '@/contracts/types';
 import { ContractStatusBadge } from '@/contracts/components';
+import { ReceiptProgress } from '@/contracts/components/receipt-progress';
 
 interface ContractDetailsSheetProps {
   contract: Contract;
@@ -65,9 +66,10 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
             </SheetDescription>
           </SheetHeader>
           <Tabs defaultValue="details">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="details">詳細資料</TabsTrigger>
               <TabsTrigger value="payments">付款</TabsTrigger>
+              <TabsTrigger value="receipts">收款</TabsTrigger>
               <TabsTrigger value="changes">變更單</TabsTrigger>
               <TabsTrigger value="history">歷史紀錄</TabsTrigger>
             </TabsList>
@@ -161,6 +163,46 @@ export function ContractDetailsSheet({ contract, isOpen, onOpenChange }: Contrac
                         </TableRow>
                       )) : (
                         <TableRow><TableCell colSpan={4} className="text-center h-24">尚無付款紀錄</TableCell></TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="receipts" className="mt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>收款追蹤</CardTitle>
+                  <CardDescription>所有收款請求及其狀態的紀錄。</CardDescription>
+                  <div className="pt-2">
+                    <ReceiptProgress 
+                      receipts={contract.receipts || []}
+                      totalValue={contract.totalValue}
+                    />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>金額</TableHead>
+                        <TableHead>請求日期</TableHead>
+                        <TableHead>狀態</TableHead>
+                        <TableHead>收款日期</TableHead>
+                        <TableHead>發票號碼</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {contract.receipts && contract.receipts.length > 0 ? contract.receipts.map((receipt) => (
+                        <TableRow key={receipt.id}>
+                          <TableCell>${receipt.amount.toLocaleString()}</TableCell>
+                          <TableCell>{formatDate(receipt.requestDate instanceof Date ? receipt.requestDate : receipt.requestDate?.toDate())}</TableCell>
+                          <TableCell><ContractStatusBadge status={receipt.status as '啟用中' | '已完成' | '暫停中' | '已終止'} /></TableCell>
+                          <TableCell>{receipt.receivedDate ? formatDate(receipt.receivedDate instanceof Date ? receipt.receivedDate : receipt.receivedDate?.toDate()) : '未收款'}</TableCell>
+                          <TableCell>{receipt.invoiceNumber || '-'}</TableCell>
+                        </TableRow>
+                      )) : (
+                        <TableRow><TableCell colSpan={5} className="text-center h-24">尚無收款紀錄</TableCell></TableRow>
                       )}
                     </TableBody>
                   </Table>
