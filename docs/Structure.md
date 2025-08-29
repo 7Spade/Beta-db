@@ -522,7 +522,7 @@
 │  │          docu-parse-view.tsx
 │  │
 │  ├─integrations
-│  │      READMD.md
+│  │      README.md
 │  │
 │  ├─kanban
 │  │  │  index.ts
@@ -550,10 +550,10 @@
 │  │          kanban-view.tsx
 │  │
 │  ├─mobile-app
-│  │      READMD.md
+│  │      README.md
 │  │
 │  ├─multi-tenancy
-│  │      READMD.md
+│  │      README.md
 │  │
 │  ├─partnerverse
 │  │  │  README.md
@@ -682,7 +682,7 @@
 │  │      README.md
 │  │
 │  └─workflow-automation
-│          READMD.md
+│          README.md
 │
 └─lib
     │  README.md
