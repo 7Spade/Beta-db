@@ -312,3 +312,186 @@
 - 水平擴展支援 - Horizontal scaling capability
 - 負載均衡 - Load balancing across instances
 - 緩存策略優化 - Optimized caching strategies
+
+---
+
+## 🏗️ 模組實現架構建議
+
+### 1. **多租戶支援 (Multi-tenancy)** 
+**建議位置：** `src/features/multi-tenancy/`
+
+**理由：**
+- 這是一個核心業務功能，應該放在 `features` 目錄下
+- 需要與現有的認證、用戶管理、權限系統深度集成
+- 可以參考現有的 `auth` 和 `admin` 模組結構
+
+**目錄結構建議：**
+```
+src/features/multi-tenancy/
+├── actions/
+│   ├── tenant-actions.ts
+│   └── index.ts
+├── components/
+│   ├── tenant-switcher.tsx
+│   ├── tenant-selector.tsx
+│   └── index.ts
+├── hooks/
+│   ├── use-tenant.ts
+│   └── index.ts
+├── providers/
+│   ├── tenant-context.tsx
+│   └── index.ts
+├── services/
+│   ├── tenant.service.ts
+│   └── index.ts
+├── types/
+│   ├── tenant.types.ts
+│   └── index.ts
+├── utils/
+│   ├── tenant.utils.ts
+│   └── index.ts
+├── views/
+│   ├── tenant-management-view.tsx
+│   └── index.ts
+└── README.md
+```
+
+### 2. **移動應用支援 (Mobile App)**
+**建議位置：** `src/features/mobile-app/`
+
+**理由：**
+- 現有已有 `src/components/mobile-app/` 目錄，但只有 README
+- 應該擴展為完整的 feature 模組
+- 需要與現有的 `use-mobile.tsx` hook 集成
+
+**目錄結構建議：**
+```
+src/features/mobile-app/
+├── actions/
+│   ├── mobile-actions.ts
+│   └── index.ts
+├── components/
+│   ├── mobile-navigation.tsx
+│   ├── mobile-menu.tsx
+│   ├── mobile-forms.tsx
+│   └── index.ts
+├── hooks/
+│   ├── use-mobile-features.ts
+│   ├── use-mobile-gestures.ts
+│   └── index.ts
+├── services/
+│   ├── mobile-push.service.ts
+│   ├── mobile-sync.service.ts
+│   └── index.ts
+├── types/
+│   ├── mobile.types.ts
+│   └── index.ts
+├── utils/
+│   ├── mobile.utils.ts
+│   ├── pwa.utils.ts
+│   └── index.ts
+├── views/
+│   ├── mobile-dashboard-view.tsx
+│   └── index.ts
+└── README.md
+```
+
+### 3. **系統整合與API (Integrations)**
+**建議位置：** `src/features/integrations/`
+
+**理由：**
+- 現有已有 `src/integrations/` 目錄，但只有 README
+- 應該移動到 `features` 下保持架構一致性
+- 需要與現有的服務層深度集成
+
+**目錄結構建議：**
+```
+src/features/integrations/
+├── actions/
+│   ├── integration-actions.ts
+│   └── index.ts
+├── components/
+│   ├── integration-card.tsx
+│   ├── integration-status.tsx
+│   └── index.ts
+├── hooks/
+│   ├── use-integrations.ts
+│   └── index.ts
+├── providers/
+│   ├── integration-context.tsx
+│   └── index.ts
+├── services/
+│   ├── api-integration.service.ts
+│   ├── webhook.service.ts
+│   ├── oauth.service.ts
+│   └── index.ts
+├── types/
+│   ├── integration.types.ts
+│   ├── api.types.ts
+│   └── index.ts
+├── utils/
+│   ├── api.utils.ts
+│   ├── webhook.utils.ts
+│   └── index.ts
+├── views/
+│   ├── integrations-view.tsx
+│   └── index.ts
+└── README.md
+```
+
+### 4. **工作流程自動化 (Workflow Automation)**
+**建議位置：** `src/features/workflow-automation/`
+
+**理由：**
+- 現有已有 `src/app/(dashboard)/(workflow-automation)/` 目錄
+- 應該擴展為完整的 feature 模組
+- 需要與現有的 kanban、projects、team 等模組集成
+
+**目錄結構建議：**
+```
+src/features/workflow-automation/
+├── actions/
+│   ├── workflow-actions.ts
+│   ├── automation-actions.ts
+│   └── index.ts
+├── components/
+│   ├── workflow-builder.tsx
+│   ├── automation-trigger.tsx
+│   ├── workflow-canvas.tsx
+│   └── index.ts
+├── hooks/
+│   ├── use-workflow.ts
+│   ├── use-automation.ts
+│   └── index.ts
+├── providers/
+│   ├── workflow-context.tsx
+│   └── index.ts
+├── services/
+│   ├── workflow-engine.service.ts
+│   ├── automation.service.ts
+│   ├── trigger.service.ts
+│   └── index.ts
+├── types/
+│   ├── workflow.types.ts
+│   ├── automation.types.ts
+│   └── index.ts
+├── utils/
+│   ├── workflow.utils.ts
+│   ├── automation.utils.ts
+│   └── index.ts
+├── views/
+│   ├── workflow-builder-view.tsx
+│   ├── automation-dashboard-view.tsx
+│   └── index.ts
+└── README.md
+```
+
+## 🏆 架構優勢
+
+1. **一致性**：所有新模組都遵循現有的 `features` 目錄結構
+2. **可擴展性**：每個模組都有完整的 actions、components、hooks、services 等層次
+3. **集成性**：與現有的認證、權限、數據庫等基礎設施無縫集成
+4. **維護性**：清晰的目錄結構便於團隊協作和代碼維護
+5. **符合Next.js最佳實踐**：遵循App Router的目錄結構和組件組織方式
+
+這樣的設計既保持了項目架構的一致性，又為未來的功能擴展提供了良好的基礎。
