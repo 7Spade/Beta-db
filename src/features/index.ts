@@ -15,14 +15,14 @@
 export * from '@/admin/views/admin-dashboard-view';
 
 // Core App Features
-export * from '@/app-features/projects-view';
+export * from '@/features/projects/projects-view';
 
 // Auth Features
 export * from '@/auth/index';
 
 // Blog Features
-export * from '@/blog/views/posts-list-view';
 export * from '@/blog/views/post-form-view';
+export * from '@/blog/views/posts-list-view';
 
 // Cloud Drive Features
 export * from '@/cloud-drive/views/cloud-drive-view';
@@ -34,8 +34,8 @@ export * from '@/contracts/index';
 export * from '@/dashboard/dashboard-view';
 
 // PartnerVerse Features
-export * from '@/partnerverse/partners/partners-view';
-export * from '@/partnerverse/workflows/workflow-builder';
+export * from '@/(crm-management)/partners/partners-view';
+export * from '@/(crm-management)/workflows/workflow-builder';
 
 // Quick Actions Features
 export * from '@/quick-actions-features/daily-report';
@@ -47,3 +47,4 @@ export * from '@/settings/settings-view';
 
 // Team Features
 export * from '@/team/index';
+

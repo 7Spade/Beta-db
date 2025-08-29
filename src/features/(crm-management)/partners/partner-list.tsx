@@ -1,8 +1,8 @@
 
 'use client';
 
+import { Dashboard } from '@/(crm-management)/dashboard/dashboard';
 import type { Partner } from '@/lib/types/types';
-import { Dashboard } from '@/partnerverse/dashboard/dashboard';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';

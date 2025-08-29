@@ -1,5 +1,5 @@
 
-import { ProjectsView } from '@/features/app/views/projects-view';
+import { ProjectsView } from '@/features/projects/views/projects-view';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Project, Task } from '@/lib/types/types';
 import { collection, DocumentData, getDocs, Timestamp } from 'firebase/firestore';

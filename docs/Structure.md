@@ -47,10 +47,28 @@
 │  │  │      README.md
 │  │  │
 │  │  ├─(crm-management)
-│  │  │      README.md
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─partners
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─workflows
+│  │  │          page.tsx
 │  │  │
 │  │  ├─(enhanced-inventory)
-│  │  │      README.md
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─items
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─movements
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─transfers
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─warehouses
+│  │  │          page.tsx
 │  │  │
 │  │  ├─(finance-management)
 │  │  │      README.md
@@ -80,13 +98,6 @@
 │  │  │
 │  │  ├─dashboard
 │  │  │      page.tsx
-│  │  │
-│  │  ├─partnerverse
-│  │  │  ├─partners
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─workflows
-│  │  │          page.tsx
 │  │  │
 │  │  ├─projects
 │  │  │      page.tsx
@@ -125,26 +136,6 @@
 │  │  │  │
 │  │  │  └─skills
 │  │  │          page.tsx
-│  │  │
-│  │  ├─warehousing
-│  │  │      README.md
-│  │  │      page.tsx
-│  │  │
-│  │  │  ├─items
-│  │  │  │      page.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─movements
-│  │  │  │      page.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─transfers
-│  │  │  │      page.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  └─warehouses
-│  │  │          page.tsx
-│  │  │          README.md
 │  │  │
 │  │  └─website-cms
 │  │      │  layout.tsx
@@ -313,6 +304,85 @@
 │  │  index.ts
 │  │  README.md
 │  │
+│  ├─(crm-management)
+│  │  │  README.md
+│  │  │
+│  │  ├─compliance
+│  │  │      compliance-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─contacts
+│  │  │  │  contacts-tab.tsx
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  └─forms
+│  │  │          contact-form.tsx
+│  │  │          README.md
+│  │  │
+│  │  ├─contracts
+│  │  │      contracts-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─dashboard
+│  │  │      dashboard.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─financials
+│  │  │      financials-tab.tsx
+│  │  │      README.md
+│  │  │      workflow-designer.tsx
+│  │  │
+│  │  ├─overview
+│  │  │      overview-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─partners
+│  │  │  │  partner-list.tsx
+│  │  │  │  partner-profile.tsx
+│  │  │  │  partners-view.tsx
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─forms
+│  │  │  │      contact-form.tsx
+│  │  │  │      partner-form.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─list
+│  │  │  │      partner-list.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  └─profile
+│  │  │          partner-profile.tsx
+│  │  │          profile-header.tsx
+│  │  │          README.md
+│  │  │
+│  │  ├─performance
+│  │  │      performance-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─transactions
+│  │  │      README.md
+│  │  │      transactions-tab.tsx
+│  │  │
+│  │  └─workflows
+│  │          README.md
+│  │          workflow-builder.tsx
+│  │
+│  ├─(enhanced-inventory)
+│  │  │  README.md
+│  │  │
+│  │  ├─items
+│  │  │      README.md
+│  │  │
+│  │  ├─movements
+│  │  │      README.md
+│  │  │
+│  │  ├─transfers
+│  │  │      README.md
+│  │  │
+│  │  └─warehouses
+│  │          README.md
+│  │
 │  ├─admin
 │  │  │  README.md
 │  │  │
@@ -322,20 +392,6 @@
 │  │  └─views
 │  │          admin-dashboard-view.tsx
 │  │          user-management-view.tsx
-│  │
-│  ├─app
-│  │  │  ai-subtask-suggestions.tsx
-│  │  │  create-project-dialog.tsx
-│  │  │  project-details-sheet.tsx
-│  │  │  projects-view.tsx
-│  │  │  README.md
-│  │  │  task-item.tsx
-│  │  │
-│  │  ├─actions
-│  │  │      project-actions.ts
-│  │  │
-│  │  └─views
-│  │          projects-view.tsx
 │  │
 │  ├─auth
 │  │      auth-actions.ts
@@ -362,9 +418,6 @@
 │  │          post-form-view.tsx
 │  │          posts-list-view.tsx
 │  │
-│  ├─career-management
-│  │      README.md
-│  │
 │  ├─cloud-drive
 │  │  │  README.md
 │  │  │
@@ -386,12 +439,6 @@
 │  │  └─views
 │  │          cloud-drive-view.tsx
 │  │
-│  ├─contact-management
-│  │      README.md
-│  │
-│  ├─content-management
-│  │      README.md
-│  │
 │  ├─contracts
 │  │  │  index.ts
 │  │  │  README.md
@@ -409,15 +456,15 @@
 │  │  │      contract-summary-card.tsx
 │  │  │      index.ts
 │  │  │      payment-progress.tsx
+│  │  │      README.md
 │  │  │      receipt-progress.tsx
 │  │  │      version-timeline.tsx
-│  │  │      README.md
 │  │  │
 │  │  ├─constants
 │  │  │      contract.constants.ts
 │  │  │      index.ts
-│  │  │      ui.constants.ts
 │  │  │      README.md
+│  │  │      ui.constants.ts
 │  │  │
 │  │  ├─dashboard
 │  │  │      contract-charts.tsx
@@ -444,10 +491,10 @@
 │  │  │
 │  │  ├─hooks
 │  │  │      index.ts
+│  │  │      README.md
 │  │  │      use-contract-actions.ts
 │  │  │      use-contract-form.ts
 │  │  │      use-contracts.ts
-│  │  │      README.md
 │  │  │
 │  │  ├─providers
 │  │  │      contract-context.tsx
@@ -474,8 +521,8 @@
 │  │  │      contracts-table.tsx
 │  │  │      index.ts
 │  │  │      payments-table.tsx
-│  │  │      receipts-table.tsx
 │  │  │      README.md
+│  │  │      receipts-table.tsx
 │  │  │
 │  │  ├─types
 │  │  │      change-order.types.ts
@@ -483,15 +530,15 @@
 │  │  │      contract.types.ts
 │  │  │      index.ts
 │  │  │      payment.types.ts
-│  │  │      receipt.types.ts
 │  │  │      README.md
+│  │  │      receipt.types.ts
 │  │  │
 │  │  ├─utils
 │  │  │      contract.utils.ts
 │  │  │      index.ts
+│  │  │      README.md
 │  │  │      status.utils.ts
 │  │  │      validation.utils.ts
-│  │  │      README.md
 │  │  │
 │  │  └─views
 │  │          contract-detail-view.tsx
@@ -572,70 +619,6 @@
 │  ├─multi-tenancy
 │  │      README.md
 │  │
-│  ├─partnerverse
-│  │  │  README.md
-│  │  │
-│  │  ├─compliance
-│  │  │      compliance-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─contacts
-│  │  │  │  contacts-tab.tsx
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─forms
-│  │  │          contact-form.tsx
-│  │  │          README.md
-│  │  │
-│  │  ├─contracts
-│  │  │      contracts-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─dashboard
-│  │  │      dashboard.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─financials
-│  │  │      financials-tab.tsx
-│  │  │      README.md
-│  │  │      workflow-designer.tsx
-│  │  │
-│  │  ├─overview
-│  │  │      overview-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─partners
-│  │  │  │  partner-list.tsx
-│  │  │  │  partner-profile.tsx
-│  │  │  │  partners-view.tsx
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─forms
-│  │  │  │      contact-form.tsx
-│  │  │  │      partner-form.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─list
-│  │  │  │      partner-list.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  └─profile
-│  │  │          partner-profile.tsx
-│  │  │          profile-header.tsx
-│  │  │          README.md
-│  │  │
-│  │  ├─performance
-│  │  │      performance-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─transactions
-│  │  │      README.md
-│  │  │      transactions-tab.tsx
-│  │  │
-│  │  └─workflows
-│  │          README.md
-│  │          workflow-builder.tsx
-│  │
 │  ├─profile
 │  │  │  profile-form.tsx
 │  │  │  profile-view.tsx
@@ -644,6 +627,20 @@
 │  │  │
 │  │  └─actions
 │  │          profile-actions.ts
+│  │
+│  ├─projects
+│  │  │  ai-subtask-suggestions.tsx
+│  │  │  create-project-dialog.tsx
+│  │  │  project-details-sheet.tsx
+│  │  │  projects-view.tsx
+│  │  │  README.md
+│  │  │  task-item.tsx
+│  │  │
+│  │  ├─actions
+│  │  │      project-actions.ts
+│  │  │
+│  │  └─views
+│  │          projects-view.tsx
 │  │
 │  ├─quick-actions
 │  │  │  README.md
@@ -676,15 +673,6 @@
 │  │      README.md
 │  │      settings-view.tsx
 │  │
-│  ├─storage-manager
-│  │  │  README.md
-│  │  │
-│  │  └─components
-│  │          storage-item-card.tsx
-│  │
-│  ├─system-management
-│  │      README.md
-│  │
 │  ├─team
 │  │  │  index.ts
 │  │  │
@@ -713,21 +701,6 @@
 │  │          README.md
 │  │          skill-form-dialog.tsx
 │  │          skills-list.tsx
-│  │
-│  ├─warehousing
-│  │  │  README.md
-│  │  │
-│  │  ├─items
-│  │  │      README.md
-│  │  │
-│  │  ├─movements
-│  │  │      README.md
-│  │  │
-│  │  ├─transfers
-│  │  │      README.md
-│  │  │
-│  │  └─warehouses
-│  │          README.md
 │  │
 │  ├─website-cms
 │  │  ├─blog-management

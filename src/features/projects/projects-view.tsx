@@ -1,7 +1,7 @@
 'use client';
 
-import { CreateProjectDialog } from '@/features/app/create-project-dialog';
-import { ProjectDetailsSheet } from '@/features/app/project-details-sheet';
+import { CreateProjectDialog } from '@/features/projects/create-project-dialog';
+import { ProjectDetailsSheet } from '@/features/projects/project-details-sheet';
 import type { Project, Task } from '@/lib/types/types';
 import { Button } from '@/ui/button';
 import {

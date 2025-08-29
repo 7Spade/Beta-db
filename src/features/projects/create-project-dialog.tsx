@@ -1,7 +1,7 @@
 
 'use client';
 
-import { addProjectAction } from '@/app-features/actions/project-actions';
+import { addProjectAction } from '@/features/projects/actions/project-actions';
 import { Button } from '@/ui/button';
 import { Calendar } from '@/ui/calendar';
 import {

@@ -1,13 +1,13 @@
 
 'use client';
 
-import { ComplianceTab } from '@/partnerverse/compliance/compliance-tab';
-import { ContactsTab } from '@/partnerverse/contacts/contacts-tab';
-import { ContractsTab } from '@/partnerverse/contracts/contracts-tab';
-import { FinancialsTab } from '@/partnerverse/financials/financials-tab';
-import { OverviewTab } from '@/partnerverse/overview/overview-tab';
-import { PerformanceTab } from '@/partnerverse/performance/performance-tab';
-import { TransactionsTab } from '@/partnerverse/transactions/transactions-tab';
+import { ComplianceTab } from '@/(crm-management)/compliance/compliance-tab';
+import { ContactsTab } from '@/(crm-management)/contacts/contacts-tab';
+import { ContractsTab } from '@/(crm-management)/contracts/contracts-tab';
+import { FinancialsTab } from '@/(crm-management)/financials/financials-tab';
+import { OverviewTab } from '@/(crm-management)/overview/overview-tab';
+import { PerformanceTab } from '@/(crm-management)/performance/performance-tab';
+import { TransactionsTab } from '@/(crm-management)/transactions/transactions-tab';
 import type { Contact, Partner } from '@/types/types';
 import { Button } from '@/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';

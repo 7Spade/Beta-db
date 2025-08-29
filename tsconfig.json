@@ -57,8 +57,8 @@
       "@/admin/*": [
         "./src/features/admin/*"
       ],
-      "@/app-features/*": [
-        "./src/features/app/*"
+      "@/features/projects/*": [
+        "./src/features/projects/*"
       ],
       "@/auth/*": [
         "./src/features/auth/*"
@@ -81,8 +81,8 @@
       "@/kanban/*": [
         "./src/features/kanban/*"
       ],
-      "@/partnerverse/*": [
-        "./src/features/partnerverse/*"
+      "@/(crm-management)/*": [
+        "./src/features/(crm-management)/*"
       ],
       "@/profile/*": [
         "./src/features/profile/*"
@@ -150,70 +150,9 @@
       "@/utils/*": [
         "./src/lib/utils/*"
       ],
-      // 应用路由映射 (页面层面)
-      "@/admin-routes/*": [
-        "./src/app/(admin)/*"
-      ],
-      "@/auth-routes/*": [
-        "./src/app/(auth)/*"
-      ],
-      "@/dashboard-routes/*": [
-        "./src/app/(dashboard)/*"
-      ],
-      "@/public-routes/*": [
-        "./src/app/(public)/*"
-      ],
       // 功能路由映射 (页面层面)
       "@/quick-actions/*": [
         "./src/app/(dashboard)/quick-actions/*"
-      ],
-      "@/contracts-routes/*": [
-        "./src/app/(dashboard)/contracts/*"
-      ],
-      "@/warehousing/*": [
-        "./src/app/(dashboard)/warehousing/*"
-      ],
-      "@/projects/*": [
-        "./src/app/(dashboard)/projects/*"
-      ],
-      "@/team-routes/*": [
-        "./src/app/(dashboard)/team/*"
-      ],
-      "@/partnerverse-routes/*": [
-        "./src/app/(dashboard)/partnerverse/*"
-      ],
-      "@/settings-routes/*": [
-        "./src/app/(dashboard)/settings/*"
-      ],
-      // 文档映射
-      "@/docs/*": [
-        "./docs/*"
-      ],
-      "@/docs-architecture/*": [
-        "./docs/02_architecture/*"
-      ],
-      "@/docs-development/*": [
-        "./docs/03_development/*"
-      ],
-      "@/docs-project-management/*": [
-        "./docs/04_project_management/*"
-      ],
-      // 配置文件映射
-      "@/config-navigation/*": [
-        "./src/config/*"
-      ],
-      "@/config-root/*": [
-        "./config/*"
-      ],
-      // 脚本和工具映射
-      "@/scripts/*": [
-        "./scripts/*"
-      ],
-      "@/functions/*": [
-        "./functions/*"
-      ],
-      "@/migrations/*": [
-        "./supabase-migrations/*"
       ]
     }
   },

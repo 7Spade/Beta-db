@@ -1,7 +1,7 @@
 
 'use client';
 
-import { AISubtaskSuggestions } from '@/app-features/ai-subtask-suggestions';
+import { AISubtaskSuggestions } from '@/features/projects/ai-subtask-suggestions';
 import type { Project, Task, TaskStatus } from '@/types/types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
