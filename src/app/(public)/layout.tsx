@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
-import { Toaster } from '@/ui/toaster';
 import { cn } from '@/lib/utils/utils';
-import { Inter } from 'next/font/google';
+import { Toaster } from '@/ui/toaster';
 import { FolderKanban } from 'lucide-react';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import Link from 'next/link';
 
 const inter = Inter({
@@ -41,18 +41,18 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
           <footer className="bg-muted py-8">
             <div className="container mx-auto text-center text-muted-foreground text-sm space-y-4">
-               <div className="flex justify-center items-center flex-wrap gap-x-6 gap-y-2">
-                    <Link href="/about" className="hover:text-primary">關於我們</Link>
-                    <Link href="/blog" className="hover:text-primary">部落格</Link>
-                    <Link href="/careers" className="hover:text-primary">企業徵才</Link>
-                    <Link href="/contact" className="hover:text-primary">聯絡我們</Link>
-                    <Link href="/privacy-policy" className="hover:text-primary">隱私權政策</Link>
-                    <Link href="/terms-of-service" className="hover:text-primary">服務條款</Link>
-               </div>
-               <div>
+              <div className="flex justify-center items-center flex-wrap gap-x-6 gap-y-2">
+                <Link href="/about" className="hover:text-primary">關於我們</Link>
+                <Link href="/blog" className="hover:text-primary">部落格</Link>
+                <Link href="/careers" className="hover:text-primary">企業徵才</Link>
+                <Link href="/contact" className="hover:text-primary">聯絡我們</Link>
+                <Link href="/privacy-policy" className="hover:text-primary">隱私權政策</Link>
+                <Link href="/terms-of-service" className="hover:text-primary">服務條款</Link>
+              </div>
+              <div>
                 <Link href="/login" className="hover:text-primary text-xs">內部登入</Link>
-               </div>
-               <p>&copy; {new Date().getFullYear()} Beta-db. All rights reserved.</p>
+              </div>
+              <p>&copy; {new Date().getFullYear()} Beta-db. All rights reserved.</p>
             </div>
           </footer>
         </div>

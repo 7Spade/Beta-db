@@ -14,35 +14,35 @@
  * 以及相關的導航工具函數。此版本根據系統藍圖進行了擴展與優化。
  */
 
-import {
-    FolderKanban,
-    Building2,
-    FileText,
-    Users,
-    ClipboardList,
-    CalendarDays,
-    ArrowLeftRight,
-    Wrench,
-    BookOpen,
-    Calendar,
-    UserCheck,
-    Activity,
-    Cloud,
-    Shield,
-    Briefcase,
-    Mail,
-    Cog,
-    BarChart3,
-    Handshake,
-    Rocket,
-    Package,
-    Calculator,
-    DollarSign,
-    Warehouse,
-    Truck,
-    LayoutGrid,
-} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import {
+    Activity,
+    ArrowLeftRight,
+    BarChart3,
+    BookOpen,
+    Briefcase,
+    Building2,
+    Calculator,
+    Calendar,
+    CalendarDays,
+    ClipboardList,
+    Cloud,
+    Cog,
+    DollarSign,
+    FileText,
+    FolderKanban,
+    Handshake,
+    LayoutGrid,
+    Mail,
+    Package,
+    Rocket,
+    Shield,
+    Truck,
+    UserCheck,
+    Users,
+    Warehouse,
+    Wrench,
+} from 'lucide-react'
 
 export interface NavigationItem {
     id: string
@@ -127,37 +127,37 @@ export const navigationConfig: NavigationItem[] = [
         id: 'warehousing',
         label: '倉儲管理',
         icon: Warehouse,
-        href: '/warehousing',
+        href: '/enhanced-inventory',
         children: [
-             {
+            {
                 id: 'warehousing-dashboard',
                 label: '倉儲總覽',
                 icon: BarChart3,
-                href: '/warehousing',
+                href: '/enhanced-inventory',
             },
             {
                 id: 'inventory-items',
                 label: '物料主檔',
                 icon: Package,
-                href: '/warehousing/items',
+                href: '/enhanced-inventory/items',
             },
             {
                 id: 'inventory-movements',
                 label: '出入庫紀錄',
                 icon: ArrowLeftRight,
-                href: '/warehousing/movements',
+                href: '/enhanced-inventory/movements',
             },
             {
                 id: 'inventory-transfers',
                 label: '跨倉調撥',
                 icon: Truck,
-                href: '/warehousing/transfers',
+                href: '/enhanced-inventory/transfers',
             },
             {
                 id: 'inventory-warehouses',
                 label: '倉庫管理',
                 icon: Warehouse,
-                href: '/warehousing/warehouses',
+                href: '/enhanced-inventory/warehouses',
             },
         ]
     },
