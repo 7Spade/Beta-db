@@ -6,7 +6,7 @@
 import { CreateContractDialog } from '@/features/contracts/dialogs';
 import { contractService } from '@/features/contracts/services';
 import type { Contract } from '@/features/contracts/types';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
 export function CreateContractView() {

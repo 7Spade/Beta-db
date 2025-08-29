@@ -15,46 +15,6 @@
 │  │  layout.tsx
 │  │  README.md
 │  │
-│  ├─(admin)
-│  │  │  layout.tsx
-│  │  │
-│  │  ├─blog-management
-│  │  │  └─posts
-│  │  │      │  page.tsx
-│  │  │      │
-│  │  │      └─[id]
-│  │  │              page.tsx
-│  │  │
-│  │  ├─career-management
-│  │  │  │  page.tsx
-│  │  │  │
-│  │  │  ├─applications
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─jobs
-│  │  │          page.tsx
-│  │  │
-│  │  ├─contact-management
-│  │  │      page.tsx
-│  │  │
-│  │  ├─content-management
-│  │  │  │  page.tsx
-│  │  │  │
-│  │  │  ├─media
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─pages
-│  │  │          page.tsx
-│  │  │
-│  │  ├─dashboard-management
-│  │  │      page.tsx
-│  │  │
-│  │  ├─system-management
-│  │  │      page.tsx
-│  │  │
-│  │  └─user-management
-│  │          page.tsx
-│  │
 │  ├─(auth)
 │  │  │  layout.tsx
 │  │  │
@@ -82,6 +42,27 @@
 │  ├─(dashboard)
 │  │  │  layout.tsx
 │  │  │  README.md
+│  │  │
+│  │  ├─(business-intelligence)
+│  │  │      README.md
+│  │  │
+│  │  ├─(crm-management)
+│  │  │      README.md
+│  │  │
+│  │  ├─(enhanced-inventory)
+│  │  │      README.md
+│  │  │
+│  │  ├─(finance-management)
+│  │  │      README.md
+│  │  │
+│  │  ├─(hr-management)
+│  │  │      README.md
+│  │  │
+│  │  ├─(security-compliance)
+│  │  │      README.md
+│  │  │
+│  │  ├─(workflow-automation)
+│  │  │      README.md
 │  │  │
 │  │  ├─contracts
 │  │  │  ├─billing
@@ -145,19 +126,59 @@
 │  │  │  └─skills
 │  │  │          page.tsx
 │  │  │
-│  │  └─warehousing
-│  │      │  page.tsx
+│  │  ├─warehousing
+│  │  │  │  page.tsx
+│  │  │  │
+│  │  │  ├─items
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─movements
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─transfers
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─warehouses
+│  │  │          page.tsx
+│  │  │
+│  │  └─website-cms
+│  │      │  layout.tsx
 │  │      │
-│  │      ├─items
+│  │      ├─blog-management
+│  │      │  └─posts
+│  │      │      │  page.tsx
+│  │      │      │
+│  │      │      └─[id]
+│  │      │              page.tsx
+│  │      │
+│  │      ├─career-management
+│  │      │  │  page.tsx
+│  │      │  │
+│  │      │  ├─applications
+│  │      │  │      page.tsx
+│  │      │  │
+│  │      │  └─jobs
+│  │      │          page.tsx
+│  │      │
+│  │      ├─contact-management
 │  │      │      page.tsx
 │  │      │
-│  │      ├─movements
+│  │      ├─content-management
+│  │      │  │  page.tsx
+│  │      │  │
+│  │      │  ├─media
+│  │      │  │      page.tsx
+│  │      │  │
+│  │      │  └─pages
+│  │      │          page.tsx
+│  │      │
+│  │      ├─dashboard-management
 │  │      │      page.tsx
 │  │      │
-│  │      ├─transfers
+│  │      ├─system-management
 │  │      │      page.tsx
 │  │      │
-│  │      └─warehouses
+│  │      └─user-management
 │  │              page.tsx
 │  │
 │  └─(public)
@@ -188,354 +209,6 @@
 │
 ├─components
 │  │  README.md
-│  │
-│  ├─features
-│  │  │  index.ts
-│  │  │  README.md
-│  │  │
-│  │  ├─admin
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      user-actions.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          admin-dashboard-view.tsx
-│  │  │          user-management-view.tsx
-│  │  │
-│  │  ├─app
-│  │  │  │  ai-subtask-suggestions.tsx
-│  │  │  │  create-project-dialog.tsx
-│  │  │  │  project-details-sheet.tsx
-│  │  │  │  projects-view.tsx
-│  │  │  │  README.md
-│  │  │  │  task-item.tsx
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      project-actions.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          projects-view.tsx
-│  │  │
-│  │  ├─auth
-│  │  │      auth-actions.ts
-│  │  │      auth-form-schemas.ts
-│  │  │      auth-provider.tsx
-│  │  │      auth.config.ts
-│  │  │      auth.utils.ts
-│  │  │      index.ts
-│  │  │      login-view.tsx
-│  │  │      pending-approval-view.tsx
-│  │  │      README.md
-│  │  │      register-view.tsx
-│  │  │      social-auth-buttons.tsx
-│  │  │      use-auth.ts
-│  │  │      verify-email-view.tsx
-│  │  │
-│  │  ├─blog
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      posts.actions.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          post-form-view.tsx
-│  │  │          posts-list-view.tsx
-│  │  │
-│  │  ├─cloud-drive
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      storage-actions.ts
-│  │  │  │
-│  │  │  ├─components
-│  │  │  │      file-browser.tsx
-│  │  │  │      file-card.tsx
-│  │  │  │      folder-card.tsx
-│  │  │  │      upload-button.tsx
-│  │  │  │
-│  │  │  ├─types
-│  │  │  │      storage.types.ts
-│  │  │  │
-│  │  │  ├─utils
-│  │  │  │      path.utils.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          cloud-drive-view.tsx
-│  │  │
-│  │  ├─contracts
-│  │  │  │  index.ts
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      contract-actions.ts
-│  │  │  │      index.ts
-│  │  │  │      MIGRATION.md
-│  │  │  │      README.md
-│  │  │  │      types.ts
-│  │  │  │
-│  │  │  ├─components
-│  │  │  │      change-order-item.tsx
-│  │  │  │      contract-status-badge.tsx
-│  │  │  │      contract-summary-card.tsx
-│  │  │  │      index.ts
-│  │  │  │      payment-progress.tsx
-│  │  │  │      version-timeline.tsx
-│  │  │  │
-│  │  │  ├─constants
-│  │  │  │      contract.constants.ts
-│  │  │  │      index.ts
-│  │  │  │      ui.constants.ts
-│  │  │  │
-│  │  │  ├─dashboard
-│  │  │  │      contract-charts.tsx
-│  │  │  │      contract-dashboard.tsx
-│  │  │  │      contract-stats.tsx
-│  │  │  │      dashboard.tsx
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─dialogs
-│  │  │  │      create-contract-dialog.tsx
-│  │  │  │      delete-contract-dialog.tsx
-│  │  │  │      edit-contract-dialog.tsx
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─forms
-│  │  │  │      contract-form.tsx
-│  │  │  │      create-contract-form.tsx
-│  │  │  │      edit-contract-form.tsx
-│  │  │  │      form-schemas.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─hooks
-│  │  │  │      index.ts
-│  │  │  │      use-contract-actions.ts
-│  │  │  │      use-contract-form.ts
-│  │  │  │      use-contracts.ts
-│  │  │  │
-│  │  │  ├─providers
-│  │  │  │      contract-context.tsx
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─services
-│  │  │  │      change-order.service.ts
-│  │  │  │      contract.service.ts
-│  │  │  │      export.service.ts
-│  │  │  │      index.ts
-│  │  │  │      payment.service.ts
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─sheets
-│  │  │  │      contract-details-sheet.tsx
-│  │  │  │      contract-edit-sheet.tsx
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─tables
-│  │  │  │      change-orders-table.tsx
-│  │  │  │      contracts-table.tsx
-│  │  │  │      index.ts
-│  │  │  │      payments-table.tsx
-│  │  │  │
-│  │  │  ├─types
-│  │  │  │      change-order.types.ts
-│  │  │  │      contract-version.types.ts
-│  │  │  │      contract.types.ts
-│  │  │  │      index.ts
-│  │  │  │      payment.types.ts
-│  │  │  │
-│  │  │  ├─utils
-│  │  │  │      contract.utils.ts
-│  │  │  │      index.ts
-│  │  │  │      status.utils.ts
-│  │  │  │      validation.utils.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          contract-detail-view.tsx
-│  │  │          contract-list-view.tsx
-│  │  │          contracts-view.tsx
-│  │  │          create-contract-view.tsx
-│  │  │          index.ts
-│  │  │
-│  │  ├─dashboard
-│  │  │      ai-usage-log.tsx
-│  │  │      dashboard-stats.tsx
-│  │  │      dashboard-view.tsx
-│  │  │      dashboard.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─docu-parse
-│  │  │  │  index.ts
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      docu-parse-actions.ts
-│  │  │  │
-│  │  │  ├─components
-│  │  │  │      file-selector.tsx
-│  │  │  │
-│  │  │  ├─constants
-│  │  │  │      file-constants.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─tables
-│  │  │  │      index.ts
-│  │  │  │      work-items-table.tsx
-│  │  │  │
-│  │  │  ├─types
-│  │  │  │      docu-parse.types.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─utils
-│  │  │  │      export.utils.ts
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          docu-parse-view.tsx
-│  │  │
-│  │  ├─kanban
-│  │  │  │  index.ts
-│  │  │  │  README.md
-│  │  │  │  types.ts
-│  │  │  │
-│  │  │  ├─components
-│  │  │  │      kanban-board.tsx
-│  │  │  │      kanban-card.tsx
-│  │  │  │      kanban-column.tsx
-│  │  │  │      note-card.tsx
-│  │  │  │      notes-grid.tsx
-│  │  │  │      quick-note.tsx
-│  │  │  │
-│  │  │  ├─data
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─hooks
-│  │  │  │      use-kanban.ts
-│  │  │  │
-│  │  │  ├─types
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          kanban-view.tsx
-│  │  │
-│  │  ├─partnerverse
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─compliance
-│  │  │  │      compliance-tab.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─contacts
-│  │  │  │  │  contacts-tab.tsx
-│  │  │  │  │  README.md
-│  │  │  │  │
-│  │  │  │  └─forms
-│  │  │  │          contact-form.tsx
-│  │  │  │          README.md
-│  │  │  │
-│  │  │  ├─contracts
-│  │  │  │      contracts-tab.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─dashboard
-│  │  │  │      dashboard.tsx
-│  │  │  │
-│  │  │  ├─financials
-│  │  │  │      financials-tab.tsx
-│  │  │  │      README.md
-│  │  │  │      workflow-designer.tsx
-│  │  │  │
-│  │  │  ├─overview
-│  │  │  │      overview-tab.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─partners
-│  │  │  │  │  partner-list.tsx
-│  │  │  │  │  partner-profile.tsx
-│  │  │  │  │  partners-view.tsx
-│  │  │  │  │  README.md
-│  │  │  │  │
-│  │  │  │  ├─forms
-│  │  │  │  │      contact-form.tsx
-│  │  │  │  │      partner-form.tsx
-│  │  │  │  │
-│  │  │  │  ├─list
-│  │  │  │  │      partner-list.tsx
-│  │  │  │  │
-│  │  │  │  └─profile
-│  │  │  │          partner-profile.tsx
-│  │  │  │          profile-header.tsx
-│  │  │  │          README.md
-│  │  │  │
-│  │  │  ├─performance
-│  │  │  │      performance-tab.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─transactions
-│  │  │  │      README.md
-│  │  │  │      transactions-tab.tsx
-│  │  │  │
-│  │  │  └─workflows
-│  │  │          workflow-builder.tsx
-│  │  │
-│  │  ├─profile
-│  │  │  │  profile-form.tsx
-│  │  │  │  profile-view.tsx
-│  │  │  │  public-profile-view.tsx
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─actions
-│  │  │          profile-actions.ts
-│  │  │
-│  │  ├─quick-actions
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─daily-report
-│  │  │  │      daily-report-view.tsx
-│  │  │  │      index.ts
-│  │  │  │
-│  │  │  ├─project-progress
-│  │  │  │      index.ts
-│  │  │  │      project-progress-view.tsx
-│  │  │  │
-│  │  │  └─staff-attendance
-│  │  │          index.ts
-│  │  │          staff-attendance-view.tsx
-│  │  │
-│  │  ├─settings
-│  │  │      README.md
-│  │  │      settings-view.tsx
-│  │  │
-│  │  ├─storage-manager
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─components
-│  │  │          storage-item-card.tsx
-│  │  │
-│  │  └─team
-│  │      │  index.ts
-│  │      │
-│  │      ├─knowledge-base
-│  │      │  │  entry-form-dialog.tsx
-│  │      │  │  page.tsx
-│  │      │  │  README.md
-│  │      │  │
-│  │      │  └─actions
-│  │      │          index.ts
-│  │      │          knowledge-actions.ts
-│  │      │          types.ts
-│  │      │
-│  │      ├─members
-│  │      │      create-member-dialog.tsx
-│  │      │      page.tsx
-│  │      │      README.md
-│  │      │
-│  │      ├─schedule
-│  │      │      README.md
-│  │      │
-│  │      └─skills
-│  │              README.md
-│  │              skill-form-dialog.tsx
-│  │              skills-list.tsx
 │  │
 │  ├─layout
 │  │  │  index.ts
@@ -570,12 +243,16 @@
 │  │  │      responsive-wrapper.tsx
 │  │  │
 │  │  └─shared
+│  │          document-preview.tsx
 │  │          empty-state.tsx
 │  │          logo.tsx
 │  │          page-container.tsx
 │  │          page-header.tsx
 │  │          section-divider.tsx
 │  │          status-indicator.tsx
+│  │
+│  ├─mobile-app
+│  │      README.md
 │  │
 │  └─ui
 │          accordion.tsx
@@ -634,11 +311,383 @@
 │      navigation.config.ts
 │      README.md
 │
+├─features
+│  │  index.ts
+│  │  README.md
+│  │
+│  ├─admin
+│  │  │  README.md
+│  │  │
+│  │  ├─actions
+│  │  │      user-actions.ts
+│  │  │
+│  │  └─views
+│  │          admin-dashboard-view.tsx
+│  │          user-management-view.tsx
+│  │
+│  ├─app
+│  │  │  ai-subtask-suggestions.tsx
+│  │  │  create-project-dialog.tsx
+│  │  │  project-details-sheet.tsx
+│  │  │  projects-view.tsx
+│  │  │  README.md
+│  │  │  task-item.tsx
+│  │  │
+│  │  ├─actions
+│  │  │      project-actions.ts
+│  │  │
+│  │  └─views
+│  │          projects-view.tsx
+│  │
+│  ├─auth
+│  │      auth-actions.ts
+│  │      auth-form-schemas.ts
+│  │      auth-provider.tsx
+│  │      auth.config.ts
+│  │      auth.utils.ts
+│  │      index.ts
+│  │      login-view.tsx
+│  │      pending-approval-view.tsx
+│  │      README.md
+│  │      register-view.tsx
+│  │      social-auth-buttons.tsx
+│  │      use-auth.ts
+│  │      verify-email-view.tsx
+│  │
+│  ├─blog
+│  │  │  README.md
+│  │  │
+│  │  ├─actions
+│  │  │      posts.actions.ts
+│  │  │
+│  │  └─views
+│  │          post-form-view.tsx
+│  │          posts-list-view.tsx
+│  │
+│  ├─career-management
+│  │      README.md
+│  │
+│  ├─cloud-drive
+│  │  │  README.md
+│  │  │
+│  │  ├─actions
+│  │  │      storage-actions.ts
+│  │  │
+│  │  ├─components
+│  │  │      file-browser.tsx
+│  │  │      file-card.tsx
+│  │  │      folder-card.tsx
+│  │  │      upload-button.tsx
+│  │  │
+│  │  ├─types
+│  │  │      storage.types.ts
+│  │  │
+│  │  ├─utils
+│  │  │      path.utils.ts
+│  │  │
+│  │  └─views
+│  │          cloud-drive-view.tsx
+│  │
+│  ├─contact-management
+│  │      README.md
+│  │
+│  ├─content-management
+│  │      README.md
+│  │
+│  ├─contracts
+│  │  │  index.ts
+│  │  │  README.md
+│  │  │
+│  │  ├─actions
+│  │  │      contract-actions.ts
+│  │  │      index.ts
+│  │  │      MIGRATION.md
+│  │  │      README.md
+│  │  │      types.ts
+│  │  │
+│  │  ├─components
+│  │  │      change-order-item.tsx
+│  │  │      contract-status-badge.tsx
+│  │  │      contract-summary-card.tsx
+│  │  │      index.ts
+│  │  │      payment-progress.tsx
+│  │  │      receipt-progress.tsx
+│  │  │      version-timeline.tsx
+│  │  │
+│  │  ├─constants
+│  │  │      contract.constants.ts
+│  │  │      index.ts
+│  │  │      ui.constants.ts
+│  │  │
+│  │  ├─dashboard
+│  │  │      contract-charts.tsx
+│  │  │      contract-dashboard.tsx
+│  │  │      contract-stats.tsx
+│  │  │      dashboard.tsx
+│  │  │      index.ts
+│  │  │
+│  │  ├─dialogs
+│  │  │      create-contract-dialog.tsx
+│  │  │      delete-contract-dialog.tsx
+│  │  │      edit-contract-dialog.tsx
+│  │  │      index.ts
+│  │  │
+│  │  ├─forms
+│  │  │      contract-form.tsx
+│  │  │      create-contract-form.tsx
+│  │  │      edit-contract-form.tsx
+│  │  │      form-schemas.ts
+│  │  │      index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      index.ts
+│  │  │      use-contract-actions.ts
+│  │  │      use-contract-form.ts
+│  │  │      use-contracts.ts
+│  │  │
+│  │  ├─providers
+│  │  │      contract-context.tsx
+│  │  │      index.ts
+│  │  │
+│  │  ├─services
+│  │  │      change-order.service.ts
+│  │  │      contract.service.ts
+│  │  │      export.service.ts
+│  │  │      index.ts
+│  │  │      payment.service.ts
+│  │  │      README.md
+│  │  │      receipt.service.ts
+│  │  │
+│  │  ├─sheets
+│  │  │      contract-details-sheet.tsx
+│  │  │      contract-edit-sheet.tsx
+│  │  │      index.ts
+│  │  │
+│  │  ├─tables
+│  │  │      change-orders-table.tsx
+│  │  │      contracts-table.tsx
+│  │  │      index.ts
+│  │  │      payments-table.tsx
+│  │  │      receipts-table.tsx
+│  │  │
+│  │  ├─types
+│  │  │      change-order.types.ts
+│  │  │      contract-version.types.ts
+│  │  │      contract.types.ts
+│  │  │      index.ts
+│  │  │      payment.types.ts
+│  │  │      receipt.types.ts
+│  │  │
+│  │  ├─utils
+│  │  │      contract.utils.ts
+│  │  │      index.ts
+│  │  │      status.utils.ts
+│  │  │      validation.utils.ts
+│  │  │
+│  │  └─views
+│  │          contract-detail-view.tsx
+│  │          contract-list-view.tsx
+│  │          contracts-view.tsx
+│  │          create-contract-view.tsx
+│  │          index.ts
+│  │
+│  ├─dashboard
+│  │      ai-usage-log.tsx
+│  │      dashboard-stats.tsx
+│  │      dashboard-view.tsx
+│  │      dashboard.tsx
+│  │      README.md
+│  │
+│  ├─docu-parse
+│  │  │  index.ts
+│  │  │  README.md
+│  │  │
+│  │  ├─actions
+│  │  │      docu-parse-actions.ts
+│  │  │      docu-parse-commit.actions.ts
+│  │  │
+│  │  ├─components
+│  │  │      file-selector.tsx
+│  │  │
+│  │  ├─constants
+│  │  │      file-constants.ts
+│  │  │      index.ts
+│  │  │
+│  │  ├─tables
+│  │  │      index.ts
+│  │  │      work-items-table.tsx
+│  │  │
+│  │  ├─types
+│  │  │      docu-parse.types.ts
+│  │  │      index.ts
+│  │  │
+│  │  ├─utils
+│  │  │      export.utils.ts
+│  │  │      index.ts
+│  │  │
+│  │  └─views
+│  │          docu-parse-view.tsx
+│  │
+│  ├─kanban
+│  │  │  index.ts
+│  │  │  README.md
+│  │  │  types.ts
+│  │  │
+│  │  ├─components
+│  │  │      kanban-board.tsx
+│  │  │      kanban-card.tsx
+│  │  │      kanban-column.tsx
+│  │  │      note-card.tsx
+│  │  │      notes-grid.tsx
+│  │  │      quick-note.tsx
+│  │  │
+│  │  ├─data
+│  │  │      index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      use-kanban.ts
+│  │  │
+│  │  ├─types
+│  │  │      index.ts
+│  │  │
+│  │  └─views
+│  │          kanban-view.tsx
+│  │
+│  ├─partnerverse
+│  │  │  README.md
+│  │  │
+│  │  ├─compliance
+│  │  │      compliance-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─contacts
+│  │  │  │  contacts-tab.tsx
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  └─forms
+│  │  │          contact-form.tsx
+│  │  │          README.md
+│  │  │
+│  │  ├─contracts
+│  │  │      contracts-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─dashboard
+│  │  │      dashboard.tsx
+│  │  │
+│  │  ├─financials
+│  │  │      financials-tab.tsx
+│  │  │      README.md
+│  │  │      workflow-designer.tsx
+│  │  │
+│  │  ├─overview
+│  │  │      overview-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─partners
+│  │  │  │  partner-list.tsx
+│  │  │  │  partner-profile.tsx
+│  │  │  │  partners-view.tsx
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─forms
+│  │  │  │      contact-form.tsx
+│  │  │  │      partner-form.tsx
+│  │  │  │
+│  │  │  ├─list
+│  │  │  │      partner-list.tsx
+│  │  │  │
+│  │  │  └─profile
+│  │  │          partner-profile.tsx
+│  │  │          profile-header.tsx
+│  │  │          README.md
+│  │  │
+│  │  ├─performance
+│  │  │      performance-tab.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─transactions
+│  │  │      README.md
+│  │  │      transactions-tab.tsx
+│  │  │
+│  │  └─workflows
+│  │          workflow-builder.tsx
+│  │
+│  ├─profile
+│  │  │  profile-form.tsx
+│  │  │  profile-view.tsx
+│  │  │  public-profile-view.tsx
+│  │  │  README.md
+│  │  │
+│  │  └─actions
+│  │          profile-actions.ts
+│  │
+│  ├─quick-actions
+│  │  │  README.md
+│  │  │
+│  │  ├─daily-report
+│  │  │      daily-report-view.tsx
+│  │  │      index.ts
+│  │  │
+│  │  ├─project-progress
+│  │  │      index.ts
+│  │  │      project-progress-view.tsx
+│  │  │
+│  │  └─staff-attendance
+│  │          index.ts
+│  │          staff-attendance-view.tsx
+│  │
+│  ├─settings
+│  │      README.md
+│  │      settings-view.tsx
+│  │
+│  ├─storage-manager
+│  │  │  README.md
+│  │  │
+│  │  └─components
+│  │          storage-item-card.tsx
+│  │
+│  ├─system-management
+│  │      README.md
+│  │
+│  ├─team
+│  │  │  index.ts
+│  │  │
+│  │  ├─knowledge-base
+│  │  │  │  entry-form-dialog.tsx
+│  │  │  │  page.tsx
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  └─actions
+│  │  │          index.ts
+│  │  │          knowledge-actions.ts
+│  │  │          types.ts
+│  │  │
+│  │  ├─members
+│  │  │      create-member-dialog.tsx
+│  │  │      page.tsx
+│  │  │      README.md
+│  │  │
+│  │  ├─schedule
+│  │  │      README.md
+│  │  │
+│  │  └─skills
+│  │          README.md
+│  │          skill-form-dialog.tsx
+│  │          skills-list.tsx
+│  │
+│  └─warehousing
+│          README.md
+│
 ├─hooks
+│      index.ts
 │      README.md
 │      use-mobile.tsx
 │      use-notifications.ts
 │      use-toast.ts
+│
+├─integrations
+│      READMD.md
 │
 └─lib
     │  README.md
@@ -706,6 +755,7 @@
     │
     ├─types
     │  │  env.types.ts
+    │  │  errors.ts
     │  │  README.md
     │  │  types.ts
     │  │
@@ -718,5 +768,7 @@
     │          README.md
     │
     └─utils
+            auth-utils.ts
+            date-utils.ts
             index.ts
             utils.ts

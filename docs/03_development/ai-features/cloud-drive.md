@@ -6,7 +6,7 @@
 
 ### 1. 核心功能元件 (Core Feature Components)
 ```
-src/components/features/cloud-drive/
+src/features/cloud-drive/
 ├── README.md                           # 雲端硬碟模組概述
 ├── actions/
 │   └── storage-actions.ts              # 所有與 Firebase Storage 互動的 Server Actions

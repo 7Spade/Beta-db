@@ -4,20 +4,20 @@
  */
 'use client';
 
-import * as React from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardHeader, CardTitle, CardContent } from '@/ui/card';
-import { Button } from '@/ui/button';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/ui/breadcrumb';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/ui/alert-dialog';
-import { Input } from '@/ui/input';
-import { FolderPlus } from 'lucide-react';
+import { createFolder, deleteItem, getSignedUrl, listItems, renameItem } from '@/cloud-drive/actions/storage-actions';
 import { FileBrowser } from '@/cloud-drive/components/file-browser';
 import { UploadButton } from '@/cloud-drive/components/upload-button';
-import { listItems, createFolder, deleteItem, renameItem, getSignedUrl } from '@/cloud-drive/actions/storage-actions';
 import type { StorageItem } from '@/cloud-drive/types/storage.types';
 import DocumentPreview from '@/components/layout/shared/document-preview';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/ui/alert-dialog';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/ui/breadcrumb';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
+import { Input } from '@/ui/input';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { FolderPlus } from 'lucide-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import * as React from 'react';
 
 export function CloudDriveView() {
   const router = useRouter();
@@ -70,12 +70,12 @@ export function CloudDriveView() {
       setPreviewUrl(url);
     }
   };
-  
+
   const handleConfirmDelete = async () => {
     if (!itemToDelete) return;
     const result = await deleteItem(itemToDelete.fullPath, itemToDelete.type);
     if (result.success) {
-      toast({ title: '成功', description: '項目已刪除。'});
+      toast({ title: '成功', description: '項目已刪除。' });
       fetchItems();
     } else {
       toast({ variant: 'destructive', title: '錯誤', description: result.error });
@@ -87,12 +87,12 @@ export function CloudDriveView() {
     setItemToRename(item);
     setNewItemName(item.name);
   };
-  
+
   const handleConfirmRename = async () => {
     if (!itemToRename || !newItemName) return;
     const result = await renameItem(itemToRename.fullPath, newItemName, itemToRename.type);
     if (result.success) {
-      toast({ title: '成功', description: '項目已重新命名。'});
+      toast({ title: '成功', description: '項目已重新命名。' });
       fetchItems();
     } else {
       toast({ variant: 'destructive', title: '錯誤', description: result.error });
@@ -100,19 +100,19 @@ export function CloudDriveView() {
     setItemToRename(null);
     setNewItemName('');
   };
-  
+
   const handleCreateFolder = async () => {
     if (!newFolderName) return;
     const normalizedCurrentPath = currentPath.replace(/^\/+|\/+$/g, '');
     const fullPath = normalizedCurrentPath ? `${normalizedCurrentPath}/${newFolderName}` : newFolderName;
     const result = await createFolder(fullPath);
     if (result.success) {
-        toast({ title: '成功', description: `資料夾 "${newFolderName}" 已建立。` });
-        setNewFolderName('');
-        setCreateFolderOpen(false);
-        fetchItems();
+      toast({ title: '成功', description: `資料夾 "${newFolderName}" 已建立。` });
+      setNewFolderName('');
+      setCreateFolderOpen(false);
+      fetchItems();
     } else {
-        toast({ variant: 'destructive', title: '錯誤', description: result.error });
+      toast({ variant: 'destructive', title: '錯誤', description: result.error });
     }
   };
 
@@ -135,20 +135,20 @@ export function CloudDriveView() {
           <p className="text-muted-foreground">管理您的檔案和資料夾。</p>
         </div>
         <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setCreateFolderOpen(true)}>
-                <FolderPlus className="mr-2 h-4 w-4" /> 新增資料夾
-            </Button>
-            <UploadButton currentPath={currentPath} onUploadComplete={fetchItems} />
+          <Button variant="outline" onClick={() => setCreateFolderOpen(true)}>
+            <FolderPlus className="mr-2 h-4 w-4" /> 新增資料夾
+          </Button>
+          <UploadButton currentPath={currentPath} onUploadComplete={fetchItems} />
         </div>
       </div>
-      
+
       <Breadcrumb>
         <BreadcrumbList>
           {breadcrumbItems.map((item, index) => (
             <React.Fragment key={item.path}>
               <BreadcrumbItem>
                 <BreadcrumbLink onClick={() => handleNavigate(item.path)} className="cursor-pointer">
-                    {item.name}
+                  {item.name}
                 </BreadcrumbLink>
               </BreadcrumbItem>
               {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
@@ -156,14 +156,14 @@ export function CloudDriveView() {
           ))}
         </BreadcrumbList>
       </Breadcrumb>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>檔案瀏覽器</CardTitle>
         </CardHeader>
         <CardContent>
-          <FileBrowser 
-            items={items} 
+          <FileBrowser
+            items={items}
             isLoading={isLoading}
             onItemClick={handleItemClick}
             onDeleteItem={(item) => setItemToDelete(item)}
@@ -184,7 +184,7 @@ export function CloudDriveView() {
           </CardContent>
         </Card>
       )}
-      
+
       <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -207,7 +207,7 @@ export function CloudDriveView() {
             <AlertDialogDescription>
               為「{itemToRename?.name}」輸入一個新名稱。
             </AlertDialogDescription>
-            <Input 
+            <Input
               value={newItemName}
               onChange={(e) => setNewItemName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleConfirmRename()}
@@ -221,23 +221,23 @@ export function CloudDriveView() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      
+
       <AlertDialog open={isCreateFolderOpen} onOpenChange={setCreateFolderOpen}>
-          <AlertDialogContent>
-              <AlertDialogHeader>
-                  <AlertDialogTitle>建立新資料夾</AlertDialogTitle>
-                  <Input 
-                    value={newFolderName} 
-                    onChange={(e) => setNewFolderName(e.target.value)}
-                    placeholder="輸入資料夾名稱..."
-                    onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder()}
-                  />
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                  <AlertDialogCancel>取消</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleCreateFolder}>建立</AlertDialogAction>
-              </AlertDialogFooter>
-          </AlertDialogContent>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>建立新資料夾</AlertDialogTitle>
+            <Input
+              value={newFolderName}
+              onChange={(e) => setNewFolderName(e.target.value)}
+              placeholder="輸入資料夾名稱..."
+              onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder()}
+            />
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleCreateFolder}>建立</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
       </AlertDialog>
     </div>
   );

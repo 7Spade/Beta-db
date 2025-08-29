@@ -2,9 +2,9 @@
 'use client';
 
 import { deletePost } from '@/features/blog/actions/posts.actions';
-import { useToast } from '@/hooks/use-toast';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { formatDate } from '@/lib/utils/utils';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 import { collection, onSnapshot, orderBy, query, Timestamp } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

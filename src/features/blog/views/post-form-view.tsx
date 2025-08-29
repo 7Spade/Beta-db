@@ -2,9 +2,9 @@
 'use client';
 
 import { savePost, type PostFormValues } from '@/features/blog/actions/posts.actions';
-import { useToast } from '@/hooks/use-toast';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 import { doc, getDoc, Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';

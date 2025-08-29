@@ -1,18 +1,18 @@
 
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { useMemo, Fragment } from 'react'
-import Link from 'next/link'
 import {
-  Breadcrumb as UiBreadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  Breadcrumb as UiBreadcrumb,
 } from '@/ui/breadcrumb'
-import { navigationConfig } from '@/config/navigation.config'
+import { navigationConfig } from '@root/src/lib/config/navigation.config'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Fragment, useMemo } from 'react'
 
 export function Breadcrumb() {
   const pathname = usePathname()
@@ -46,8 +46,8 @@ export function Breadcrumb() {
         }
         if (found) break
       }
-       
-      if(label.toLowerCase() === 'dashboard') {
+
+      if (label.toLowerCase() === 'dashboard') {
         return;
       }
 

@@ -1,15 +1,15 @@
 
 'use client';
 
-import { useState, type FC, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { Button } from '@/ui/button';
-import { Input } from '@/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import type { Partner } from '@/lib/types/types';
-import { doc, setDoc } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { Save, PlusCircle, Trash2, GripVertical } from 'lucide-react';
+import type { Partner } from '@/lib/types/types';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Input } from '@/ui/input';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { doc, setDoc } from 'firebase/firestore';
+import { GripVertical, PlusCircle, Save, Trash2 } from 'lucide-react';
+import { useEffect, useState, type FC } from 'react';
 
 
 const WorkflowEditor: FC<{ title: string; steps: string[]; setSteps: (steps: string[]) => void; }> = ({ title, steps, setSteps }) => {
@@ -36,7 +36,7 @@ const WorkflowEditor: FC<{ title: string; steps: string[]; setSteps: (steps: str
 
 
 interface WorkflowDesignerProps {
-  partner: Partner;
+    partner: Partner;
 }
 
 export const WorkflowDesigner: FC<WorkflowDesignerProps> = ({ partner }) => {
@@ -60,7 +60,7 @@ export const WorkflowDesigner: FC<WorkflowDesignerProps> = ({ partner }) => {
             setIsSaving(false);
         }
     };
-    
+
     return (
         <div className="space-y-6">
             <Card>

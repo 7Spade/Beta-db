@@ -6,7 +6,7 @@
 
 ### 1. 認證功能元件 (Auth Feature Components)
 ```
-src/components/features/auth/
+src/features/auth/
 ├── README.md                           # 身份驗證模組概述
 ├── index.ts                            # 模組統一導出
 ├── actions/auth-actions.ts             # 包含 createUserProfile 等核心操作 (Client-side)
@@ -22,7 +22,7 @@ src/components/features/auth/
 
 ### 2. 管理員操作 (Admin Actions)
 ```
-src/components/features/admin/
+src/features/admin/
 ├── actions/user-actions.ts             # 管理員審核用戶的 Server Actions (approveUser, rejectUser)
 └── views/user-management-view.tsx      # 管理員審核使用者的介面
 ```

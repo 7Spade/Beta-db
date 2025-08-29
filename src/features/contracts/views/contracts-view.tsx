@@ -6,10 +6,10 @@ import { useContracts } from '@/features/contracts/hooks';
 import { contractService } from '@/features/contracts/services';
 import { ContractsTable } from '@/features/contracts/tables';
 import type { Contract } from '@/features/contracts/types';
-import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardHeader } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 

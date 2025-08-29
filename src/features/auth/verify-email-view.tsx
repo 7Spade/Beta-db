@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { Button } from '@/ui/button';
-import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/db/firebase-client/firebase-client';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 import { sendEmailVerification } from 'firebase/auth';
 import Link from 'next/link';
+import React from 'react';
 
 export function VerifyEmailView() {
   const { toast } = useToast();

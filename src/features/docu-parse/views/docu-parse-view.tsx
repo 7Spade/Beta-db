@@ -18,19 +18,27 @@
 
 'use client';
 
-import {
-  useActionState,
-  useState,
-  useMemo,
-  useEffect,
-  startTransition,
-  Key,
-} from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Partner } from '@/lib/types/types';
+import { collection, getDocs } from 'firebase/firestore';
+import { useRouter, useSearchParams } from 'next/navigation';
+import {
+  Key,
+  startTransition,
+  useActionState,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
+import DocumentPreview from '@/components/layout/shared/document-preview';
+import { extractWorkItemsFromDocument } from '@/docu-parse/actions/docu-parse-actions';
+import { createProjectAndContractFromParsedData } from '@/docu-parse/actions/docu-parse-commit.actions';
+import { FileSelector } from '@/docu-parse/components/file-selector';
+import { WorkItemsTable } from '@/docu-parse/tables';
+import type { DocDetails, WorkItem } from '@/docu-parse/types/docu-parse.types';
+import { Badge } from '@/ui/badge';
+import { Button } from '@/ui/button';
 import {
   Card,
   CardContent,
@@ -38,13 +46,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/ui/card';
-import { useToast } from '@/hooks/use-toast';
-import { extractWorkItemsFromDocument } from '@/docu-parse/actions/docu-parse-actions';
-import type { WorkItem, DocDetails } from '@/docu-parse/types/docu-parse.types';
-import { createProjectAndContractFromParsedData } from '@/docu-parse/actions/docu-parse-commit.actions';
-import { WorkItemsTable } from '@/docu-parse/tables';
-import { Button } from '@/ui/button';
-import { Badge } from '@/ui/badge';
 import { Input } from '@/ui/input';
 import { Label } from '@/ui/label';
 import {
@@ -54,9 +55,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/ui/select';
-import { File, Loader2, Cpu, FileCog, RefreshCcw } from 'lucide-react';
-import { FileSelector } from '@/docu-parse/components/file-selector';
-import DocumentPreview from '@/components/layout/shared/document-preview';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { Cpu, File, FileCog, Loader2, RefreshCcw } from 'lucide-react';
 
 const initialState = {
   data: undefined,

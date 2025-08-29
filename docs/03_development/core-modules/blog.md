@@ -6,7 +6,7 @@
 
 ### 1. 後台管理元件 (Admin Components)
 ```
-src/components/features/blog/
+src/features/blog/
 ├── README.md                           # 部落格模組說明
 ├── actions/
 │   └── posts.actions.ts                # 文章的 CRUD Server Actions (savePost, deletePost)
@@ -60,8 +60,8 @@ src/app/(public)/blog/
 
 - **修改文章欄位**:
   1.  在 `docs/database.md` 中更新 `posts` 集合的結構定義。
-  2.  在 `src/components/features/blog/actions/posts.actions.ts` 的 `postSchema` 中更新 Zod 驗證規則。
-  3.  在 `src/components/features/blog/views/post-form-view.tsx` 中新增或修改對應的表單欄位。
+  2.  在 `src/features/blog/actions/posts.actions.ts` 的 `postSchema` 中更新 Zod 驗證規則。
+  3.  在 `src/features/blog/views/post-form-view.tsx` 中新增或修改對應的表單欄位。
 
 - **實現動態前台**:
   1.  修改 `src/app/(public)/blog/page.tsx`，使用 Firebase SDK 查詢所有 `status` 為「已發布」的文章並渲染列表。

@@ -1,8 +1,32 @@
 
 'use client';
 
-import { useState, useTransition } from 'react';
+import { AISubtaskSuggestions } from '@/app-features/ai-subtask-suggestions';
 import type { Project, Task, TaskStatus } from '@/types/types';
+import { Badge } from '@/ui/badge';
+import { Button } from '@/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/ui/collapsible';
+import { Input } from '@/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/ui/tooltip';
+import { cn } from '@/utils/utils';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
 import {
   CheckCircle2,
   ChevronRight,
@@ -11,31 +35,7 @@ import {
   Plus,
   Sparkles,
 } from 'lucide-react';
-import { Button } from '@/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/ui/select';
-import { cn } from '@/utils/utils';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/ui/collapsible';
-import { formatDistanceToNow } from 'date-fns';
-import { Input } from '@/ui/input';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/ui/tooltip';
-import { AISubtaskSuggestions } from '@/app-features/ai-subtask-suggestions';
-import { Badge } from '@/ui/badge';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useTransition } from 'react';
 import { addTaskAction, updateTaskStatusAction } from './actions/project-actions';
 
 interface TaskItemProps {
@@ -50,14 +50,14 @@ const statusIcons: Record<TaskStatus, React.ReactNode> = {
 };
 
 const statusColors: Record<TaskStatus, string> = {
-    '待處理': 'border-muted-foreground/30',
-    '進行中': 'border-yellow-500/30',
-    '已完成': 'border-green-500/30',
+  '待處理': 'border-muted-foreground/30',
+  '進行中': 'border-yellow-500/30',
+  '已完成': 'border-green-500/30',
 };
 
 function calculateRemainingValue(totalValue: number, tasks: Task[]): number {
-    const usedValue = tasks.reduce((acc, task) => acc + (task.value || 0), 0);
-    return totalValue - usedValue;
+  const usedValue = tasks.reduce((acc, task) => acc + (task.value || 0), 0);
+  return totalValue - usedValue;
 }
 
 export function TaskItem({ task, project }: TaskItemProps) {
@@ -84,37 +84,37 @@ export function TaskItem({ task, project }: TaskItemProps) {
   const handleAddSubtask = (e: React.FormEvent) => {
     e.preventDefault();
     if (subtaskTitle.trim() && subtaskValue > 0) {
-        if (subtaskValue > remainingValue) {
-            toast({
-              title: '子任務價值超過剩餘價值',
-              description: `子任務價值 (${subtaskValue.toLocaleString()}) 不可超過剩餘的任務價值 ${remainingValue.toLocaleString()}`,
-              variant: 'destructive'
-            });
-            return;
-        }
-        startTransition(async () => {
-            const result = await addTaskAction(project.id, project.tasks, task.id, subtaskTitle.trim(), subtaskQuantity, subtaskUnitPrice);
-            if (result.success) {
-                setSubtaskTitle('');
-                setSubtaskQuantity(1);
-                setSubtaskUnitPrice(0);
-                setIsAddingSubtask(false);
-                setIsOpen(true);
-            } else {
-                toast({ title: '新增失敗', description: result.error, variant: 'destructive'});
-            }
+      if (subtaskValue > remainingValue) {
+        toast({
+          title: '子任務價值超過剩餘價值',
+          description: `子任務價值 (${subtaskValue.toLocaleString()}) 不可超過剩餘的任務價值 ${remainingValue.toLocaleString()}`,
+          variant: 'destructive'
         });
+        return;
+      }
+      startTransition(async () => {
+        const result = await addTaskAction(project.id, project.tasks, task.id, subtaskTitle.trim(), subtaskQuantity, subtaskUnitPrice);
+        if (result.success) {
+          setSubtaskTitle('');
+          setSubtaskQuantity(1);
+          setSubtaskUnitPrice(0);
+          setIsAddingSubtask(false);
+          setIsOpen(true);
+        } else {
+          toast({ title: '新增失敗', description: result.error, variant: 'destructive' });
+        }
+      });
     }
   };
 
   const handleAddSuggestedSubtask = (title: string) => {
     const suggestedUnitPrice = Math.min(10, remainingValue);
     if (suggestedUnitPrice > 0) {
-        startTransition(async () => {
-          await addTaskAction(project.id, project.tasks, task.id, title, 1, suggestedUnitPrice);
-        });
+      startTransition(async () => {
+        await addTaskAction(project.id, project.tasks, task.id, title, 1, suggestedUnitPrice);
+      });
     } else {
-        toast({ title: "沒有剩餘價值", description: "沒有剩餘價值可以分配給新的子任務。", variant: 'destructive' });
+      toast({ title: "沒有剩餘價值", description: "沒有剩餘價值可以分配給新的子任務。", variant: 'destructive' });
     }
   }
 
@@ -176,7 +176,7 @@ export function TaskItem({ task, project }: TaskItemProps) {
               ))}
             </SelectContent>
           </Select>
-           <Tooltip>
+          <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
@@ -210,12 +210,12 @@ export function TaskItem({ task, project }: TaskItemProps) {
         </div>
 
         {showAISuggestions && project && (
-            <AISubtaskSuggestions
-                projectTitle={project.title}
-                taskTitle={task.title}
-                onAddSubtask={handleAddSuggestedSubtask}
-                onClose={() => setShowAISuggestions(false)}
-            />
+          <AISubtaskSuggestions
+            projectTitle={project.title}
+            taskTitle={task.title}
+            onAddSubtask={handleAddSuggestedSubtask}
+            onClose={() => setShowAISuggestions(false)}
+          />
         )}
 
         <CollapsibleContent className="pl-6 space-y-2">
@@ -232,23 +232,23 @@ export function TaskItem({ task, project }: TaskItemProps) {
                 className="h-8 flex-grow"
                 autoFocus
               />
-               <Input
-                    type="number"
-                    placeholder="數量"
-                    value={subtaskQuantity || ''}
-                    onChange={(e) => setSubtaskQuantity(parseInt(e.target.value, 10) || 1)}
-                    className="h-8 w-20"
-                />
-                <Input
-                    type="number"
-                    placeholder="單價"
-                    value={subtaskUnitPrice || ''}
-                    onChange={(e) => setSubtaskUnitPrice(parseInt(e.target.value, 10) || 0)}
-                    className="h-8 w-24"
-                />
-                <Badge variant="outline" className="h-8 w-28 justify-center bg-background">
-                    價值: ${subtaskValue.toLocaleString()}
-                </Badge>
+              <Input
+                type="number"
+                placeholder="數量"
+                value={subtaskQuantity || ''}
+                onChange={(e) => setSubtaskQuantity(parseInt(e.target.value, 10) || 1)}
+                className="h-8 w-20"
+              />
+              <Input
+                type="number"
+                placeholder="單價"
+                value={subtaskUnitPrice || ''}
+                onChange={(e) => setSubtaskUnitPrice(parseInt(e.target.value, 10) || 0)}
+                className="h-8 w-24"
+              />
+              <Badge variant="outline" className="h-8 w-28 justify-center bg-background">
+                價值: ${subtaskValue.toLocaleString()}
+              </Badge>
               <Button type="submit" size="sm" className="bg-primary hover:bg-primary/90 h-8" disabled={isPending}>新增</Button>
               <Button
                 type="button"

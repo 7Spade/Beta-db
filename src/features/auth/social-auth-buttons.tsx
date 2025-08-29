@@ -4,14 +4,14 @@
  */
 'use client';
 
-import React from 'react';
+import { auth } from '@/lib/db/firebase-client/firebase-client';
+import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 import { Button } from '@/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/db/firebase-client/firebase-client';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
+import React from 'react';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg

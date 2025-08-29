@@ -34,23 +34,23 @@ src/lib/models/
 
 #### 4.1 文件解析 (DocuParse)
 ```
-src/components/features/docu-parse/
+src/features/docu-parse/
 ├── actions/docu-parse-actions.ts       # 呼叫 AI 流程的 Server Action
 └── views/docu-parse-view.tsx           # 文件解析的主視圖
 ```
 
 #### 4.2 專案管理 (Project Management)
 ```
-src/components/features/projects/components/
+src/features/projects/components/
 └── ai-subtask-suggestions.tsx          # AI 子任務建議元件
 ```
 
 #### 4.3 團隊管理 (Team Management)
 ```
-src/components/features/team/knowledge-base/
+src/features/team/knowledge-base/
 └── entry-form-dialog.tsx               # 包含 AI 生成內容功能的工法編輯對話方塊
 
-src/components/features/team/skills/
+src/features/team/skills/
 └── skill-form-dialog.tsx               # 包含 AI 建議技能功能的技能編輯對話方塊
 ```
 
@@ -75,7 +75,7 @@ src/components/features/team/skills/
 1. **新增 AI 流程**: 在 `src/ai/flows/` 目錄下建立新的 `*.ts` 檔案，定義新的 Genkit Flow。
 2. **註冊流程**: 在 `src/ai/dev.ts` 中導入新建的流程檔案，以便在開發環境中啟用。
 3. **前端整合**:
-   - 建立一個 Server Action (例如在 `src/components/features/[your-feature]/actions/`) 來作為前端與 AI 流程之間的安全橋樑。
+   - 建立一個 Server Action (例如在 `src/features/[your-feature]/actions/`) 來作為前端與 AI 流程之間的安全橋樑。
    - 在前端元件中呼叫該 Server Action。
 4. **日誌記錄**: 在 AI 流程的 `defineFlow` 邏輯中，務必呼叫 `logAiTokenUsage` 服務來記錄 Token 消耗。
 

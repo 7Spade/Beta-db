@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { generateSubtasks } from '@/ai/flows/generate-subtasks-flow';
-import { Button } from '@/ui/button';
-import { Loader, PlusCircle, X } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/ui/alert';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/ui/button';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { Loader, PlusCircle, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface AISubtaskSuggestionsProps {
   projectTitle: string;
@@ -46,44 +46,44 @@ export function AISubtaskSuggestions({
     onAddSubtask(suggestion);
     setSuggestions(suggestions.filter((s) => s !== suggestion));
     toast({
-        title: "子任務已新增",
-        description: `"${suggestion}" 已被加到您的任務清單中。`
+      title: "子任務已新增",
+      description: `"${suggestion}" 已被加到您的任務清單中。`
     })
   };
 
   return (
     <div className="my-2 ml-14 mr-2">
-        <Alert className="relative bg-secondary border-primary/20">
-             <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={onClose}>
-                <X className="h-4 w-4" />
-             </Button>
-            <AlertTitle className="flex items-center gap-2">
-                AI 子任務建議
-            </AlertTitle>
-            <AlertDescription>
-            {loading && (
-                <div className="flex items-center gap-2 py-4">
-                    <Loader className="h-4 w-4 animate-spin" />
-                    <span>正在生成想法...</span>
-                </div>
-            )}
-            {error && <p className="text-destructive">{error}</p>}
-            {!loading && !error && (
-                <ul className="space-y-2 pt-2">
-                {suggestions.map((suggestion, index) => (
-                    <li key={index} className="flex items-center justify-between gap-2">
-                    <span>{suggestion}</span>
-                    <Button variant="outline" size="sm" onClick={() => handleAddSuggestion(suggestion)}>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        新增
-                    </Button>
-                    </li>
-                ))}
-                 {suggestions.length === 0 && <p className="text-sm text-muted-foreground">所有建議都已被新增，或沒有生成任何建議。</p>}
-                </ul>
-            )}
-            </AlertDescription>
-        </Alert>
+      <Alert className="relative bg-secondary border-primary/20">
+        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={onClose}>
+          <X className="h-4 w-4" />
+        </Button>
+        <AlertTitle className="flex items-center gap-2">
+          AI 子任務建議
+        </AlertTitle>
+        <AlertDescription>
+          {loading && (
+            <div className="flex items-center gap-2 py-4">
+              <Loader className="h-4 w-4 animate-spin" />
+              <span>正在生成想法...</span>
+            </div>
+          )}
+          {error && <p className="text-destructive">{error}</p>}
+          {!loading && !error && (
+            <ul className="space-y-2 pt-2">
+              {suggestions.map((suggestion, index) => (
+                <li key={index} className="flex items-center justify-between gap-2">
+                  <span>{suggestion}</span>
+                  <Button variant="outline" size="sm" onClick={() => handleAddSuggestion(suggestion)}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    新增
+                  </Button>
+                </li>
+              ))}
+              {suggestions.length === 0 && <p className="text-sm text-muted-foreground">所有建議都已被新增，或沒有生成任何建議。</p>}
+            </ul>
+          )}
+        </AlertDescription>
+      </Alert>
     </div>
   );
 }

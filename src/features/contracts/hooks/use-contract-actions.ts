@@ -3,10 +3,10 @@
  */
 'use client';
 
-import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { contractService } from '@/contracts/services';
 import type { Contract } from '@/contracts/types';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useState } from 'react';
 
 export function useContractActions() {
   const { toast } = useToast();

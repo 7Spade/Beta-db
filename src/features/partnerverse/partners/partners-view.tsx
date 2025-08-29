@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useEffect, type FC } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { collection, onSnapshot, addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { addDoc, collection, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { useEffect, useState, type FC } from 'react';
 
-import type { Partner, Contact } from '@/types/types';
 import type { Role } from '@/lib/roles';
+import type { Contact, Partner } from '@/types/types';
 
+import { ContactForm } from '@/partnerverse/contacts/forms/contact-form';
 import { Skeleton } from '@/ui/skeleton';
+import { PartnerForm } from './forms/partner-form';
 import { PartnerList } from './list/partner-list';
 import { PartnerProfile } from './profile/partner-profile';
-import { PartnerForm } from './forms/partner-form';
-import { ContactForm } from '@/partnerverse/contacts/forms/contact-form';
 
 
 export const PartnersView: FC = () => {
@@ -29,13 +29,13 @@ export const PartnersView: FC = () => {
   useEffect(() => {
     const partnersCollection = collection(firestore, 'partners');
     const unsubscribe = onSnapshot(partnersCollection, (querySnapshot) => {
-        const partnerList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Partner[];
-        setPartners(partnerList);
-        setIsLoading(false);
+      const partnerList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Partner[];
+      setPartners(partnerList);
+      setIsLoading(false);
     }, (error) => {
-        console.error("獲取合作夥伴時發生錯誤 (snapshot):", error);
-        toast({ title: "錯誤", description: "無法即時載入合作夥伴資料。", variant: "destructive" });
-        setIsLoading(false);
+      console.error("獲取合作夥伴時發生錯誤 (snapshot):", error);
+      toast({ title: "錯誤", description: "無法即時載入合作夥伴資料。", variant: "destructive" });
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -44,7 +44,7 @@ export const PartnersView: FC = () => {
   const handleSelectPartner = (partnerId: string) => {
     setSelectedPartnerId(partnerId);
   };
-  
+
   const handleBackToList = () => {
     setSelectedPartnerId(null);
   };
@@ -53,7 +53,7 @@ export const PartnersView: FC = () => {
     setPartnerToEdit(null);
     setIsFormOpen(true);
   };
-  
+
   const handleEditPartner = (partner: Partner) => {
     setPartnerToEdit(partner);
     setIsFormOpen(true);
@@ -73,8 +73,8 @@ export const PartnersView: FC = () => {
         toast({ title: "合作夥伴已新增", description: `已成功新增合作夥伴。` });
       }
     } catch (error) {
-       console.error("儲存合作夥伴時發生錯誤：", error);
-       toast({
+      console.error("儲存合作夥伴時發生錯誤：", error);
+      toast({
         title: "錯誤",
         description: "儲存合作夥伴失敗，請再試一次。",
         variant: "destructive",
@@ -83,36 +83,36 @@ export const PartnersView: FC = () => {
       setPartnerToEdit(null);
     }
   };
-  
+
   const handleOpenContactForm = (contact: Contact | null) => {
     setContactToEdit(contact);
     setIsContactFormOpen(true);
   };
-  
+
   const handleSaveContact = async (contactData: Omit<Contact, 'id'>, contactId?: string) => {
     const selectedPartner = partners.find(p => p.id === selectedPartnerId);
     if (!selectedPartner || !selectedPartner.id) return false;
-    
+
     const partnerRef = doc(firestore, 'partners', selectedPartner.id);
     let updatedContacts: Contact[];
 
     if (contactId) { // Editing existing contact
-        updatedContacts = selectedPartner.contacts.map(c => 
-            c.id === contactId ? { ...c, ...contactData, id: c.id } : c
-        );
+      updatedContacts = selectedPartner.contacts.map(c =>
+        c.id === contactId ? { ...c, ...contactData, id: c.id } : c
+      );
     } else { // Adding new contact
-        const newContact: Contact = { ...contactData, id: `contact-${Date.now()}` };
-        updatedContacts = [...(selectedPartner.contacts || []), newContact];
+      const newContact: Contact = { ...contactData, id: `contact-${Date.now()}` };
+      updatedContacts = [...(selectedPartner.contacts || []), newContact];
     }
-    
+
     try {
-        await updateDoc(partnerRef, { contacts: updatedContacts });
-        toast({ title: "聯絡人已儲存", description: `聯絡人 ${contactData.name} 的資料已成功更新。` });
-        return true;
+      await updateDoc(partnerRef, { contacts: updatedContacts });
+      toast({ title: "聯絡人已儲存", description: `聯絡人 ${contactData.name} 的資料已成功更新。` });
+      return true;
     } catch (error) {
-        console.error("儲存聯絡人時發生錯誤：", error);
-        toast({ title: "錯誤", description: "儲存聯絡人失敗。", variant: "destructive" });
-        return false;
+      console.error("儲存聯絡人時發生錯誤：", error);
+      toast({ title: "錯誤", description: "儲存聯絡人失敗。", variant: "destructive" });
+      return false;
     }
   };
 
@@ -124,11 +124,11 @@ export const PartnersView: FC = () => {
     const updatedContacts = selectedPartner.contacts.filter(c => c.id !== contactId);
 
     try {
-        await updateDoc(partnerRef, { contacts: updatedContacts });
-        toast({ title: "聯絡人已刪除", description: "該聯絡人已成功從列表中移除。" });
+      await updateDoc(partnerRef, { contacts: updatedContacts });
+      toast({ title: "聯絡人已刪除", description: "該聯絡人已成功從列表中移除。" });
     } catch (error) {
-        console.error("刪除聯絡人時發生錯誤：", error);
-        toast({ title: "錯誤", description: "刪除聯絡人失敗。", variant: "destructive" });
+      console.error("刪除聯絡人時發生錯誤：", error);
+      toast({ title: "錯誤", description: "刪除聯絡人失敗。", variant: "destructive" });
     }
   };
 
@@ -146,16 +146,16 @@ export const PartnersView: FC = () => {
     const selectedPartner = partners.find(p => p.id === selectedPartnerId);
 
     if (selectedPartner) {
-        return (
-            <PartnerProfile 
-                partner={selectedPartner} 
-                onBack={handleBackToList} 
-                userRole={userRole} 
-                onEdit={handleEditPartner} 
-                onOpenContactForm={handleOpenContactForm}
-                onDeleteContact={handleDeleteContact}
-            />
-        );
+      return (
+        <PartnerProfile
+          partner={selectedPartner}
+          onBack={handleBackToList}
+          userRole={userRole}
+          onEdit={handleEditPartner}
+          onOpenContactForm={handleOpenContactForm}
+          onDeleteContact={handleDeleteContact}
+        />
+      );
     }
     return <PartnerList partners={partners} onSelectPartner={handleSelectPartner} userRole={userRole} onAddPartner={handleAddPartner} />;
   }
@@ -163,18 +163,18 @@ export const PartnersView: FC = () => {
   return (
     <>
       {renderContent()}
-       <PartnerForm
+      <PartnerForm
         isOpen={isFormOpen}
         onOpenChange={setIsFormOpen}
         onSave={handleSavePartner}
         partner={partnerToEdit}
       />
-      <ContactForm 
+      <ContactForm
         isOpen={isContactFormOpen}
         onOpenChange={setIsContactFormOpen}
         onSave={handleSaveContact}
         contact={contactToEdit}
-    />
+      />
     </>
   );
 }

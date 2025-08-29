@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { auth } from '@/lib/db/firebase-client/firebase-client';
+import { dispatch } from '@/lib/events/event-dispatcher';
+import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
+import { Button } from '@/ui/button';
 import {
   Card,
   CardContent,
@@ -10,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/ui/card';
-import { Button } from '@/ui/button';
-import { Input } from '@/ui/input';
 import {
   Form,
   FormControl,
@@ -20,19 +19,20 @@ import {
   FormLabel,
   FormMessage,
 } from '@/ui/form';
-import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Input } from '@/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from 'firebase/auth';
-import { auth } from '@/lib/db/firebase-client/firebase-client';
-import { registerSchema, type RegisterValues } from './auth-form-schemas';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { dispatch } from '@/lib/events/event-dispatcher';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { createUserProfile } from './auth-actions';
-import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
+import { registerSchema, type RegisterValues } from './auth-form-schemas';
 
 function RegisterForm() {
   const { toast } = useToast();

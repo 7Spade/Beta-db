@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { Button } from '@/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
-import { Skeleton } from '@/ui/skeleton';
 import { approveUser, rejectUser } from '@/admin/actions/user-actions';
-import { DocumentData } from 'firebase/firestore';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Skeleton } from '@/ui/skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
+import { useToast } from '@root/src/lib/hooks/use-toast';
+import { collection, DocumentData, onSnapshot, query, where } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 
 interface UserProfile {
   id: string;
@@ -122,8 +121,8 @@ export function UserManagementView() {
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.createdAt ? new Date(user.createdAt).toLocaleString() : '-'}</TableCell>
                     <TableCell className="text-right space-x-2">
-                       <Button variant="outline" size="sm" onClick={() => handleReject(user.id)}>拒絕</Button>
-                       <Button size="sm" onClick={() => handleApprove(user.id)}>核准</Button>
+                      <Button variant="outline" size="sm" onClick={() => handleReject(user.id)}>拒絕</Button>
+                      <Button size="sm" onClick={() => handleApprove(user.id)}>核准</Button>
                     </TableCell>
                   </TableRow>
                 ))}
