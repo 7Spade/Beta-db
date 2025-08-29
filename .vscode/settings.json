@@ -14,7 +14,7 @@
     "explorer.confirmDelete": false,
     // TypeScript/JavaScript 優化設定
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "typescript.tsserver.nodePath": "C:\\nvm4w\\nodejs\\node.exe",
+    "typescript.tsserver.nodePath": "C:\\Program Files\\nodejs\\node.exe",
     "typescript.tsserver.maxTsServerMemory": 16384,
     "typescript.preferences.importModuleSpecifier": "relative",
     "typescript.tsserver.experimental.enableProjectDiagnostics": false,
