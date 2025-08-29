@@ -18,7 +18,6 @@ import type { LucideIcon } from 'lucide-react'
 import {
     Activity,
     ArrowLeftRight,
-    BarChart3,
     BookOpen,
     Briefcase,
     Building2,
@@ -41,7 +40,7 @@ import {
     UserCheck,
     Users,
     Warehouse,
-    Wrench,
+    Wrench
 } from 'lucide-react'
 
 export interface NavigationItem {
@@ -130,34 +129,28 @@ export const navigationConfig: NavigationItem[] = [
         href: '/enhanced-inventory',
         children: [
             {
-                id: 'warehousing-dashboard',
-                label: '倉儲總覽',
-                icon: BarChart3,
-                href: '/enhanced-inventory',
-            },
-            {
                 id: 'inventory-items',
                 label: '物料主檔',
                 icon: Package,
-                href: '/enhanced-inventory/items',
+                href: '/items',
             },
             {
                 id: 'inventory-movements',
                 label: '出入庫紀錄',
                 icon: ArrowLeftRight,
-                href: '/enhanced-inventory/movements',
+                href: '/movements',
             },
             {
                 id: 'inventory-transfers',
                 label: '跨倉調撥',
                 icon: Truck,
-                href: '/enhanced-inventory/transfers',
+                href: '/transfers',
             },
             {
                 id: 'inventory-warehouses',
                 label: '倉庫管理',
                 icon: Warehouse,
-                href: '/enhanced-inventory/warehouses',
+                href: '/warehouses',
             },
         ]
     },
