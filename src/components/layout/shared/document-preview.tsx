@@ -33,11 +33,9 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 		if (driveFileId) return toGoogleDrivePreviewUrl(driveFileId);
 		if (!src) return "";
 		
-		// PDF 直接顯示，Office 文檔使用 Google Docs viewer
-		if (isPdf(src)) return src;
+		// 一律透過 Google Docs viewer 預覽，避免瀏覽器直接下載
+		if (isPdf(src)) return toGoogleDocsViewerUrl(src);
 		if (isOfficeDocument(src)) return toGoogleDocsViewerUrl(src);
-		
-		// 其他文件類型也嘗試使用 Google Docs viewer
 		return toGoogleDocsViewerUrl(src);
 	}, [src, driveFileId]);
 
@@ -98,7 +96,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 				className={`w-full h-full ${hasError ? 'opacity-0' : ''}`}
 				style={{ border: 0 }}
 				referrerPolicy="no-referrer"
-				sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads allow-modals"
+				sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
 				allow="autoplay; clipboard-read; clipboard-write; fullscreen"
 				loading="lazy"
 				onLoad={handleLoad}
