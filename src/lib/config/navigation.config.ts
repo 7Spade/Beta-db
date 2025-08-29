@@ -164,13 +164,13 @@ export const navigationConfig: NavigationItem[] = [
                 id: 'partners',
                 label: '夥伴列表',
                 icon: Users,
-                href: '/partnerverse/partners'
+                href: '/partners'
             },
             {
                 id: 'workflows',
                 label: '收支流程',
                 icon: DollarSign,
-                href: '/partnerverse/workflows'
+                href: '/workflows'
             }
         ]
     },
