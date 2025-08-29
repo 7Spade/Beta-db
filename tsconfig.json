@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,94 +24,212 @@
     ],
     "paths": {
       // 根目录映射
-      "@root/*": ["./*"],
-      "@/*": ["./src/*"],
-
-      // 核心模块映射
-      "@/components/*": ["./src/components/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/config/*": ["./src/config/*"],
-      "@/ai/*": ["./src/ai/*"],
-
-      // 功能模块映射 (基于Structure.md)
-      "@/features/*": ["./src/components/features/*"],
-      "@/layout/*": ["./src/components/layout/*"],
-      "@/ui/*": ["./src/components/ui/*"],
-
-      // 具体功能模块映射 (组件层面)
-      "@/admin/*": ["./src/components/features/admin/*"],
-      "@/app-features/*": ["./src/components/features/app/*"],
-      "@/auth/*": ["./src/components/features/auth/*"],
-      "@/blog/*": ["./src/components/features/blog/*"],
-      "@/cloud-drive/*": ["./src/components/features/cloud-drive/*"],
-      "@/contracts/*": ["./src/components/features/contracts/*"],
-      "@/dashboard/*": ["./src/components/features/dashboard/*"],
-      "@/docu-parse/*": ["./src/components/features/docu-parse/*"],
-      "@/kanban/*": ["./src/components/features/kanban/*"],
-      "@/partnerverse/*": ["./src/components/features/partnerverse/*"],
-      "@/profile/*": ["./src/components/features/profile/*"],
-      "@/quick-actions-features/*": [
-        "./src/components/features/quick-actions/*"
+      "@root/*": [
+        "./*"
       ],
-      "@/settings/*": ["./src/components/features/settings/*"],
-      "@/storage-manager/*": ["./src/components/features/storage-manager/*"],
-      "@/team/*": ["./src/components/features/team/*"],
-
+      "@/*": [
+        "./src/*"
+      ],
+      // 核心模块映射
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/app/*": [
+        "./src/app/*"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/config/*": [
+        "./src/config/*"
+      ],
+      "@/ai/*": [
+        "./src/ai/*"
+      ],
+      // 功能模块映射 (基于Structure.md)
+      "@/features/*": [
+        "./src/features/*"
+      ],
+      "@/layout/*": [
+        "./src/components/layout/*"
+      ],
+      "@/ui/*": [
+        "./src/components/ui/*"
+      ],
+      // 具体功能模块映射 (组件层面)
+      "@/admin/*": [
+        "./src/features/admin/*"
+      ],
+      "@/app-features/*": [
+        "./src/features/app/*"
+      ],
+      "@/auth/*": [
+        "./src/features/auth/*"
+      ],
+      "@/blog/*": [
+        "./src/features/blog/*"
+      ],
+      "@/cloud-drive/*": [
+        "./src/features/cloud-drive/*"
+      ],
+      "@/contracts/*": [
+        "./src/features/contracts/*"
+      ],
+      "@/dashboard/*": [
+        "./src/features/dashboard/*"
+      ],
+      "@/docu-parse/*": [
+        "./src/features/docu-parse/*"
+      ],
+      "@/kanban/*": [
+        "./src/features/kanban/*"
+      ],
+      "@/partnerverse/*": [
+        "./src/features/partnerverse/*"
+      ],
+      "@/profile/*": [
+        "./src/features/profile/*"
+      ],
+      "@/quick-actions-features/*": [
+        "./src/features/quick-actions/*"
+      ],
+      "@/settings/*": [
+        "./src/features/settings/*"
+      ],
+      "@/storage-manager/*": [
+        "./src/features/storage-manager/*"
+      ],
+      "@/team/*": [
+        "./src/features/team/*"
+      ],
       // 布局组件映射
-      "@/core/*": ["./src/components/layout/core/*"],
-      "@/navigation/*": ["./src/components/layout/navigation/*"],
-      "@/overlays/*": ["./src/components/layout/overlays/*"],
-      "@/responsive/*": ["./src/components/layout/responsive/*"],
-      "@/shared/*": ["./src/components/layout/shared/*"],
-
+      "@/core/*": [
+        "./src/components/layout/core/*"
+      ],
+      "@/navigation/*": [
+        "./src/components/layout/navigation/*"
+      ],
+      "@/overlays/*": [
+        "./src/components/layout/overlays/*"
+      ],
+      "@/responsive/*": [
+        "./src/components/layout/responsive/*"
+      ],
+      "@/shared/*": [
+        "./src/components/layout/shared/*"
+      ],
       // 数据库相关映射
-      "@/db/*": ["./src/lib/db/*"],
-      "@/firebase-admin/*": ["./src/lib/db/firebase-admin/*"],
-      "@/firebase-client/*": ["./src/lib/db/firebase-client/*"],
-      "@/mongoose/*": ["./src/lib/db/mongoose/*"],
-      "@/redis/*": ["./src/lib/db/redis/*"],
-      "@/supabase/*": ["./src/lib/db/supabase/*"],
-
+      "@/db/*": [
+        "./src/lib/db/*"
+      ],
+      "@/firebase-admin/*": [
+        "./src/lib/db/firebase-admin/*"
+      ],
+      "@/firebase-client/*": [
+        "./src/lib/db/firebase-client/*"
+      ],
+      "@/mongoose/*": [
+        "./src/lib/db/mongoose/*"
+      ],
+      "@/redis/*": [
+        "./src/lib/db/redis/*"
+      ],
+      "@/supabase/*": [
+        "./src/lib/db/supabase/*"
+      ],
       // 服务层映射
-      "@/services/*": ["./src/lib/services/*"],
-      "@/events/*": ["./src/lib/events/*"],
-      "@/models/*": ["./src/lib/models/*"],
-      "@/types/*": ["./src/lib/types/*"],
-      "@/utils/*": ["./src/lib/utils/*"],
-
+      "@/services/*": [
+        "./src/lib/services/*"
+      ],
+      "@/events/*": [
+        "./src/lib/events/*"
+      ],
+      "@/models/*": [
+        "./src/lib/models/*"
+      ],
+      "@/types/*": [
+        "./src/lib/types/*"
+      ],
+      "@/utils/*": [
+        "./src/lib/utils/*"
+      ],
       // 应用路由映射 (页面层面)
-      "@/admin-routes/*": ["./src/app/(admin)/*"],
-      "@/auth-routes/*": ["./src/app/(auth)/*"],
-      "@/dashboard-routes/*": ["./src/app/(dashboard)/*"],
-      "@/public-routes/*": ["./src/app/(public)/*"],
-
+      "@/admin-routes/*": [
+        "./src/app/(admin)/*"
+      ],
+      "@/auth-routes/*": [
+        "./src/app/(auth)/*"
+      ],
+      "@/dashboard-routes/*": [
+        "./src/app/(dashboard)/*"
+      ],
+      "@/public-routes/*": [
+        "./src/app/(public)/*"
+      ],
       // 功能路由映射 (页面层面)
-      "@/quick-actions/*": ["./src/app/(dashboard)/quick-actions/*"],
-      "@/contracts-routes/*": ["./src/app/(dashboard)/contracts/*"],
-      "@/warehousing/*": ["./src/app/(dashboard)/warehousing/*"],
-      "@/projects/*": ["./src/app/(dashboard)/projects/*"],
-      "@/team-routes/*": ["./src/app/(dashboard)/team/*"],
-      "@/partnerverse-routes/*": ["./src/app/(dashboard)/partnerverse/*"],
-      "@/settings-routes/*": ["./src/app/(dashboard)/settings/*"],
-
+      "@/quick-actions/*": [
+        "./src/app/(dashboard)/quick-actions/*"
+      ],
+      "@/contracts-routes/*": [
+        "./src/app/(dashboard)/contracts/*"
+      ],
+      "@/warehousing/*": [
+        "./src/app/(dashboard)/warehousing/*"
+      ],
+      "@/projects/*": [
+        "./src/app/(dashboard)/projects/*"
+      ],
+      "@/team-routes/*": [
+        "./src/app/(dashboard)/team/*"
+      ],
+      "@/partnerverse-routes/*": [
+        "./src/app/(dashboard)/partnerverse/*"
+      ],
+      "@/settings-routes/*": [
+        "./src/app/(dashboard)/settings/*"
+      ],
       // 文档映射
-      "@/docs/*": ["./docs/*"],
-      "@/docs-architecture/*": ["./docs/02_architecture/*"],
-      "@/docs-development/*": ["./docs/03_development/*"],
-      "@/docs-project-management/*": ["./docs/04_project_management/*"],
-
+      "@/docs/*": [
+        "./docs/*"
+      ],
+      "@/docs-architecture/*": [
+        "./docs/02_architecture/*"
+      ],
+      "@/docs-development/*": [
+        "./docs/03_development/*"
+      ],
+      "@/docs-project-management/*": [
+        "./docs/04_project_management/*"
+      ],
       // 配置文件映射
-      "@/config-navigation/*": ["./src/config/*"],
-      "@/config-root/*": ["./config/*"],
-
+      "@/config-navigation/*": [
+        "./src/config/*"
+      ],
+      "@/config-root/*": [
+        "./config/*"
+      ],
       // 脚本和工具映射
-      "@/scripts/*": ["./scripts/*"],
-      "@/functions/*": ["./functions/*"],
-      "@/migrations/*": ["./supabase-migrations/*"]
+      "@/scripts/*": [
+        "./scripts/*"
+      ],
+      "@/functions/*": [
+        "./functions/*"
+      ],
+      "@/migrations/*": [
+        "./supabase-migrations/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
