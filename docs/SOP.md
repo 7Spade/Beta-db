@@ -273,6 +273,63 @@
 │      └─custom-fields                  # 自定義欄位 - 租戶專屬資料欄位
 ```
 
+```
+├─(document-management)                    # 文件管理
+│  ├─documents                            # 文件管理
+│  │      page.tsx                        # 文件列表頁面
+│  ├─templates                            # 模板管理
+│  │      page.tsx                        # 文件模板頁面
+│  └─approvals                            # 審批管理
+│          page.tsx                       # 文件審批頁面
+│
+├─(communication)                          # 溝通協作
+│  ├─messages                             # 訊息中心
+│  │      page.tsx                        # 內部訊息頁面
+│  ├─notifications                        # 通知管理
+│  │      page.tsx                        # 系統通知頁面
+│  └─announcements                        # 公告管理
+│          page.tsx                       # 公告發佈頁面
+│
+├─(quality-management)                     # 品質管理
+│  ├─quality-control                      # 品質控制
+│  │      page.tsx                        # 品質控制頁面
+│  ├─inspections                          # 檢驗管理
+│  │      page.tsx                        # 檢驗記錄頁面
+│  └─certifications                       # 認證管理
+│          page.tsx                       # 證書管理頁面
+```
+
+## 功能說明
+
+### 📄 文件管理 (Document Management)
+- **documents** - 集中管理公司各類文件檔案
+- **templates** - 標準化文件模板，提高工作效率
+- **approvals** - 文件審核流程，確保文件品質與合規
+
+### 💬 溝通協作 (Communication)
+- **messages** - 內部即時通訊與訊息管理
+- **notifications** - 系統通知與提醒機制
+- **announcements** - 公司公告與重要訊息發佈
+
+### ✅ 品質管理 (Quality Management)
+- **quality-control** - 產品/服務品質控制流程
+- **inspections** - 檢驗作業與結果記錄
+- **certifications** - ISO認證、資格證書等管理
+
+## 與現有功能的整合
+
+這些新群組可以與現有功能良好整合：
+- **文件管理** 可結合 `contracts` 合約管理
+- **溝通協作** 可整合 `team` 團隊管理功能  
+- **品質管理** 可配合 `enhanced-inventory` 庫存管理
+
+## 開發優先級建議
+
+1. **高優先級**: Communication (溝通協作)
+2. **中優先級**: Document Management (文件管理) 
+3. **低優先級**: Quality Management (品質管理)
+
+根據企業實際需求調整開發順序。
 ---
 
 ## 🚀 優先級建議
