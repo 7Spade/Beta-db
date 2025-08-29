@@ -127,19 +127,24 @@
 │  │  │          page.tsx
 │  │  │
 │  │  ├─warehousing
-│  │  │  │  page.tsx
-│  │  │  │
+│  │  │      README.md
+│  │  │      page.tsx
+│  │  │
 │  │  │  ├─items
 │  │  │  │      page.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─movements
 │  │  │  │      page.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─transfers
 │  │  │  │      page.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  └─warehouses
 │  │  │          page.tsx
+│  │  │          README.md
 │  │  │
 │  │  └─website-cms
 │  │      │  layout.tsx
@@ -406,11 +411,13 @@
 │  │  │      payment-progress.tsx
 │  │  │      receipt-progress.tsx
 │  │  │      version-timeline.tsx
+│  │  │      README.md
 │  │  │
 │  │  ├─constants
 │  │  │      contract.constants.ts
 │  │  │      index.ts
 │  │  │      ui.constants.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─dashboard
 │  │  │      contract-charts.tsx
@@ -418,12 +425,14 @@
 │  │  │      contract-stats.tsx
 │  │  │      dashboard.tsx
 │  │  │      index.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─dialogs
 │  │  │      create-contract-dialog.tsx
 │  │  │      delete-contract-dialog.tsx
 │  │  │      edit-contract-dialog.tsx
 │  │  │      index.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─forms
 │  │  │      contract-form.tsx
@@ -431,16 +440,19 @@
 │  │  │      edit-contract-form.tsx
 │  │  │      form-schemas.ts
 │  │  │      index.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─hooks
 │  │  │      index.ts
 │  │  │      use-contract-actions.ts
 │  │  │      use-contract-form.ts
 │  │  │      use-contracts.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─providers
 │  │  │      contract-context.tsx
 │  │  │      index.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─services
 │  │  │      change-order.service.ts
@@ -455,6 +467,7 @@
 │  │  │      contract-details-sheet.tsx
 │  │  │      contract-edit-sheet.tsx
 │  │  │      index.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─tables
 │  │  │      change-orders-table.tsx
@@ -462,6 +475,7 @@
 │  │  │      index.ts
 │  │  │      payments-table.tsx
 │  │  │      receipts-table.tsx
+│  │  │      README.md
 │  │  │
 │  │  ├─types
 │  │  │      change-order.types.ts
@@ -470,12 +484,14 @@
 │  │  │      index.ts
 │  │  │      payment.types.ts
 │  │  │      receipt.types.ts
+│  │  │      README.md
 │  │  │
 │  │  ├─utils
 │  │  │      contract.utils.ts
 │  │  │      index.ts
 │  │  │      status.utils.ts
 │  │  │      validation.utils.ts
+│  │  │      README.md
 │  │  │
 │  │  └─views
 │  │          contract-detail-view.tsx
@@ -483,6 +499,7 @@
 │  │          contracts-view.tsx
 │  │          create-contract-view.tsx
 │  │          index.ts
+│  │          README.md
 │  │
 │  ├─dashboard
 │  │      ai-usage-log.tsx
@@ -576,6 +593,7 @@
 │  │  │
 │  │  ├─dashboard
 │  │  │      dashboard.tsx
+│  │  │      README.md
 │  │  │
 │  │  ├─financials
 │  │  │      financials-tab.tsx
@@ -595,9 +613,11 @@
 │  │  │  ├─forms
 │  │  │  │      contact-form.tsx
 │  │  │  │      partner-form.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─list
 │  │  │  │      partner-list.tsx
+│  │  │  │      README.md
 │  │  │  │
 │  │  │  └─profile
 │  │  │          partner-profile.tsx
@@ -613,6 +633,7 @@
 │  │  │      transactions-tab.tsx
 │  │  │
 │  │  └─workflows
+│  │          README.md
 │  │          workflow-builder.tsx
 │  │
 │  ├─profile
@@ -627,16 +648,28 @@
 │  ├─quick-actions
 │  │  │  README.md
 │  │  │
+│  │  ├─cloud-drive
+│  │  │      README.md
+│  │  │
 │  │  ├─daily-report
 │  │  │      daily-report-view.tsx
 │  │  │      index.ts
+│  │  │      README.md
+│  │  │
+│  │  ├─docu-parse
+│  │  │      README.md
+│  │  │
+│  │  ├─kanban
+│  │  │      README.md
 │  │  │
 │  │  ├─project-progress
 │  │  │      index.ts
 │  │  │      project-progress-view.tsx
+│  │  │      README.md
 │  │  │
 │  │  └─staff-attendance
 │  │          index.ts
+│  │          README.md
 │  │          staff-attendance-view.tsx
 │  │
 │  ├─settings
@@ -654,6 +687,9 @@
 │  │
 │  ├─team
 │  │  │  index.ts
+│  │  │
+│  │  ├─actions
+│  │  │      README.md
 │  │  │
 │  │  ├─knowledge-base
 │  │  │  │  entry-form-dialog.tsx
@@ -679,7 +715,41 @@
 │  │          skills-list.tsx
 │  │
 │  ├─warehousing
-│  │      README.md
+│  │  │  README.md
+│  │  │
+│  │  ├─items
+│  │  │      README.md
+│  │  │
+│  │  ├─movements
+│  │  │      README.md
+│  │  │
+│  │  ├─transfers
+│  │  │      README.md
+│  │  │
+│  │  └─warehouses
+│  │          README.md
+│  │
+│  ├─website-cms
+│  │  ├─blog-management
+│  │  │      README.md
+│  │  │
+│  │  ├─career-management
+│  │  │      README.md
+│  │  │
+│  │  ├─contact-management
+│  │  │      README.md
+│  │  │
+│  │  ├─content-management
+│  │  │      README.md
+│  │  │
+│  │  ├─dashboard-management
+│  │  │      README.md
+│  │  │
+│  │  ├─system-management
+│  │  │      README.md
+│  │  │
+│  │  └─user-management
+│  │          README.md
 │  │
 │  └─workflow-automation
 │          README.md
@@ -744,9 +814,11 @@
     │  ├─activity-log
     │  │      activity-log.listeners.ts
     │  │      activity-log.service.ts
+    │  │      README.md
     │  │
     │  ├─ai-token-log
     │  │      logging.service.ts
+    │  │      README.md
     │  │
     │  ├─contracts
     │  │      contract-api.service.ts
