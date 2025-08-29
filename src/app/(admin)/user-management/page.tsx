@@ -1,4 +1,4 @@
-import { UserManagementView } from '@/components/features/admin/views/user-management-view';
+import { UserManagementView } from '@/features/admin/views/user-management-view';
 
 export default function UserManagementPage() {
   return <UserManagementView />;

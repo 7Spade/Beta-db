@@ -3,11 +3,11 @@
  */
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { CreateContractDialog } from '@/features/contracts/dialogs';
+import { contractService } from '@/features/contracts/services';
+import type { Contract } from '@/features/contracts/types';
 import { useToast } from '@/hooks/use-toast';
-import { CreateContractDialog } from '@/components/features/contracts/dialogs';
-import { contractService } from '@/components/features/contracts/services';
-import type { Contract } from '@/components/features/contracts/types';
+import { useRouter } from 'next/navigation';
 
 export function CreateContractView() {
   const router = useRouter();

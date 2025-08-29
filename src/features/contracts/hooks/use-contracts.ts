@@ -2,10 +2,10 @@
  * @fileoverview 合約數據管理 Hook
  */
 
-import { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, DocumentData, DocumentSnapshot } from 'firebase/firestore';
+import type { Contract } from '@/features/contracts/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import type { Contract } from '@/components/features/contracts/types';
+import { collection, DocumentData, DocumentSnapshot, onSnapshot, query } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 
 // Helper function to convert Firestore Timestamps to Dates
 const processFirestoreContract = (doc: DocumentSnapshot<DocumentData>): Contract => {
@@ -13,7 +13,7 @@ const processFirestoreContract = (doc: DocumentSnapshot<DocumentData>): Contract
   if (!data) {
     throw new Error('Document data is undefined');
   }
-  
+
   return {
     ...data,
     id: doc.id,
@@ -43,7 +43,7 @@ export function useContracts() {
   useEffect(() => {
     const contractsCollection = collection(firestore, 'contracts');
     const q = query(contractsCollection);
-    
+
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       try {
         const contractList = querySnapshot.docs.map(processFirestoreContract);
@@ -60,7 +60,7 @@ export function useContracts() {
       setError("獲取合約時發生錯誤");
       setLoading(false);
     });
-    
+
     return () => unsubscribe();
   }, []);
 

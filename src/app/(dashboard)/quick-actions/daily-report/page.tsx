@@ -1,4 +1,4 @@
-import { DailyReportView } from '@/components/features/quick-actions/daily-report';
+import { DailyReportView } from '@/features/quick-actions/daily-report';
 
 export default function DailyReportPage() {
   return <DailyReportView />;

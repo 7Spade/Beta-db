@@ -13,7 +13,7 @@
 "use server";
 
 import { extractWorkItems } from '@/ai/flows/extract-work-items-flow';
-import type { DocuParseActionState } from '@/components/features/docu-parse/types';
+import type { DocuParseActionState } from '@/features/docu-parse/types';
 import { getStorage } from 'firebase-admin/storage';
 
 /**
@@ -29,7 +29,7 @@ export async function extractWorkItemsFromDocument(
   payload: { filePath: string | null }
 ): Promise<DocuParseActionState> {
   const { filePath } = payload;
-  
+
   if (!filePath) {
     return { error: '未提供有效的檔案路徑。' };
   }
@@ -42,13 +42,13 @@ export async function extractWorkItemsFromDocument(
 
     // 步驟 1: 調用 Genkit AI 流程以提取工作項目
     const result = await extractWorkItems({ storagePath: filePath });
-    
+
     if (!result || !result.workItems) {
-        return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
+      return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
     }
 
     // 步驟 2: 返回成功的結果
-    return { 
+    return {
       data: {
         ...result,
         fileName: fileName,

@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { format } from 'date-fns';
+import { CreateProjectDialog } from '@/features/app/create-project-dialog';
+import { ProjectDetailsSheet } from '@/features/app/project-details-sheet';
+import type { Project, Task } from '@/lib/types/types';
+import { Button } from '@/ui/button';
 import {
   Card,
   CardContent,
@@ -10,11 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/ui/card';
-import { Button } from '@/ui/button';
 import { Progress } from '@/ui/progress';
-import { CreateProjectDialog } from '@/components/features/app/create-project-dialog';
-import type { Project, Task } from '@/lib/types/types';
-import { ProjectDetailsSheet } from '@/components/features/app/project-details-sheet';
+import { format } from 'date-fns';
+import { useState } from 'react';
 
 function calculateProgress(tasks: Task[]): { completedValue: number } {
   let completedValue = 0;

@@ -1,7 +1,7 @@
 /**
  * @fileoverview 合約詳情頁面
  */
-import { ContractDetailView } from '@/components/features/contracts/views';
+import { ContractDetailView } from '@/features/contracts/views';
 
 export default async function ContractDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

@@ -19,7 +19,7 @@
 在需要使用看板的頁面中，導入 `KanbanView` 元件即可。
 
 ```tsx
-import { KanbanView } from '@/components/features/kanban';
+import { KanbanView } from '@/features/kanban';
 
 export default function KanbanPage() {
   return <KanbanView />;

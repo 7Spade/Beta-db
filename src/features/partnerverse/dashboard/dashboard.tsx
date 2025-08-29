@@ -13,14 +13,14 @@
  */
 'use client';
 
-import type { FC } from 'react';
-import { useState, useEffect } from 'react';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { DashboardStats, type StatCardData } from '@/features/dashboard/dashboard-stats';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Partner } from '@/lib/types/types';
-import { Users, CheckCircle, Clock } from 'lucide-react';
 import { Skeleton } from '@/ui/skeleton';
-import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { CheckCircle, Clock, Users } from 'lucide-react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 
 interface DashboardProps {
     partners?: Partner[];
@@ -44,19 +44,19 @@ export const Dashboard: FC<DashboardProps> = ({ partners: initialPartners }) => 
             });
             return () => unsubscribe();
         } else {
-          setPartners(initialPartners);
-          setIsLoading(false);
+            setPartners(initialPartners);
+            setIsLoading(false);
         }
     }, [initialPartners]);
-    
+
     if (isLoading) {
         return (
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <Skeleton className="h-[125px] w-full" />
-            <Skeleton className="h-[125px] w-full" />
-            <Skeleton className="h-[125px] w-full" />
-            <Skeleton className="h-[125px] w-full" />
-          </div>
+            <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+                <Skeleton className="h-[125px] w-full" />
+                <Skeleton className="h-[125px] w-full" />
+                <Skeleton className="h-[125px] w-full" />
+                <Skeleton className="h-[125px] w-full" />
+            </div>
         );
     }
 
@@ -75,7 +75,7 @@ export const Dashboard: FC<DashboardProps> = ({ partners: initialPartners }) => 
         {
             title: '活躍合作夥伴',
             value: activePartners.toString(),
-            description: totalPartners > 0 ? `${((activePartners/totalPartners) * 100).toFixed(0)}% 的佔比` : '',
+            description: totalPartners > 0 ? `${((activePartners / totalPartners) * 100).toFixed(0)}% 的佔比` : '',
             icon: CheckCircle
         },
         {
@@ -92,5 +92,5 @@ export const Dashboard: FC<DashboardProps> = ({ partners: initialPartners }) => 
         }
     ];
 
-  return <DashboardStats stats={stats} />;
+    return <DashboardStats stats={stats} />;
 };

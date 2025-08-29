@@ -4,24 +4,24 @@
  */
 'use client';
 
-import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
+import { useContracts } from '@/contracts/hooks';
+import { DashboardStats, type StatCardData } from '@/features/dashboard/dashboard-stats';
 import { Skeleton } from '@/ui/skeleton';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
-import { useContracts } from '@/contracts/hooks';
 
 export function ContractDashboard() {
   const { contracts, loading } = useContracts();
 
   if (loading) {
     return (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-                <Skeleton key={i} className="h-28" />
-            ))}
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} className="h-28" />
+        ))}
+      </div>
     )
   }
-  
+
   const totalValue = contracts.reduce((acc, c) => acc + c.totalValue, 0);
 
   const stats: StatCardData[] = [

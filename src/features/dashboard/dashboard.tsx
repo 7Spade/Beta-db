@@ -12,13 +12,13 @@
  */
 'use client';
 
-import type { Contract } from '@/lib/types/types';
-import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
-import { Skeleton } from '@/ui/skeleton';
-import { useState, useEffect } from 'react';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { DashboardStats, type StatCardData } from '@/features/dashboard/dashboard-stats';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import type { Contract } from '@/lib/types/types';
+import { Skeleton } from '@/ui/skeleton';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface ContractDashboardProps {
   contracts?: Contract[];
@@ -59,15 +59,15 @@ export function ContractDashboard({ contracts: initialContracts, loading: initia
 
   if (loading) {
     return (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Skeleton className="h-28" />
-            <Skeleton className="h-28" />
-            <Skeleton className="h-28" />
-            <Skeleton className="h-28" />
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Skeleton className="h-28" />
+        <Skeleton className="h-28" />
+        <Skeleton className="h-28" />
+        <Skeleton className="h-28" />
+      </div>
     )
   }
-  
+
   const totalValue = contracts.reduce((acc, c) => acc + c.totalValue, 0);
 
   const stats: StatCardData[] = [

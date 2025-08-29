@@ -1,16 +1,16 @@
 
 'use client';
 
-import { type FC } from 'react';
-import { useRouter } from 'next/navigation';
-import { File, Folder, MoreVertical, Download, Trash2, Edit, Cpu } from 'lucide-react';
+import { getSignedUrl } from '@/features/cloud-drive/actions/storage-actions';
+import type { StorageItem } from '@/features/cloud-drive/types/storage.types';
+import { useToast } from '@/hooks/use-toast';
+import { formatBytes } from '@/lib/utils/utils';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardFooter } from '@/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/ui/dropdown-menu';
-import { useToast } from '@/hooks/use-toast';
-import { formatBytes } from '@/lib/utils/utils';
-import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
-import { getSignedUrl } from '@/components/features/cloud-drive/actions/storage-actions';
+import { Cpu, Download, Edit, File, Folder, MoreVertical, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { type FC } from 'react';
 
 interface StorageItemCardProps {
   item: StorageItem;
@@ -37,7 +37,7 @@ export const StorageItemCard: FC<StorageItemCardProps> = ({ item, onNavigate, on
       toast({ variant: 'destructive', title: '錯誤', description: result.error });
     }
   };
-  
+
   const handleDocuParse = () => {
     router.push(`/quick-actions/docu-parse?filePath=${encodeURIComponent(item.fullPath)}`);
   };
@@ -70,7 +70,7 @@ export const StorageItemCard: FC<StorageItemCardProps> = ({ item, onNavigate, on
                 <DropdownMenuItem onClick={() => handleAction(() => getSignedUrl(item.fullPath))}>
                   <Download className="mr-2 h-4 w-4" /> 下載
                 </DropdownMenuItem>
-                 <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleDocuParse}>
                   <Cpu className="mr-2 h-4 w-4 text-primary" />
                   <span className="text-primary">使用 DocuParse 解析</span>

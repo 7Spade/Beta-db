@@ -13,9 +13,9 @@
  */
 
 
-import { AiUsageLog } from '@/components/features/dashboard/ai-usage-log';
-import { ContractDashboard } from '@/components/features/contracts/dashboard';
-import { Dashboard as PartnerDashboard } from '@/components/features/partnerverse/dashboard/dashboard';
+import { ContractDashboard } from '@/features/contracts/dashboard';
+import { AiUsageLog } from '@/features/dashboard/ai-usage-log';
+import { Dashboard as PartnerDashboard } from '@/features/partnerverse/dashboard/dashboard';
 import { Separator } from '@/ui/separator';
 
 export function DashboardView() {
@@ -26,7 +26,7 @@ export function DashboardView() {
         <h2 className="text-2xl font-semibold tracking-tight mb-4">合約總覽</h2>
         <ContractDashboard />
       </section>
-      
+
       <Separator />
 
       <section>
@@ -36,7 +36,7 @@ export function DashboardView() {
 
       <Separator />
 
-       <section>
+      <section>
         <h2 className="text-2xl font-semibold tracking-tight mb-4">AI 使用紀錄</h2>
         <AiUsageLog />
       </section>

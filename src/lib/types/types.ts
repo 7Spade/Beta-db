@@ -1,17 +1,14 @@
 import type {
+  ChangeOrder,
   Contract,
   ContractStatus,
-  Payment,
-  ChangeOrder,
   ContractVersion,
-} from '@/components/features/contracts/types';
+  Payment,
+} from '@/features/contracts/types';
 
 export type {
-  Contract,
-  ContractStatus,
-  Payment,
-  ChangeOrder,
-  ContractVersion,
+  ChangeOrder, Contract,
+  ContractStatus, ContractVersion, Payment
 };
 export type TaskStatus = '待處理' | '進行中' | '已完成';
 
@@ -64,20 +61,20 @@ export interface ComplianceDocument {
 }
 
 export interface PerformanceReview {
-    id: string;
-    date: string;
-    rating: number; // 1-5
-    notes: string;
-    reviewer: string;
+  id: string;
+  date: string;
+  rating: number; // 1-5
+  notes: string;
+  reviewer: string;
 }
 
 export interface ContractDocument {
-    id: string;
-    title: string;
-    startDate: string;
-    endDate: string;
-    status: '啟用中' | '已過期' | '已終止';
-    fileUrl: string;
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  status: '啟用中' | '已過期' | '已終止';
+  fileUrl: string;
 }
 
 export type PartnerFlowType = '未配置' | '純收款' | '純付款' | '收付款';
@@ -120,22 +117,22 @@ export interface TeamMember {
 export type ReceivablePayableType = 'receivable' | 'payable';
 
 export interface FinancialDocument {
-    id: string;
-    partnerId: string;
-    partnerName: string;
-    contractId?: string;
-    contractName?: string;
-    type: ReceivablePayableType;
-    amount: number;
-    description: string;
-    currentStep: string;
-    createDate: Date;
-    dueDate: Date;
-    history: Array<{
-        step: string;
-        date: Date;
-        user: string;
-    }>;
+  id: string;
+  partnerId: string;
+  partnerName: string;
+  contractId?: string;
+  contractName?: string;
+  type: ReceivablePayableType;
+  amount: number;
+  description: string;
+  currentStep: string;
+  createDate: Date;
+  dueDate: Date;
+  history: Array<{
+    step: string;
+    date: Date;
+    user: string;
+  }>;
 }
 
 export type WorkflowNode = {

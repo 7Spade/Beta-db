@@ -1,25 +1,25 @@
 
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { doc, getDoc, Timestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { savePost, type PostFormValues } from '@/features/blog/actions/posts.actions';
 import { useToast } from '@/hooks/use-toast';
-import { savePost, type PostFormValues } from '@/components/features/blog/actions/posts.actions';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Button } from '@/ui/button';
-import { Input } from '@/ui/input';
-import { Textarea } from '@/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
+import { Input } from '@/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
 import { Skeleton } from '@/ui/skeleton';
-import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { Textarea } from '@/ui/textarea';
 import { DocumentData } from 'firebase/firestore';
+import { ArrowLeft, Loader2, Save } from 'lucide-react';
 
 const postSchema = z.object({
     title: z.string().min(3, '標題至少需要 3 個字元。'),
@@ -51,7 +51,7 @@ export function PostFormView({ postId }: PostFormViewProps) {
             imageUrl: '',
         },
     });
-    
+
     const slugify = useCallback((text: string) => {
         return text
             .toString()
@@ -80,10 +80,10 @@ export function PostFormView({ postId }: PostFormViewProps) {
                 if (docSnap.exists()) {
                     const data = docSnap.data() as DocumentData;
                     form.reset({
-                      ...data,
-                      // Firestore timestamps need to be converted to Dates for the form
-                      createdAt: (data.createdAt as Timestamp)?.toDate(),
-                      updatedAt: (data.updatedAt as Timestamp)?.toDate(),
+                        ...data,
+                        // Firestore timestamps need to be converted to Dates for the form
+                        createdAt: (data.createdAt as Timestamp)?.toDate(),
+                        updatedAt: (data.updatedAt as Timestamp)?.toDate(),
                     });
                 } else {
                     toast({ title: "錯誤", description: "找不到該文章。", variant: "destructive" });
@@ -117,7 +117,7 @@ export function PostFormView({ postId }: PostFormViewProps) {
 
     if (loading) {
         return (
-             <div className="space-y-6">
+            <div className="space-y-6">
                 <Skeleton className="h-10 w-48" />
                 <Card>
                     <CardHeader><Skeleton className="h-8 w-1/3" /></CardHeader>
@@ -133,7 +133,7 @@ export function PostFormView({ postId }: PostFormViewProps) {
             </div>
         );
     }
-    
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -147,7 +147,7 @@ export function PostFormView({ postId }: PostFormViewProps) {
                         {isSaving ? '儲存中...' : '儲存文章'}
                     </Button>
                 </div>
-                
+
                 <Card>
                     <CardHeader>
                         <CardTitle>{postId ? '編輯文章' : '新增文章'}</CardTitle>
@@ -165,7 +165,7 @@ export function PostFormView({ postId }: PostFormViewProps) {
                                 </FormItem>
                             )}
                         />
-                         <FormField
+                        <FormField
                             control={form.control}
                             name="slug"
                             render={({ field }) => (

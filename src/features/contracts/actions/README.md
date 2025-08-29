@@ -26,7 +26,7 @@ actions/
 ### 在 Server Components 中使用
 
 ```tsx
-import { createContractAction } from '@/components/features/contracts';
+import { createContractAction } from '@/features/contracts';
 
 export default function CreateContractPage() {
   async function handleCreateContract(formData: FormData) {
@@ -56,7 +56,7 @@ export default function CreateContractPage() {
 ```tsx
 'use client';
 
-import { createContractAction } from '@/components/features/contracts';
+import { createContractAction } from '@/features/contracts';
 
 export function CreateContractForm() {
   const handleSubmit = async (formData: FormData) => {

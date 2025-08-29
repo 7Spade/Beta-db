@@ -1,21 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { generateKnowledgeEntry } from '@/ai/flows/generate-knowledge-entry-flow';
+import { handleDeleteKnowledgeBaseEntry } from '@/features/team';
+import { useToast } from '@/hooks/use-toast';
 import type { KnowledgeBaseEntry } from '@/lib/types/types';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
+import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { Input } from '@/ui/input';
 import { Textarea } from '@/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { handleDeleteKnowledgeBaseEntry } from '@/components/features/team';
-import { Trash2, Wand2, Loader2, Cpu } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
-import { generateKnowledgeEntry } from '@/ai/flows/generate-knowledge-entry-flow';
-import { Badge } from '@/ui/badge';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Cpu, Loader2, Trash2, Wand2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 
 const entrySchema = z.object({
@@ -68,8 +68,8 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
   async function onSubmit(values: EntryFormValues) {
     setIsSaving(true);
     const dataToSave = {
-        ...values,
-        tags: values.tags ? values.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+      ...values,
+      tags: values.tags ? values.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
     };
     const success = await onSave(dataToSave, entry?.id);
     setIsSaving(false);
@@ -77,40 +77,40 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
       onOpenChange(false);
     }
   }
-  
+
   async function onDelete() {
-      if (!entry?.id) return;
-      setIsDeleting(true);
-      const result = await handleDeleteKnowledgeBaseEntry(entry.id);
-      if (result.error) {
-          toast({ title: "錯誤", description: result.error, variant: "destructive" });
-      } else {
-          toast({ title: result.message });
-          onOpenChange(false);
-      }
-      setIsDeleting(false);
+    if (!entry?.id) return;
+    setIsDeleting(true);
+    const result = await handleDeleteKnowledgeBaseEntry(entry.id);
+    if (result.error) {
+      toast({ title: "錯誤", description: result.error, variant: "destructive" });
+    } else {
+      toast({ title: result.message });
+      onOpenChange(false);
+    }
+    setIsDeleting(false);
   }
 
   async function handleAiGenerate() {
     const title = form.getValues('title');
     if (!title) {
-        toast({ title: "缺少標題", description: "請先輸入工法標題以生成內容。", variant: "destructive" });
-        return;
+      toast({ title: "缺少標題", description: "請先輸入工法標題以生成內容。", variant: "destructive" });
+      return;
     }
     setIsGenerating(true);
     setGeneratedTokens(null);
     try {
-        const result = await generateKnowledgeEntry({ title });
-        form.setValue('category', result.category);
-        form.setValue('content', result.content);
-        form.setValue('tags', result.tags.join(', '));
-        setGeneratedTokens(result.totalTokens);
-        toast({ title: "AI 生成成功！" });
-    } catch(err) {
-        console.error(err);
-        toast({ title: "AI 生成失敗", description: "無法生成內容，請稍後再試。", variant: "destructive" });
+      const result = await generateKnowledgeEntry({ title });
+      form.setValue('category', result.category);
+      form.setValue('content', result.content);
+      form.setValue('tags', result.tags.join(', '));
+      setGeneratedTokens(result.totalTokens);
+      toast({ title: "AI 生成成功！" });
+    } catch (err) {
+      console.error(err);
+      toast({ title: "AI 生成失敗", description: "無法生成內容，請稍後再試。", variant: "destructive" });
     } finally {
-        setIsGenerating(false);
+      setIsGenerating(false);
     }
   }
 
@@ -146,10 +146,10 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
             />
             {generatedTokens !== null && (
               <div className="flex justify-end">
-                  <Badge variant="secondary" className="flex items-center gap-2">
-                      <Cpu className="w-4 h-4" />
-                      <span>{generatedTokens.toLocaleString()} tokens</span>
-                  </Badge>
+                <Badge variant="secondary" className="flex items-center gap-2">
+                  <Cpu className="w-4 h-4" />
+                  <span>{generatedTokens.toLocaleString()} tokens</span>
+                </Badge>
               </div>
             )}
             <FormField
@@ -163,7 +163,7 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="content"
               render={({ field }) => (
@@ -180,7 +180,7 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="tags"
               render={({ field }) => (
@@ -192,28 +192,28 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
               )}
             />
             <DialogFooter className="flex-col-reverse sm:flex-row sm:justify-between pt-2">
-                <div>
+              <div>
                 {entry && (
-                     <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                           <Button type="button" variant="destructive" disabled={isSaving || isDeleting}>
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                {isDeleting ? '刪除中...' : '刪除'}
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>確定要刪除「{entry.title}」嗎？</AlertDialogTitle>
-                                <AlertDialogDescription>此操作無法復原，將永久刪除此筆工法資料。</AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>取消</AlertDialogCancel>
-                                <AlertDialogAction onClick={onDelete}>繼續刪除</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button type="button" variant="destructive" disabled={isSaving || isDeleting}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {isDeleting ? '刪除中...' : '刪除'}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>確定要刪除「{entry.title}」嗎？</AlertDialogTitle>
+                        <AlertDialogDescription>此操作無法復原，將永久刪除此筆工法資料。</AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>取消</AlertDialogCancel>
+                        <AlertDialogAction onClick={onDelete}>繼續刪除</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 )}
-                </div>
+              </div>
               <div className="flex gap-2">
                 <Button type="button" variant="ghost" onClick={() => handleDialogChange(false)} disabled={isSaving}>取消</Button>
                 <Button type="submit" disabled={isSaving}>

@@ -3,12 +3,12 @@
  */
 'use client';
 
-import { useForm, FormProvider, type UseFormReturn } from 'react-hook-form';
+import type { Contract } from '@/features/contracts/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { contractSchema, type ContractFormValues } from './form-schemas';
-import type { Contract } from '@/components/features/contracts/types';
-import { ContractForm } from './contract-form';
 import { useEffect } from 'react';
+import { FormProvider, useForm, type UseFormReturn } from 'react-hook-form';
+import { ContractForm } from './contract-form';
+import { contractSchema, type ContractFormValues } from './form-schemas';
 
 interface EditContractFormProps {
   contract: Contract;

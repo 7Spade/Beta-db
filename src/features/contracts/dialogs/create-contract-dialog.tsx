@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { ContractForm, contractSchema, type ContractFormValues } from '@/features/contracts/forms';
+import type { Contract } from '@/features/contracts/types';
 import { Button } from '@/ui/button';
 import {
   Dialog,
@@ -12,18 +11,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/ui/dialog';
-import { contractSchema, type ContractFormValues, ContractForm } from '@/components/features/contracts/forms';
-import type { Contract } from '@/components/features/contracts/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 interface CreateContractDialogProps {
-    isOpen: boolean;
-    onOpenChange: (isOpen: boolean) => void;
-    onSave: (data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>) => Promise<boolean>;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onSave: (data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>) => Promise<boolean>;
 }
 
 export function CreateContractDialog({ isOpen, onOpenChange, onSave }: CreateContractDialogProps) {
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const form = useForm<ContractFormValues>({
     resolver: zodResolver(contractSchema),
     defaultValues: {
@@ -70,14 +70,14 @@ export function CreateContractDialog({ isOpen, onOpenChange, onSave }: CreateCon
         </DialogHeader>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <ContractForm />
-              <DialogFooter>
-                 <Button type="button" variant="ghost" onClick={() => handleOpenChange(false)} disabled={isSaving}>取消</Button>
-                <Button type="submit" disabled={isSaving}>
-                  {isSaving ? '儲存中...' : '建立合約'}
-                </Button>
-              </DialogFooter>
-            </form>
+            <ContractForm />
+            <DialogFooter>
+              <Button type="button" variant="ghost" onClick={() => handleOpenChange(false)} disabled={isSaving}>取消</Button>
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? '儲存中...' : '建立合約'}
+              </Button>
+            </DialogFooter>
+          </form>
         </FormProvider>
       </DialogContent>
     </Dialog>

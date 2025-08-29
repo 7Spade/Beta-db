@@ -4,15 +4,15 @@
  */
 'use client';
 
-import * as React from 'react';
+import { listItems } from '@/features/cloud-drive/actions/storage-actions';
+import type { StorageItem } from '@/features/cloud-drive/types/storage.types';
+import { SUPPORTED_FILE_TYPES, type SupportedFileType } from '@/features/docu-parse/constants';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent } from '@/ui/card';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/ui/breadcrumb';
-import { listItems } from '@/components/features/cloud-drive/actions/storage-actions';
-import type { StorageItem } from '@/components/features/cloud-drive/types/storage.types';
+import { Card, CardContent } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
-import { Folder, File as FileIcon } from 'lucide-react';
-import { SUPPORTED_FILE_TYPES, type SupportedFileType } from '@/components/features/docu-parse/constants';
+import { File as FileIcon, Folder } from 'lucide-react';
+import * as React from 'react';
 
 interface FileSelectorProps {
   onFileSelect: (filePath: string) => void;
@@ -106,7 +106,7 @@ export function FileSelector({ onFileSelect }: FileSelectorProps) {
                     )}
                     <span>{item.name}</span>
                     {item.type === 'file' && !SUPPORTED_FILE_TYPES.includes(item.contentType as SupportedFileType) && (
-                        <span className="text-xs text-destructive/80 ml-auto">(不支援)</span>
+                      <span className="text-xs text-destructive/80 ml-auto">(不支援)</span>
                     )}
                   </button>
                 </li>

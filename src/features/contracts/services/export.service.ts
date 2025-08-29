@@ -1,8 +1,8 @@
 /**
  * @fileoverview 匯出功能服務
  */
+import type { Contract } from '@/features/contracts/types';
 import { formatDate } from '@/lib/utils/utils';
-import type { Contract } from '@/components/features/contracts/types';
 
 export const exportService = {
   exportContractsToCSV: (contracts: Contract[]) => {

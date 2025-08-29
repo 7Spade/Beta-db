@@ -1,17 +1,17 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { collection, onSnapshot, addDoc } from 'firebase/firestore';
-import type { TeamMember } from '@/lib/types/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
-import { Button } from '@/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/ui/avatar';
-import { Mail, Phone, PlusCircle } from 'lucide-react';
-import { CreateMemberDialog } from '@/components/features/team/members/create-member-dialog';
+import { CreateMemberDialog } from '@/features/team/members/create-member-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import type { TeamMember } from '@/lib/types/types';
+import { Avatar, AvatarFallback, AvatarImage } from '@/ui/avatar';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
+import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import { Mail, Phone, PlusCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function TeamMembersPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
@@ -45,7 +45,7 @@ export default function TeamMembersPage() {
       return false;
     }
   };
-  
+
   const LoadingSkeleton = () => (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {[...Array(4)].map((_, i) => (
@@ -58,8 +58,8 @@ export default function TeamMembersPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-3 pt-2">
-             <Skeleton className="h-5 w-full" />
-             <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-full" />
           </CardContent>
         </Card>
       ))}
@@ -71,8 +71,8 @@ export default function TeamMembersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-            <h1 className="text-3xl font-bold tracking-tight">同伴列表</h1>
-            <p className="text-muted-foreground">管理您的內部團隊成員。</p>
+          <h1 className="text-3xl font-bold tracking-tight">同伴列表</h1>
+          <p className="text-muted-foreground">管理您的內部團隊成員。</p>
         </div>
         <Button onClick={() => setDialogOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
@@ -84,8 +84,8 @@ export default function TeamMembersPage() {
         <LoadingSkeleton />
       ) : members.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed rounded-lg">
-            <h2 className="text-xl font-semibold">尚無團隊成員</h2>
-            <p className="text-muted-foreground mt-2">點擊「新增同伴」以建立您的團隊列表。</p>
+          <h2 className="text-xl font-semibold">尚無團隊成員</h2>
+          <p className="text-muted-foreground mt-2">點擊「新增同伴」以建立您的團隊列表。</p>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -116,7 +116,7 @@ export default function TeamMembersPage() {
         </div>
       )}
 
-      <CreateMemberDialog 
+      <CreateMemberDialog
         isOpen={isDialogOpen}
         onOpenChange={setDialogOpen}
         onSave={handleAddMember}

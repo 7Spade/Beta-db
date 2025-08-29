@@ -2,9 +2,9 @@
  * @fileoverview 合約 CRUD 操作服務
  */
 
-import { addDoc, updateDoc, deleteDoc, doc, collection, Timestamp } from 'firebase/firestore';
+import type { Contract } from '@/features/contracts/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import type { Contract } from '@/components/features/contracts/types';
+import { addDoc, collection, deleteDoc, doc, Timestamp, updateDoc } from 'firebase/firestore';
 
 export const contractService = {
   createContract: async (data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>): Promise<string> => {
@@ -34,7 +34,7 @@ export const contractService = {
     try {
       const docRef = doc(firestore, 'contracts', id);
       const updateData: Partial<Omit<Contract, 'id'>> = { ...data };
-      
+
       if (data.startDate) {
         if (data.startDate instanceof Date) {
           updateData.startDate = Timestamp.fromDate(data.startDate);

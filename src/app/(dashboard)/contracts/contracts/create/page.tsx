@@ -2,7 +2,7 @@
  * @fileoverview 創建合約頁面
  */
 
-import { CreateContractView } from '@/components/features/contracts/views/create-contract-view';
+import { CreateContractView } from '@/features/contracts/views/create-contract-view';
 
 export default function CreateContractPage() {
   return (

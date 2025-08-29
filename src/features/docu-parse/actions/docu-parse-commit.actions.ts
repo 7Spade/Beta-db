@@ -5,14 +5,13 @@
  */
 'use server';
 
-import { writeBatch, collection, doc, Timestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import type { Task, Project } from '@/lib/types/types';
-import type { Contract } from '@/contracts/types';
 import type {
-  WorkItem,
   DocDetails,
-} from '@/components/features/docu-parse/types';
+  WorkItem,
+} from '@/features/docu-parse/types';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import type { Task } from '@/lib/types/types';
+import { collection, doc, Timestamp, writeBatch } from 'firebase/firestore';
 
 interface ActionInput {
   docDetails: DocDetails;

@@ -1,8 +1,8 @@
 'use client';
 
+import { useAuth } from '@/features/auth/use-auth';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAuth } from '@/components/features/auth/use-auth';
 
 const PUBLIC_ROUTES = new Set<string>([
   '/login',

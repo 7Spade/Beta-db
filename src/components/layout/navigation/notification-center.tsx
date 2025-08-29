@@ -1,10 +1,10 @@
 "use client"
 
-import * as React from "react"
-import { Bell, Check, X } from "lucide-react"
-import { cn } from "@/lib/utils/utils"
-import { useAuth } from "@/components/features/auth/use-auth"
+import { useAuth } from "@/features/auth/use-auth"
 import { useNotifications } from "@/hooks/use-notifications"
+import { cn } from "@/lib/utils/utils"
+import { Bell, Check, X } from "lucide-react"
+import * as React from "react"
 
 interface NotificationCenterProps { className?: string }
 
@@ -49,7 +49,7 @@ const NotificationCenter = React.forwardRef<HTMLDivElement, NotificationCenterPr
                 {unreadCount} unread notification{unreadCount !== 1 ? "s" : ""}
               </p>
             </div>
-            
+
             <div className="max-h-96 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="p-4 text-center text-muted-foreground">

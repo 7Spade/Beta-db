@@ -3,7 +3,7 @@
  * @description 合約管理的入口頁面，包含儀表板、列表和操作功能
  */
 
-import { ContractsView } from '@/components/features/contracts/views';
+import { ContractsView } from '@/features/contracts/views';
 
 export default function ContractsPage() {
   return (

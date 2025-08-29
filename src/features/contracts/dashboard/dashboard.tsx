@@ -12,11 +12,11 @@
  */
 'use client';
 
+import { useContracts } from '@/contracts/hooks';
 import type { Contract } from '@/contracts/types';
-import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
+import { DashboardStats, type StatCardData } from '@/features/dashboard/dashboard-stats';
 import { Skeleton } from '@/ui/skeleton';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
-import { useContracts } from '@/contracts/hooks';
 
 interface ContractDashboardProps {
   contracts?: Contract[];
@@ -25,21 +25,21 @@ interface ContractDashboardProps {
 
 export function ContractDashboard({ contracts: initialContracts, loading: initialLoading }: ContractDashboardProps) {
   const { contracts: contextContracts, loading: contextLoading } = useContracts();
-  
+
   const contracts = initialContracts || contextContracts;
   const loading = initialLoading ?? contextLoading;
 
   if (loading) {
     return (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Skeleton className="h-28" />
-            <Skeleton className="h-28" />
-            <Skeleton className="h-28" />
-            <Skeleton className="h-28" />
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Skeleton className="h-28" />
+        <Skeleton className="h-28" />
+        <Skeleton className="h-28" />
+        <Skeleton className="h-28" />
+      </div>
     )
   }
-  
+
   const totalValue = contracts.reduce((acc, c) => acc + c.totalValue, 0);
 
   const stats: StatCardData[] = [

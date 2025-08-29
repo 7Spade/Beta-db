@@ -2,8 +2,8 @@
  * @fileoverview 合約表單驗證 Schema
  */
 
+import { CONTRACT_STATUSES } from '@/features/contracts/constants';
 import { z } from 'zod';
-import { CONTRACT_STATUSES } from '@/components/features/contracts/constants';
 
 export const contractSchema = z.object({
   customId: z.string().optional(),
@@ -14,9 +14,9 @@ export const contractSchema = z.object({
   totalValue: z.coerce.number().min(1, '總價值至少需要為 1。'),
   scope: z.string().min(10, '工作範疇描述至少需要 10 個字元。'),
   status: z.enum([
-    CONTRACT_STATUSES.ACTIVE, 
-    CONTRACT_STATUSES.COMPLETED, 
-    CONTRACT_STATUSES.PAUSED, 
+    CONTRACT_STATUSES.ACTIVE,
+    CONTRACT_STATUSES.COMPLETED,
+    CONTRACT_STATUSES.PAUSED,
     CONTRACT_STATUSES.TERMINATED
   ]),
   startDate: z.date({ required_error: '起始日期為必填項。' }),

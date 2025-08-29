@@ -15,7 +15,7 @@ import { createProjectAndContractFromDocument } from '@/app/actions/contracts.ac
 
 **新的導入方式：**
 ```tsx
-import { createProjectAndContractFromDocument } from '@/components/features/contracts';
+import { createProjectAndContractFromDocument } from '@/features/contracts';
 ```
 
 ### 2. 功能對比
@@ -37,7 +37,7 @@ import { createProjectAndContractFromDocument } from '@/components/features/cont
 #### 在 Server Components 中
 
 ```tsx
-import { createProjectAndContractFromDocument } from '@/components/features/contracts';
+import { createProjectAndContractFromDocument } from '@/features/contracts';
 
 export default function DocumentProcessor() {
   async function processDocument(formData: FormData) {
@@ -71,7 +71,7 @@ export default function DocumentProcessor() {
 ```tsx
 'use client';
 
-import { createProjectAndContractFromDocument } from '@/components/features/contracts';
+import { createProjectAndContractFromDocument } from '@/features/contracts';
 
 export function DocumentProcessor() {
   const handleSubmit = async (data: any) => {

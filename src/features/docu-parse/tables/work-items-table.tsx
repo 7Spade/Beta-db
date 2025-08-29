@@ -1,21 +1,21 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
-import { FileJson, FileText, Trash2, Plus } from 'lucide-react';
+import type { WorkItem } from '@/features/docu-parse/types';
+import { exportToCSV, exportToJSON } from '@/features/docu-parse/utils';
+import { Badge } from '@/ui/badge';
+import { Button } from '@/ui/button';
+import { Input } from '@/ui/input';
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/ui/table';
-import { Input } from '@/ui/input';
-import { Button } from '@/ui/button';
-import { Badge } from '@/ui/badge';
-import type { WorkItem } from '@/components/features/docu-parse/types';
-import { exportToCSV, exportToJSON } from '@/components/features/docu-parse/utils';
+import { FileJson, FileText, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 
 interface WorkItemsTableProps {
@@ -24,39 +24,39 @@ interface WorkItemsTableProps {
 }
 
 export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProps) {
-  const [data, setData] = useState<WorkItem[]>(initialData.map(item => ({...item, total: item.quantity * item.unitPrice })));
+  const [data, setData] = useState<WorkItem[]>(initialData.map(item => ({ ...item, total: item.quantity * item.unitPrice })));
 
   useEffect(() => {
-    setData(initialData.map(item => ({...item, total: item.quantity * item.unitPrice })));
+    setData(initialData.map(item => ({ ...item, total: item.quantity * item.unitPrice })));
   }, [initialData]);
 
   const updateData = (newData: WorkItem[]) => {
-      setData(newData);
-      onDataChange(newData);
+    setData(newData);
+    onDataChange(newData);
   }
 
   const handleInputChange = (index: number, field: keyof WorkItem, value: string | number) => {
     const newData = [...data];
     const updatedItem = { ...newData[index] };
-    
+
     if (field === 'id' || field === 'name') {
-        (updatedItem[field] as string) = String(value);
+      (updatedItem[field] as string) = String(value);
     } else if (field === 'quantity' || field === 'unitPrice') {
-        const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
-        (updatedItem[field] as number) = numericValue;
+      const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
+      (updatedItem[field] as number) = numericValue;
     } else {
-        (updatedItem[field] as number) = 0;
+      (updatedItem[field] as number) = 0;
     }
-    
+
     // Automatic calculation logic
     if (field === 'quantity' || field === 'unitPrice') {
-        updatedItem.total = parseFloat((updatedItem.quantity * updatedItem.unitPrice).toFixed(2));
+      updatedItem.total = parseFloat((updatedItem.quantity * updatedItem.unitPrice).toFixed(2));
     }
 
     newData[index] = updatedItem;
     updateData(newData);
   };
-  
+
   const handleRemoveRow = (index: number) => {
     const newData = data.filter((_, i) => i !== index);
     updateData(newData);
@@ -72,7 +72,7 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
     };
     updateData([...data, newRow]);
   };
-  
+
   const totalAmount = data.reduce((sum, item) => sum + (item.total || 0), 0);
 
   if (data.length === 0) {
@@ -114,9 +114,9 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
                   />
                 </TableCell>
                 <TableCell className="text-center">
-                    <Badge variant="outline">
-                        {totalAmount > 0 ? (((row.total || 0) / totalAmount) * 100).toFixed(1) : '0.0'}%
-                    </Badge>
+                  <Badge variant="outline">
+                    {totalAmount > 0 ? (((row.total || 0) / totalAmount) * 100).toFixed(1) : '0.0'}%
+                  </Badge>
                 </TableCell>
                 <TableCell className="p-1">
                   <Input
@@ -152,25 +152,25 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
                   />
                 </TableCell>
                 <TableCell className="p-1 text-center">
-                    <Button variant="ghost" size="icon" onClick={() => handleRemoveRow(index)}>
-                        <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
-                        <span className="sr-only">移除此行</span>
-                    </Button>
+                  <Button variant="ghost" size="icon" onClick={() => handleRemoveRow(index)}>
+                    <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                    <span className="sr-only">移除此行</span>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-      
+
       <div className="flex justify-between items-center mt-6">
         <Button onClick={handleAddRow} variant="outline">
           <Plus className="mr-2 h-4 w-4" />
           新增一列
         </Button>
         <div className="text-right">
-            <p className="text-sm text-muted-foreground">總金額</p>
-            <p className="text-2xl font-bold">${totalAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+          <p className="text-sm text-muted-foreground">總金額</p>
+          <p className="text-2xl font-bold">${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         </div>
       </div>
 

@@ -3,9 +3,9 @@
  */
 'use client';
 
-import { DashboardStats, type StatCardData } from '@/components/features/dashboard/dashboard-stats';
-import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
 import type { Contract } from '@/contracts/types';
+import { DashboardStats, type StatCardData } from '@/features/dashboard/dashboard-stats';
+import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
 
 interface ContractStatsProps {
   contracts: Contract[];

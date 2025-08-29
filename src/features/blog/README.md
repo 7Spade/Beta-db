@@ -29,7 +29,7 @@ blog/
 
 ```tsx
 // src/app/(admin)/blog-management/posts/page.tsx
-import { PostsListView } from '@/components/features/blog/views/posts-list-view';
+import { PostsListView } from '@/features/blog/views/posts-list-view';
 
 export default function AdminBlogPostsPage() {
   return <PostsListView />;
