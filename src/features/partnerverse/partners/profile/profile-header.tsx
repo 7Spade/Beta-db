@@ -1,30 +1,30 @@
 
 'use client';
 
-import type { FC } from 'react';
-import Image from 'next/image';
 import type { Partner } from '@/lib/types/types';
-import type { Role } from '@/lib/roles';
+import { formatDate } from '@/lib/utils/utils';
+import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardHeader, CardTitle } from '@/ui/card';
-import { Badge } from '@/ui/badge';
-import { Globe, Edit, Calendar } from 'lucide-react';
-import { formatDate } from '@/lib/utils/utils';
+import type { Role } from '@root/src/lib/constants/roles';
+import { Calendar, Edit, Globe } from 'lucide-react';
+import Image from 'next/image';
+import type { FC } from 'react';
 
 interface ProfileHeaderProps {
-  partner: Partner;
-  userRole: Role;
-  onEdit: (partner: Partner) => void;
+    partner: Partner;
+    userRole: Role;
+    onEdit: (partner: Partner) => void;
 }
 
 export const ProfileHeader: FC<ProfileHeaderProps> = ({ partner, userRole, onEdit }) => {
-    
+
     const statusBadgeVariant = (status: Partner['status']) => {
         switch (status) {
-        case '啟用中': return 'default';
-        case '停用中': return 'secondary';
-        case '待審核': return 'outline';
-        default: return 'default';
+            case '啟用中': return 'default';
+            case '停用中': return 'secondary';
+            case '待審核': return 'outline';
+            default: return 'default';
         }
     };
 

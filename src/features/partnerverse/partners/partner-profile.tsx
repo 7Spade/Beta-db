@@ -1,19 +1,19 @@
 
 'use client';
 
-import { type FC } from 'react';
-import type { Partner, Contact } from '@/types/types';
-import type { Role } from '@/lib/roles';
+import { ComplianceTab } from '@/partnerverse/compliance/compliance-tab';
+import { ContactsTab } from '@/partnerverse/contacts/contacts-tab';
+import { ContractsTab } from '@/partnerverse/contracts/contracts-tab';
+import { FinancialsTab } from '@/partnerverse/financials/financials-tab';
+import { OverviewTab } from '@/partnerverse/overview/overview-tab';
+import { PerformanceTab } from '@/partnerverse/performance/performance-tab';
+import { TransactionsTab } from '@/partnerverse/transactions/transactions-tab';
+import type { Contact, Partner } from '@/types/types';
 import { Button } from '@/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
-import { Users, Star, ShieldCheck, Briefcase, DollarSign, ArrowLeft, ArrowLeftRight } from 'lucide-react';
-import { OverviewTab } from '@/partnerverse/overview/overview-tab';
-import { ContactsTab } from '@/partnerverse/contacts/contacts-tab';
-import { FinancialsTab } from '@/partnerverse/financials/financials-tab';
-import { PerformanceTab } from '@/partnerverse/performance/performance-tab';
-import { ComplianceTab } from '@/partnerverse/compliance/compliance-tab';
-import { ContractsTab } from '@/partnerverse/contracts/contracts-tab';
-import { TransactionsTab } from '@/partnerverse/transactions/transactions-tab';
+import type { Role } from '@root/src/lib/constants/roles';
+import { ArrowLeft, ArrowLeftRight, Briefcase, DollarSign, ShieldCheck, Star, Users } from 'lucide-react';
+import { type FC } from 'react';
 import { ProfileHeader } from './profile/profile-header';
 
 
@@ -27,16 +27,16 @@ interface PartnerProfileProps {
 }
 
 export const PartnerProfile: FC<PartnerProfileProps> = ({ partner, userRole, onBack, onEdit, onOpenContactForm, onDeleteContact }) => {
-    
+
   return (
     <div className="space-y-6">
-       <Button variant="outline" onClick={onBack} className="mb-4">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          返回夥伴列表
-        </Button>
-      
+      <Button variant="outline" onClick={onBack} className="mb-4">
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        返回夥伴列表
+      </Button>
+
       <ProfileHeader partner={partner} onEdit={onEdit} userRole={userRole} />
-      
+
       <Tabs defaultValue="overview">
         <TabsList className="flex flex-wrap h-auto">
           <TabsTrigger value="overview">概覽</TabsTrigger>
@@ -52,14 +52,14 @@ export const PartnerProfile: FC<PartnerProfileProps> = ({ partner, userRole, onB
           <OverviewTab partner={partner} />
         </TabsContent>
         <TabsContent value="contacts">
-            <ContactsTab 
-                partner={partner} 
-                onOpenContactForm={onOpenContactForm}
-                onDeleteContact={onDeleteContact}
-            />
+          <ContactsTab
+            partner={partner}
+            onOpenContactForm={onOpenContactForm}
+            onDeleteContact={onDeleteContact}
+          />
         </TabsContent>
         <TabsContent value="financials">
-            <FinancialsTab partner={partner} />
+          <FinancialsTab partner={partner} />
         </TabsContent>
         <TabsContent value="performance">
           <PerformanceTab partner={partner} />
@@ -71,7 +71,7 @@ export const PartnerProfile: FC<PartnerProfileProps> = ({ partner, userRole, onB
           <ContractsTab partner={partner} />
         </TabsContent>
         <TabsContent value="transactions">
-           <TransactionsTab partner={partner} />
+          <TransactionsTab partner={partner} />
         </TabsContent>
       </Tabs>
     </div>

@@ -2,13 +2,13 @@
 'use client';
 
 import { Dashboard } from '@/features/partnerverse/dashboard/dashboard';
-import type { Role } from '@/lib/roles';
 import type { Partner } from '@/lib/types/types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Input } from '@/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
+import type { Role } from '@root/src/lib/constants/roles';
 import { Plus, Search } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState, type FC } from 'react';

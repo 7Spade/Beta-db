@@ -5,8 +5,8 @@ import { useToast } from '@root/src/lib/hooks/use-toast';
 import { addDoc, collection, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState, type FC } from 'react';
 
-import type { Role } from '@/lib/roles';
 import type { Contact, Partner } from '@/types/types';
+import type { Role } from '@root/src/lib/constants/roles';
 
 import { ContactForm } from '@/partnerverse/contacts/forms/contact-form';
 import { Skeleton } from '@/ui/skeleton';

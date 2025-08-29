@@ -251,9 +251,6 @@
 │  │          section-divider.tsx
 │  │          status-indicator.tsx
 │  │
-│  ├─mobile-app
-│  │      README.md
-│  │
 │  └─ui
 │          accordion.tsx
 │          alert-dialog.tsx
@@ -306,10 +303,6 @@
 │          toggle-group.tsx
 │          toggle.tsx
 │          tooltip.tsx
-│
-├─config
-│      navigation.config.ts
-│      README.md
 │
 ├─features
 │  │  index.ts
@@ -528,6 +521,9 @@
 │  │  └─views
 │  │          docu-parse-view.tsx
 │  │
+│  ├─integrations
+│  │      READMD.md
+│  │
 │  ├─kanban
 │  │  │  index.ts
 │  │  │  README.md
@@ -552,6 +548,12 @@
 │  │  │
 │  │  └─views
 │  │          kanban-view.tsx
+│  │
+│  ├─mobile-app
+│  │      READMD.md
+│  │
+│  ├─multi-tenancy
+│  │      READMD.md
 │  │
 │  ├─partnerverse
 │  │  │  README.md
@@ -676,24 +678,20 @@
 │  │          skill-form-dialog.tsx
 │  │          skills-list.tsx
 │  │
-│  └─warehousing
-│          README.md
-│
-├─hooks
-│      index.ts
-│      README.md
-│      use-mobile.tsx
-│      use-notifications.ts
-│      use-toast.ts
-│
-├─integrations
-│      READMD.md
+│  ├─warehousing
+│  │      README.md
+│  │
+│  └─workflow-automation
+│          READMD.md
 │
 └─lib
     │  README.md
     │  roles.ts
     │
     ├─config
+    │      navigation.config.ts
+    │      README.md
+    │
     ├─db
     │  │  README.md
     │  │
@@ -726,6 +724,13 @@
     ├─events
     │      app-events.ts
     │      event-dispatcher.ts
+    │
+    ├─hooks
+    │      index.ts
+    │      README.md
+    │      use-mobile.tsx
+    │      use-notifications.ts
+    │      use-toast.ts
     │
     ├─models
     │      ai-token-log.model.ts
