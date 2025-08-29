@@ -10,9 +10,14 @@ async function getProjects(): Promise<Project[]> {
 
   const processFirestoreTasks = (tasks: DocumentData[]): Task[] => {
     return tasks.map(task => ({
-      ...task,
-      lastUpdated: task.lastUpdated, // Should already be ISO string
-      subTasks: task.subTasks ? processFirestoreTasks(task.subTasks) : []
+      id: task.id || '',
+      title: task.title || '',
+      status: task.status || '待處理',
+      lastUpdated: task.lastUpdated ? (task.lastUpdated instanceof Timestamp ? task.lastUpdated.toDate().toISOString() : task.lastUpdated) : new Date().toISOString(),
+      subTasks: task.subTasks ? processFirestoreTasks(task.subTasks) : [],
+      value: task.value || 0,
+      quantity: task.quantity || 0,
+      unitPrice: task.unitPrice || 0
     }));
   }
 
