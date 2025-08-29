@@ -13,9 +13,9 @@
  */
 
 
+import { Dashboard as PartnerDashboard } from '@/features/(crm-management)/dashboard/dashboard';
 import { ContractDashboard } from '@/features/contracts/dashboard';
 import { AiUsageLog } from '@/features/dashboard/ai-usage-log';
-import { Dashboard as PartnerDashboard } from '@/features/partnerverse/dashboard/dashboard';
 import { Separator } from '@/ui/separator';
 
 export function DashboardView() {
