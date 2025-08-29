@@ -60,6 +60,7 @@ export function CloudDriveView() {
     if (item.type === 'folder') {
       handleNavigate(item.fullPath);
     } else {
+      // 對於文件，獲取簽名 URL 並顯示預覽
       const { url, error } = await getSignedUrl(item.fullPath);
       if (error || !url) {
         toast({ variant: 'destructive', title: '無法預覽', description: error || '取得檔案連結失敗。' });

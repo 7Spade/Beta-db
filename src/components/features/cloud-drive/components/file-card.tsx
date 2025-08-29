@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, type FC } from 'react';
-import { File as FileIcon, MoreVertical, Download, Trash2, ExternalLink, Edit } from 'lucide-react';
+import { File as FileIcon, MoreVertical, Download, Trash2, ExternalLink, Edit, Eye } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/ui/card';
 import { Button } from '@/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/ui/dropdown-menu';
@@ -18,9 +18,10 @@ interface FileCardProps {
   file: StorageItem;
   onDelete: () => void;
   onRename: () => void;
+  onOpen?: () => void;
 }
 
-export const FileCard: FC<FileCardProps> = ({ file, onDelete, onRename }) => {
+export const FileCard: FC<FileCardProps> = ({ file, onDelete, onRename, onOpen }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -35,10 +36,16 @@ export const FileCard: FC<FileCardProps> = ({ file, onDelete, onRename }) => {
     }
   }, [isHovered, file, previewUrl]);
   
-  const handleOpen = async () => {
+  const handlePreview = async () => {
+    if (onOpen) {
+      onOpen();
+    }
+  };
+
+  const handleDownload = async () => {
     const result = await getSignedUrl(file.fullPath);
     if (result.url) {
-      // 透過在新分頁開啟來觸發下載或預覽
+      // 透過在新分頁開啟來觸發下載
       window.open(result.url, '_blank');
     }
   };
@@ -51,7 +58,7 @@ export const FileCard: FC<FileCardProps> = ({ file, onDelete, onRename }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardContent className="p-0 aspect-square flex items-center justify-center bg-muted rounded-t-lg">
+      <CardContent className="p-0 aspect-square flex items-center justify-center bg-muted rounded-t-lg cursor-pointer" onClick={handlePreview}>
         {isImage && previewUrl ? (
           <Image 
             src={previewUrl} 
@@ -79,10 +86,10 @@ export const FileCard: FC<FileCardProps> = ({ file, onDelete, onRename }) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleOpen}>
-                    <ExternalLink className="mr-2 h-4 w-4" /> 在新分頁開啟
+                <DropdownMenuItem onClick={handlePreview}>
+                    <Eye className="mr-2 h-4 w-4" /> 預覽
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleOpen}>
+                <DropdownMenuItem onClick={handleDownload}>
                     <Download className="mr-2 h-4 w-4" /> 下載
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

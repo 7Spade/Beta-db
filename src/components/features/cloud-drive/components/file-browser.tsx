@@ -46,7 +46,7 @@ export const FileBrowser: FC<FileBrowserProps> = ({ items, isLoading, onItemClic
         item.type === 'folder' ? (
           <FolderCard key={item.fullPath} folder={item} onClick={() => onItemClick(item)} onDelete={() => onDeleteItem(item)} onRename={() => onRenameItem(item)} />
         ) : (
-          <FileCard key={item.fullPath} file={item} onDelete={() => onDeleteItem(item)} onRename={() => onRenameItem(item)} />
+          <FileCard key={item.fullPath} file={item} onDelete={() => onDeleteItem(item)} onRename={() => onRenameItem(item)} onOpen={() => onItemClick(item)} />
         )
       )}
     </div>
