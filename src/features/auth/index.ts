@@ -13,9 +13,12 @@ export { VerifyEmailView } from './verify-email-view';
 export { SocialAuthButtons } from './social-auth-buttons';
 
 // 表單驗證 Schema
-export { 
-  loginSchema, 
+export {
+  loginSchema,
   registerSchema,
   type LoginValues,
-  type RegisterValues 
+  type RegisterValues,
 } from './auth-form-schemas';
+
+// Hooks
+export { useAuth } from './use-auth';
