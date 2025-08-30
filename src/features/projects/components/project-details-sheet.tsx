@@ -1,7 +1,6 @@
 'use client';
 
-import { TaskItem } from '@/features/projects/task-item';
-import type { Project, Task } from '@/types/types';
+import { TaskItem } from '@/features/projects/components/task-item';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import {
@@ -20,11 +19,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/ui/sheet';
-import { addTaskAction } from '@root/src/features/projects/project-actions';
+import { addTaskAction } from '@/features/projects/actions/task-actions';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { format } from 'date-fns';
 import { PlusCircle } from 'lucide-react';
 import React from 'react';
+import type { Project, Task } from '@/features/projects/types';
 
 interface ProjectDetailsSheetProps {
   project: Project | undefined;

@@ -1,8 +1,8 @@
 'use client';
 
-import { CreateProjectDialog } from '@/features/projects/create-project-dialog';
-import { ProjectDetailsSheet } from '@/features/projects/project-details-sheet';
-import type { Project, Task } from '@/lib/types/types';
+import { CreateProjectDialog } from '@/features/projects/components/create-project-dialog';
+import { ProjectDetailsSheet } from '@/features/projects/components/project-details-sheet';
+import type { Project, Task } from '@/features/projects/types';
 import { Button } from '@/ui/button';
 import {
   Card,
@@ -114,7 +114,7 @@ export function ProjectsView({ initialProjects }: ProjectsViewProps) {
                         開始日期：
                       </span>{' '}
                       {project.startDate
-                        ? format(project.startDate, 'yyyy-MM-dd')
+                        ? format(new Date(project.startDate), 'yyyy-MM-dd')
                         : '無'}
                     </p>
                     <p>
@@ -122,7 +122,7 @@ export function ProjectsView({ initialProjects }: ProjectsViewProps) {
                         結束日期：
                       </span>{' '}
                       {project.endDate
-                        ? format(project.endDate, 'yyyy-MM-dd')
+                        ? format(new Date(project.endDate), 'yyyy-MM-dd')
                         : '無'}
                     </p>
                   </div>

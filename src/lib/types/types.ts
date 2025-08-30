@@ -6,35 +6,7 @@ import type {
   Payment,
 } from '@/features/contracts/types';
 
-export type {
-  ChangeOrder, Contract,
-  ContractStatus, ContractVersion, Payment
-};
-export type TaskStatus = '待處理' | '進行中' | '已完成';
-
-export interface Task {
-  id: string;
-  title: string;
-  status: TaskStatus;
-  lastUpdated: string;
-  subTasks: Task[];
-  value: number; // This will now be calculated as quantity * unitPrice
-  quantity: number;
-  unitPrice: number;
-}
-
-export interface Project {
-  id: string;
-  customId?: string;
-  title: string;
-  description: string;
-  client?: string;
-  clientRepresentative?: string;
-  startDate: Date;
-  endDate: Date;
-  tasks: Task[];
-  value: number;
-}
+export type { ChangeOrder, Contract, ContractStatus, ContractVersion, Payment };
 
 export interface Contact {
   id: string;
@@ -83,7 +55,14 @@ export interface Partner {
   id?: string;
   name: string;
   logoUrl: string;
-  category: '技術' | '經銷商' | '服務' | '顧問' | '下游承包商' | '供應商' | '設備';
+  category:
+    | '技術'
+    | '經銷商'
+    | '服務'
+    | '顧問'
+    | '下游承包商'
+    | '供應商'
+    | '設備';
   status: '啟用中' | '停用中' | '待審核';
   overview: string;
   website: string;

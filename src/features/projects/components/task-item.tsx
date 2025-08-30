@@ -1,7 +1,7 @@
 'use client';
 
-import { AISubtaskSuggestions } from '@/features/projects/ai-subtask-suggestions';
-import type { Project, Task, TaskStatus } from '@/types/types';
+import { AISubtaskSuggestions } from '@/features/projects/components/ai-subtask-suggestions';
+import type { Project, Task, TaskStatus } from '@/features/projects/types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import {
@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/ui/tooltip';
-import { cn } from '@/utils/utils';
+import { cn } from '@/lib/utils/utils';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -35,7 +35,10 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useState, useTransition } from 'react';
-import { addTaskAction, updateTaskStatusAction } from './project-actions';
+import {
+  addTaskAction,
+  updateTaskStatusAction,
+} from '@/features/projects/actions/task-actions';
 
 interface TaskItemProps {
   task: Task;
@@ -118,25 +121,13 @@ export function TaskItem({ task, project }: TaskItemProps) {
   };
 
   const handleAddSuggestedSubtask = (title: string) => {
-    const suggestedUnitPrice = Math.min(10, remainingValue);
-    if (suggestedUnitPrice > 0) {
-      startTransition(async () => {
-        await addTaskAction(
-          project.id,
-          project.tasks,
-          task.id,
-          title,
-          1,
-          suggestedUnitPrice
-        );
-      });
-    } else {
-      toast({
-        title: '沒有剩餘價值',
-        description: '沒有剩餘價值可以分配給新的子任務。',
-        variant: 'destructive',
-      });
-    }
+    startTransition(async () => {
+      await addTaskAction(project.id, project.tasks, task.id, title, 1, 0);
+    });
+    toast({
+      title: '子任務已新增',
+      description: `"${title}" 已被加到您的任務清單中。`,
+    });
   };
 
   const taskQuantity = task.quantity || 0;
@@ -245,9 +236,9 @@ export function TaskItem({ task, project }: TaskItemProps) {
 
         {showAISuggestions && project && (
           <AISubtaskSuggestions
-            projectTitle={project.title}
+            project={project}
             taskTitle={task.title}
-            onAddSubtask={handleAddSuggestedSubtask}
+            parentTaskId={task.id}
             onClose={() => setShowAISuggestions(false)}
           />
         )}
