@@ -9,22 +9,24 @@
 ### 1. 更新導入路徑
 
 **舊的導入方式：**
+
 ```tsx
 import { createProjectAndContractFromDocument } from '@/app/actions/contracts.actions';
 ```
 
 **新的導入方式：**
+
 ```tsx
-import { createProjectAndContractFromDocument } from '@/features/contracts';
+import { createProjectAndContractFromParsedData } from '@/features/docu-parse/actions/docu-parse-commit.actions';
 ```
 
 ### 2. 功能對比
 
-| 功能 | 舊路徑 | 新路徑 | 狀態 |
-|------|--------|--------|------|
-| createProjectAndContractFromDocument | ✅ | ✅ | 已遷移 |
-| 類型定義 | ❌ | ✅ | 新增 |
-| 錯誤處理 | ✅ | ✅ | 已優化 |
+| 功能                                 | 舊路徑 | 新路徑            | 狀態   |
+| ------------------------------------ | ------ | ----------------- | ------ |
+| createProjectAndContractFromDocument | ✅     | ✅ (已更名並移動) | 已遷移 |
+| 類型定義                             | ❌     | ✅                | 新增   |
+| 錯誤處理                             | ✅     | ✅                | 已優化 |
 
 ### 3. 新增功能
 
@@ -37,13 +39,13 @@ import { createProjectAndContractFromDocument } from '@/features/contracts';
 #### 在 Server Components 中
 
 ```tsx
-import { createProjectAndContractFromDocument } from '@/features/contracts';
+import { createProjectAndContractFromParsedData } from '@/features/docu-parse/actions/docu-parse-commit.actions';
 
 export default function DocumentProcessor() {
   async function processDocument(formData: FormData) {
     'use server';
-    
-    const result = await createProjectAndContractFromDocument({
+
+    const result = await createProjectAndContractFromParsedData({
       docDetails: {
         customId: formData.get('customId') as string,
         name: formData.get('name') as string,
@@ -52,17 +54,13 @@ export default function DocumentProcessor() {
       },
       workItems: JSON.parse(formData.get('workItems') as string),
     });
-    
+
     if (result.error) {
       // 處理錯誤
     }
   }
-  
-  return (
-    <form action={processDocument}>
-      {/* 表單內容 */}
-    </form>
-  );
+
+  return <form action={processDocument}>{/* 表單內容 */}</form>;
 }
 ```
 
@@ -71,31 +69,27 @@ export default function DocumentProcessor() {
 ```tsx
 'use client';
 
-import { createProjectAndContractFromDocument } from '@/features/contracts';
+import { createProjectAndContractFromParsedData } from '@/features/docu-parse/actions/docu-parse-commit.actions';
 
 export function DocumentProcessor() {
   const handleSubmit = async (data: any) => {
-    const result = await createProjectAndContractFromDocument(data);
-    
+    const result = await createProjectAndContractFromParsedData(data);
+
     if (result.error) {
       // 處理錯誤
     } else {
       // 處理成功
     }
   };
-  
-  return (
-    <button onClick={() => handleSubmit(data)}>
-      處理文件
-    </button>
-  );
+
+  return <button onClick={() => handleSubmit(data)}>處理文件</button>;
 }
 ```
 
 ## 注意事項
 
 1. **類型安全**: 新架構提供完整的 TypeScript 支援
-2. **錯誤處理**: 統一的錯誤處理格式
+2. **錯誤處理**: 統一的錯誤處理和返回格式
 3. **模組化**: 與現有合約模組完全整合
 4. **向後兼容**: 功能保持不變，只是路徑和架構優化
 
