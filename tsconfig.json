@@ -33,7 +33,6 @@
       "@/ui/*": ["./src/components/ui/*"],
       // 具体功能模块映射 (组件层面)
       "@/admin/*": ["./src/features/admin/*"],
-      "@/features/(core-operations)/projects/*": ["./src/features/projects/*"],
       "@/auth/*": ["./src/features/auth/*"],
       "@/blog/*": ["./src/features/blog/*"],
       "@/cloud-drive/*": ["./src/features/cloud-drive/*"],
