@@ -1,4 +1,3 @@
-
 import { DocuParseView } from '@/features/docu-parse/views/docu-parse-view';
 import { Suspense } from 'react';
 
