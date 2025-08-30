@@ -44,24 +44,28 @@ export function ProjectsView({
   );
 
   return (
-    <Tabs defaultValue="projects" className="space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">專案管理</h1>
+        <CreateProjectDialog />
+      </div>
+
+      <Tabs defaultValue="projects" className="space-y-4">
         <TabsList>
           <TabsTrigger value="projects">專案列表</TabsTrigger>
           <TabsTrigger value="acceptances">驗收管理</TabsTrigger>
         </TabsList>
-        <CreateProjectDialog />
-      </div>
 
-      <TabsContent value="projects">
-        <ProjectList
-          projects={initialProjects}
-          onViewDetails={handleViewDetails}
-        />
-      </TabsContent>
-      <TabsContent value="acceptances">
-        <AcceptanceList acceptances={initialAcceptances} />
-      </TabsContent>
+        <TabsContent value="projects">
+          <ProjectList
+            projects={initialProjects}
+            onViewDetails={handleViewDetails}
+          />
+        </TabsContent>
+        <TabsContent value="acceptances">
+          <AcceptanceList acceptances={initialAcceptances} />
+        </TabsContent>
+      </Tabs>
 
       {selectedProjectId && (
         <ProjectDetailsSheet
@@ -70,6 +74,6 @@ export function ProjectsView({
           onOpenChange={handleSheetOpenChange}
         />
       )}
-    </Tabs>
+    </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   serverTimestamp,
   updateDoc,
   writeBatch,
+  getDoc,
 } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import type { Task } from '@/lib/types/types';
@@ -25,7 +26,7 @@ interface SubmitProgressInput {
   notes?: string;
   applicantId: string;
   applicantName: string;
-  reviewerId: string; // Assuming a reviewer is assigned, can be improved later
+  reviewerId: string;
 }
 
 /**
@@ -47,13 +48,18 @@ export async function submitTaskProgressAction(
   } = input;
 
   try {
-    // This action orchestrates the process by calling another specialized action.
-    // In a real scenario, this would call createAcceptanceRecordAction.
-    // For now, we implement the logic directly here but within the workflow file.
+    const projectRef = doc(firestore, 'projects', projectId);
+    const projectSnap = await getDoc(projectRef);
+    if (!projectSnap.exists()) {
+      throw new Error('找不到對應的專案。');
+    }
+    const projectData = projectSnap.data();
+    const projectName = projectData.title || '未命名專案';
+
     const acceptanceData = {
       title: `${taskTitle} - 進度回報`,
       projectId,
-      projectName: '', // This could be fetched or passed in
+      projectName,
       taskId,
       submittedQuantity,
       applicantId,
@@ -122,7 +128,7 @@ export async function approveAcceptanceAction({
 
     // 2. Update the corresponding task's completedQuantity
     const projectRef = doc(firestore, 'projects', projectId);
-    const projectSnap = await projectRef.get();
+    const projectSnap = await getDoc(projectRef);
     if (!projectSnap.exists()) {
       throw new Error('找不到對應的專案。');
     }

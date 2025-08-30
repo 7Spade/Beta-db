@@ -29,6 +29,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useState } from 'react';
+import { SubmitProgressDialog } from './submit-progress-dialog';
 
 interface TaskItemProps {
   task: Task;
@@ -65,21 +66,17 @@ export function TaskItem({ task, project }: TaskItemProps) {
   const [isAddingSubtask, setIsAddingSubtask] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [showAISuggestions, setShowAISuggestions] = useState(false);
+  const [isProgressDialogOpen, setIsProgressDialogOpen] = useState(false);
 
   // Derive status from quantities
   const status = getTaskStatus(task);
   const isPending = false; // Placeholder for transition state if needed later
 
-  const handleReportProgress = () => {
-    // This will open a new dialog to submit progress
-    // The logic will be handled by a new component, e.g., SubmitProgressDialog
-    console.log(`Reporting progress for task: ${task.id}`);
-  };
-
   const taskQuantity = task.quantity || 0;
   const taskUnitPrice = task.unitPrice || 0;
   const taskValue = task.value || 0;
   const completedQuantity = task.completedQuantity || 0;
+  const remainingQuantity = taskQuantity - completedQuantity;
 
   return (
     <TooltipProvider delayDuration={200}>
@@ -140,7 +137,7 @@ export function TaskItem({ task, project }: TaskItemProps) {
             variant="outline"
             size="sm"
             className="h-8"
-            onClick={handleReportProgress}
+            onClick={() => setIsProgressDialogOpen(true)}
             disabled={completedQuantity >= taskQuantity}
           >
             回報進度
@@ -194,6 +191,13 @@ export function TaskItem({ task, project }: TaskItemProps) {
           {/* Add subtask form logic will be refactored */}
         </CollapsibleContent>
       </Collapsible>
+      <SubmitProgressDialog
+        isOpen={isProgressDialogOpen}
+        onOpenChange={setIsProgressDialogOpen}
+        task={task}
+        project={project}
+        remainingQuantity={remainingQuantity}
+      />
     </TooltipProvider>
   );
 }
