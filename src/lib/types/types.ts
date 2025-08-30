@@ -1,12 +1,21 @@
+import type { Timestamp } from 'firebase/firestore';
 import type {
   ChangeOrder,
   Contract,
   ContractStatus,
   ContractVersion,
   Payment,
+  Receipt,
 } from '@/features/(core-operations)/contracts/types';
 
-export type { ChangeOrder, Contract, ContractStatus, ContractVersion, Payment };
+export type {
+  ChangeOrder,
+  Contract,
+  ContractStatus,
+  ContractVersion,
+  Payment,
+  Receipt,
+};
 
 export interface Contact {
   id: string;
@@ -105,11 +114,11 @@ export interface FinancialDocument {
   amount: number;
   description: string;
   currentStep: string;
-  createDate: Date;
-  dueDate: Date;
+  createDate: Date | Timestamp;
+  dueDate: Date | Timestamp;
   history: Array<{
     step: string;
-    date: Date;
+    date: Date | Timestamp;
     user: string;
   }>;
 }
@@ -171,9 +180,13 @@ export interface AcceptanceRecord {
   status: AcceptanceStatus;
   notes?: string;
   attachments?: Array<{ name: string; url: string }>;
-  history?: Array<{ action: string; userId: string; timestamp: Date | string }>;
-  submittedAt: Date | string;
-  reviewedAt?: Date | string;
+  history?: Array<{
+    action: string;
+    userId: string;
+    timestamp: Date | string | Timestamp;
+  }>;
+  submittedAt: Date | string | Timestamp;
+  reviewedAt?: Date | string | Timestamp;
 }
 
 export type TaskStatus = '待處理' | '進行中' | '已完成';
@@ -186,7 +199,7 @@ export interface Task {
   value: number;
   quantity: number;
   unitPrice: number;
-  completedQuantity: number; // New field, replaces status
+  completedQuantity: number;
 }
 
 export interface Project {

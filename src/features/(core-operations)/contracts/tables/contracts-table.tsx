@@ -4,6 +4,7 @@ import { ContractStatusBadge } from '@/features/(core-operations)/contracts/comp
 import { ContractDetailsSheet } from '@/features/(core-operations)/contracts/sheets';
 import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { formatDate } from '@/lib/utils/utils';
+import { toDate } from '@/lib/utils/date-utils';
 import { Button } from '@/ui/button';
 import {
   Card,
@@ -67,8 +68,8 @@ export function ContractsTable({ contracts }: ContractsTableProps) {
         `"${c.name.replace(/"/g, '""')}"`,
         `"${c.contractor.replace(/"/g, '""')}"`,
         `"${c.client.replace(/"/g, '""')}"`,
-        formatDate(c.startDate),
-        formatDate(c.endDate),
+        formatDate(toDate(c.startDate)),
+        formatDate(toDate(c.endDate)),
         c.totalValue,
         c.status,
       ].join(',')
@@ -129,7 +130,7 @@ export function ContractsTable({ contracts }: ContractsTableProps) {
                     {contract.contractor}
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
-                    {formatDate(contract.endDate)}
+                    {formatDate(toDate(contract.endDate))}
                   </TableCell>
                   <TableCell>${contract.totalValue.toLocaleString()}</TableCell>
                   <TableCell>

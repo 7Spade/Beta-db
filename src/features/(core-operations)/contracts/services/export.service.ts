@@ -2,6 +2,7 @@
  * @fileoverview 匯出功能服務
  */
 import type { Contract } from '@/features/(core-operations)/contracts/types';
+import { toDate } from '@/lib/utils/date-utils';
 import { formatDate } from '@/lib/utils/utils';
 
 export const exportService = {
@@ -22,8 +23,8 @@ export const exportService = {
         `"${c.name.replace(/"/g, '""')}"`,
         `"${c.contractor.replace(/"/g, '""')}"`,
         `"${c.client.replace(/"/g, '""')}"`,
-        formatDate(c.startDate),
-        formatDate(c.endDate),
+        formatDate(toDate(c.startDate)),
+        formatDate(toDate(c.endDate)),
         c.totalValue,
         c.status,
       ].join(',')

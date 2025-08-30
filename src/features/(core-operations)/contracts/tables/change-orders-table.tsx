@@ -5,6 +5,7 @@
 
 import type { ChangeOrder } from '@/features/(core-operations)/contracts/types';
 import { formatDate } from '@/lib/utils/utils';
+import { toDate } from '@/lib/utils/date-utils';
 import { Badge } from '@/ui/badge';
 import {
   Table,
@@ -35,7 +36,7 @@ export function ChangeOrdersTable({ changeOrders }: ChangeOrdersTableProps) {
           changeOrders.map((order) => (
             <TableRow key={order.id}>
               <TableCell className="font-medium">{order.title}</TableCell>
-              <TableCell>{formatDate(order.date)}</TableCell>
+              <TableCell>{formatDate(toDate(order.date))}</TableCell>
               <TableCell>
                 <Badge>{order.status}</Badge>
               </TableCell>

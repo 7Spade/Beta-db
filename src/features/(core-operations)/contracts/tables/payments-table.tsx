@@ -5,6 +5,7 @@
 
 import type { Payment } from '@/features/(core-operations)/contracts/types';
 import { formatDate } from '@/lib/utils/utils';
+import { toDate } from '@/lib/utils/date-utils';
 import { Badge } from '@/ui/badge';
 import {
   Table,
@@ -35,12 +36,14 @@ export function PaymentsTable({ payments }: PaymentsTableProps) {
           payments.map((payment) => (
             <TableRow key={payment.id}>
               <TableCell>${payment.amount.toLocaleString()}</TableCell>
-              <TableCell>{formatDate(payment.requestDate)}</TableCell>
+              <TableCell>{formatDate(toDate(payment.requestDate))}</TableCell>
               <TableCell>
                 <Badge>{payment.status}</Badge>
               </TableCell>
               <TableCell>
-                {payment.paidDate ? formatDate(payment.paidDate) : '未付款'}
+                {payment.paidDate
+                  ? formatDate(toDate(payment.paidDate))
+                  : '未付款'}
               </TableCell>
             </TableRow>
           ))

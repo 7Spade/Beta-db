@@ -26,12 +26,12 @@ function workItemsToTasks(items: WorkItem[]): Task[] {
   return items.map((item, index) => ({
     id: `task-${Date.now()}-${index}`,
     title: item.name,
-    status: '待處理',
     lastUpdated: new Date().toISOString(),
     quantity: item.quantity,
     unitPrice: item.unitPrice,
-    value: item.quantity * item.unitPrice, // Calculate total value
+    value: item.quantity * item.unitPrice,
     subTasks: [],
+    completedQuantity: 0,
   }));
 }
 
@@ -105,6 +105,7 @@ export async function createProjectAndContractFromParsedData(
       startDate: projectData.startDate,
       endDate: projectData.endDate,
       payments: [],
+      receipts: [],
       changeOrders: [],
       versions: [
         {

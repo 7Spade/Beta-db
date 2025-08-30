@@ -58,7 +58,11 @@ export function CreateProjectDialog() {
   });
 
   async function onSubmit(values: z.infer<typeof projectSchema>) {
-    const result = await addProjectAction(values);
+    const result = await addProjectAction({
+      ...values,
+      startDate: values.startDate.toISOString(),
+      endDate: values.endDate.toISOString(),
+    });
 
     if (result.success) {
       toast({

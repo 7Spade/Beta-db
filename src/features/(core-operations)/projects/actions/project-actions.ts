@@ -11,8 +11,8 @@ export async function addProjectAction(
   try {
     const projectDataForFirestore = {
       ...project,
-      startDate: Timestamp.fromDate(project.startDate as Date),
-      endDate: Timestamp.fromDate(project.endDate as Date),
+      startDate: Timestamp.fromDate(new Date(project.startDate)),
+      endDate: Timestamp.fromDate(new Date(project.endDate)),
       tasks: [],
     };
     await addDoc(collection(firestore, 'projects'), projectDataForFirestore);

@@ -23,7 +23,10 @@ interface CreateContractDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onSave: (
-    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>
+    data: Omit<
+      Contract,
+      'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'
+    >
   ) => Promise<boolean>;
 }
 
