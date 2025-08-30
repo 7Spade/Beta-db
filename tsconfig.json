@@ -36,7 +36,6 @@
       "@/auth/*": ["./src/features/auth/*"],
       "@/blog/*": ["./src/features/blog/*"],
       "@/cloud-drive/*": ["./src/features/cloud-drive/*"],
-      "@/contracts/*": ["./src/features/contracts/*"],
       "@/dashboard/*": ["./src/features/dashboard/*"],
       "@/docu-parse/*": ["./src/features/docu-parse/*"],
       "@/kanban/*": ["./src/features/kanban/*"],
