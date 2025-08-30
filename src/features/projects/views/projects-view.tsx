@@ -1,8 +1,13 @@
-'use client';
-
 import { CreateProjectDialog } from '@/features/projects/components/create-project-dialog';
 import { ProjectDetailsSheet } from '@/features/projects/components/project-details-sheet';
 import type { Project, Task } from '@/features/projects/types';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  Timestamp,
+} from 'firebase/firestore';
 import { Button } from '@/ui/button';
 import {
   Card,
@@ -36,15 +41,60 @@ function calculateProgress(tasks: Task[]): { completedValue: number } {
   return { completedValue };
 }
 
-interface ProjectsViewProps {
-  initialProjects: Project[];
+async function getProjects(): Promise<Project[]> {
+  const projectsCollection = collection(firestore, 'projects');
+  const projectSnapshot = await getDocs(projectsCollection);
+
+  const processFirestoreTasks = (tasks: DocumentData[]): Task[] => {
+    return tasks.map((task) => ({
+      id: task.id || '',
+      title: task.title || '',
+      status: task.status || '待處理',
+      lastUpdated:
+        task.lastUpdated instanceof Timestamp
+          ? task.lastUpdated.toDate().toISOString()
+          : new Date().toISOString(),
+      subTasks: task.subTasks ? processFirestoreTasks(task.subTasks) : [],
+      value: task.value || 0,
+      quantity: task.quantity || 0,
+      unitPrice: task.unitPrice || 0,
+    }));
+  };
+
+  const projectsData = projectSnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+      id: doc.id,
+      startDate: (data.startDate as Timestamp)?.toDate(),
+      endDate: (data.endDate as Timestamp)?.toDate(),
+      tasks: processFirestoreTasks(data.tasks || []),
+    } as Project;
+  });
+
+  return projectsData;
 }
 
-export function ProjectsView({ initialProjects }: ProjectsViewProps) {
+export function ProjectsView() {
+  // Since this is now a Server Component, we fetch data directly.
+  // We'll manage client-side state for interactions.
+  const [initialProjects, setInitialProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
   const [isSheetOpen, setSheetOpen] = useState(false);
+
+  // We need useEffect to fetch data on the client side now
+  // to avoid issues with server components and state.
+  // For a fully server-side approach, we'd lift state management.
+  // This is a hybrid approach.
+  useState(() => {
+    getProjects().then((data) => {
+      setInitialProjects(data);
+      setLoading(false);
+    });
+  });
 
   const handleViewDetails = (projectId: string) => {
     setSelectedProjectId(projectId);
