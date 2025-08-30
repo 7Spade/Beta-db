@@ -41,8 +41,6 @@
       "@/kanban/*": ["./src/features/kanban/*"],
       "@/(crm-management)/*": ["./src/features/(crm-management)/*"],
       "@/profile/*": ["./src/features/profile/*"],
-      "@/quick-actions-features/*": ["./src/features/quick-actions/*"],
-      "@/settings/*": ["./src/features/settings/*"],
       "@/storage-manager/*": ["./src/features/storage-manager/*"],
       "@/team/*": ["./src/features/team/*"],
       // 布局组件映射
