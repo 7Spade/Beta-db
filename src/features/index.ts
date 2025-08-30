@@ -38,9 +38,9 @@ export * from '@/(crm-management)/partners/partners-view';
 export * from '@/(crm-management)/workflows/workflow-builder';
 
 // Quick Actions Features
-export * from '@/quick-actions-features/daily-report';
-export * from '@/quick-actions-features/project-progress';
-export * from '@/quick-actions-features/staff-attendance';
+export * from '@/features/quick-actions/daily-report';
+export * from '@/features/quick-actions/project-progress';
+export * from '@/features/quick-actions/staff-attendance';
 
 // Settings Features
 export * from '@/features/(system-admin)/settings/settings-view';
