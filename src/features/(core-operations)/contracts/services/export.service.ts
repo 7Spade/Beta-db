@@ -1,7 +1,7 @@
 /**
  * @fileoverview 匯出功能服務
  */
-import type { Contract } from '@/features/contracts/types';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { formatDate } from '@/lib/utils/utils';
 
 export const exportService = {

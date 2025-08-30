@@ -16,8 +16,8 @@ Import constants as needed throughout the contracts feature:
 import {
   CONTRACT_STATUSES,
   CONTRACT_TYPES,
-} from '@/features/contracts/constants';
-import { UI_CONSTANTS } from '@/features/contracts/constants';
+} from '@/features/(core-operations)/contracts/constants';
+import { UI_CONSTANTS } from '@/features/(core-operations)/contracts/constants';
 ```
 
 ## Structure

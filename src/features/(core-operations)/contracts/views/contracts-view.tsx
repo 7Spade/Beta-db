@@ -1,11 +1,11 @@
 'use client';
 
-import { ContractDashboard } from '@/features/contracts/dashboard';
-import { CreateContractDialog } from '@/features/contracts/dialogs';
-import { useContracts } from '@/features/contracts/hooks';
-import { contractService } from '@/features/contracts/services';
-import { ContractsTable } from '@/features/contracts/tables';
-import type { Contract } from '@/features/contracts/types';
+import { ContractDashboard } from '@/features/(core-operations)/contracts/dashboard';
+import { CreateContractDialog } from '@/features/(core-operations)/contracts/dialogs';
+import { useContracts } from '@/features/(core-operations)/contracts/hooks';
+import { contractService } from '@/features/(core-operations)/contracts/services';
+import { ContractsTable } from '@/features/(core-operations)/contracts/tables';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardHeader } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';

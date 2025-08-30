@@ -3,9 +3,9 @@
  */
 'use client';
 
-import { CreateContractDialog } from '@/features/contracts/dialogs';
-import { contractService } from '@/features/contracts/services';
-import type { Contract } from '@/features/contracts/types';
+import { CreateContractDialog } from '@/features/(core-operations)/contracts/dialogs';
+import { contractService } from '@/features/(core-operations)/contracts/services';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 

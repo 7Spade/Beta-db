@@ -16,8 +16,8 @@ This directory contains reusable UI components specific to contract management f
 These components are designed to be used within the contracts feature views and can be imported as needed:
 
 ```tsx
-import { ContractStatusBadge } from '@/features/contracts/components/contract-status-badge';
-import { ContractSummaryCard } from '@/features/contracts/components/contract-summary-card';
+import { ContractStatusBadge } from '@/features/(core-operations)/contracts/components/contract-status-badge';
+import { ContractSummaryCard } from '@/features/(core-operations)/contracts/components/contract-summary-card';
 ```
 
 ## Dependencies

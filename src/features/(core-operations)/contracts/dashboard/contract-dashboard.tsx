@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useContracts } from '@/contracts/hooks';
+import { useContracts } from '@/features/(core-operations)/contracts/hooks';
 import {
   DashboardStats,
   type StatCardData,

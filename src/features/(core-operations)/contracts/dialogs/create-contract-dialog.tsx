@@ -4,8 +4,8 @@ import {
   ContractForm,
   contractSchema,
   type ContractFormValues,
-} from '@/features/contracts/forms';
-import type { Contract } from '@/features/contracts/types';
+} from '@/features/(core-operations)/contracts/forms';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { Button } from '@/ui/button';
 import {
   Dialog,

@@ -3,7 +3,7 @@
  */
 'use client';
 
-import type { Contract } from '@/features/contracts/types';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { FormProvider, useForm, type UseFormReturn } from 'react-hook-form';

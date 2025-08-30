@@ -3,12 +3,12 @@
  */
 'use client';
 
-import { CONTRACT_STATUSES } from '@/features/contracts/constants';
+import { CONTRACT_STATUSES } from '@/features/(core-operations)/contracts/constants';
 import {
   contractSchema,
   type ContractFormValues,
-} from '@/features/contracts/forms';
-import type { Contract } from '@/features/contracts/types';
+} from '@/features/(core-operations)/contracts/forms';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

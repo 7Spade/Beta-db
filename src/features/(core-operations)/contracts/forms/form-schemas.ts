@@ -2,7 +2,7 @@
  * @fileoverview 合約表單驗證 Schema
  */
 
-import { CONTRACT_STATUSES } from '@/features/contracts/constants';
+import { CONTRACT_STATUSES } from '@/features/(core-operations)/contracts/constants';
 import { z } from 'zod';
 
 export const contractSchema = z

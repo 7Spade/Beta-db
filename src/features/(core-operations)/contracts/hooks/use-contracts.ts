@@ -2,7 +2,7 @@
  * @fileoverview 合約數據管理 Hook
  */
 
-import type { Contract } from '@/features/contracts/types';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import {
   collection,

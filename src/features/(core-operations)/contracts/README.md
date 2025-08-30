@@ -43,7 +43,7 @@ contracts/
 
 ```tsx
 // src/app/(dashboard)/contracts/layout.tsx
-import { ContractProvider } from '@/features/contracts/providers';
+import { ContractProvider } from '@/features/(core-operations)/contracts/providers';
 
 export default function ContractsLayout({
   children,

@@ -2,7 +2,7 @@
  * @fileoverview 合約 CRUD 操作服務
  */
 
-import type { Contract } from '@/features/contracts/types';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import {
   addDoc,
