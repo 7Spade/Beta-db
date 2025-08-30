@@ -4,7 +4,7 @@ import type {
   ContractStatus,
   ContractVersion,
   Payment,
-} from '@/features/contracts/types';
+} from '@/features/(core-operations)/contracts/types';
 
 export type { ChangeOrder, Contract, ContractStatus, ContractVersion, Payment };
 
@@ -154,4 +154,23 @@ export interface AiTokenLog {
   timestamp: Date;
   userId?: string;
   error?: string;
+}
+
+export type AcceptanceStatus = '草稿' | '待審批' | '已批准' | '已駁回';
+
+export interface AcceptanceRecord {
+  id: string;
+  title: string;
+  projectId: string;
+  projectName: string; // 冗餘儲存，方便顯示
+  applicantId: string;
+  applicantName: string; // 冗餘儲存
+  reviewerId: string;
+  status: AcceptanceStatus;
+  linkedTaskIds: string[];
+  notes?: string;
+  attachments?: Array<{ name: string; url: string }>;
+  history?: Array<{ action: string; userId: string; timestamp: Date }>;
+  submittedAt: Date;
+  reviewedAt?: Date;
 }
