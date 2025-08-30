@@ -163,11 +163,12 @@ export interface AcceptanceRecord {
   title: string;
   projectId: string;
   projectName: string;
+  taskId: string; // New field
+  submittedQuantity: number; // New field
   applicantId: string;
   applicantName: string;
   reviewerId: string;
   status: AcceptanceStatus;
-  linkedTaskIds: string[];
   notes?: string;
   attachments?: Array<{ name: string; url: string }>;
   history?: Array<{ action: string; userId: string; timestamp: Date | string }>;
@@ -180,12 +181,12 @@ export type TaskStatus = '待處理' | '進行中' | '已完成';
 export interface Task {
   id: string;
   title: string;
-  status: TaskStatus;
   lastUpdated: string;
   subTasks: Task[];
   value: number;
   quantity: number;
   unitPrice: number;
+  completedQuantity: number; // New field, replaces status
 }
 
 export interface Project {

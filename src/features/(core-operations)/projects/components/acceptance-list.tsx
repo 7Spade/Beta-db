@@ -19,18 +19,41 @@ import {
 import { AcceptanceStatusBadge } from './acceptance-status-badge';
 import { formatDate } from '@/lib/utils/utils';
 import { Button } from '@/ui/button';
+import { approveAcceptanceAction } from '../actions/workflow-actions';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 
 interface AcceptanceListProps {
   acceptances: AcceptanceRecord[];
 }
 
 export function AcceptanceList({ acceptances }: AcceptanceListProps) {
+  const { toast } = useToast();
+
+  const handleApprove = async (acceptanceId: string) => {
+    // In a real app, we'd get the current admin's ID
+    const adminId = 'admin_user_placeholder';
+    const result = await approveAcceptanceAction({ acceptanceId, adminId });
+
+    if (result.success) {
+      toast({
+        title: '成功',
+        description: '驗收單已批准，相關任務進度已更新。',
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: '操作失敗',
+        description: result.error,
+      });
+    }
+  };
+
   if (acceptances.length === 0) {
     return (
       <div className="text-center py-10 border-2 border-dashed rounded-lg">
         <h3 className="text-lg font-medium">尚無驗收單</h3>
         <p className="text-sm text-muted-foreground">
-          建立任務並完成後，即可發起驗收。
+          當有進度被回報時，對應的驗收單將會顯示在這裡。
         </p>
       </div>
     );
@@ -47,7 +70,8 @@ export function AcceptanceList({ acceptances }: AcceptanceListProps) {
           <TableHeader>
             <TableRow>
               <TableHead>標題</TableHead>
-              <TableHead>專案</TableHead>
+              <TableHead>專案 / 任務</TableHead>
+              <TableHead>提交數量</TableHead>
               <TableHead>申請人</TableHead>
               <TableHead>提交日期</TableHead>
               <TableHead>狀態</TableHead>
@@ -58,16 +82,32 @@ export function AcceptanceList({ acceptances }: AcceptanceListProps) {
             {acceptances.map((record) => (
               <TableRow key={record.id}>
                 <TableCell className="font-medium">{record.title}</TableCell>
-                <TableCell>{record.projectName}</TableCell>
+                <TableCell>
+                  <div>{record.projectName}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {record.taskId}
+                  </div>
+                </TableCell>
+                <TableCell>{record.submittedQuantity}</TableCell>
                 <TableCell>{record.applicantName}</TableCell>
                 <TableCell>{formatDate(record.submittedAt)}</TableCell>
                 <TableCell>
                   <AcceptanceStatusBadge status={record.status} />
                 </TableCell>
                 <TableCell>
-                  <Button variant="outline" size="sm">
-                    查看詳情
-                  </Button>
+                  {record.status === '待審批' ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleApprove(record.id)}
+                    >
+                      批准
+                    </Button>
+                  ) : (
+                    <Button variant="ghost" size="sm" disabled>
+                      查看
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

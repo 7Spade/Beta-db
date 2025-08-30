@@ -1,9 +1,6 @@
 'use client';
 
-import type {
-  Project,
-  Task,
-} from '@/features/(core-operations)/projects/types';
+import type { Project } from '@/features/(core-operations)/projects/types';
 import { Button } from '@/ui/button';
 import {
   Card,
@@ -15,26 +12,7 @@ import {
 } from '@/ui/card';
 import { Progress } from '@/ui/progress';
 import { format } from 'date-fns';
-
-function calculateProgress(tasks: Task[]): { completedValue: number } {
-  let completedValue = 0;
-
-  function recurse(taskArray: Task[]) {
-    taskArray.forEach((task) => {
-      // Only count leaf nodes for progress
-      if (task.subTasks && task.subTasks.length > 0) {
-        recurse(task.subTasks);
-      } else {
-        if (task.status === '已完成') {
-          completedValue += task.value;
-        }
-      }
-    });
-  }
-
-  recurse(tasks);
-  return { completedValue };
-}
+import { calculateProjectProgress } from '../utils/project-progress';
 
 interface ProjectCardProps {
   project: Project;
@@ -42,9 +20,13 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, onViewDetails }: ProjectCardProps) {
-  const { completedValue } = calculateProgress(project.tasks);
+  const { completedValue, totalValue } = calculateProjectProgress(
+    project.tasks
+  );
+  // Ensure totalValue from calculation is used if project.value is 0 to avoid division by zero
+  const safeTotalValue = project.value > 0 ? project.value : totalValue;
   const progressPercentage =
-    project.value > 0 ? (completedValue / project.value) * 100 : 0;
+    safeTotalValue > 0 ? (completedValue / safeTotalValue) * 100 : 0;
 
   return (
     <Card

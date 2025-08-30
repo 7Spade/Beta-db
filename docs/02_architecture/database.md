@@ -79,17 +79,19 @@
 | `endDate`     | `Timestamp`                  | 專案的預計結束日期。     |
 | `tasks`       | `Array<Map>` (Task 物件陣列) | 專案下的任務列表。       |
 
-#### 巢状 `Task` 物件結構 (v2.0)
+#### 巢状 `Task` 物件結構 (v2.1)
 
-| 欄位             | 類型                                    | 描述                                  |
-| ---------------- | --------------------------------------- | ------------------------------------- |
-| `id`             | `string`                                | 任務的唯一 ID。                       |
-| `title`          | `string`                                | 任務的標題。                          |
-| `status`         | `string` ('待處理', '進行中', '已完成') | 任務的當前狀態。                      |
-| `value`          | `number`                                | 任務的價值 (quantity \* unitPrice)。  |
-| `requiredSkills` | `Array<string>`                         | (可選) 執行此任務所需的技能 ID 列表。 |
-| `assignment`     | `Map`                                   | (可選) **任務委派物件**。             |
-| `subTasks`       | `Array<Map>` (Task 物件陣列)            | 巢狀的子任務列表。                    |
+| 欄位                | 類型            | 描述                                                        |
+| ------------------- | --------------- | ----------------------------------------------------------- |
+| `id`                | `string`        | 任務的唯一 ID。                                             |
+| `title`             | `string`        | 任務的標題。                                                |
+| `value`             | `number`        | 任務的價值 (quantity \* unitPrice)。                        |
+| `quantity`          | `number`        | **[核心]** 任務的總量。                                     |
+| `unitPrice`         | `number`        | **[核心]** 任務的單價。                                     |
+| `completedQuantity` | `number`        | **[核心]** 已被批准的完成數量，由驗收單自動更新。預設為 0。 |
+| `requiredSkills`    | `Array<string>` | (可選) 執行此任務所需的技能 ID 列表。                       |
+| `assignment`        | `Map`           | (可選) **任務委派物件**。                                   |
+| `subTasks`          | `Array<Map>`    | (Task 物件陣列) 巢狀的子任務列表。                          |
 
 #### 巢状 `Assignment` 物件結構
 
@@ -108,19 +110,21 @@
 - **文件 ID**: 自動生成的唯一 ID (`string`)
 - **文件結構**:
 
-| 欄位            | 類型            | 描述                                                                               |
-| --------------- | --------------- | ---------------------------------------------------------------------------------- |
-| `title`         | `string`        | 驗收單的標題（例如：「五月份一樓水電工程驗收」）。                                 |
-| `projectId`     | `string`        | **[關聯]** `projects` ID，標明此驗收單屬於哪個專案。                               |
-| `applicantId`   | `string`        | **[關聯]** `users` ID，申請驗收的人員。                                            |
-| `reviewerId`    | `string`        | **[關聯]** `users` ID，應負責審核此驗收單的人員。                                  |
-| `status`        | `string`        | **核心狀態**：'草稿', '待審批', '已批准', '已駁回'。                               |
-| `linkedTaskIds` | `Array<string>` | **[關聯]** 關聯的 `projects` 中的任務 ID 列表。                                    |
-| `notes`         | `string`        | (可選) 關於此次驗收的備註或說明。                                                  |
-| `attachments`   | `Array<Map>`    | (可選) 驗收照片或文件列表 (`{ name: string, url: string }`)。                      |
-| `history`       | `Array<Map>`    | (可選) 審批歷史紀錄 (`{ action: string, userId: string, timestamp: Timestamp }`)。 |
-| `submittedAt`   | `Timestamp`     | 提交審批的時間。                                                                   |
-| `reviewedAt`    | `Timestamp`     | (可選) 完成審批的時間。                                                            |
+| 欄位                | 類型            | 描述                                                                               |
+| ------------------- | --------------- | ---------------------------------------------------------------------------------- |
+| `title`             | `string`        | 驗收單的標題（例如：「五月份一樓水電工程驗收」）。                                 |
+| `projectId`         | `string`        | **[關聯]** `projects` ID，標明此驗收單屬於哪個專案。                               |
+| `taskId`            | `string`        | **[關聯]** 此驗收單對應的 `projects` 中的任務 ID。                                 |
+| `submittedQuantity` | `number`        | **[核心]** 本次提交驗收的數量。                                                    |
+| `applicantId`       | `string`        | **[關聯]** `users` ID，申請驗收的人員。                                            |
+| `reviewerId`        | `string`        | **[關聯]** `users` ID，應負責審核此驗收單的人員。                                  |
+| `status`            | `string`        | **核心狀態**：'草稿', '待審批', '已批准', '已駁回'。                               |
+| `linkedTaskIds`     | `Array<string>` | (棄用) 關聯的 `projects` 中的任務 ID 列表。                                        |
+| `notes`             | `string`        | (可選) 關於此次驗收的備註或說明。                                                  |
+| `attachments`       | `Array<Map>`    | (可選) 驗收照片或文件列表 (`{ name: string, url: string }`)。                      |
+| `history`           | `Array<Map>`    | (可選) 審批歷史紀錄 (`{ action: string, userId: string, timestamp: Timestamp }`)。 |
+| `submittedAt`       | `Timestamp`     | 提交審批的時間。                                                                   |
+| `reviewedAt`        | `Timestamp`     | (可選) 完成審批的時間。                                                            |
 
 ### 2.3. `contracts`
 
