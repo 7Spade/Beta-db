@@ -9,6 +9,45 @@
 │ generate-skill-flow.ts
 │ generate-subtasks-flow.ts
 │
+├─api
+│ │ README.md
+│ │
+│ ├─client
+│ │ │ README.md
+│ │ │
+│ │ ├─core
+│ │ │ README.md
+│ │ │
+│ │ ├─hooks
+│ │ │ README.md
+│ │ │
+│ │ └─services
+│ │ README.md
+│ │
+│ ├─server
+│ │ │ README.md
+│ │ │
+│ │ ├─handlers
+│ │ │ README.md
+│ │ │
+│ │ ├─middleware
+│ │ │ README.md
+│ │ │
+│ │ └─validators
+│ │ README.md
+│ │
+│ └─types
+│ │ README.md
+│ │
+│ ├─common
+│ │ README.md
+│ │
+│ ├─requests
+│ │ README.md
+│ │
+│ └─responses
+│ README.md
+│
 ├─app
 │ │ error.tsx
 │ │ globals.css
@@ -761,100 +800,118 @@
 │ └─workflow-automation
 │ README.md
 │
-└─lib
-│ README.md
-│
-├─config
-│ navigation.config.ts
-│ README.md
-│
-├─constants
-│ roles.ts
-│
-├─db
+├─lib
 │ │ README.md
 │ │
-│ ├─firebase-admin
-│ │ firebase-admin.ts
+│ ├─config
+│ │ navigation.config.ts
+│ │ README.md
+│ │
+│ ├─constants
+│ │ roles.ts
+│ │
+│ ├─db
+│ │ │ README.md
+│ │ │
+│ │ ├─firebase-admin
+│ │ │ firebase-admin.ts
+│ │ │ index.ts
+│ │ │ README.md
+│ │ │
+│ │ ├─firebase-client
+│ │ │ firebase-client.ts
+│ │ │ index.ts
+│ │ │ README.md
+│ │ │
+│ │ ├─mongoose
+│ │ │ mongodb.ts
+│ │ │ README.md
+│ │ │
+│ │ ├─redis
+│ │ │ README.md
+│ │ │ redis-client.ts
+│ │ │
+│ │ └─supabase
+│ │ client.ts
 │ │ index.ts
+│ │ middleware.ts
 │ │ README.md
-│ │
-│ ├─firebase-client
-│ │ firebase-client.ts
-│ │ index.ts
-│ │ README.md
-│ │
-│ ├─mongoose
-│ │ mongodb.ts
-│ │ README.md
-│ │
-│ ├─redis
-│ │ README.md
-│ │ redis-client.ts
-│ │
-│ └─supabase
-│ client.ts
-│ index.ts
-│ middleware.ts
-│ README.md
-│ server.ts
-│ types.ts
-│
-├─events
-│ app-events.ts
-│ event-dispatcher.ts
-│
-├─hooks
-│ index.ts
-│ README.md
-│ use-mobile.tsx
-│ use-notifications.ts
-│ use-toast.ts
-│
-├─models
-│ ai-token-log.model.ts
-│ README.md
-│
-├─services
-│ │ README.md
-│ │
-│ ├─activity-log
-│ │ activity-log.listeners.ts
-│ │ activity-log.service.ts
-│ │ README.md
-│ │
-│ ├─ai-token-log
-│ │ logging.service.ts
-│ │ README.md
-│ │
-│ ├─contracts
-│ │ contract-api.service.ts
-│ │ contract-cache.service.ts
-│ │ firebase-contract.service.ts
-│ │ index.ts
-│ │ README.md
-│ │
-│ └─notification
-│ notification.listeners.ts
-│ notification.service.ts
-│ README.md
-│
-├─types
-│ │ env.types.ts
-│ │ errors.ts
-│ │ README.md
+│ │ server.ts
 │ │ types.ts
 │ │
-│ └─contracts
-│ change-order.types.ts
-│ contract-version.types.ts
-│ contract.types.ts
+│ ├─events
+│ │ app-events.ts
+│ │ event-dispatcher.ts
+│ │
+│ ├─hooks
+│ │ index.ts
+│ │ README.md
+│ │ use-mobile.tsx
+│ │ use-notifications.ts
+│ │ use-toast.ts
+│ │
+│ ├─models
+│ │ ai-token-log.model.ts
+│ │ README.md
+│ │
+│ ├─services
+│ │ │ README.md
+│ │ │
+│ │ ├─activity-log
+│ │ │ activity-log.listeners.ts
+│ │ │ activity-log.service.ts
+│ │ │ README.md
+│ │ │
+│ │ ├─ai-token-log
+│ │ │ logging.service.ts
+│ │ │ README.md
+│ │ │
+│ │ ├─contracts
+│ │ │ contract-api.service.ts
+│ │ │ contract-cache.service.ts
+│ │ │ firebase-contract.service.ts
+│ │ │ index.ts
+│ │ │ README.md
+│ │ │
+│ │ └─notification
+│ │ notification.listeners.ts
+│ │ notification.service.ts
+│ │ README.md
+│ │
+│ ├─types
+│ │ │ env.types.ts
+│ │ │ errors.ts
+│ │ │ README.md
+│ │ │ types.ts
+│ │ │
+│ │ └─contracts
+│ │ change-order.types.ts
+│ │ contract-version.types.ts
+│ │ contract.types.ts
+│ │ index.ts
+│ │ payment.types.ts
+│ │ README.md
+│ │
+│ └─utils
+│ auth-utils.ts
+│ date-utils.ts
 │ index.ts
-│ payment.types.ts
-│ README.md
+│ utils.ts
 │
-└─utils
-auth-utils.ts
-date-utils.ts
-index.ts
-utils.ts
+└─shared
+│ │ README.md
+│ │
+│ ├─constants
+│ │ README.md
+│ │
+│ ├─enums
+│ │ README.md
+│ │
+│ ├─schemas
+│ │ README.md
+│ │
+│ ├─types
+│ │ README.md
+│ │
+│ └─utils
+│ README.md
