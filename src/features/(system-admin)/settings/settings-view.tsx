@@ -1,20 +1,26 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { useTheme } from 'next-themes'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card'
-import { RadioGroup, RadioGroupItem } from '@/ui/radio-group'
-import { Label } from '@/ui/label'
-import { Skeleton } from '@/ui/skeleton'
+import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/ui/radio-group';
+import { Label } from '@/ui/label';
+import { Skeleton } from '@/ui/skeleton';
 
 export function SettingsView() {
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
@@ -26,7 +32,9 @@ export function SettingsView() {
       <Card>
         <CardHeader>
           <CardTitle>外觀</CardTitle>
-          <CardDescription>自訂您應用程式的外觀與感覺。選擇淺色、深色或系統主題。</CardDescription>
+          <CardDescription>
+            自訂您應用程式的外觀與感覺。選擇淺色、深色或系統主題。
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {!mounted ? (
@@ -36,7 +44,11 @@ export function SettingsView() {
               <Skeleton className="h-6 w-24" />
             </div>
           ) : (
-            <RadioGroup value={theme} onValueChange={setTheme} aria-label="主題選擇">
+            <RadioGroup
+              value={theme}
+              onValueChange={setTheme}
+              aria-label="主題選擇"
+            >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="light" id="light" />
                 <Label htmlFor="light">淺色</Label>
@@ -53,16 +65,16 @@ export function SettingsView() {
           )}
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader>
-            <CardTitle>關於</CardTitle>
-            <CardDescription>查看應用程式的版本資訊。</CardDescription>
+          <CardTitle>關於</CardTitle>
+          <CardDescription>查看應用程式的版本資訊。</CardDescription>
         </CardHeader>
         <CardContent>
-            <p className="text-sm text-muted-foreground">版本: 1.0.0</p>
+          <p className="text-sm text-muted-foreground">版本: 1.0.0</p>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
