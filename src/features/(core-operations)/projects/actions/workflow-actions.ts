@@ -5,10 +5,10 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   serverTimestamp,
   updateDoc,
   writeBatch,
-  getDoc,
 } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import type { Task } from '@/lib/types/types';
@@ -72,7 +72,7 @@ export async function submitTaskProgressAction(
         {
           action: '提交',
           userId: applicantId,
-          timestamp: serverTimestamp(),
+          timestamp: new Date(), // *** FIX: Use new Date() instead of serverTimestamp() inside an array ***
         },
       ],
     };
@@ -83,6 +83,7 @@ export async function submitTaskProgressAction(
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : '發生未知錯誤';
+    console.error('Submit Task Progress Error:', message);
     return { success: false, error: message };
   }
 }
@@ -104,7 +105,7 @@ export async function approveAcceptanceAction({
   const batch = writeBatch(firestore);
 
   try {
-    const acceptanceSnap = await acceptanceRef.get();
+    const acceptanceSnap = await getDoc(acceptanceRef);
     if (!acceptanceSnap.exists()) {
       throw new Error('找不到指定的驗收單。');
     }
@@ -122,7 +123,7 @@ export async function approveAcceptanceAction({
       reviewedAt: serverTimestamp(),
       history: [
         ...(acceptanceData.history || []),
-        { action: '批准', userId: adminId, timestamp: serverTimestamp() },
+        { action: '批准', userId: adminId, timestamp: new Date() }, // *** FIX: Use new Date() here as well for consistency ***
       ],
     });
 
@@ -167,6 +168,7 @@ export async function approveAcceptanceAction({
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : '發生未知錯誤';
+    console.error('Approve Acceptance Error:', message);
     return { success: false, error: message };
   }
 }
