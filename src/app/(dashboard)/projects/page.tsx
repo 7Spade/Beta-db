@@ -36,13 +36,15 @@ async function getProjectsAndAcceptances() {
       .get();
     const acceptances = acceptancesSnapshot.docs.map((doc) => {
       const data = doc.data();
+      const reviewedAtTimestamp = data.reviewedAt as Timestamp | undefined;
+
       return {
         id: doc.id,
         ...data,
         submittedAt: (data.submittedAt as Timestamp).toDate().toISOString(),
-        reviewedAt: (data.reviewedAt as Timestamp | undefined)
-          ?.toDate()
-          .toISOString(),
+        reviewedAt: reviewedAtTimestamp
+          ? reviewedAtTimestamp.toDate().toISOString()
+          : undefined,
         history: (data.history || []).map((h: any) => ({
           ...h,
           timestamp: (h.timestamp as Timestamp)?.toDate().toISOString(),
