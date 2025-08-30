@@ -12,6 +12,13 @@ import { CreateProjectDialog } from '../components/create-project-dialog';
 import { ProjectList } from '../components/project-list';
 import { AcceptanceList } from '../components/acceptance-list';
 import { ProjectDetailsSheet } from '../components/project-details-sheet';
+import {
+  addTaskAction,
+  deleteTaskAction,
+  updateTaskAction,
+  updateTaskStatusAction,
+} from '../actions/task-actions';
+import { useToast } from '@root/src/lib/hooks/use-toast';
 
 interface ProjectsViewProps {
   initialProjects: Project[];
@@ -19,65 +26,72 @@ interface ProjectsViewProps {
 }
 
 type OptimisticAction =
-  | { type: 'ADD'; payload: { parentId: string | null; newTask: Task } }
+  | {
+      type: 'ADD';
+      payload: { projectId: string; parentId: string | null; newTask: Task };
+    }
   | {
       type: 'UPDATE';
-      payload: {
-        taskId: string;
-        updates: Partial<Pick<Task, 'title' | 'quantity' | 'unitPrice'>>;
-      };
+      payload: { projectId: string; taskId: string; updates: Partial<Task> };
     }
-  | { type: 'DELETE'; payload: { taskId: string } }
-  | { type: 'STATUS'; payload: { taskId: string; isComplete: boolean } };
+  | { type: 'DELETE'; payload: { projectId: string; taskId: string } }
+  | {
+      type: 'STATUS';
+      payload: { projectId: string; taskId: string; isComplete: boolean };
+    };
 
-// Reducer for optimistic updates
 const projectReducer = (
   state: Project[],
   action: OptimisticAction
 ): Project[] => {
-  const findAndUpdate = (tasks: Task[]): Task[] => {
+  const { type, payload } = action;
+
+  // Helper function to recursively find and update/delete tasks
+  const updateTasksRecursive = (tasks: Task[]): Task[] => {
     return tasks
       .map((task) => {
-        if (
-          task.id === (action.payload as any).parentId &&
-          action.type === 'ADD'
-        ) {
+        if (task.id === (payload as any).parentId && type === 'ADD') {
           return {
             ...task,
-            subTasks: [...task.subTasks, action.payload.newTask],
+            subTasks: [...(task.subTasks || []), (payload as any).newTask],
           };
         }
-        if (task.id === (action.payload as any).taskId) {
-          switch (action.type) {
+        if (task.id === (payload as any).taskId) {
+          switch (type) {
             case 'UPDATE':
-              return { ...task, ...action.payload.updates };
+              return { ...task, ...(payload as any).updates };
             case 'STATUS':
               return {
                 ...task,
-                completedQuantity: action.payload.isComplete
+                completedQuantity: (payload as any).isComplete
                   ? task.quantity
                   : 0,
               };
             case 'DELETE':
-              return null; // Will be filtered out
+              return null; // Mark for deletion
           }
         }
-        if (task.subTasks) {
-          return { ...task, subTasks: findAndUpdate(task.subTasks) };
+        if (task.subTasks && task.subTasks.length > 0) {
+          return { ...task, subTasks: updateTasksRecursive(task.subTasks) };
         }
         return task;
       })
       .filter((t): t is Task => t !== null);
   };
 
-  return state.map((project) => {
-    // This is a simplified logic, assuming actions happen on one project at a time.
-    // A more robust solution might pass projectId in the action payload.
-    return {
-      ...project,
-      tasks: findAndUpdate(project.tasks),
-    };
-  });
+  if (type === 'ADD' && !payload.parentId) {
+    return state.map((project) =>
+      project.id === payload.projectId
+        ? { ...project, tasks: [...project.tasks, payload.newTask] }
+        : project
+    );
+  }
+
+  return state.map((project) =>
+    project.id === payload.projectId
+      ? { ...project, tasks: updateTasksRecursive(project.tasks) }
+      : project
+  );
 };
 
 export function ProjectsView({
@@ -88,11 +102,79 @@ export function ProjectsView({
     null
   );
   const [isSheetOpen, setSheetOpen] = useState(false);
+  const { toast } = useToast();
 
   const [optimisticProjects, optimisticUpdate] = useOptimistic(
     initialProjects,
     projectReducer
   );
+
+  const handleAction = async (
+    actionFn: () => Promise<{ success: boolean; error?: string }>,
+    optimisticAction: OptimisticAction
+  ) => {
+    optimisticUpdate(optimisticAction);
+    const result = await actionFn();
+    if (result.error) {
+      toast({
+        title: '操作失敗',
+        description: result.error,
+        variant: 'destructive',
+      });
+      // Note: React will automatically revert the optimistic state on error if the component re-renders.
+      // A manual revert might be needed if re-render doesn't happen, but revalidatePath should handle it.
+    }
+  };
+
+  const handleAddTask = (
+    projectId: string,
+    parentId: string | null,
+    title: string
+  ) => {
+    const newTask: Task = {
+      id: `optimistic-${Date.now()}`,
+      title: title,
+      lastUpdated: new Date().toISOString(),
+      subTasks: [],
+      quantity: 1,
+      unitPrice: 0,
+      value: 0,
+      completedQuantity: 0,
+    };
+    handleAction(() => addTaskAction(projectId, parentId, title), {
+      type: 'ADD',
+      payload: { projectId, parentId, newTask },
+    });
+  };
+
+  const handleUpdateTask = (
+    projectId: string,
+    taskId: string,
+    updates: Partial<Task>
+  ) => {
+    handleAction(() => updateTaskAction(projectId, taskId, updates), {
+      type: 'UPDATE',
+      payload: { projectId, taskId, updates },
+    });
+  };
+
+  const handleDeleteTask = (projectId: string, taskId: string) => {
+    handleAction(() => deleteTaskAction(projectId, taskId), {
+      type: 'DELETE',
+      payload: { projectId, taskId },
+    });
+  };
+
+  const handleUpdateTaskStatus = (
+    projectId: string,
+    taskId: string,
+    isComplete: boolean
+  ) => {
+    handleAction(() => updateTaskStatusAction(projectId, taskId, isComplete), {
+      type: 'STATUS',
+      payload: { projectId, taskId, isComplete },
+    });
+  };
 
   const handleViewDetails = (projectId: string) => {
     setSelectedProjectId(projectId);
@@ -139,7 +221,10 @@ export function ProjectsView({
           project={selectedProject}
           isOpen={isSheetOpen}
           onOpenChange={handleSheetOpenChange}
-          optimisticUpdate={optimisticUpdate}
+          onAddTask={handleAddTask}
+          onUpdateTask={handleUpdateTask}
+          onDeleteTask={handleDeleteTask}
+          onUpdateTaskStatus={handleUpdateTaskStatus}
         />
       )}
     </div>

@@ -1,11 +1,5 @@
 'use client';
 
-import {
-  addTaskAction,
-  deleteTaskAction,
-  updateTaskAction,
-  updateTaskStatusAction,
-} from '@/features/(core-operations)/projects/actions/task-actions';
 import type {
   Project,
   Task,
@@ -25,7 +19,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/ui/tooltip';
-import { useToast } from '@root/src/lib/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import {
   CheckCircle2,
@@ -65,95 +58,68 @@ const statusIcons: Record<TaskStatus, React.ReactNode> = {
 interface TaskItemProps {
   task: Task;
   project: Project;
-  optimisticUpdate: (action: {
-    type: 'ADD' | 'UPDATE' | 'DELETE' | 'STATUS';
-    payload: any;
-  }) => void;
+  onAddTask: (
+    projectId: string,
+    parentId: string | null,
+    title: string
+  ) => void;
+  onUpdateTask: (
+    projectId: string,
+    taskId: string,
+    updates: Partial<Task>
+  ) => void;
+  onDeleteTask: (projectId: string, taskId: string) => void;
+  onUpdateTaskStatus: (
+    projectId: string,
+    taskId: string,
+    isComplete: boolean
+  ) => void;
 }
 
-export function TaskItem({ task, project, optimisticUpdate }: TaskItemProps) {
+export function TaskItem({
+  task,
+  project,
+  onAddTask,
+  onUpdateTask,
+  onDeleteTask,
+  onUpdateTaskStatus,
+}: TaskItemProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(task.title);
   const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
 
   const status = getTaskStatus(task);
   const isComplete = status === '已完成';
 
-  const handleAction = (
-    actionFn: () => Promise<{ success: boolean; error?: string }>,
-    successMessage: string,
-    errorMessage: string
-  ) => {
-    startTransition(async () => {
-      const result = await actionFn();
-      if (result.error) {
-        toast({
-          title: '錯誤',
-          description: result.error,
-          variant: 'destructive',
-        });
-      } else {
-        toast({ title: successMessage });
-      }
-    });
-  };
-
   const handleSave = () => {
-    optimisticUpdate({
-      type: 'UPDATE',
-      payload: { taskId: task.id, updates: { title: editedTitle } },
+    if (editedTitle.trim() === task.title) {
+      setIsEditing(false);
+      return;
+    }
+    startTransition(() => {
+      onUpdateTask(project.id, task.id, { title: editedTitle.trim() });
+      setIsEditing(false);
     });
-    setIsEditing(false);
-    handleAction(
-      () => updateTaskAction(project.id, task.id, { title: editedTitle }),
-      '任務已更新',
-      '更新任務失敗'
-    );
   };
 
   const handleToggleStatus = () => {
     const newIsComplete = !isComplete;
-    optimisticUpdate({
-      type: 'STATUS',
-      payload: { taskId: task.id, isComplete: newIsComplete },
+    startTransition(() => {
+      onUpdateTaskStatus(project.id, task.id, newIsComplete);
     });
-    handleAction(
-      () => updateTaskStatusAction(project.id, task.id, newIsComplete),
-      '任務狀態已更新',
-      '更新任務狀態失敗'
-    );
   };
 
   const handleDelete = () => {
-    optimisticUpdate({ type: 'DELETE', payload: { taskId: task.id } });
-    handleAction(
-      () => deleteTaskAction(project.id, task.id),
-      '任務已刪除',
-      '刪除任務失敗'
-    );
+    startTransition(() => {
+      onDeleteTask(project.id, task.id);
+    });
   };
 
   const handleAddSubtask = () => {
     const subtaskTitle = `子任務 for ${task.title}`;
-    // The optimistic update will be handled by the parent
-    // The server action will return the new task object
-    startTransition(async () => {
-      const result = await addTaskAction(project.id, task.id, subtaskTitle);
-      if (result.success && result.newTask) {
-        optimisticUpdate({
-          type: 'ADD',
-          payload: { parentId: task.id, newTask: result.newTask },
-        });
-        toast({ title: '子任務已新增' });
-      } else if (result.error) {
-        toast({
-          title: '錯誤',
-          description: result.error,
-          variant: 'destructive',
-        });
-      }
+    startTransition(() => {
+      onAddTask(project.id, task.id, subtaskTitle);
     });
   };
 
@@ -254,7 +220,7 @@ export function TaskItem({ task, project, optimisticUpdate }: TaskItemProps) {
               size="icon"
               className={cn(
                 'h-8 w-8',
-                task.subTasks.length === 0 && 'invisible'
+                (task.subTasks || []).length === 0 && 'invisible'
               )}
               disabled={isPending}
             >
@@ -269,12 +235,15 @@ export function TaskItem({ task, project, optimisticUpdate }: TaskItemProps) {
         </div>
 
         <CollapsibleContent className="pl-6 space-y-1">
-          {task.subTasks.map((subTask) => (
+          {(task.subTasks || []).map((subTask) => (
             <TaskItem
               key={subTask.id}
               task={subTask}
               project={project}
-              optimisticUpdate={optimisticUpdate}
+              onAddTask={onAddTask}
+              onUpdateTask={onUpdateTask}
+              onDeleteTask={onDeleteTask}
+              onUpdateTaskStatus={onUpdateTaskStatus}
             />
           ))}
         </CollapsibleContent>

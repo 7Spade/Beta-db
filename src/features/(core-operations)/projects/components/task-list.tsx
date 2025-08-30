@@ -1,15 +1,39 @@
 'use client';
 
-import type { Project } from '@/features/(core-operations)/projects/types';
+import type {
+  Project,
+  Task,
+} from '@/features/(core-operations)/projects/types';
 import { Card, CardContent } from '@/ui/card';
 import { TaskItem } from './task-item';
 
 interface TaskListProps {
   project: Project;
-  optimisticUpdate: (action: any) => void;
+  onAddTask: (
+    projectId: string,
+    parentId: string | null,
+    title: string
+  ) => void;
+  onUpdateTask: (
+    projectId: string,
+    taskId: string,
+    updates: Partial<Task>
+  ) => void;
+  onDeleteTask: (projectId: string, taskId: string) => void;
+  onUpdateTaskStatus: (
+    projectId: string,
+    taskId: string,
+    isComplete: boolean
+  ) => void;
 }
 
-export function TaskList({ project, optimisticUpdate }: TaskListProps) {
+export function TaskList({
+  project,
+  onAddTask,
+  onUpdateTask,
+  onDeleteTask,
+  onUpdateTaskStatus,
+}: TaskListProps) {
   if (!project.tasks || project.tasks.length === 0) {
     return (
       <Card>
@@ -33,7 +57,10 @@ export function TaskList({ project, optimisticUpdate }: TaskListProps) {
               key={task.id}
               task={task}
               project={project}
-              optimisticUpdate={optimisticUpdate}
+              onAddTask={onAddTask}
+              onUpdateTask={onUpdateTask}
+              onDeleteTask={onDeleteTask}
+              onUpdateTaskStatus={onUpdateTaskStatus}
             />
           ))}
         </div>

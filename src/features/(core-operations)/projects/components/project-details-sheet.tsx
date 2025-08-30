@@ -20,14 +20,32 @@ interface ProjectDetailsSheetProps {
   project: Project | undefined;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  optimisticUpdate: (action: any) => void;
+  onAddTask: (
+    projectId: string,
+    parentId: string | null,
+    title: string
+  ) => void;
+  onUpdateTask: (
+    projectId: string,
+    taskId: string,
+    updates: Partial<Task>
+  ) => void;
+  onDeleteTask: (projectId: string, taskId: string) => void;
+  onUpdateTaskStatus: (
+    projectId: string,
+    taskId: string,
+    isComplete: boolean
+  ) => void;
 }
 
 export function ProjectDetailsSheet({
   project,
   isOpen,
   onOpenChange,
-  optimisticUpdate,
+  onAddTask,
+  onUpdateTask,
+  onDeleteTask,
+  onUpdateTaskStatus,
 }: ProjectDetailsSheetProps) {
   if (!project) {
     return (
@@ -59,10 +77,13 @@ export function ProjectDetailsSheet({
           </SheetHeader>
           <div className="space-y-6 py-4">
             <ProjectHeader project={projectWithDates} />
-            <AddTaskForm project={projectWithDates} />
+            <AddTaskForm project={projectWithDates} onAddTask={onAddTask} />
             <TaskList
               project={projectWithDates}
-              optimisticUpdate={optimisticUpdate}
+              onAddTask={onAddTask}
+              onUpdateTask={onUpdateTask}
+              onDeleteTask={onDeleteTask}
+              onUpdateTaskStatus={onUpdateTaskStatus}
             />
           </div>
         </ScrollArea>
