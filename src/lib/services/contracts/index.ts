@@ -3,3 +3,6 @@
  */
 
 export * from './contract.service';
+export * from './contract-api.service';
+export * from './contract-cache.service';
+export * from './firebase-contract.service';

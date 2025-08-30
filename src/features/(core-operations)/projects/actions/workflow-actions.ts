@@ -7,7 +7,6 @@ import {
   doc,
   getDoc,
   serverTimestamp,
-  updateDoc,
   writeBatch,
 } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
@@ -72,7 +71,7 @@ export async function submitTaskProgressAction(
         {
           action: '提交',
           userId: applicantId,
-          timestamp: new Date(), // *** FIX: Use new Date() instead of serverTimestamp() inside an array ***
+          timestamp: new Date(),
         },
       ],
     };
@@ -123,7 +122,7 @@ export async function approveAcceptanceAction({
       reviewedAt: serverTimestamp(),
       history: [
         ...(acceptanceData.history || []),
-        { action: '批准', userId: adminId, timestamp: new Date() }, // *** FIX: Use new Date() here as well for consistency ***
+        { action: '批准', userId: adminId, timestamp: new Date() },
       ],
     });
 
