@@ -6,10 +6,11 @@ import { TaskItem } from './task-item';
 
 interface TaskListProps {
   project: Project;
+  optimisticUpdate: (action: any) => void;
 }
 
-export function TaskList({ project }: TaskListProps) {
-  if (project.tasks.length === 0) {
+export function TaskList({ project, optimisticUpdate }: TaskListProps) {
+  if (!project.tasks || project.tasks.length === 0) {
     return (
       <Card>
         <CardContent>
@@ -26,9 +27,14 @@ export function TaskList({ project }: TaskListProps) {
   return (
     <Card>
       <CardContent className="pt-6 space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-1">
           {project.tasks.map((task) => (
-            <TaskItem key={task.id} task={task} project={project} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              project={project}
+              optimisticUpdate={optimisticUpdate}
+            />
           ))}
         </div>
       </CardContent>

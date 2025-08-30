@@ -5,8 +5,8 @@
  */
 'use client';
 
-import { useState } from 'react';
-import type { AcceptanceRecord, Project } from '@/lib/types/types';
+import { useOptimistic, useState } from 'react';
+import type { AcceptanceRecord, Project, Task } from '@/lib/types/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import { CreateProjectDialog } from '../components/create-project-dialog';
 import { ProjectList } from '../components/project-list';
@@ -18,6 +18,68 @@ interface ProjectsViewProps {
   initialAcceptances: AcceptanceRecord[];
 }
 
+type OptimisticAction =
+  | { type: 'ADD'; payload: { parentId: string | null; newTask: Task } }
+  | {
+      type: 'UPDATE';
+      payload: {
+        taskId: string;
+        updates: Partial<Pick<Task, 'title' | 'quantity' | 'unitPrice'>>;
+      };
+    }
+  | { type: 'DELETE'; payload: { taskId: string } }
+  | { type: 'STATUS'; payload: { taskId: string; isComplete: boolean } };
+
+// Reducer for optimistic updates
+const projectReducer = (
+  state: Project[],
+  action: OptimisticAction
+): Project[] => {
+  const findAndUpdate = (tasks: Task[]): Task[] => {
+    return tasks
+      .map((task) => {
+        if (
+          task.id === (action.payload as any).parentId &&
+          action.type === 'ADD'
+        ) {
+          return {
+            ...task,
+            subTasks: [...task.subTasks, action.payload.newTask],
+          };
+        }
+        if (task.id === (action.payload as any).taskId) {
+          switch (action.type) {
+            case 'UPDATE':
+              return { ...task, ...action.payload.updates };
+            case 'STATUS':
+              return {
+                ...task,
+                completedQuantity: action.payload.isComplete
+                  ? task.quantity
+                  : 0,
+              };
+            case 'DELETE':
+              return null; // Will be filtered out
+          }
+        }
+        if (task.subTasks) {
+          return { ...task, subTasks: findAndUpdate(task.subTasks) };
+        }
+        return task;
+      })
+      .filter((t): t is Task => t !== null);
+  };
+
+  return state.map((project) => {
+    // This is a simplified logic, assuming actions happen on one project at a time.
+    // A more robust solution might pass projectId in the action payload.
+    return {
+      ...project,
+      tasks: findAndUpdate(project.tasks),
+    };
+  });
+};
+
 export function ProjectsView({
   initialProjects,
   initialAcceptances,
@@ -26,6 +88,11 @@ export function ProjectsView({
     null
   );
   const [isSheetOpen, setSheetOpen] = useState(false);
+
+  const [optimisticProjects, optimisticUpdate] = useOptimistic(
+    initialProjects,
+    projectReducer
+  );
 
   const handleViewDetails = (projectId: string) => {
     setSelectedProjectId(projectId);
@@ -39,7 +106,7 @@ export function ProjectsView({
     }
   };
 
-  const selectedProject = initialProjects.find(
+  const selectedProject = optimisticProjects.find(
     (p) => p.id === selectedProjectId
   );
 
@@ -58,7 +125,7 @@ export function ProjectsView({
 
         <TabsContent value="projects">
           <ProjectList
-            projects={initialProjects}
+            projects={optimisticProjects}
             onViewDetails={handleViewDetails}
           />
         </TabsContent>
@@ -72,6 +139,7 @@ export function ProjectsView({
           project={selectedProject}
           isOpen={isSheetOpen}
           onOpenChange={handleSheetOpenChange}
+          optimisticUpdate={optimisticUpdate}
         />
       )}
     </div>

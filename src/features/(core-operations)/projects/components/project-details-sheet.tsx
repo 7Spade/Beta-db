@@ -1,6 +1,9 @@
 'use client';
 
-import type { Project } from '@/features/(core-operations)/projects/types';
+import type {
+  Project,
+  Task,
+} from '@/features/(core-operations)/projects/types';
 import { ScrollArea } from '@/ui/scroll-area';
 import {
   Sheet,
@@ -17,12 +20,14 @@ interface ProjectDetailsSheetProps {
   project: Project | undefined;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  optimisticUpdate: (action: any) => void;
 }
 
 export function ProjectDetailsSheet({
   project,
   isOpen,
   onOpenChange,
+  optimisticUpdate,
 }: ProjectDetailsSheetProps) {
   if (!project) {
     return (
@@ -55,7 +60,10 @@ export function ProjectDetailsSheet({
           <div className="space-y-6 py-4">
             <ProjectHeader project={projectWithDates} />
             <AddTaskForm project={projectWithDates} />
-            <TaskList project={projectWithDates} />
+            <TaskList
+              project={projectWithDates}
+              optimisticUpdate={optimisticUpdate}
+            />
           </div>
         </ScrollArea>
       </SheetContent>
