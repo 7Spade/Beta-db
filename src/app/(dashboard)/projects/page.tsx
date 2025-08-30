@@ -40,12 +40,14 @@ async function getProjectsAndAcceptances() {
         id: doc.id,
         ...data,
         submittedAt: (data.submittedAt as Timestamp).toDate().toISOString(),
-        reviewedAt: (data.reviewedAt as Timestamp | undefined)
-          ?.toDate()
-          .toISOString(),
+        reviewedAt: data.reviewedAt
+          ? (data.reviewedAt as Timestamp).toDate().toISOString()
+          : undefined,
         history: (data.history || []).map((h: any) => ({
           ...h,
-          timestamp: (h.timestamp as Timestamp)?.toDate().toISOString(),
+          timestamp: h.timestamp
+            ? (h.timestamp as Timestamp).toDate().toISOString()
+            : undefined,
         })),
       } as unknown as AcceptanceRecord;
     });
