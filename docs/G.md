@@ -1,3 +1,33 @@
+(dashboard)/ 下的分組可以更系統化：
+
+├─(core-operations)          # 核心營運
+│ ├─dashboard/
+│ ├─projects/
+│ └─contracts/
+│
+├─(resource-management)      # 資源管理  
+│ ├─(enhanced-inventory)/
+│ ├─(hr-management)/
+│ └─team/
+│
+├─(business-intelligence)    # 商業智慧
+│ ├─(reporting-analytics)/
+│ ├─(finance-management)/
+│ └─(quality-management)/
+│
+├─(automation-tools)         # 自動化工具
+│ ├─(workflow-automation)/
+│ ├─quick-actions/
+│ └─ai/ (if needed)
+│
+└─(system-admin)            # 系統管理
+  ├─(system-administration)/
+  ├─(security-compliance)/
+  ├─settings/
+  └─website-cms/
+
+
+
 🎯 建議的重新組織方案
 1. 保留現有功能群組，重新分配現有模組
 🔹 (business-intelligence) - 商業智能模組
