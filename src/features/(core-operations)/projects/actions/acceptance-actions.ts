@@ -67,7 +67,7 @@ export async function submitAcceptanceRecord(
         ...((await (await recordRef.get()).data())?.history || []),
         {
           action: '提交審批',
-          userId: 'current_user_id',
+          userId: 'current_user_id', // Replace with actual user ID
           timestamp: serverTimestamp(),
         },
       ],
@@ -96,7 +96,7 @@ export async function approveAcceptanceRecord(
         ...((await (await recordRef.get()).data())?.history || []),
         {
           action: '批准',
-          userId: 'current_user_id',
+          userId: 'current_user_id', // Replace with actual user ID
           timestamp: serverTimestamp(),
         },
       ],

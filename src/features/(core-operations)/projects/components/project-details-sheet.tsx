@@ -37,6 +37,13 @@ export function ProjectDetailsSheet({
     );
   }
 
+  // Convert string dates back to Date objects for components that need them
+  const projectWithDates = {
+    ...project,
+    startDate: new Date(project.startDate),
+    endDate: new Date(project.endDate),
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="sm:max-w-3xl">
@@ -46,9 +53,9 @@ export function ProjectDetailsSheet({
             <SheetDescription>{project.description}</SheetDescription>
           </SheetHeader>
           <div className="space-y-6 py-4">
-            <ProjectHeader project={project} />
-            <AddTaskForm project={project} />
-            <TaskList project={project} />
+            <ProjectHeader project={projectWithDates} />
+            <AddTaskForm project={projectWithDates} />
+            <TaskList project={projectWithDates} />
           </div>
         </ScrollArea>
       </SheetContent>

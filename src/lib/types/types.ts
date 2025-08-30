@@ -162,15 +162,41 @@ export interface AcceptanceRecord {
   id: string;
   title: string;
   projectId: string;
-  projectName: string; // 冗餘儲存，方便顯示
+  projectName: string;
   applicantId: string;
-  applicantName: string; // 冗餘儲存
+  applicantName: string;
   reviewerId: string;
   status: AcceptanceStatus;
   linkedTaskIds: string[];
   notes?: string;
   attachments?: Array<{ name: string; url: string }>;
-  history?: Array<{ action: string; userId: string; timestamp: Date }>;
-  submittedAt: Date;
-  reviewedAt?: Date;
+  history?: Array<{ action: string; userId: string; timestamp: Date | string }>;
+  submittedAt: Date | string;
+  reviewedAt?: Date | string;
+}
+
+export type TaskStatus = '待處理' | '進行中' | '已完成';
+
+export interface Task {
+  id: string;
+  title: string;
+  status: TaskStatus;
+  lastUpdated: string;
+  subTasks: Task[];
+  value: number;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface Project {
+  id: string;
+  customId?: string;
+  title: string;
+  description: string;
+  client?: string;
+  clientRepresentative?: string;
+  startDate: string; // Changed to string for serialization
+  endDate: string; // Changed to string for serialization
+  tasks: Task[];
+  value: number;
 }
