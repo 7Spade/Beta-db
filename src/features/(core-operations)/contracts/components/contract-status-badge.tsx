@@ -2,9 +2,9 @@
  * @fileoverview 合約狀態標籤組件
  */
 
+import type { ContractStatus } from '@/features/(core-operations)/contracts/types';
+import { getStatusVariant } from '@/features/(core-operations)/contracts/utils';
 import { Badge } from '@/ui/badge';
-import { getStatusVariant } from '@/contracts/utils';
-import type { ContractStatus } from '@/contracts/types';
 
 interface ContractStatusBadgeProps {
   status: ContractStatus;

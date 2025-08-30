@@ -3,18 +3,18 @@
  */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { ContractDetailsSheet } from '@/features/(core-operations)/contracts/sheets';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { Skeleton } from '@/ui/skeleton';
 import {
   doc,
-  onSnapshot,
-  DocumentSnapshot,
   DocumentData,
+  DocumentSnapshot,
+  onSnapshot,
 } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import type { Contract } from '@/contracts/types';
-import { ContractDetailsSheet } from '@/contracts/sheets';
-import { Skeleton } from '@/ui/skeleton';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useEffect, useState } from 'react';
 
 interface ContractDetailViewProps {
   contractId: string;

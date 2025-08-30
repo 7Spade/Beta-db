@@ -3,8 +3,8 @@
  */
 'use client';
 
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { Progress } from '@/ui/progress';
-import type { Contract } from '@/contracts/types';
 
 interface PaymentProgressProps {
   contract: Contract;

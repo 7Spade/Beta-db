@@ -1,8 +1,8 @@
 'use server';
 
-import { collection, doc, Timestamp, setDoc } from 'firebase/firestore';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import type { Contract } from '@/contracts/types';
+import { collection, doc, setDoc, Timestamp } from 'firebase/firestore';
 
 /**
  * Server Action: 創建合約（與現有服務層整合）

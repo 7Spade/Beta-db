@@ -1,6 +1,23 @@
 'use client';
 
-import * as React from 'react';
+import { ContractStatusBadge } from '@/features/(core-operations)/contracts/components';
+import { ContractDetailsSheet } from '@/features/(core-operations)/contracts/sheets';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
+import { formatDate } from '@/lib/utils/utils';
+import { Button } from '@/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown-menu';
 import {
   Table,
   TableBody,
@@ -9,25 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/ui/card';
-import { Button } from '@/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown-menu';
-import { Download, MoreHorizontal, Eye } from 'lucide-react';
-import { ContractDetailsSheet } from '@/contracts/sheets';
-import { formatDate } from '@/lib/utils/utils';
-import type { Contract } from '@/contracts/types';
-import { ContractStatusBadge } from '@/contracts/components';
+import { Download, Eye, MoreHorizontal } from 'lucide-react';
+import * as React from 'react';
 
 interface ContractsTableProps {
   contracts: Contract[];

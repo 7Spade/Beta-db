@@ -3,7 +3,7 @@
  */
 
 import { adminDb as firestore } from '@/db/firebase-admin';
-import type { Contract } from '@/contracts/types';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { Timestamp } from 'firebase-admin/firestore';
 
 // 定义Firestore文档数据类型
@@ -54,7 +54,9 @@ interface FirestoreContractData {
 export class FirebaseContractService {
   private readonly collectionName = 'contracts';
 
-  async createContract(data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>): Promise<string> {
+  async createContract(
+    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>
+  ): Promise<string> {
     try {
       const newContractData: FirestoreContractData = {
         ...data,
@@ -62,18 +64,22 @@ export class FirebaseContractService {
         endDate: Timestamp.fromDate(data.endDate as Date),
         payments: [],
         changeOrders: [],
-        versions: [{
-          version: 1,
-          date: Timestamp.now(),
-          changeSummary: "初始版本"
-        }]
+        versions: [
+          {
+            version: 1,
+            date: Timestamp.now(),
+            changeSummary: '初始版本',
+          },
+        ],
       };
 
-      const docRef = await firestore.collection(this.collectionName).add(newContractData);
+      const docRef = await firestore
+        .collection(this.collectionName)
+        .add(newContractData);
       return docRef.id as string;
     } catch (error) {
-      console.error("創建合約時發生錯誤：", error);
-      throw new Error("創建合約失敗");
+      console.error('創建合約時發生錯誤：', error);
+      throw new Error('創建合約失敗');
     }
   }
 
@@ -81,7 +87,7 @@ export class FirebaseContractService {
     try {
       const docRef = firestore.collection(this.collectionName).doc(id);
       const docSnap = await docRef.get();
-      
+
       if (docSnap.exists) {
         const data = docSnap.data() as FirestoreContractData;
         return {
@@ -89,26 +95,29 @@ export class FirebaseContractService {
           id: docSnap.id,
           startDate: data.startDate?.toDate(),
           endDate: data.endDate?.toDate(),
-          payments: data.payments?.map((p) => ({
-            ...p,
-            requestDate: p.requestDate?.toDate(),
-            paidDate: p.paidDate?.toDate(),
-          })) || [],
-          changeOrders: data.changeOrders?.map((co) => ({
-            ...co,
-            date: co.date?.toDate(),
-          })) || [],
-          versions: data.versions?.map((v) => ({
-            ...v,
-            date: v.date?.toDate(),
-          })) || [],
+          payments:
+            data.payments?.map((p) => ({
+              ...p,
+              requestDate: p.requestDate?.toDate(),
+              paidDate: p.paidDate?.toDate(),
+            })) || [],
+          changeOrders:
+            data.changeOrders?.map((co) => ({
+              ...co,
+              date: co.date?.toDate(),
+            })) || [],
+          versions:
+            data.versions?.map((v) => ({
+              ...v,
+              date: v.date?.toDate(),
+            })) || [],
         } as Contract;
       }
-      
+
       return null;
     } catch (error) {
-      console.error("獲取合約時發生錯誤：", error);
-      throw new Error("獲取合約失敗");
+      console.error('獲取合約時發生錯誤：', error);
+      throw new Error('獲取合約失敗');
     }
   }
 
@@ -118,31 +127,34 @@ export class FirebaseContractService {
         .collection(this.collectionName)
         .orderBy('startDate', 'desc')
         .get();
-      return querySnapshot.docs.map(doc => {
+      return querySnapshot.docs.map((doc) => {
         const data = doc.data() as FirestoreContractData;
         return {
           ...data,
           id: doc.id,
           startDate: data.startDate?.toDate(),
           endDate: data.endDate?.toDate(),
-          payments: data.payments?.map((p) => ({
-            ...p,
-            requestDate: p.requestDate?.toDate(),
-            paidDate: p.paidDate?.toDate(),
-          })) || [],
-          changeOrders: data.changeOrders?.map((co) => ({
-            ...co,
-            date: co.date?.toDate(),
-          })) || [],
-          versions: data.versions?.map((v) => ({
-            ...v,
-            date: v.date?.toDate(),
-          })) || [],
+          payments:
+            data.payments?.map((p) => ({
+              ...p,
+              requestDate: p.requestDate?.toDate(),
+              paidDate: p.paidDate?.toDate(),
+            })) || [],
+          changeOrders:
+            data.changeOrders?.map((co) => ({
+              ...co,
+              date: co.date?.toDate(),
+            })) || [],
+          versions:
+            data.versions?.map((v) => ({
+              ...v,
+              date: v.date?.toDate(),
+            })) || [],
         } as Contract;
       });
     } catch (error) {
-      console.error("獲取所有合約時發生錯誤：", error);
-      throw new Error("獲取所有合約失敗");
+      console.error('獲取所有合約時發生錯誤：', error);
+      throw new Error('獲取所有合約失敗');
     }
   }
 
@@ -150,7 +162,7 @@ export class FirebaseContractService {
     try {
       const docRef = firestore.collection(this.collectionName).doc(id);
       const updateData: Partial<Contract> = { ...data };
-      
+
       if (data.startDate) {
         // 确保startDate是Date类型
         if (data.startDate instanceof Date) {
@@ -172,8 +184,8 @@ export class FirebaseContractService {
 
       await docRef.update(updateData);
     } catch (error) {
-      console.error("更新合約時發生錯誤：", error);
-      throw new Error("更新合約失敗");
+      console.error('更新合約時發生錯誤：', error);
+      throw new Error('更新合約失敗');
     }
   }
 
@@ -182,8 +194,8 @@ export class FirebaseContractService {
       const docRef = firestore.collection(this.collectionName).doc(id);
       await docRef.delete();
     } catch (error) {
-      console.error("刪除合約時發生錯誤：", error);
-      throw new Error("刪除合約失敗");
+      console.error('刪除合約時發生錯誤：', error);
+      throw new Error('刪除合約失敗');
     }
   }
 }

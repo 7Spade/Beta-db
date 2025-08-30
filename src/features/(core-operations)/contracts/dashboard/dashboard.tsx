@@ -12,8 +12,8 @@
  */
 'use client';
 
-import type { Contract } from '@/contracts/types';
 import { useContracts } from '@/features/(core-operations)/contracts/hooks';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import {
   DashboardStats,
   type StatCardData,

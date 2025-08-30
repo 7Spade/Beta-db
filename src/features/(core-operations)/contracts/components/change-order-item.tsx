@@ -3,8 +3,8 @@
  */
 'use client';
 
+import type { ChangeOrder } from '@/features/(core-operations)/contracts/types';
 import { Card, CardContent } from '@/ui/card';
-import type { ChangeOrder } from '@/contracts/types';
 
 interface ChangeOrderItemProps {
   changeOrder: ChangeOrder;

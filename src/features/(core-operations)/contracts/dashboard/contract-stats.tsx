@@ -3,7 +3,7 @@
  */
 'use client';
 
-import type { Contract } from '@/contracts/types';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import {
   DashboardStats,
   type StatCardData,

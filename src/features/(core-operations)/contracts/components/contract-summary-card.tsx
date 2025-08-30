@@ -3,14 +3,14 @@
  */
 'use client';
 
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from '@/ui/card';
-import type { Contract } from '@/contracts/types';
 
 interface ContractSummaryCardProps {
   contract: Contract;

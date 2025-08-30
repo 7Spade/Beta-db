@@ -3,8 +3,8 @@
  */
 'use client';
 
+import type { ContractVersion } from '@/features/(core-operations)/contracts/types';
 import { formatDate } from '@/lib/utils/utils';
-import type { ContractVersion } from '@/contracts/types';
 
 interface VersionTimelineProps {
   versions: ContractVersion[];

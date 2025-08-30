@@ -1,21 +1,26 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/ui/sheet';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
+import { ContractStatusBadge } from '@/features/(core-operations)/contracts/components';
+import { ReceiptProgress } from '@/features/(core-operations)/contracts/components/receipt-progress';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
+import { formatDate } from '@/lib/utils/utils';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from '@/ui/card';
+import { Progress } from '@/ui/progress';
+import { ScrollArea } from '@/ui/scroll-area';
+import { Separator } from '@/ui/separator';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/ui/sheet';
 import {
   Table,
   TableBody,
@@ -24,13 +29,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { Separator } from '@/ui/separator';
-import { Progress } from '@/ui/progress';
-import { ScrollArea } from '@/ui/scroll-area';
-import { formatDate } from '@/lib/utils/utils';
-import type { Contract } from '@/contracts/types';
-import { ContractStatusBadge } from '@/contracts/components';
-import { ReceiptProgress } from '@/contracts/components/receipt-progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
+import { useMemo } from 'react';
 
 interface ContractDetailsSheetProps {
   contract: Contract;

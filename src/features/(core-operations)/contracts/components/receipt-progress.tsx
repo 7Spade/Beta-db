@@ -3,8 +3,8 @@
  */
 'use client';
 
+import type { Receipt } from '@/features/(core-operations)/contracts/types';
 import { Progress } from '@/ui/progress';
-import type { Receipt } from '@/contracts/types';
 
 interface ReceiptProgressProps {
   receipts: Receipt[];

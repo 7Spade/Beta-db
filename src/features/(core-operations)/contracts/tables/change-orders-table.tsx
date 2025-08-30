@@ -3,6 +3,9 @@
  */
 'use client';
 
+import type { ChangeOrder } from '@/features/(core-operations)/contracts/types';
+import { formatDate } from '@/lib/utils/utils';
+import { Badge } from '@/ui/badge';
 import {
   Table,
   TableBody,
@@ -11,9 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import type { ChangeOrder } from '@/contracts/types';
-import { formatDate } from '@/lib/utils/utils';
-import { Badge } from '@/ui/badge';
 
 interface ChangeOrdersTableProps {
   changeOrders: ChangeOrder[];

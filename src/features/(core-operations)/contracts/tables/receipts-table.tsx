@@ -3,6 +3,9 @@
  */
 'use client';
 
+import { ContractStatusBadge } from '@/features/(core-operations)/contracts/components';
+import type { Receipt } from '@/features/(core-operations)/contracts/types';
+import { formatDate } from '@/lib/utils/utils';
 import {
   Table,
   TableBody,
@@ -11,9 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { ContractStatusBadge } from '@/contracts/components';
-import { formatDate } from '@/lib/utils/utils';
-import type { Receipt } from '@/contracts/types';
 
 interface ReceiptsTableProps {
   receipts: Receipt[];

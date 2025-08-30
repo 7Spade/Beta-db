@@ -3,8 +3,8 @@
  */
 'use client';
 
-import { contractService } from '@/contracts/services';
-import type { Contract } from '@/contracts/types';
+import { contractService } from '@/features/(core-operations)/contracts/services';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { useState } from 'react';
 

@@ -3,8 +3,8 @@
  */
 'use client';
 
-import { ContractsTable } from '@/contracts/tables';
-import type { Contract } from '@/contracts/types';
+import { ContractsTable } from '@/features/(core-operations)/contracts/tables';
+import type { Contract } from '@/features/(core-operations)/contracts/types';
 
 interface ContractListViewProps {
   contracts: Contract[];
