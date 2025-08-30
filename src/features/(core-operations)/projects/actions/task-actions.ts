@@ -1,9 +1,12 @@
 'use server';
 
+import type {
+  Task,
+  TaskStatus,
+} from '@/features/(core-operations)/projects/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { doc, updateDoc } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
-import type { Task, TaskStatus } from '@/features/projects/types';
 
 export async function updateTaskStatusAction(
   projectId: string,

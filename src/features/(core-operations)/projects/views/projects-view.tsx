@@ -1,6 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { CreateProjectDialog } from '@/features/(core-operations)/projects/components/create-project-dialog';
+import { ProjectDetailsSheet } from '@/features/(core-operations)/projects/components/project-details-sheet';
+import { ProjectList } from '@/features/(core-operations)/projects/components/project-list';
+import type {
+  Project,
+  Task,
+} from '@/features/(core-operations)/projects/types';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { Skeleton } from '@/ui/skeleton';
 import {
   collection,
   DocumentData,
@@ -8,12 +16,7 @@ import {
   query,
   Timestamp,
 } from 'firebase/firestore';
-import type { Project, Task } from '@/features/projects/types';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { CreateProjectDialog } from '@/features/projects/components/create-project-dialog';
-import { ProjectDetailsSheet } from '@/features/projects/components/project-details-sheet';
-import { ProjectList } from '@/features/projects/components/project-list';
-import { Skeleton } from '@/ui/skeleton';
+import { useEffect, useState } from 'react';
 
 const processFirestoreTasks = (tasks: DocumentData[]): Task[] => {
   return tasks.map((task) => ({

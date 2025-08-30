@@ -1,6 +1,7 @@
 'use client';
 
-import type { Project } from '@/features/projects/types';
+import type { Project } from '@/features/(core-operations)/projects/types';
+import { ScrollArea } from '@/ui/scroll-area';
 import {
   Sheet,
   SheetContent,
@@ -8,10 +9,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/ui/sheet';
-import { ScrollArea } from '@/ui/scroll-area';
 import { AddTaskForm } from './add-task-form';
-import { TaskList } from './task-list';
 import { ProjectHeader } from './project-header';
+import { TaskList } from './task-list';
 
 interface ProjectDetailsSheetProps {
   project: Project | undefined;

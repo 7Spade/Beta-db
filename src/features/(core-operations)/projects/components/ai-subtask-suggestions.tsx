@@ -1,11 +1,11 @@
 'use client';
 
 import { generateSubtasks } from '@/ai/flows/generate-subtasks-flow';
+import { addTaskAction } from '@/features/(core-operations)/projects/actions/task-actions';
+import type { Project } from '@/features/(core-operations)/projects/types';
 import { Alert, AlertDescription, AlertTitle } from '@/ui/alert';
 import { Button } from '@/ui/button';
 import { useToast } from '@root/src/lib/hooks/use-toast';
-import { addTaskAction } from '@/features/projects/actions/task-actions';
-import type { Project } from '@/features/projects/types';
 import { Loader, PlusCircle, X } from 'lucide-react';
 import { useEffect, useState, useTransition } from 'react';
 

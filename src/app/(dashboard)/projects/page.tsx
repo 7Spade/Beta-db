@@ -1,4 +1,4 @@
-import { ProjectsView } from '@/features/projects/views/projects-view';
+import { ProjectsView } from '@/features/(core-operations)/projects/views/projects-view';
 
 export default async function ProjectsPage() {
   // The data fetching logic has been moved to the ProjectsView component itself.

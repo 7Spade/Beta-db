@@ -1,7 +1,16 @@
 'use client';
 
-import { AISubtaskSuggestions } from '@/features/projects/components/ai-subtask-suggestions';
-import type { Project, Task, TaskStatus } from '@/features/projects/types';
+import {
+  addTaskAction,
+  updateTaskStatusAction,
+} from '@/features/(core-operations)/projects/actions/task-actions';
+import { AISubtaskSuggestions } from '@/features/(core-operations)/projects/components/ai-subtask-suggestions';
+import type {
+  Project,
+  Task,
+  TaskStatus,
+} from '@/features/(core-operations)/projects/types';
+import { cn } from '@/lib/utils/utils';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import {
@@ -23,7 +32,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/ui/tooltip';
-import { cn } from '@/lib/utils/utils';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -35,10 +43,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useState, useTransition } from 'react';
-import {
-  addTaskAction,
-  updateTaskStatusAction,
-} from '@/features/projects/actions/task-actions';
 
 interface TaskItemProps {
   task: Task;

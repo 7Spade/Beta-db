@@ -1,6 +1,9 @@
 'use client';
 
-import type { Project, Task } from '@/features/projects/types';
+import type {
+  Project,
+  Task,
+} from '@/features/(core-operations)/projects/types';
 import { Button } from '@/ui/button';
 import {
   Card,

@@ -1,5 +1,6 @@
 'use client';
 
+import { addProjectAction } from '@/features/(core-operations)/projects/actions/project-actions';
 import { Button } from '@/ui/button';
 import { Calendar } from '@/ui/calendar';
 import {
@@ -23,7 +24,6 @@ import { Input } from '@/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Textarea } from '@/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { addProjectAction } from '@/features/projects/actions/project-actions';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, PlusCircle } from 'lucide-react';

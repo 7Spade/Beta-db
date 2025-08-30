@@ -6,7 +6,7 @@
  * @created 2025-01-22
  * @updated 2025-01-22
  * @version 1.0.0
- * 
+ *
  * @fileoverview 功能模組統一導出檔案
  * @description 集中管理所有功能模組的導出，方便其他模組引用
  */
@@ -15,7 +15,7 @@
 export * from '@/admin/views/admin-dashboard-view';
 
 // Core App Features
-export * from '@/features/projects/projects-view';
+export * from '@/features/(core-operations)/projects/projects-view';
 
 // Auth Features
 export * from '@/auth/index';
@@ -47,4 +47,3 @@ export * from '@/settings/settings-view';
 
 // Team Features
 export * from '@/team/index';
-

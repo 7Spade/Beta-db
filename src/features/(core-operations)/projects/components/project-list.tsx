@@ -1,6 +1,6 @@
 'use client';
 
-import type { Project } from '@/features/projects/types';
+import type { Project } from '@/features/(core-operations)/projects/types';
 import { ProjectCard } from './project-card';
 
 interface ProjectListProps {

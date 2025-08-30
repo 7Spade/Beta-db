@@ -1,6 +1,6 @@
 'use client';
 
-import type { Project } from '@/features/projects/types';
+import type { Project } from '@/features/(core-operations)/projects/types';
 import { Badge } from '@/ui/badge';
 import { Card, CardContent } from '@/ui/card';
 import { format } from 'date-fns';

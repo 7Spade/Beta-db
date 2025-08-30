@@ -1,7 +1,10 @@
 'use client';
 
-import { addTaskAction } from '@/features/projects/actions/task-actions';
-import type { Project, Task } from '@/features/projects/types';
+import { addTaskAction } from '@/features/(core-operations)/projects/actions/task-actions';
+import type {
+  Project,
+  Task,
+} from '@/features/(core-operations)/projects/types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import {

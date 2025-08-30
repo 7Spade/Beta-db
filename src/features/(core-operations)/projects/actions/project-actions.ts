@@ -1,9 +1,9 @@
 'use server';
 
+import type { Project } from '@/features/(core-operations)/projects/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
-import type { Project } from '@/features/projects/types';
 
 export async function addProjectAction(
   project: Omit<Project, 'id' | 'tasks'>
