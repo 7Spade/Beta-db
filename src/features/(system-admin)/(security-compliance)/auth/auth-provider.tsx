@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/features/auth/use-auth';
+import { useAuth } from '@root/src/features/(system-admin)/(security-compliance)/auth/use-auth';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 

@@ -1,7 +1,7 @@
 "use client"
 
-import { useAuth } from "@/features/auth/use-auth"
 import { cn } from "@/utils"
+import { useAuth } from "@root/src/features/(system-admin)/(security-compliance)/auth/use-auth"
 import { useNotifications } from "@root/src/lib/hooks/use-notifications"
 import { Bell, Check, X } from "lucide-react"
 import * as React from "react"

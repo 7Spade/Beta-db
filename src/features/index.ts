@@ -18,7 +18,7 @@ export * from '@root/src/features/(system-admin)/admin/views/admin-dashboard-vie
 export * from '@root/src/features/(core-operations)/projects/views/ProjectView';
 
 // Auth Features
-export * from '@/auth/index';
+export * from '@root/src/features/(system-admin)/(security-compliance)/auth/index';
 
 // Blog Features
 export * from '@/blog/views/post-form-view';

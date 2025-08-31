@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useAuth } from '@/features/auth';
 import { Button } from '@/ui/button';
 import {
   Dialog,
@@ -22,6 +21,7 @@ import {
 import { Input } from '@/ui/input';
 import { Textarea } from '@/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '@root/src/features/(system-admin)/(security-compliance)/auth';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';

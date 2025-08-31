@@ -5,7 +5,7 @@
  * - 告知新註冊的使用者其帳號正在等待管理員審核。
  * - 職責是渲染 PendingApprovalView 元件。
  */
-import { PendingApprovalView } from '@/features/auth/pending-approval-view';
+import { PendingApprovalView } from '@root/src/features/(system-admin)/(security-compliance)/auth/pending-approval-view';
 
 export default function PendingApprovalPage() {
   return <PendingApprovalView />;

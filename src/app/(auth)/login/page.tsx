@@ -6,7 +6,7 @@
  * - 此檔案是 Next.js 的入口點，應保持簡潔。
  * - 主要職責是渲染對應的 View 元件。
  */
-import { LoginView } from '@/features/auth';
+import { LoginView } from '@root/src/features/(system-admin)/(security-compliance)/auth';
 
 export default function LoginPage() {
   return <LoginView />;
