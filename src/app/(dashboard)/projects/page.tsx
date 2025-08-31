@@ -7,7 +7,7 @@ import {
   AcceptanceList,
   ProjectList,
   ProjectsView,
-} from '@/features/(core-operations)/projects/components';
+} from '@/features/(core-operations)/projects';
 import type {
   AcceptanceRecord,
   Project,
