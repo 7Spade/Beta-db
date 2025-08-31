@@ -1,12 +1,32 @@
 /**
- * @fileoverview 文章編輯與新增頁面
- * @description 此頁面負責渲染文章表單，用於建立或更新部落格文章。
+ * @fileoverview Blog Post Detail Page (Admin)
+ * @description This page is for viewing the details of a single blog post from an admin's perspective.
+ * In this new structure, this route is for viewing details, and a sub-route is for editing.
  */
+import { getPostById } from '@/lib/services/blog/blog.service';
+import { notFound } from 'next/navigation';
+import { BlogDetailView } from '@/features/(system-admin)/website-cms/blog/views/BlogDetailView';
+import { Button } from '@/ui/button';
+import { Edit } from 'lucide-react';
+import Link from 'next/link';
 
-import { PostFormView } from '@root/src/features/(system-admin)/website-cms/blog/views/post-form-view';
+export default async function AdminPostDetailPage({ params }: { params: { id: string } }) {
+  const post = await getPostById(params.id);
 
-export default async function PostFormPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const postId = typeof id === 'string' && id !== 'create' ? id : null;
-  return <PostFormView postId={postId} />;
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <div className="space-y-4">
+       <div className="flex justify-end">
+         <Button asChild>
+            <Link href={`/website-cms/blog-management/posts/${post.id}/edit`}>
+                <Edit className="mr-2 h-4 w-4" /> 編輯此文章
+            </Link>
+         </Button>
+       </div>
+       <BlogDetailView post={post} />
+    </div>
+  );
 }
