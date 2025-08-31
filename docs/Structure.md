@@ -362,8 +362,7 @@
 │  │  README.md
 │  │
 │  ├─(automation-tools)
-│  │  ├─(workflow-automation)
-│  │  │      README.md
+│  │  │  README.md
 │  │  │
 │  │  ├─docu-parse
 │  │  │  │  index.ts
@@ -432,6 +431,9 @@
 │  │  └─(reporting-analytics)
 │  │      │  README.md
 │  │      │
+│  │      ├─daily-report
+│  │      │      daily-report-view.tsx
+│  │      │
 │  │      └─dashboard
 │  │              ai-usage-log.tsx
 │  │              dashboard-stats.tsx
@@ -439,10 +441,9 @@
 │  │              dashboard.tsx
 │  │              README.md
 │  │
-│  ├─(communication)
-│  │      README.md
-│  │
 │  ├─(core-operations)
+│  │  │  README.md
+│  │  │
 │  │  ├─contracts
 │  │  │  │  index.ts
 │  │  │  │  README.md
@@ -594,6 +595,9 @@
 │  │  │  │      TaskItem.tsx
 │  │  │  │      TaskList.tsx
 │  │  │  │
+│  │  │  ├─project-progress
+│  │  │  │      project-progress-view.tsx
+│  │  │  │
 │  │  │  ├─types
 │  │  │  │      index.ts
 │  │  │  │
@@ -606,70 +610,6 @@
 │  │  │
 │  │  └─schedule
 │  │          README.md
-│  │
-│  ├─(crm-management)
-│  │  │  README.md
-│  │  │
-│  │  ├─compliance
-│  │  │      compliance-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─contacts
-│  │  │  │  contacts-tab.tsx
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─forms
-│  │  │          contact-form.tsx
-│  │  │          README.md
-│  │  │
-│  │  ├─contracts
-│  │  │      contracts-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─dashboard
-│  │  │      dashboard.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─financials
-│  │  │      financials-tab.tsx
-│  │  │      README.md
-│  │  │      workflow-designer.tsx
-│  │  │
-│  │  ├─overview
-│  │  │      overview-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─partners
-│  │  │  │  partner-list.tsx
-│  │  │  │  partner-profile.tsx
-│  │  │  │  partners-view.tsx
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─forms
-│  │  │  │      contact-form.tsx
-│  │  │  │      partner-form.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─list
-│  │  │  │      partner-list.tsx
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  └─profile
-│  │  │          partner-profile.tsx
-│  │  │          profile-header.tsx
-│  │  │          README.md
-│  │  │
-│  │  ├─performance
-│  │  │      performance-tab.tsx
-│  │  │      README.md
-│  │  │
-│  │  ├─transactions
-│  │  │      README.md
-│  │  │      transactions-tab.tsx
-│  │  │
-│  │  └─workflows
-│  │          README.md
-│  │          workflow-builder.tsx
 │  │
 │  ├─(document-management)
 │  │  │  README.md
@@ -709,6 +649,72 @@
 │  │      README.md
 │  │
 │  ├─(resource-management)
+│  │  │  README.md
+│  │  │
+│  │  ├─(crm-management)
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─compliance
+│  │  │  │      compliance-tab.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─contacts
+│  │  │  │  │  contacts-tab.tsx
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  └─forms
+│  │  │  │          contact-form.tsx
+│  │  │  │          README.md
+│  │  │  │
+│  │  │  ├─contracts
+│  │  │  │      contracts-tab.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─dashboard
+│  │  │  │      dashboard.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─financials
+│  │  │  │      financials-tab.tsx
+│  │  │  │      README.md
+│  │  │  │      workflow-designer.tsx
+│  │  │  │
+│  │  │  ├─overview
+│  │  │  │      overview-tab.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─partners
+│  │  │  │  │  partner-list.tsx
+│  │  │  │  │  partner-profile.tsx
+│  │  │  │  │  partners-view.tsx
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  ├─forms
+│  │  │  │  │      contact-form.tsx
+│  │  │  │  │      partner-form.tsx
+│  │  │  │  │      README.md
+│  │  │  │  │
+│  │  │  │  ├─list
+│  │  │  │  │      partner-list.tsx
+│  │  │  │  │      README.md
+│  │  │  │  │
+│  │  │  │  └─profile
+│  │  │  │          partner-profile.tsx
+│  │  │  │          profile-header.tsx
+│  │  │  │          README.md
+│  │  │  │
+│  │  │  ├─performance
+│  │  │  │      performance-tab.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─transactions
+│  │  │  │      README.md
+│  │  │  │      transactions-tab.tsx
+│  │  │  │
+│  │  │  └─workflows
+│  │  │          README.md
+│  │  │          workflow-builder.tsx
+│  │  │
 │  │  ├─(enhanced-inventory)
 │  │  │  │  README.md
 │  │  │  │
@@ -727,6 +733,9 @@
 │  │  └─(hr-management)
 │  │      │  README.md
 │  │      │
+│  │      ├─attendance
+│  │      │      staff-attendance-view.tsx
+│  │      │
 │  │      ├─members
 │  │      │      create-member-dialog.tsx
 │  │      │      page.tsx
@@ -737,88 +746,87 @@
 │  │              skill-form-dialog.tsx
 │  │              skills-list.tsx
 │  │
-│  ├─(system-admin)
-│  │  ├─(security-compliance)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─auth
-│  │  │          auth-actions.ts
-│  │  │          auth-form-schemas.ts
-│  │  │          auth-provider.tsx
-│  │  │          auth.config.ts
-│  │  │          auth.utils.ts
-│  │  │          index.ts
-│  │  │          login-view.tsx
-│  │  │          pending-approval-view.tsx
-│  │  │          README.md
-│  │  │          register-view.tsx
-│  │  │          social-auth-buttons.tsx
-│  │  │          use-auth.ts
-│  │  │          verify-email-view.tsx
-│  │  │
-│  │  ├─(system-administration)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─profile
-│  │  │      │  profile-form.tsx
-│  │  │      │  profile-view.tsx
-│  │  │      │  public-profile-view.tsx
-│  │  │      │  README.md
-│  │  │      │
-│  │  │      └─actions
-│  │  │              profile-actions.ts
-│  │  │
-│  │  ├─admin
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      user-actions.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          admin-dashboard-view.tsx
-│  │  │          user-management-view.tsx
-│  │  │
-│  │  ├─multi-tenancy
-│  │  │      README.md
-│  │  │
-│  │  ├─settings
-│  │  │      README.md
-│  │  │      settings-view.tsx
-│  │  │
-│  │  └─website-cms
-│  │      ├─blog
-│  │      │  │  README.md
-│  │      │  │
-│  │      │  ├─actions
-│  │      │  │      posts.actions.ts
-│  │      │  │
-│  │      │  └─views
-│  │      │          post-form-view.tsx
-│  │      │          posts-list-view.tsx
-│  │      │
-│  │      ├─blog-management
-│  │      │      README.md
-│  │      │
-│  │      ├─career-management
-│  │      │      README.md
-│  │      │
-│  │      ├─contact-management
-│  │      │      README.md
-│  │      │
-│  │      ├─content-management
-│  │      │      README.md
-│  │      │
-│  │      ├─dashboard-management
-│  │      │      README.md
-│  │      │
-│  │      ├─system-management
-│  │      │      README.md
-│  │      │
-│  │      └─user-management
-│  │              README.md
-│  │
-│  └─mobile-app
-│          README.md
+│  └─(system-admin)
+│      │  README.md
+│      │
+│      ├─(security-compliance)
+│      │  │  README.md
+│      │  │
+│      │  └─auth
+│      │          auth-actions.ts
+│      │          auth-form-schemas.ts
+│      │          auth-provider.tsx
+│      │          auth.config.ts
+│      │          auth.utils.ts
+│      │          index.ts
+│      │          login-view.tsx
+│      │          pending-approval-view.tsx
+│      │          README.md
+│      │          register-view.tsx
+│      │          social-auth-buttons.tsx
+│      │          use-auth.ts
+│      │          verify-email-view.tsx
+│      │
+│      ├─(system-administration)
+│      │  │  README.md
+│      │  │
+│      │  └─profile
+│      │      │  profile-form.tsx
+│      │      │  profile-view.tsx
+│      │      │  public-profile-view.tsx
+│      │      │  README.md
+│      │      │
+│      │      └─actions
+│      │              profile-actions.ts
+│      │
+│      ├─admin
+│      │  │  README.md
+│      │  │
+│      │  ├─actions
+│      │  │      user-actions.ts
+│      │  │
+│      │  └─views
+│      │          admin-dashboard-view.tsx
+│      │          user-management-view.tsx
+│      │
+│      ├─multi-tenancy
+│      │      README.md
+│      │
+│      ├─settings
+│      │      README.md
+│      │      settings-view.tsx
+│      │
+│      └─website-cms
+│          ├─blog
+│          │  │  README.md
+│          │  │
+│          │  ├─actions
+│          │  │      posts.actions.ts
+│          │  │
+│          │  └─views
+│          │          post-form-view.tsx
+│          │          posts-list-view.tsx
+│          │
+│          ├─blog-management
+│          │      README.md
+│          │
+│          ├─career-management
+│          │      README.md
+│          │
+│          ├─contact-management
+│          │      README.md
+│          │
+│          ├─content-management
+│          │      README.md
+│          │
+│          ├─dashboard-management
+│          │      README.md
+│          │
+│          ├─system-management
+│          │      README.md
+│          │
+│          └─user-management
+│                  README.md
 │
 ├─lib
 │  │  README.md
