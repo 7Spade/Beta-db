@@ -25,7 +25,7 @@ export * from '@/blog/views/post-form-view';
 export * from '@/blog/views/posts-list-view';
 
 // Cloud Drive Features
-export * from '@/cloud-drive/views/cloud-drive-view';
+export * from '@/features/(document-management)/cloud-drive/views/cloud-drive-view';
 
 // Contracts Features
 export * from '@/features/(core-operations)/contracts/index';

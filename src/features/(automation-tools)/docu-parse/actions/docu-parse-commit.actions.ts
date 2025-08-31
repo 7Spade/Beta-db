@@ -5,8 +5,8 @@
  */
 'use server';
 
+import type { DocDetails, WorkItem } from '@/features/(automation-tools)/docu-parse/types';
 import type { Task } from '@/features/(core-operations)/projects/types';
-import type { DocDetails, WorkItem } from '@/features/docu-parse/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { collection, doc, Timestamp, writeBatch } from 'firebase/firestore';
 

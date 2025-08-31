@@ -1,4 +1,4 @@
-import { DocuParseView } from '@/features/docu-parse/views/docu-parse-view';
+import { DocuParseView } from '@/features/(automation-tools)/docu-parse/views/docu-parse-view';
 import { Suspense } from 'react';
 
 export default function DocuParsePage() {

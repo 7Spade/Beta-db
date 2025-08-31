@@ -63,14 +63,8 @@
       "@/blog/*": [
         "./src/features/blog/*"
       ],
-      "@/cloud-drive/*": [
-        "./src/features/cloud-drive/*"
-      ],
       "@/dashboard/*": [
         "./src/features/dashboard/*"
-      ],
-      "@/docu-parse/*": [
-        "./src/features/docu-parse/*"
       ],
       "@/kanban/*": [
         "./src/features/kanban/*"

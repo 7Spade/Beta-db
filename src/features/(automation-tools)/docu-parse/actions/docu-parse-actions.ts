@@ -13,7 +13,7 @@
 "use server";
 
 import { extractWorkItems } from '@/ai/flows/extract-work-items-flow';
-import type { DocuParseActionState } from '@/features/docu-parse/types';
+import type { DocuParseActionState } from '@/features/(automation-tools)/docu-parse/types';
 import { getStorage } from 'firebase-admin/storage';
 
 /**

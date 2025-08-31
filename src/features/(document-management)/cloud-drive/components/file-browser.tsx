@@ -4,12 +4,12 @@
  */
 'use client';
 
-import type { FC } from 'react';
+import type { StorageItem } from '@/features/(document-management)/cloud-drive/types/storage.types';
 import { Skeleton } from '@/ui/skeleton';
+import { File } from 'lucide-react';
+import type { FC } from 'react';
 import { FileCard } from './file-card';
 import { FolderCard } from './folder-card';
-import type { StorageItem } from '@/cloud-drive/types/storage.types';
-import { File } from 'lucide-react';
 
 interface FileBrowserProps {
   items: StorageItem[];

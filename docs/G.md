@@ -1,3 +1,27 @@
+src\features\(automation-tools)                 → 自動化工具
+src\features\(automation-tools)\(workflow-automation) → 流程自動化
+
+src\features\(business-intelligence)            → 商業智慧（BI 分析 / 決策支援）
+
+src\features\(core-operations)                  → 核心作業 / 核心業務流程
+
+src\features\(crm-management)                   → 客戶關係管理（CRM）
+
+src\features\(document-management)              → 文件管理
+
+src\features\(project-management)               → 專案管理
+
+src\features\(resource-management)              → 資源管理
+src\features\(resource-management)\(enhanced-inventory) → 強化型庫存管理
+src\features\(resource-management)\(hr-management)      → 人力資源管理（HR）
+
+src\features\(system-admin)                     → 系統管理
+src\features\(system-admin)\(security-compliance)       → 安全與合規
+src\features\(system-admin)\(system-administration)     → 系統管理功能（配置 / 維護 / 後台）
+
+
+
+
 (dashboard)/ 下的分組可以更系統化：
 
 ├─(core-operations)          # 核心營運

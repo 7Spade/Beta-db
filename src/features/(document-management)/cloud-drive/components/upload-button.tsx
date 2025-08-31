@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { uploadFile } from '@/cloud-drive/actions/storage-actions';
+import { uploadFile } from '@/features/(document-management)/cloud-drive/actions/storage-actions';
 import { Button } from '@/ui/button';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { Loader2, Upload } from 'lucide-react';

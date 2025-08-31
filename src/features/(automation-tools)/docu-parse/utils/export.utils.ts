@@ -1,8 +1,8 @@
 /**
  * @fileoverview 文件匯出相關的工具函數
  */
-import { EXPORT_FILE_NAMES } from '@/features/docu-parse/constants';
-import type { WorkItem } from '@/features/docu-parse/types';
+import { EXPORT_FILE_NAMES } from '@/features/(automation-tools)/docu-parse/constants';
+import type { WorkItem } from '@/features/(automation-tools)/docu-parse/types';
 
 /**
  * 將工料清單資料匯出為 CSV 檔案。

@@ -4,9 +4,9 @@
  */
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import type { StorageAction, StorageItem, StorageListResult } from '@/features/(document-management)/cloud-drive/types/storage.types';
 import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
-import type { StorageItem, StorageAction, StorageListResult } from '@/cloud-drive/types/storage.types';
+import { revalidatePath } from 'next/cache';
 
 // 從環境變數讀取儲存桶名稱，如果不存在則拋出錯誤
 const BUCKET_NAME = process.env.FIREBASE_STORAGE_BUCKET;
@@ -57,19 +57,19 @@ export async function listItems(path: string): Promise<StorageListResult> {
     }));
 
     const fileItems: StorageItem[] = files
-        .filter(file => !file.name.endsWith('/.folder'))
-        .map(file => ({
-            name: file.name.split('/').pop() || '',
-            fullPath: file.name,
-            type: 'file',
-            size: Number(file.metadata.size) || 0,
-            contentType: file.metadata.contentType || 'application/octet-stream',
-            createdAt: file.metadata.timeCreated,
-        }));
-    
+      .filter(file => !file.name.endsWith('/.folder'))
+      .map(file => ({
+        name: file.name.split('/').pop() || '',
+        fullPath: file.name,
+        type: 'file',
+        size: Number(file.metadata.size) || 0,
+        contentType: file.metadata.contentType || 'application/octet-stream',
+        createdAt: file.metadata.timeCreated,
+      }));
+
     const allItems = [...folders, ...fileItems].sort((a, b) => {
-        if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
-        return a.name.localeCompare(b.name);
+      if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
+      return a.name.localeCompare(b.name);
     });
 
     return { items: allItems };
@@ -86,7 +86,7 @@ export async function createFolder(path: string): Promise<StorageAction> {
   try {
     const markerPath = `${normalizePath(path)}/.folder`;
     await bucket.file(markerPath).save('', { contentType: 'application/x-directory' });
-    
+
     revalidatePath(`/cloud-drive?path=${getParentPath(path)}`, 'page');
     return { success: true };
   } catch {
@@ -104,7 +104,7 @@ export async function deleteItem(path: string, type: 'file' | 'folder'): Promise
     } else {
       await bucket.file(path).delete();
     }
-    
+
     revalidatePath(`/cloud-drive?path=${getParentPath(path)}`, 'page');
     return { success: true };
   } catch {
@@ -118,7 +118,7 @@ export async function deleteItem(path: string, type: 'file' | 'folder'): Promise
 export async function uploadFile(formData: FormData): Promise<StorageAction> {
   const file = formData.get('file') as File;
   const currentPath = formData.get('currentPath') as string;
-  
+
   if (!file) return { success: false, error: '找不到檔案。' };
 
   const filePath = buildFullPath(currentPath, file.name);
@@ -126,7 +126,7 @@ export async function uploadFile(formData: FormData): Promise<StorageAction> {
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
     await bucket.file(filePath).save(buffer, { contentType: file.type });
-    
+
     revalidatePath(`/cloud-drive?path=${currentPath}`, 'page');
     return { success: true };
   } catch {
@@ -138,15 +138,15 @@ export async function uploadFile(formData: FormData): Promise<StorageAction> {
  * 取得檔案的簽名 URL (有時效性)
  */
 export async function getSignedUrl(path: string): Promise<{ url?: string, error?: string }> {
-    try {
-        const [url] = await bucket.file(path).getSignedUrl({
-            action: 'read',
-            expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-        });
-        return { url };
-    } catch {
-        return { error: '無法取得下載連結。' };
-    }
+  try {
+    const [url] = await bucket.file(path).getSignedUrl({
+      action: 'read',
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+    });
+    return { url };
+  } catch {
+    return { error: '無法取得下載連結。' };
+  }
 }
 
 /**
@@ -167,7 +167,7 @@ export async function renameItem(oldPath: string, newName: string, type: 'file' 
     } else {
       await bucket.file(oldPath).move(newPath);
     }
-    
+
     revalidatePath(`/cloud-drive?path=${parentPath}`, 'page');
     return { success: true };
   } catch {

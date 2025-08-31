@@ -17,7 +17,7 @@ import { createProjectAndContractFromDocument } from '@/app/actions/contracts.ac
 **新的導入方式：**
 
 ```tsx
-import { createProjectAndContractFromParsedData } from '@/features/docu-parse/actions/docu-parse-commit.actions';
+import { createProjectAndContractFromParsedData } from '@/features/(automation-tools)/docu-parse/actions/docu-parse-commit.actions';
 ```
 
 ### 2. 功能對比
@@ -39,7 +39,7 @@ import { createProjectAndContractFromParsedData } from '@/features/docu-parse/ac
 #### 在 Server Components 中
 
 ```tsx
-import { createProjectAndContractFromParsedData } from '@/features/docu-parse/actions/docu-parse-commit.actions';
+import { createProjectAndContractFromParsedData } from '@/features/(automation-tools)/docu-parse/actions/docu-parse-commit.actions';
 
 export default function DocumentProcessor() {
   async function processDocument(formData: FormData) {
@@ -69,7 +69,7 @@ export default function DocumentProcessor() {
 ```tsx
 'use client';
 
-import { createProjectAndContractFromParsedData } from '@/features/docu-parse/actions/docu-parse-commit.actions';
+import { createProjectAndContractFromParsedData } from '@/features/(automation-tools)/docu-parse/actions/docu-parse-commit.actions';
 
 export function DocumentProcessor() {
   const handleSubmit = async (data: any) => {

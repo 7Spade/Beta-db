@@ -4,8 +4,8 @@
  */
 'use client';
 
-import { getSignedUrl } from '@/cloud-drive/actions/storage-actions';
-import type { StorageItem } from '@/cloud-drive/types/storage.types';
+import { getSignedUrl } from '@/features/(document-management)/cloud-drive/actions/storage-actions';
+import type { StorageItem } from '@/features/(document-management)/cloud-drive/types/storage.types';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardFooter } from '@/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/ui/dropdown-menu';

@@ -4,11 +4,11 @@
  */
 'use client';
 
-import { createFolder, deleteItem, getSignedUrl, listItems, renameItem } from '@/cloud-drive/actions/storage-actions';
-import { FileBrowser } from '@/cloud-drive/components/file-browser';
-import { UploadButton } from '@/cloud-drive/components/upload-button';
-import type { StorageItem } from '@/cloud-drive/types/storage.types';
 import DocumentPreview from '@/components/layout/shared/document-preview';
+import { createFolder, deleteItem, getSignedUrl, listItems, renameItem } from '@/features/(document-management)/cloud-drive/actions/storage-actions';
+import { FileBrowser } from '@/features/(document-management)/cloud-drive/components/file-browser';
+import { UploadButton } from '@/features/(document-management)/cloud-drive/components/upload-button';
+import type { StorageItem } from '@/features/(document-management)/cloud-drive/types/storage.types';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/ui/alert-dialog';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/ui/breadcrumb';
 import { Button } from '@/ui/button';
