@@ -1,6 +1,6 @@
 'use client';
 
-import { PublicProfileView } from '@/features/profile/public-profile-view';
+import { PublicProfileView } from '@root/src/features/(system-admin)/(system-administration)/profile/public-profile-view';
 import { use } from 'react';
 
 export default function PublicProfilePage({ params }: { params: Promise<{ id: string }> }) {

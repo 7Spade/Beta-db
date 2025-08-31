@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { PostsListView } from '@/features/blog/views/posts-list-view';
+import { PostsListView } from '@root/src/features/(system-admin)/website-cms/blog/views/posts-list-view';
 
 export default function AdminBlogPostsPage() {
   return <PostsListView />;

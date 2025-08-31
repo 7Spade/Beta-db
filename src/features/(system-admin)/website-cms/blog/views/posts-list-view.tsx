@@ -1,9 +1,9 @@
 
 'use client';
 
-import { deletePost } from '@/features/blog/actions/posts.actions';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { formatDate } from '@/utils';
+import { deletePost } from '@root/src/features/(system-admin)/website-cms/blog/actions/posts.actions';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { collection, onSnapshot, orderBy, query, Timestamp } from 'firebase/firestore';
 import Link from 'next/link';

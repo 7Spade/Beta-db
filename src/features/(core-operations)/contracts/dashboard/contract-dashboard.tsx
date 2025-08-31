@@ -5,11 +5,11 @@
 'use client';
 
 import { useContracts } from '@/features/(core-operations)/contracts/hooks';
+import { Skeleton } from '@/ui/skeleton';
 import {
   DashboardStats,
   type StatCardData,
-} from '@/features/dashboard/dashboard-stats';
-import { Skeleton } from '@/ui/skeleton';
+} from '@root/src/features/(business-intelligence)/(reporting-analytics)/dashboard/dashboard-stats';
 import { Briefcase, CheckCircle, CircleDollarSign, Clock } from 'lucide-react';
 
 export function ContractDashboard() {

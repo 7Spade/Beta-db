@@ -3,7 +3,7 @@
  * @description 此頁面負責渲染文章表單，用於建立或更新部落格文章。
  */
 
-import { PostFormView } from '@/features/blog/views/post-form-view';
+import { PostFormView } from '@root/src/features/(system-admin)/website-cms/blog/views/post-form-view';
 
 export default async function PostFormPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

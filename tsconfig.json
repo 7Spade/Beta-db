@@ -54,20 +54,11 @@
         "./src/components/ui/*"
       ],
       // 具体功能模块映射 (组件层面)
-      "@/blog/*": [
-        "./src/features/blog/*"
-      ],
-      "@/dashboard/*": [
-        "./src/features/dashboard/*"
-      ],
       "@/kanban/*": [
         "./src/features/kanban/*"
       ],
       "@/(crm-management)/*": [
         "./src/features/(crm-management)/*"
-      ],
-      "@/profile/*": [
-        "./src/features/profile/*"
       ],
       "@/storage-manager/*": [
         "./src/features/storage-manager/*"

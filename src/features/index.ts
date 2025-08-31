@@ -21,8 +21,8 @@ export * from '@root/src/features/(core-operations)/projects/views/ProjectView';
 export * from '@root/src/features/(system-admin)/(security-compliance)/auth/index';
 
 // Blog Features
-export * from '@/blog/views/post-form-view';
-export * from '@/blog/views/posts-list-view';
+export * from '@root/src/features/(system-admin)/website-cms/blog/views/post-form-view';
+export * from '@root/src/features/(system-admin)/website-cms/blog/views/posts-list-view';
 
 // Cloud Drive Features
 export * from '@/features/(document-management)/cloud-drive/views/cloud-drive-view';
@@ -31,7 +31,7 @@ export * from '@/features/(document-management)/cloud-drive/views/cloud-drive-vi
 export * from '@/features/(core-operations)/contracts/index';
 
 // Dashboard Features
-export * from '@/dashboard/dashboard-view';
+export * from '@root/src/features/(business-intelligence)/(reporting-analytics)/dashboard/dashboard-view';
 
 // PartnerVerse Features
 export * from '@/(crm-management)/partners/partners-view';
