@@ -7,6 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/ui/collapsible';
+import { Progress } from '@/ui/progress';
 import {
   Tooltip,
   TooltipContent,
@@ -83,6 +84,8 @@ export function TaskItem({
   const taskValue = task.value || 0;
   const completedQuantity = task.completedQuantity || 0;
   const remainingQuantity = taskQuantity - completedQuantity;
+  const progressPercentage =
+    taskQuantity > 0 ? (completedQuantity / taskQuantity) * 100 : 0;
 
   return (
     <TooltipProvider delayDuration={200}>
@@ -122,9 +125,17 @@ export function TaskItem({
             {task.title}
           </span>
 
-          <Badge variant="outline" className="h-8">
-            進度: {completedQuantity} / {taskQuantity}
-          </Badge>
+          <div className="w-32 space-y-1">
+            <div className="flex justify-between items-baseline">
+              <span className="text-sm font-medium text-muted-foreground">
+                進度: {completedQuantity} / {taskQuantity}
+              </span>
+              <span className="text-sm font-semibold">
+                {Math.round(progressPercentage)}%
+              </span>
+            </div>
+            <Progress value={progressPercentage} className="h-2" />
+          </div>
 
           <Badge variant="secondary" className="h-8">
             ${taskValue.toLocaleString()}
