@@ -1,11 +1,11 @@
 'use client';
 
-import { approveUser, rejectUser } from '@/admin/actions/user-actions';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
+import { approveUser, rejectUser } from '@root/src/features/(system-admin)/admin/actions/user-actions';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { collection, DocumentData, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';

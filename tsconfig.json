@@ -54,9 +54,6 @@
         "./src/components/ui/*"
       ],
       // 具体功能模块映射 (组件层面)
-      "@/admin/*": [
-        "./src/features/admin/*"
-      ],
       "@/auth/*": [
         "./src/features/auth/*"
       ],

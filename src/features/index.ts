@@ -12,7 +12,7 @@
  */
 
 // Admin Features
-export * from '@/admin/views/admin-dashboard-view';
+export * from '@root/src/features/(system-admin)/admin/views/admin-dashboard-view';
 
 // Core App Features
 export * from '@root/src/features/(core-operations)/projects/views/ProjectView';
