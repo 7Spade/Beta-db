@@ -1,10 +1,10 @@
 "use client";
-import { type Note, NOTE_COLORS } from "@/kanban/types";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import { cn } from "@/utils";
+import { type Note, NOTE_COLORS } from "@root/src/features/(automation-tools)/kanban/types";
 import { Edit3, MoreVertical, Pin, Trash2 } from "lucide-react";
 import { useState } from "react";
 

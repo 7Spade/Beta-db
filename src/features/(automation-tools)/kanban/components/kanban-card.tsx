@@ -1,15 +1,14 @@
 
 "use client";
-import React from "react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
+import { Button } from "@/ui/button";
+import { Card, CardContent, CardHeader } from "@/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card, CardContent, CardHeader } from "@/ui/card";
-import { Button } from "@/ui/button";
+import { type Task } from "@root/src/features/(automation-tools)/kanban/types";
 import { cva } from "class-variance-authority";
 import { GripVertical, MoreVertical } from "lucide-react";
-import { type Task } from "@/kanban/types";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 
 
 export interface KanbanCardProps {
@@ -69,15 +68,15 @@ export const KanbanCard = ({ task, isOverlay, onDeleteTask }: KanbanCardProps) =
         <AlertDialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7">
-                    <MoreVertical className="h-4 w-4" />
-                </Button>
+              <Button variant="ghost" size="icon" className="h-7 w-7">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem>編輯任務</DropdownMenuItem>
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem className="text-destructive" onSelect={(e) => e.preventDefault()}>刪除任務</DropdownMenuItem>
-                </AlertDialogTrigger>
+              <DropdownMenuItem>編輯任務</DropdownMenuItem>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem className="text-destructive" onSelect={(e) => e.preventDefault()}>刪除任務</DropdownMenuItem>
+              </AlertDialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
           <AlertDialogContent>

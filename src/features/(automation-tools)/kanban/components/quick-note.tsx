@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
-import { Card, CardContent } from "@/ui/card";
 import { Button } from "@/ui/button";
+import { Card, CardContent } from "@/ui/card";
 import { Input } from "@/ui/input";
+import { NOTE_COLORS } from "@root/src/features/(automation-tools)/kanban/types";
 import { Plus } from "lucide-react";
-import { NOTE_COLORS } from "@/kanban/types";
+import React, { useState } from "react";
 
 interface QuickNoteProps {
   onAddNote: (title: string, content: string, color: string) => void;
@@ -37,7 +37,7 @@ export const QuickNote = ({ onAddNote }: QuickNoteProps) => {
     <Card className="w-full max-w-2xl mx-auto mb-6 shadow-sm">
       <CardContent className="p-4">
         {!isExpanded ? (
-          <div 
+          <div
             className="flex items-center gap-3 text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
             onClick={() => setIsExpanded(true)}
           >
@@ -63,7 +63,7 @@ export const QuickNote = ({ onAddNote }: QuickNoteProps) => {
                   onKeyDown={handleKeyDown}
                 />
               </div>
-              
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -80,9 +80,8 @@ export const QuickNote = ({ onAddNote }: QuickNoteProps) => {
                   <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    className={`w-6 h-6 rounded-full border-2 transition-all ${
-                      selectedColor === color ? "border-primary scale-110" : "border-gray-300"
-                    }`}
+                    className={`w-6 h-6 rounded-full border-2 transition-all ${selectedColor === color ? "border-primary scale-110" : "border-gray-300"
+                      }`}
                     style={{ backgroundColor: color }}
                   />
                 ))}

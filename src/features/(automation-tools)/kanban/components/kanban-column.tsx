@@ -1,17 +1,17 @@
 
 "use client";
-import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { KanbanCard } from "./kanban-card";
-import { type Column, type Task } from "@/kanban/types";
-import { useMemo, useState } from "react";
-import { CSS } from "@dnd-kit/utilities";
-import { cva } from "class-variance-authority";
-import { Button } from "@/ui/button";
-import { GripVertical, Plus, MoreVertical } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/ui/card";
-import { Input } from "@/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
+import { Button } from "@/ui/button";
+import { Card, CardContent, CardHeader } from "@/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
+import { Input } from "@/ui/input";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { type Column, type Task } from "@root/src/features/(automation-tools)/kanban/types";
+import { cva } from "class-variance-authority";
+import { GripVertical, MoreVertical, Plus } from "lucide-react";
+import { useMemo, useState } from "react";
+import { KanbanCard } from "./kanban-card";
 
 
 interface KanbanColumnProps {
@@ -60,9 +60,9 @@ export function KanbanColumn({ column, tasks, onAddTask, onDeleteTask, onDeleteC
       },
     }
   );
-  
+
   const handleAddTask = () => {
-    if(newTaskTitle.trim()) {
+    if (newTaskTitle.trim()) {
       onAddTask(column.id as string, newTaskTitle.trim());
       setNewTaskTitle('');
     }
@@ -120,19 +120,19 @@ export function KanbanColumn({ column, tasks, onAddTask, onDeleteTask, onDeleteC
           ))}
         </SortableContext>
       </CardContent>
-       <CardContent className="border-t p-4 mt-auto">
-          <div className="flex items-center gap-2">
-            <Input 
-                placeholder="新增任務..." 
-                value={newTaskTitle}
-                onChange={e => setNewTaskTitle(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAddTask()}
-            />
-            <Button size="icon" onClick={handleAddTask}>
-                <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-       </CardContent>
+      <CardContent className="border-t p-4 mt-auto">
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="新增任務..."
+            value={newTaskTitle}
+            onChange={e => setNewTaskTitle(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleAddTask()}
+          />
+          <Button size="icon" onClick={handleAddTask}>
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardContent>
     </Card>
   );
 }

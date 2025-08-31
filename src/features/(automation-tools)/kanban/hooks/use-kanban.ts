@@ -1,18 +1,18 @@
 
 "use client";
-import React, { useMemo, useState } from "react";
 import {
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
-  KeyboardSensor,
-  TouchSensor,
-  MouseSensor,
-  DragStartEvent,
-  DragOverEvent,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { type Task, type Column } from "@/kanban/types";
+import { type Column, type Task } from "@root/src/features/(automation-tools)/kanban/types";
+import React, { useMemo, useState } from "react";
 
 export const useKanban = (
   initialColumns: Column[],

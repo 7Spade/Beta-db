@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
-import { NoteCard } from "./note-card";
-import { type Note } from "@/kanban/types";
 import { Input } from "@/ui/input";
+import { type Note } from "@root/src/features/(automation-tools)/kanban/types";
 import { Search } from "lucide-react";
+import { useState } from "react";
+import { NoteCard } from "./note-card";
 
 interface NotesGridProps {
   notes: Note[];
@@ -15,7 +15,7 @@ interface NotesGridProps {
 export const NotesGrid = ({ notes, onDeleteNote, onUpdateNote, onPinNote }: NotesGridProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredNotes = notes.filter(note => 
+  const filteredNotes = notes.filter(note =>
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     note.content.toLowerCase().includes(searchQuery.toLowerCase())
   );

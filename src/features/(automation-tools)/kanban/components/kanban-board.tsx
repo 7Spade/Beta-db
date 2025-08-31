@@ -1,13 +1,13 @@
 
 "use client";
-import React, { useEffect, useState } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
+import { useKanban } from "@root/src/features/(automation-tools)/kanban/hooks/use-kanban";
+import { type Column, Task } from "@root/src/features/(automation-tools)/kanban/types";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";
-import { type Column, Task } from "@/kanban/types";
-import { useKanban } from "@/kanban/hooks/use-kanban";
-import { createPortal } from "react-dom";
 
 interface KanbanBoardProps {
   columns: Column[];
@@ -29,7 +29,7 @@ export const KanbanBoard = ({ columns, tasks, setColumns, setTasks, onAddTask, o
     activeTask,
     columnsId,
   } = useKanban(columns, tasks, setColumns, setTasks);
-  
+
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -43,27 +43,27 @@ export const KanbanBoard = ({ columns, tasks, setColumns, setTasks, onAddTask, o
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
     >
-        <SortableContext items={columnsId}>
-          {columns.map((col) => {
-            const colTasks = tasks.filter((task) => task.status === col.id);
-            return (
-              <KanbanColumn 
-                key={col.id} 
-                column={col} 
-                tasks={colTasks}
-                onAddTask={onAddTask}
-                onDeleteTask={onDeleteTask}
-                onDeleteColumn={onDeleteColumn}
-              />
-            );
-          })}
-        </SortableContext>
+      <SortableContext items={columnsId}>
+        {columns.map((col) => {
+          const colTasks = tasks.filter((task) => task.status === col.id);
+          return (
+            <KanbanColumn
+              key={col.id}
+              column={col}
+              tasks={colTasks}
+              onAddTask={onAddTask}
+              onDeleteTask={onDeleteTask}
+              onDeleteColumn={onDeleteColumn}
+            />
+          );
+        })}
+      </SortableContext>
 
       {isClient && createPortal(
         <DragOverlay>
           {activeColumn && (
-            <KanbanColumn 
-              column={activeColumn} 
+            <KanbanColumn
+              column={activeColumn}
               tasks={tasks.filter(task => task.status === activeColumn.id)}
               onAddTask={onAddTask}
               onDeleteTask={onDeleteTask}

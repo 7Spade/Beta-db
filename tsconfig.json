@@ -54,9 +54,6 @@
         "./src/components/ui/*"
       ],
       // 具体功能模块映射 (组件层面)
-      "@/kanban/*": [
-        "./src/features/kanban/*"
-      ],
       "@/(crm-management)/*": [
         "./src/features/(crm-management)/*"
       ],

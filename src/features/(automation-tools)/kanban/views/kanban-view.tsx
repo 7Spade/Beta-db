@@ -1,11 +1,11 @@
 
 'use client';
 
+import { NotesGrid } from "@root/src/features/(automation-tools)/kanban/components/notes-grid";
+import { QuickNote } from "@root/src/features/(automation-tools)/kanban/components/quick-note";
+import { notes as initialNotes } from "@root/src/features/(automation-tools)/kanban/data";
+import type { Note } from '@root/src/features/(automation-tools)/kanban/types';
 import { useState } from 'react';
-import { QuickNote } from "@/kanban/components/quick-note";
-import { NotesGrid } from "@/kanban/components/notes-grid";
-import { notes as initialNotes } from "@/kanban/data";
-import type { Note } from '@/kanban/types';
 
 export const KanbanView = () => {
     const [notes, setNotes] = useState<Note[]>(initialNotes);
@@ -23,8 +23,8 @@ export const KanbanView = () => {
     };
 
     const updateNote = (noteId: string, updates: Partial<Note>) => {
-        setNotes(notes.map(note => 
-            note.id === noteId 
+        setNotes(notes.map(note =>
+            note.id === noteId
                 ? { ...note, ...updates }
                 : note
         ));
@@ -35,8 +35,8 @@ export const KanbanView = () => {
     };
 
     const pinNote = (noteId: string) => {
-        setNotes(notes.map(note => 
-            note.id === noteId 
+        setNotes(notes.map(note =>
+            note.id === noteId
                 ? { ...note, isPinned: !note.isPinned }
                 : note
         ));
