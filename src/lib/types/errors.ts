@@ -25,15 +25,15 @@ export interface GenericError {
 
 // 类型守卫函数
 export function isFirebaseError(error: unknown): error is FirebaseError {
-  return error && typeof error === 'object' && 'code' in error && 'message' in error;
+  return Boolean(error && typeof error === 'object' && 'code' in error && 'message' in error);
 }
 
 export function isApiError(error: unknown): error is ApiError {
-  return error && typeof error === 'object' && 'error' in error && 'code' in error;
+  return Boolean(error && typeof error === 'object' && 'error' in error && 'code' in error);
 }
 
 export function isGenericError(error: unknown): error is GenericError {
-  return error && typeof error === 'object' && 'message' in error;
+  return Boolean(error && typeof error === 'object' && 'message' in error);
 }
 
 // 统一的错误处理函数

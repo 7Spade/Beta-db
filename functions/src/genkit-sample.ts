@@ -1,6 +1,6 @@
 // Import the Genkit core libraries and plugins.
-import { genkit, z } from 'genkit';
 import { vertexAI } from '@genkit-ai/vertexai';
+import { genkit, z } from 'genkit';
 
 // Import models from the Vertex AI plugin. The Vertex AI API provides access to
 // several generative models. Here, we import Gemini 2.0 Flash.
@@ -8,7 +8,10 @@ import { gemini20Flash } from '@genkit-ai/vertexai';
 
 // Cloud Functions for Firebase supports Genkit natively. The onCallGenkit function creates a callable
 // function from a Genkit action. It automatically implements streaming if your flow does.
-import { onCallGenkit, type AuthData } from 'firebase-functions/https';
+import { onCallGenkit } from 'firebase-functions/https';
+
+// 类型定义
+type AuthData = any;
 
 // Genkit models generally depend on an API key. APIs should be stored in Cloud Secret Manager so that
 // access to these sensitive values can be controlled. defineSecret does this for you automatically.

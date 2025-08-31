@@ -1,7 +1,7 @@
 /**
  * @fileoverview 付款相關類型定義
  */
-import type { Timestamp } from 'firebase-admin/firestore';
+import type { Timestamp } from '@firebase/firestore';
 
 export type PaymentStatus = '已付款' | '待處理' | '已逾期';
 

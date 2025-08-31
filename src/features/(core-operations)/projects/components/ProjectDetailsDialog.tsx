@@ -11,6 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/ui/sheet';
+import { useState } from 'react';
 import type { Project } from '../types';
 import { AddTaskPanel } from './AddTaskPanel';
 import { ProjectSummary } from './ProjectSummary';
@@ -40,6 +41,18 @@ export function ProjectDetailsSheet({
   onDeleteTask,
   onUpdateTaskStatus,
 }: ProjectDetailsSheetProps) {
+  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
+
+  const handleToggleExpand = (taskId: string) => {
+    const newExpanded = new Set(expandedTasks);
+    if (newExpanded.has(taskId)) {
+      newExpanded.delete(taskId);
+    } else {
+      newExpanded.add(taskId);
+    }
+    setExpandedTasks(newExpanded);
+  };
+
   if (!project) {
     // Even if project is not available, we render the sheet to handle the close animation properly.
     return (
@@ -83,6 +96,8 @@ export function ProjectDetailsSheet({
               onAddSubtask={onAddSubtask}
               onDeleteTask={onDeleteTask}
               onUpdateTaskStatus={onUpdateTaskStatus}
+              expandedTasks={expandedTasks}
+              onToggleExpand={handleToggleExpand}
             />
           </div>
         </ScrollArea>

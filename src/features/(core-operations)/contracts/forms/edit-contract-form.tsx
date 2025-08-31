@@ -4,7 +4,6 @@
 'use client';
 
 import type { Contract } from '@/features/(core-operations)/contracts/types';
-import { toDate } from '@/lib/utils/date-utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { FormProvider, useForm, type UseFormReturn } from 'react-hook-form';
@@ -26,16 +25,16 @@ export function EditContractForm({
     resolver: zodResolver(contractSchema),
     defaultValues: {
       ...contract,
-      startDate: toDate(contract.startDate),
-      endDate: toDate(contract.endDate),
+      startDate: contract.startDate instanceof Date ? contract.startDate : contract.startDate.toDate(),
+      endDate: contract.endDate instanceof Date ? contract.endDate : contract.endDate.toDate(),
     },
   });
 
   useEffect(() => {
     form.reset({
       ...contract,
-      startDate: toDate(contract.startDate),
-      endDate: toDate(contract.endDate),
+      startDate: contract.startDate instanceof Date ? contract.startDate : contract.startDate.toDate(),
+      endDate: contract.endDate instanceof Date ? contract.endDate : contract.endDate.toDate(),
     });
   }, [contract, form]);
 

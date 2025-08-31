@@ -15,7 +15,7 @@ import {
 
 export const contractService = {
   createContract: async (
-    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>
+    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'>
   ): Promise<string> => {
     try {
       const newContractData = {

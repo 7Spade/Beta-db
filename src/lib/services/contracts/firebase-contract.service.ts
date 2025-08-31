@@ -4,7 +4,7 @@
 
 import { adminDb as firestore } from '@/db/firebase-admin';
 import type { Contract } from '@/features/(core-operations)/contracts/types';
-import { Timestamp } from 'firebase-admin/firestore';
+import { Timestamp } from '@firebase/firestore';
 
 // 定义Firestore文档数据类型
 interface FirestoreContractData {
@@ -55,13 +55,13 @@ export class FirebaseContractService {
   private readonly collectionName = 'contracts';
 
   async createContract(
-    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>
+    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'>
   ): Promise<string> {
     try {
       const newContractData: FirestoreContractData = {
         ...data,
-        startDate: Timestamp.fromDate(data.startDate as Date),
-        endDate: Timestamp.fromDate(data.endDate as Date),
+        startDate: data.startDate instanceof Date ? Timestamp.fromDate(data.startDate) : data.startDate,
+        endDate: data.endDate instanceof Date ? Timestamp.fromDate(data.endDate) : data.endDate,
         payments: [],
         changeOrders: [],
         versions: [

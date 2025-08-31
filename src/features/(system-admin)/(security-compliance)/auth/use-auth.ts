@@ -18,10 +18,10 @@
  * - useRegister: 註冊流程管理
  * - usePermission: 權限檢查管理
  */
-import { useEffect, useState, useMemo } from 'react';
 import { auth, firestore } from '@/lib/db/firebase-client/firebase-client';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
+import { useEffect, useMemo, useState } from 'react';
 
 export type AuthStatus = 'pending' | 'approved' | 'rejected' | 'unknown';
 
@@ -31,6 +31,7 @@ export interface UserProfile {
   role?: string;
   status?: AuthStatus;
   createdAt?: unknown;
+  avatarUrl?: string;
 }
 
 export function useAuth() {

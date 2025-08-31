@@ -1,11 +1,11 @@
 /**
  * @fileoverview 合約核心類型定義
  */
-import type { Payment } from './payment.types';
-import type { Receipt } from './receipt.types';
+import type { Timestamp } from '@firebase/firestore';
 import type { ChangeOrder } from './change-order.types';
 import type { ContractVersion } from './contract-version.types';
-import type { Timestamp } from 'firebase-admin/firestore';
+import type { Payment } from './payment.types';
+import type { Receipt } from './receipt.types';
 
 export type ContractStatus = '啟用中' | '已完成' | '暫停中' | '已終止';
 

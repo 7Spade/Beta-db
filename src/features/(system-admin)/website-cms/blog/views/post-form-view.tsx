@@ -5,7 +5,7 @@ import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { savePost, type PostFormValues } from '@root/src/features/(system-admin)/website-cms/blog/actions/posts.actions';
 import { useToast } from '@root/src/lib/hooks/use-toast';
-import { doc, getDoc, Timestamp } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -80,10 +80,12 @@ export function PostFormView({ postId }: PostFormViewProps) {
                 if (docSnap.exists()) {
                     const data = docSnap.data() as DocumentData;
                     form.reset({
-                        ...data,
-                        // Firestore timestamps need to be converted to Dates for the form
-                        createdAt: (data.createdAt as Timestamp)?.toDate(),
-                        updatedAt: (data.updatedAt as Timestamp)?.toDate(),
+                        title: data.title || '',
+                        content: data.content || '',
+                        status: data.status || '草稿',
+                        slug: data.slug || '',
+                        excerpt: data.excerpt || '',
+                        imageUrl: data.imageUrl || '',
                     });
                 } else {
                     toast({ title: "錯誤", description: "找不到該文章。", variant: "destructive" });

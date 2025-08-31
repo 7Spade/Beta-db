@@ -1,7 +1,7 @@
 /**
- * @fileoverview 收款相關類型定義
+ * @fileoverview 收據相關類型定義
  */
-import type { Timestamp } from 'firebase-admin/firestore';
+import type { Timestamp } from '@firebase/firestore';
 
 export type ReceiptStatus = '已收款' | '待處理' | '已逾期';
 

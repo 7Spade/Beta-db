@@ -1,7 +1,7 @@
 /**
  * @fileoverview 變更單相關類型定義
  */
-import type { Timestamp } from 'firebase-admin/firestore';
+import type { Timestamp } from '@firebase/firestore';
 
 export type ChangeOrderStatus = '已核准' | '待處理' | '已拒絕';
 

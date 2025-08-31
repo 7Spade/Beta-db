@@ -4,7 +4,6 @@
 'use client';
 
 import type { ContractVersion } from '@/features/(core-operations)/contracts/types';
-import { toDate } from '@/lib/utils/date-utils';
 import { formatDate } from '@/utils';
 
 interface VersionTimelineProps {
@@ -28,7 +27,7 @@ export function VersionTimeline({ versions }: VersionTimelineProps) {
             )}
           </div>
           <div>
-            <p className="font-semibold">{formatDate(toDate(version.date))}</p>
+            <p className="font-semibold">{formatDate(version.date)}</p>
             <p className="text-sm text-muted-foreground">
               {version.changeSummary}
             </p>

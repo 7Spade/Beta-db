@@ -14,7 +14,7 @@ export function CreateContractView() {
   const { toast } = useToast();
 
   const handleSave = async (
-    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions'>
+    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'>
   ) => {
     try {
       const newId = await contractService.createContract(data);

@@ -1,7 +1,7 @@
 /**
  * @fileoverview 合約版本相關類型定義
  */
-import type { Timestamp } from 'firebase-admin/firestore';
+import type { Timestamp } from '@firebase/firestore';
 
 export interface ContractVersion {
   version: number;
