@@ -35,25 +35,35 @@ interface CreateAcceptanceInput {
 export async function createAcceptanceRecord(
   input: CreateAcceptanceInput
 ): Promise<{ success: boolean; error?: string; recordId?: string }> {
+  const batch = writeBatch(firestore);
+  const newRecordRef = doc(collection(firestore, 'acceptance_records'));
+  
   try {
     const record: Omit<AcceptanceRecord, 'id' | 'history'> = {
       ...input,
       status: '草稿',
-      submittedAt: new Date(),
+      submittedAt: serverTimestamp(), // Use serverTimestamp for the main field
     };
 
-    const docRef = await addDoc(collection(firestore, 'acceptance_records'), {
-      ...record,
-      history: [
-        { action: '建立', userId: input.applicantId, timestamp: serverTimestamp() },
-      ],
-      submittedAt: serverTimestamp(),
+    // Step 1: Create the document without the history array
+    batch.set(newRecordRef, record);
+
+    // Step 2: Update the newly created document to add the first history entry
+    batch.update(newRecordRef, {
+      history: arrayUnion({
+        action: '建立',
+        userId: input.applicantId,
+        timestamp: serverTimestamp(),
+      }),
     });
+    
+    await batch.commit();
 
     revalidatePath('/projects');
-    return { success: true, recordId: docRef.id };
+    return { success: true, recordId: newRecordRef.id };
   } catch (error) {
     const message = error instanceof Error ? error.message : '發生未知錯誤';
+    console.error("Create Acceptance Record Error:", message);
     return { success: false, error: message };
   }
 }
