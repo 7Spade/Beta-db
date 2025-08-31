@@ -2,11 +2,12 @@
 // The build system will handle the file rename.
 'use client';
 
+import { ScrollArea } from '@/ui/scroll-area';
+import { Separator } from '@/ui/separator';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from '@/ui/sheet';
@@ -14,9 +15,6 @@ import type { Project } from '../types';
 import { AddTaskPanel } from './AddTaskPanel';
 import { ProjectSummary } from './ProjectSummary';
 import { TaskList } from './TaskList';
-import { Separator } from '@/ui/separator';
-import { Button } from '@/ui/button';
-import { ScrollArea } from '@/ui/scroll-area';
 
 interface ProjectDetailsSheetProps {
   project: Project | undefined;
@@ -88,15 +86,6 @@ export function ProjectDetailsSheet({
             />
           </div>
         </ScrollArea>
-
-        <SheetFooter className="p-6 pt-4 border-t bg-muted/50">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-          >
-            關閉
-          </Button>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

@@ -1,13 +1,16 @@
+
 'use server';
 
 import {
   addDoc,
   collection,
   doc,
+  FieldValue,
   getDoc,
   serverTimestamp,
   updateDoc,
   writeBatch,
+  arrayUnion,
 } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import type { AcceptanceRecord, Task } from '../types';
@@ -33,17 +36,17 @@ export async function createAcceptanceRecord(
   input: CreateAcceptanceInput
 ): Promise<{ success: boolean; error?: string; recordId?: string }> {
   try {
-    const record: Omit<AcceptanceRecord, 'id'> = {
+    const record: Omit<AcceptanceRecord, 'id' | 'history'> = {
       ...input,
       status: '草稿',
-      history: [
-        { action: '建立', userId: input.applicantId, timestamp: new Date() },
-      ],
       submittedAt: new Date(),
     };
 
     const docRef = await addDoc(collection(firestore, 'acceptance_records'), {
       ...record,
+      history: [
+        { action: '建立', userId: input.applicantId, timestamp: serverTimestamp() },
+      ],
       submittedAt: serverTimestamp(),
     });
 
@@ -69,14 +72,11 @@ export async function submitAcceptanceRecord(
 
     await updateDoc(recordRef, {
       status: '待審批',
-      history: [
-        ...(recordSnap.data()?.history || []),
-        {
+      history: arrayUnion({
           action: '提交審批',
           userId: applicantId,
           timestamp: serverTimestamp(),
-        },
-      ],
+      }),
     });
     revalidatePath('/projects');
     return { success: true };
@@ -118,10 +118,7 @@ export async function approveAcceptanceRecord(
       status: '已批准',
       reviewerId: adminId,
       reviewedAt: serverTimestamp(),
-      history: [
-        ...(acceptanceData.history || []),
-        { action: '批准', userId: adminId, timestamp: serverTimestamp() },
-      ],
+      history: arrayUnion({ action: '批准', userId: adminId, timestamp: serverTimestamp() }),
     });
 
     // 2. Update the corresponding task's completedQuantity
