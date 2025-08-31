@@ -53,16 +53,6 @@
       "@/ui/*": [
         "./src/components/ui/*"
       ],
-      // 具体功能模块映射 (组件层面)
-      "@/(crm-management)/*": [
-        "./src/features/(crm-management)/*"
-      ],
-      "@/storage-manager/*": [
-        "./src/features/storage-manager/*"
-      ],
-      "@/team/*": [
-        "./src/features/team/*"
-      ],
       // 布局组件映射
       "@/core/*": [
         "./src/components/layout/core/*"
@@ -113,18 +103,13 @@
       ],
       "@/utils": [
         "./src/lib/utils"
-      ],
-      // 功能路由映射 (页面层面)
-      "@/quick-actions/*": [
-        "./src/app/(dashboard)/quick-actions/*"
       ]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules"

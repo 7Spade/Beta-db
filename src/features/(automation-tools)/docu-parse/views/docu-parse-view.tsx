@@ -32,11 +32,11 @@ import {
 } from 'react';
 
 import DocumentPreview from '@/components/layout/shared/document-preview';
-import { extractWorkItemsFromDocument } from '@/docu-parse/actions/docu-parse-actions';
-import { createProjectAndContractFromParsedData } from '@/docu-parse/actions/docu-parse-commit.actions';
-import { FileSelector } from '@/docu-parse/components/file-selector';
-import { WorkItemsTable } from '@/docu-parse/tables';
-import type { DocDetails, WorkItem } from '@/docu-parse/types/docu-parse.types';
+import { extractWorkItemsFromDocument } from '@/features/(automation-tools)/docu-parse/actions/docu-parse-actions';
+import { createProjectAndContractFromParsedData } from '@/features/(automation-tools)/docu-parse/actions/docu-parse-commit.actions';
+import { FileSelector } from '@/features/(automation-tools)/docu-parse/components/file-selector';
+import { WorkItemsTable } from '@/features/(automation-tools)/docu-parse/tables';
+import type { DocDetails, WorkItem } from '@/features/(automation-tools)/docu-parse/types/docu-parse.types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import {
