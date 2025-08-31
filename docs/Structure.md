@@ -365,35 +365,60 @@
 │  │  ├─(workflow-automation)
 │  │  │      README.md
 │  │  │
-│  │  └─docu-parse
+│  │  ├─docu-parse
+│  │  │  │  index.ts
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─actions
+│  │  │  │      docu-parse-actions.ts
+│  │  │  │      docu-parse-commit.actions.ts
+│  │  │  │
+│  │  │  ├─components
+│  │  │  │      file-selector.tsx
+│  │  │  │
+│  │  │  ├─constants
+│  │  │  │      file-constants.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─tables
+│  │  │  │      index.ts
+│  │  │  │      work-items-table.tsx
+│  │  │  │
+│  │  │  ├─types
+│  │  │  │      docu-parse.types.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  ├─utils
+│  │  │  │      export.utils.ts
+│  │  │  │      index.ts
+│  │  │  │
+│  │  │  └─views
+│  │  │          docu-parse-view.tsx
+│  │  │
+│  │  └─kanban
 │  │      │  index.ts
 │  │      │  README.md
-│  │      │
-│  │      ├─actions
-│  │      │      docu-parse-actions.ts
-│  │      │      docu-parse-commit.actions.ts
+│  │      │  types.ts
 │  │      │
 │  │      ├─components
-│  │      │      file-selector.tsx
+│  │      │      kanban-board.tsx
+│  │      │      kanban-card.tsx
+│  │      │      kanban-column.tsx
+│  │      │      note-card.tsx
+│  │      │      notes-grid.tsx
+│  │      │      quick-note.tsx
 │  │      │
-│  │      ├─constants
-│  │      │      file-constants.ts
+│  │      ├─data
 │  │      │      index.ts
 │  │      │
-│  │      ├─tables
-│  │      │      index.ts
-│  │      │      work-items-table.tsx
+│  │      ├─hooks
+│  │      │      use-kanban.ts
 │  │      │
 │  │      ├─types
-│  │      │      docu-parse.types.ts
-│  │      │      index.ts
-│  │      │
-│  │      ├─utils
-│  │      │      export.utils.ts
 │  │      │      index.ts
 │  │      │
 │  │      └─views
-│  │              docu-parse-view.tsx
+│  │              kanban-view.tsx
 │  │
 │  ├─(business-intelligence)
 │  │  │  README.md
@@ -791,31 +816,6 @@
 │  │      │
 │  │      └─user-management
 │  │              README.md
-│  │
-│  ├─kanban
-│  │  │  index.ts
-│  │  │  README.md
-│  │  │  types.ts
-│  │  │
-│  │  ├─components
-│  │  │      kanban-board.tsx
-│  │  │      kanban-card.tsx
-│  │  │      kanban-column.tsx
-│  │  │      note-card.tsx
-│  │  │      notes-grid.tsx
-│  │  │      quick-note.tsx
-│  │  │
-│  │  ├─data
-│  │  │      index.ts
-│  │  │
-│  │  ├─hooks
-│  │  │      use-kanban.ts
-│  │  │
-│  │  ├─types
-│  │  │      index.ts
-│  │  │
-│  │  └─views
-│  │          kanban-view.tsx
 │  │
 │  └─mobile-app
 │          README.md
