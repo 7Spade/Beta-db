@@ -1,0 +1,216 @@
+import type { Timestamp } from 'firebase/firestore';
+import type {
+  ChangeOrder,
+  Contract,
+  ContractStatus,
+  ContractVersion,
+  Payment,
+  Receipt,
+} from '@/features/(core-operations)/contracts/types';
+
+export type {
+  ChangeOrder,
+  Contract,
+  ContractStatus,
+  ContractVersion,
+  Payment,
+  Receipt,
+};
+
+export interface Contact {
+  id: string;
+  name: string;
+  role: string;
+  email: string;
+  phone: string;
+}
+
+export interface Transaction {
+  id: string;
+  date: string;
+  amount: number;
+  status: '已完成' | '待處理' | '失敗';
+  description: string;
+}
+
+export interface ComplianceDocument {
+  id: string;
+  name: string;
+  status: '有效' | '即將到期' | '已過期';
+  expiryDate: string;
+  fileUrl: string;
+}
+
+export interface PerformanceReview {
+  id: string;
+  date: string;
+  rating: number; // 1-5
+  notes: string;
+  reviewer: string;
+}
+
+export interface ContractDocument {
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  status: '啟用中' | '已過期' | '已終止';
+  fileUrl: string;
+}
+
+export type PartnerFlowType = '未配置' | '純收款' | '純付款' | '收付款';
+
+export interface Partner {
+  id?: string;
+  name: string;
+  logoUrl: string;
+  category:
+    | '技術'
+    | '經銷商'
+    | '服務'
+    | '顧問'
+    | '下游承包商'
+    | '供應商'
+    | '設備';
+  status: '啟用中' | '停用中' | '待審核';
+  overview: string;
+  website: string;
+  contacts: Contact[];
+  transactions: Transaction[];
+  joinDate: string;
+  performanceReviews: PerformanceReview[];
+  complianceDocuments: ComplianceDocument[];
+  contracts: ContractDocument[];
+  flowType: PartnerFlowType;
+  receivableWorkflow: string[];
+  payableWorkflow: string[];
+}
+
+export interface Skill {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  email: string;
+  phone: string;
+  avatarUrl?: string;
+  skillIds?: string[];
+}
+
+export type ReceivablePayableType = 'receivable' | 'payable';
+
+export interface FinancialDocument {
+  id: string;
+  partnerId: string;
+  partnerName: string;
+  contractId?: string;
+  contractName?: string;
+  type: ReceivablePayableType;
+  amount: number;
+  description: string;
+  currentStep: string;
+  createDate: Date | Timestamp;
+  dueDate: Date | Timestamp;
+  history: Array<{
+    step: string;
+    date: Date | Timestamp;
+    user: string;
+  }>;
+}
+
+export type WorkflowNode = {
+  id: string;
+  type: 'start' | 'end' | 'task' | 'decision';
+  label: string;
+  position: { x: number; y: number };
+};
+
+export type WorkflowEdge = {
+  id: string;
+  source: string;
+  target: string;
+  label?: string;
+};
+
+export type Workflow = {
+  id?: string;
+  name: string;
+  nodes: WorkflowNode[];
+  edges: WorkflowEdge[];
+  partnerId?: string;
+};
+
+export interface KnowledgeBaseEntry {
+  id: string;
+  title: string;
+  category: string;
+  content: string;
+  tags?: string[];
+  createdAt: Date | string; // Firestore Timestamp or ISO string
+  updatedAt: Date | string; // Firestore Timestamp or ISO string
+}
+
+export interface AiTokenLog {
+  id: string;
+  flowName: string;
+  totalTokens: number;
+  status: 'succeeded' | 'failed';
+  timestamp: Date;
+  userId?: string;
+  error?: string;
+}
+
+export type AcceptanceStatus = '草稿' | '待審批' | '已批准' | '已駁回';
+
+export interface AcceptanceRecord {
+  id: string;
+  title: string;
+  projectId: string;
+  projectName: string;
+  taskId: string; // New field
+  submittedQuantity: number; // New field
+  applicantId: string;
+  applicantName: string;
+  reviewerId: string;
+  status: AcceptanceStatus;
+  notes?: string;
+  attachments?: Array<{ name: string; url: string }>;
+  history?: Array<{
+    action: string;
+    userId: string;
+    timestamp: Date | string | Timestamp;
+  }>;
+  submittedAt: Date | string | Timestamp;
+  reviewedAt?: Date | string | Timestamp;
+}
+
+export type TaskStatus = '待處理' | '進行中' | '已完成';
+
+export interface Task {
+  id: string;
+  title: string;
+  lastUpdated: string;
+  subTasks: Task[];
+  value: number;
+  quantity: number;
+  unitPrice: number;
+  completedQuantity: number;
+}
+
+export interface Project {
+  id: string;
+  customId?: string;
+  title: string;
+  description: string;
+  client?: string;
+  clientRepresentative?: string;
+  startDate: string; // Changed to string for serialization
+  endDate: string; // Changed to string for serialization
+  tasks: Task[];
+  value: number;
+}

@@ -1,18 +1,18 @@
 
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { useMemo, Fragment } from 'react'
-import Link from 'next/link'
 import {
-  Breadcrumb as UiBreadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import { navigationConfig } from '@/config/navigation.config'
+  Breadcrumb as UiBreadcrumb,
+} from '@/ui/breadcrumb'
+import { navigationConfig } from '@root/src/lib/config/navigation.config'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Fragment, useMemo } from 'react'
 
 export function Breadcrumb() {
   const pathname = usePathname()
@@ -46,8 +46,8 @@ export function Breadcrumb() {
         }
         if (found) break
       }
-       
-      if(label.toLowerCase() === 'dashboard') {
+
+      if (label.toLowerCase() === 'dashboard') {
         return;
       }
 
@@ -65,7 +65,7 @@ export function Breadcrumb() {
             <Link href="/dashboard">儀表板</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {breadcrumbs.map((crumb, index) => (
+        {breadcrumbs.map((crumb) => (
           <Fragment key={crumb.href}>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

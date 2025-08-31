@@ -6,11 +6,10 @@ import { Menu } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTrigger,
-} from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
-import { UnifiedSidebar } from '../navigation/unified-sidebar'
+} from '@/ui/sheet'
+import { Button } from '@/ui/button'
+import { UnifiedSidebar } from '@/components/layout/navigation/unified-sidebar'
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false)

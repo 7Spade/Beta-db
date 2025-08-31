@@ -9,7 +9,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { logAiTokenUsage } from '@/services/logging.service';
+import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import { z } from 'zod';
 
 const GenerateSkillInputSchema = z.object({
@@ -68,11 +68,8 @@ const generateSkillFlow = ai.defineFlow(
         }
 
         const totalTokens = result.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'generateSkillFlow',
-            totalTokens: totalTokens,
-            status: 'succeeded',
-        });
+        // 极简化的 token 日志记录
+        logAiTokenUsage('generateSkillFlow', totalTokens, 'succeeded');
 
         return {
             skills: output.skills,
@@ -80,12 +77,8 @@ const generateSkillFlow = ai.defineFlow(
         };
     } catch (error) {
         const totalTokens = result?.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'generateSkillFlow',
-            totalTokens: totalTokens,
-            status: 'failed',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        });
+        // 极简化的失败日志记录
+        logAiTokenUsage('generateSkillFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
         throw error;
     }
   }

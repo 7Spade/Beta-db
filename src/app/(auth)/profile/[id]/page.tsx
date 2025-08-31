@@ -1,8 +1,9 @@
-/**
- * Profile Detail Page - 用戶資料詳情頁面
- * 
- * 功能說明：
- * - 顯示特定用戶的公開資料頁面
- */
+'use client';
 
-// 用戶資料詳情頁面實現將在這裡
+import { PublicProfileView } from '@/features/profile/public-profile-view';
+import { use } from 'react';
+
+export default function PublicProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  return <PublicProfileView userId={id} />;
+}

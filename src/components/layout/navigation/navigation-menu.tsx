@@ -1,15 +1,15 @@
-'use client'
+'use client';
 
-import { SidebarMenu } from '@/components/ui/sidebar'
-import { NavigationMenuItem } from './navigation-menu-item'
-import type { NavigationItem } from '@/config/navigation.config'
+import { SidebarMenu } from '@/ui/sidebar';
+import type { NavigationItem } from '@root/src/lib/config/navigation.config';
+import { NavigationMenuItem } from './navigation-menu-item';
 
 interface NavigationMenuProps {
-  items: NavigationItem[]
-  onToggleSection?: (sectionId: string) => void
-  isRouteActive: (route: string) => boolean
-  isSectionExpanded: (sectionId: string) => boolean
-  onNavigate?: (route: string) => void
+  items: NavigationItem[];
+  onToggleSection?: (sectionId: string) => void;
+  isRouteActive: (route: string) => boolean;
+  isSectionExpanded: (sectionId: string) => boolean;
+  onNavigate?: (route: string) => void;
 }
 
 export function NavigationMenu({
@@ -21,13 +21,13 @@ export function NavigationMenu({
 }: NavigationMenuProps) {
   return (
     <SidebarMenu>
-      {items.map(item => {
+      {items.map((item) => {
         // Check if the item or any of its children are active
         const isActive =
           isRouteActive(item.href) ||
-          (item.children?.some(child => isRouteActive(child.href)) ?? false)
+          (item.children?.some((child) => isRouteActive(child.href)) ?? false);
 
-        const isExpanded = isSectionExpanded(item.id)
+        const isExpanded = isSectionExpanded(item.id);
 
         return (
           <NavigationMenuItem
@@ -39,8 +39,8 @@ export function NavigationMenu({
             onToggleSection={onToggleSection}
             isRouteActive={isRouteActive}
           />
-        )
+        );
       })}
     </SidebarMenu>
-  )
+  );
 }

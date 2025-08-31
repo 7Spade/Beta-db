@@ -9,7 +9,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { logAiTokenUsage } from '@/services/logging.service';
+import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import { z } from 'zod';
 
 const GenerateSubtasksInputSchema = z.object({
@@ -60,21 +60,14 @@ const generateSubtasksFlow = ai.defineFlow(
         }
 
         const totalTokens = result.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'generateSubtasksFlow',
-            totalTokens: totalTokens,
-            status: 'succeeded',
-        });
+        // 极简化的 token 日志记录
+        logAiTokenUsage('generateSubtasksFlow', totalTokens, 'succeeded');
         
         return output;
     } catch(error) {
         const totalTokens = result?.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'generateSubtasksFlow',
-            totalTokens: totalTokens,
-            status: 'failed',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        });
+        // 极简化的失败日志记录
+        logAiTokenUsage('generateSubtasksFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
         throw error;
     }
   }

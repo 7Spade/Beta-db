@@ -1,24 +1,24 @@
 
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { Button } from '@/ui/button'
 import {
   Sidebar,
-  SidebarHeader,
   SidebarContent,
   SidebarFooter,
-} from '@/components/ui/sidebar'
-import { Button } from '@/components/ui/button'
-import { Package2 } from 'lucide-react'
+  SidebarHeader,
+} from '@/ui/sidebar'
 import {
-  navigationConfig,
   footerNavigationConfig,
+  navigationConfig,
   shouldExpandSection,
-} from '@/config/navigation.config'
-import { NavigationMenu } from './navigation-menu'
+} from '@root/src/lib/config/navigation.config'
+import { Package2 } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import type { ComponentProps } from 'react'
+import { useEffect, useState } from 'react'
+import { NavigationMenu } from './navigation-menu'
 
 interface UnifiedSidebarProps extends ComponentProps<typeof Sidebar> {
   className?: string

@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SidebarInset } from '@/components/ui/sidebar';
+import { SidebarInset } from '@/ui/sidebar';
 import { UnifiedSidebar } from '@/components/layout/navigation/unified-sidebar';
 import { AppHeader } from '@/components/layout/core/app-header';
 

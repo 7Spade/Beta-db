@@ -1,8 +1,12 @@
 /**
  * Verify Email Page - 郵箱驗證頁面
- * 
+ *
  * 功能說明：
- * - 專門用於郵箱驗證的頁面
+ * - 引導使用者完成郵箱驗證。
+ * - 職責是渲染 VerifyEmailView 元件。
  */
+import { VerifyEmailView } from '@/features/auth/verify-email-view';
 
-// 郵箱驗證頁面實現將在這裡
+export default function VerifyEmailPage() {
+  return <VerifyEmailView />;
+}

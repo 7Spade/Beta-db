@@ -1,16 +1,16 @@
 'use client'
 
-import Link from 'next/link'
-import { ChevronDown } from 'lucide-react'
-import { 
-  SidebarMenuItem, 
-  SidebarMenuButton, 
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/ui/collapsible'
+import {
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton
-} from '@/components/ui/sidebar'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import type { NavigationItem } from '@/config/navigation.config'
+  SidebarMenuSubButton,
+  SidebarMenuSubItem
+} from '@/ui/sidebar'
+import type { NavigationItem } from '@root/src/lib/config/navigation.config'
+import { ChevronDown } from 'lucide-react'
+import Link from 'next/link'
 
 interface NavigationMenuItemProps {
   item: NavigationItem
@@ -30,14 +30,14 @@ export function NavigationMenuItem({
   isRouteActive
 }: NavigationMenuItemProps) {
   const hasChildren = item.children && item.children.length > 0
-  
+
   // 如果有子項目，使用可摺疊元件
   if (hasChildren) {
     return (
       <SidebarMenuItem>
         <Collapsible open={isExpanded} onOpenChange={() => onToggleSection?.(item.id)}>
           <CollapsibleTrigger asChild>
-            <SidebarMenuButton 
+            <SidebarMenuButton
               isActive={isActive}
               tooltip={item.label}
               className="w-full justify-between"
@@ -46,10 +46,9 @@ export function NavigationMenuItem({
                 <item.icon className="mr-3 h-4 w-4" />
                 <span>{item.label}</span>
               </div>
-              <ChevronDown 
-                className={`h-4 w-4 transition-transform ${
-                  isExpanded ? 'rotate-180' : ''
-                }`} 
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''
+                  }`}
               />
             </SidebarMenuButton>
           </CollapsibleTrigger>
@@ -69,16 +68,16 @@ export function NavigationMenuItem({
       </SidebarMenuItem>
     )
   }
-  
+
   // 一般導航項目
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton 
-        asChild 
-        isActive={isActive} 
+      <SidebarMenuButton
+        asChild
+        isActive={isActive}
         tooltip={item.label}
       >
-        <Link 
+        <Link
           href={item.href}
           onClick={() => onNavigate?.(item.href)}
         >
@@ -100,7 +99,7 @@ function NavigationSubMenuItem({ item, isActive = false, onNavigate }: Navigatio
   return (
     <SidebarMenuSubItem>
       <SidebarMenuSubButton asChild isActive={isActive}>
-        <Link 
+        <Link
           href={item.href}
           onClick={() => onNavigate?.(item.href)}
         >

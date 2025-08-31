@@ -1,31 +1,22 @@
 # 佈局元件 (Layout Components)
 
-此目錄是您應用程式中所有與佈局相關的元件的中央儲存庫。它被組織成幾個子目錄，每個子目錄都有其特定的職責。
+此目錄負責應用程式的**整體佈局結構**和**核心導航系統**。這些元件定義了應用程式的「外殼」，為所有頁面提供一致的框架。
 
-## 結構概覽
+## 目錄結構與職責
 
-- **`core/`**: 存放構成應用程式核心外殼的基礎元件。
-  - `AppShell`: 組合了側邊欄和頁首，形成主要的應用程式框架。
-  - `AppProvider`: 包裹了所有全局 Context Providers，如 `ThemeProvider`, `ProjectProvider`。
-  - `AppHeader`: 應用的頂部標題欄，包含麵包屑導航和側邊欄觸發器。
+- **`core/`**: **核心佈局元件**。這是佈局系統的心臟，包含：
+  - `app-shell.tsx`: 組合側邊欄和主內容區域的頂層外殼。
+  - `app-header.tsx`: 應用程式的頂部導航欄。
+  - `app-provider.tsx`: 集中管理所有全域 Context Provider（如 Theme, Project, Sidebar 狀態）。
 
-- **`navigation/`**: 包含所有與導航相關的元件。
-  - `UnifiedSidebar`: 響應式、可折疊的側邊欄。
-  - `Breadcrumb`: 根據當前路由自動生成的麵包屑導航。
-  - `UserMenu`: 右上角的用戶個人資料下拉選單。
+- **`navigation/`**: **導航相關元件**。包含所有用於使用者在應用程式中導航的元件，例如：
+  - `unified-sidebar.tsx`: 統一的側邊欄，動態生成導航項目。
+  - `breadcrumb.tsx`: 頁面路徑麵包屑。
+  - `user-menu.tsx`: 使用者選單下拉列表。
+  - `notification-center.tsx`: 通知中心。
 
-- **`overlays/`**: 用於處理彈出層、對話方塊等覆蓋式 UI。
-  - `ModalContainer`: 標準的模態對話方塊。
-  - `DrawerContainer`: 從螢幕邊緣滑出的抽屜式面板。
-  - `TooltipProvider`: 為應用提供全局的提示框功能。
+- **`overlays/`**: **覆蓋層元件**。提供如對話方塊 (`Modal`)、抽屜 (`Drawer`)、彈出框 (`Popover`) 等覆蓋在主內容之上的 UI 元素。
 
-- **`responsive/`**: 包含用於處理響應式設計的元件。
-  - `MobileMenu`: 在行動裝置上顯示的側邊欄選單。
-  - `ResponsiveWrapper`: 根據螢幕斷點渲染不同元件的包裝器。
+- **`responsive/`**: **響應式設計輔助元件**。包含 `MobileMenu` 等專為適應不同螢幕尺寸而設計的元件。
 
-- **`shared/`**: 存放可在應用程式各處重用的通用佈局元件。
-  - `PageContainer`: 提供一致頁面內邊距和寬度限制的容器。
-  - `PageHeader`: 用於頁面標題和可選操作按鈕的標準化頁首。
-  - `EmptyState`: 用於顯示列表或內容為空時的佔位元件。
-
-- **`index.ts`**: 從此目錄中匯出所有可用的佈局元件，方便從單一入口點導入。
+- **`shared/`**: **共享的、通用的佈局元件**。這些是可以在應用程式各處重複使用的原子級佈局元件，例如 `PageHeader`, `EmptyState` 等。

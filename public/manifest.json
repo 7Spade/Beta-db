@@ -1,0 +1,16 @@
+{
+  "name": "Beta-db Integrated Platform",
+  "short_name": "Beta-db",
+  "description": "專業的營造專案管理應用程式",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF"
+}

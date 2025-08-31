@@ -1,0 +1,36 @@
+/**
+ * @fileoverview Zod 驗證 Schema
+ * @description 為所有身份驗證相關的表單（登入、註冊等）提供統一的驗證規則。
+ */
+import { z } from 'zod';
+
+// 登入表單的驗證規則
+export const loginSchema = z.object({
+  email: z.string().email({ message: '請輸入有效的電子郵件地址。' }),
+  password: z.string().min(1, { message: '密碼不能為空。' }),
+});
+
+export type LoginValues = z.infer<typeof loginSchema>;
+
+
+// 註冊表單的驗證規則
+export const registerSchema = z.object({
+    email: z.string().email({ message: '請輸入有效的電子郵件地址。' }),
+    password: z.string().min(8, { message: '密碼長度至少需要 8 個字元。' }),
+    confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "兩次輸入的密碼不相符",
+    path: ["confirmPassword"], // 在哪個欄位顯示錯誤
+});
+
+export type RegisterValues = z.infer<typeof registerSchema>;
+
+// 個人資料更新表單的驗證規則
+export const profileSchema = z.object({
+  displayName: z
+    .string()
+    .min(2, { message: '名稱至少需要 2 個字元。' })
+    .max(50, { message: '名稱長度不可超過 50 個字元。' }),
+});
+
+export type ProfileValues = z.infer<typeof profileSchema>;

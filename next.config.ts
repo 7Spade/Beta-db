@@ -1,12 +1,13 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
-    ignoreBuildErrors: true,
+    // 開發時啟用類型檢查，生產環境可選擇忽略
+    ignoreBuildErrors: process.env.NODE_ENV === 'production',
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    // 開發時啟用 ESLint 檢查，生產環境可選擇忽略
+    ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
   images: {
     remotePatterns: [
@@ -17,6 +18,12 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    config.experiments = { ...config.experiments, asyncWebAssembly: true };
+    config.output.webassemblyModuleFilename =
+      (isServer ? '../' : '') + 'static/wasm/[modulehash].wasm';
+    return config;
   },
 };
 

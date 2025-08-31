@@ -1,16 +1,161 @@
 # Settings for Backend (on Cloud Run).
 # See https://firebase.google.com/docs/app-hosting/configure#cloud-run
 runConfig:
-  minInstances: 1
+  minInstances: 0
   # maxInstances: 100
   # concurrency: 80
   # cpu: 1
   # memoryMiB: 512
 
-  # Environment variables and secrets.
-  # env:
-  # Configure environment variables.
-  # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
+# Environment variables and secrets.
+env:
+  # Firebase 项目配置（现代化命名）
+  - variable: FIREBASE_PROJECT_ID
+    value: elite-chiller-455712-c4
+    availability:
+      - BUILD
+      - RUNTIME
+  
+  - variable: FIREBASE_STORAGE_BUCKET
+    value: elite-chiller-455712-c4.firebasestorage.app
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # reCAPTCHA 配置
+  - variable: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    value: 6LfcULArAAAAAGEu9r_BXXkN3X9ceD1oqQhzcbG0
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # Firebase Web 客戶端環境變數（公開可用）
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyCJ-eayGjJwBKsNIh3oEAG2GjbfTrvAMEI
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: elite-chiller-455712-c4.firebaseapp.com
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: elite-chiller-455712-c4
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: elite-chiller-455712-c4.firebasestorage.app
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: 1:7807661688:web:cbf779797bd21f5a1d1f8d
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: G-3FLE19K97P
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: 7807661688
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: MONGODB_URI
+    value: mongodb+srv://7si:m9PIsSOktMQr5X9E@beta.myiv9dp.mongodb.net/beta-db?retryWrites=true&w=majority&appName=Beta
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: REDIS_URL
+    value: "redis://default:aMWKj78CuAkUxQJ8ERtnnnBrOA77FvDK@redis-13739.c292.ap-southeast-1-1.ec2.redns.redis-cloud.com:13739"
+    availability:
+      - BUILD
+      - RUNTIME
+      
+  - variable: GEMINI_API_KEY
+    secret: GEMINI_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # Supabase 公開環境變數
+  - variable: NEXT_PUBLIC_SUPABASE_URL
+    value: "https://padruumtxwszlstefyhg.supabase.co"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_SUPABASE_ANON_KEY
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZHJ1dW10eHdzemxzdGVmeWhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzNzM4OTksImV4cCI6MjA3MTk0OTg5OX0.xGIhO4SqQIRZlg7MebtwgjTBXVOABmubcHLcZ4elNpg"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # Supabase 服務端環境變數
+  - variable: SUPABASE_URL
+    value: "https://padruumtxwszlstefyhg.supabase.co"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: SUPABASE_ANON_KEY
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZHJ1dW10eHdzemxzdGVmeWhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzNzM4OTksImV4cCI6MjA3MTk0OTg5OX0.xGIhO4SqQIRZlg7MebtwgjTBXVOABmubcHLcZ4elNpg"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: SUPABASE_SERVICE_ROLE_KEY
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZHJ1dW10eHdzemxzdGVmeWhnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjM3Mzg5OSwiZXhwIjoyMDcxOTQ5ODk5fQ.aJj9d_DeEItbTNz_AfVdrMEhfPaIEtMlq3PM5p-Wumg"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: SUPABASE_JWT_SECRET
+    value: "byp6gX8Vq1dTCUnxifajrX/q1UUO3FLOpqTEt+7atcIeCyQKb4HOZ1QCyovJHbnik5Z8MGX4MAy6hslrZUmPJg=="
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # Supabase 數據庫連接配置
+  - variable: POSTGRES_URL
+    value: "postgres://postgres.padruumtxwszlstefyhg:pRzGOqNup7OB8d5I@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: POSTGRES_URL_NON_POOLING
+    value: "postgres://postgres.padruumtxwszlstefyhg:pRzGOqNup7OB8d5I@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: POSTGRES_PRISMA_URL
+    value: "postgres://postgres.padruumtxwszlstefyhg:pRzGOqNup7OB8d5I@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: POSTGRES_USER
+    value: "postgres"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: POSTGRES_PASSWORD
+    value: "pRzGOqNup7OB8d5I"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: POSTGRES_HOST
+    value: "db.padruumtxwszlstefyhg.supabase.co"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: POSTGRES_DATABASE
+    value: "postgres"
+    availability:
+      - BUILD
+      - RUNTIME
+      
+  # 其他环境变量可以在这里添加
   # - variable: MESSAGE
   #   value: Hello world!
   #   availability:
@@ -20,7 +165,5 @@ runConfig:
   # Grant access to secrets in Cloud Secret Manager.
   # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
   # - variable: MY_SECRET
-  #   secret: mySecretRef
-env:
-  - variable: GEMINI_API_KEY
-    secret: GEMINI_API_KEY
+  #   secret: cloud-secret-manager-id
+

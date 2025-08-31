@@ -1,0 +1,106 @@
+{
+    "window.commandCenter": true,
+    "workbench.colorTheme": "Cursor Dark High Contrast",
+    // Git 設定
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    // Cursor AI 相關設定
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
+    "cursor.composer.shouldAllowCustomModes": true,
+    // 檔案管理
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmPasteNative": false,
+    "explorer.confirmDelete": false,
+    // TypeScript/JavaScript 優化設定
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.tsserver.nodePath": "C:\\nvm4w\\nodejs\\node.exe",
+    "typescript.tsserver.maxTsServerMemory": 16384,
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+    "typescript.suggest.autoImports": true,
+    "typescript.workspaceSymbols.scope": "allOpenProjects",
+    "typescript.suggest.completeFunctionCalls": true,
+    "typescript.preferences.quoteStyle": "double",
+    // JavaScript 設定
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "javascript.suggest.autoImports": true,
+    "javascript.preferences.quoteStyle": "double",
+    // React/Next.js 特定設定
+    "emmet.includeLanguages": {
+        "typescript": "typescriptreact",
+        "javascript": "javascriptreact"
+    },
+    "emmet.triggerExpansionOnTab": true,
+    "emmet.showExpandedAbbreviation": "always",
+    // 終端機設定
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    // 編輯器優化
+    "editor.suggestOnTriggerCharacters": true,
+    "editor.acceptSuggestionOnCommitCharacter": true,
+    "editor.acceptSuggestionOnEnter": "on",
+    "editor.quickSuggestions": {
+        "other": "on",
+        "comments": "off",
+        "strings": "on"
+    },
+    "editor.parameterHints.enabled": true,
+    "editor.hover.enabled": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.tabCompletion": "on",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.suggest.localityBonus": true,
+    "editor.suggest.shareSuggestSelections": true,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.wordBasedSuggestions": "matchingDocuments",
+    "editor.inlineSuggest.enabled": true,
+    "editor.snippetSuggestions": "top",
+    "editor.suggest.insertMode": "replace",
+    "editor.autoClosingBrackets": "always",
+    "editor.autoClosingQuotes": "always",
+    "editor.autoSurround": "languageDefined",
+    // 檔案關聯
+    "files.associations": {
+        "*.tsx": "typescriptreact",
+        "*.jsx": "javascriptreact",
+        "*.mdx": "markdown"
+    },
+    "files.autoSave": "onFocusChange",
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/.next/**": true,
+        "**/out/**": true,
+        "**/build/**": true,
+        "**/dist/**": true,
+        "**/.turbo/**": true,
+        "**/coverage/**": true
+    },
+    "files.exclude": {
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    // Tailwind CSS 設定
+    "css.validate": false,
+    "scss.validate": false,
+    // 搜尋設定
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/.next": true,
+        "**/out": true,
+        "**/build": true,
+        "**/dist": true,
+        "**/.turbo": true,
+        "**/coverage": true
+    },
+    // ESLint 設定
+    // 其他設定
+    "html.autoClosingTags": true,
+    // 擴充套件推薦
+}

@@ -19,7 +19,51 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      // 根目录映射
+      "@root/*": ["./*"],
+      "@/*": ["./src/*"],
+      // 核心模块映射
+      "@/components/*": ["./src/components/*"],
+      "@/app/*": ["./src/app/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/ai/*": ["./src/ai/*"],
+      // 功能模块映射 (基于Structure.md)
+      "@/features/*": ["./src/features/*"],
+      "@/layout/*": ["./src/components/layout/*"],
+      "@/ui/*": ["./src/components/ui/*"],
+      // 具体功能模块映射 (组件层面)
+      "@/admin/*": ["./src/features/admin/*"],
+      "@/auth/*": ["./src/features/auth/*"],
+      "@/blog/*": ["./src/features/blog/*"],
+      "@/cloud-drive/*": ["./src/features/cloud-drive/*"],
+      "@/dashboard/*": ["./src/features/dashboard/*"],
+      "@/docu-parse/*": ["./src/features/docu-parse/*"],
+      "@/kanban/*": ["./src/features/kanban/*"],
+      "@/(crm-management)/*": ["./src/features/(crm-management)/*"],
+      "@/profile/*": ["./src/features/profile/*"],
+      "@/storage-manager/*": ["./src/features/storage-manager/*"],
+      "@/team/*": ["./src/features/team/*"],
+      // 布局组件映射
+      "@/core/*": ["./src/components/layout/core/*"],
+      "@/navigation/*": ["./src/components/layout/navigation/*"],
+      "@/overlays/*": ["./src/components/layout/overlays/*"],
+      "@/responsive/*": ["./src/components/layout/responsive/*"],
+      "@/shared/*": ["./src/components/layout/shared/*"],
+      // 数据库相关映射
+      "@/db/*": ["./src/lib/db/*"],
+      "@/firebase-admin/*": ["./src/lib/db/firebase-admin/*"],
+      "@/firebase-client/*": ["./src/lib/db/firebase-client/*"],
+      "@/mongoose/*": ["./src/lib/db/mongoose/*"],
+      "@/redis/*": ["./src/lib/db/redis/*"],
+      "@/supabase/*": ["./src/lib/db/supabase/*"],
+      // 服务层映射
+      "@/services/*": ["./src/lib/services/*"],
+      "@/events/*": ["./src/lib/events/*"],
+      "@/models/*": ["./src/lib/models/*"],
+      "@/types/*": ["./src/lib/types/*"],
+      "@/utils/*": ["./src/lib/utils/*"],
+      // 功能路由映射 (页面层面)
+      "@/quick-actions/*": ["./src/app/(dashboard)/quick-actions/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

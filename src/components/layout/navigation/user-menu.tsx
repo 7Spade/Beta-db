@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import { User, Settings, LogOut, ChevronDown } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
+import Image from 'next/image'
 
 interface UserMenuProps {
   className?: string
@@ -45,9 +46,11 @@ const UserMenu = React.forwardRef<HTMLDivElement, UserMenuProps>(
         >
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
             {user?.avatar ? (
-              <img
+              <Image
                 src={user.avatar}
                 alt={user.name || "User"}
+                width={32}
+                height={32}
                 className="w-8 h-8 rounded-full object-cover"
               />
             ) : (

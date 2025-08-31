@@ -1,10 +1,11 @@
+
 /**
- * @fileOverview 從文件解析工料清單流程 (Extract Work Items Flow)
- * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個指向 Cloud Storage 的文件 URL，
- * 並使用 AI 模型從中解析並提取結構化的工作項目、數量和單價。
- * 這是整個「智能文件解析」功能的核心 AI 邏輯。
+ * @fileOverview 從檔案解析工料清單流程 (Extract Work Items Flow)
+ * @description 此檔案定義了一個 Genkit AI 流程，其主要功能是接收一個指向 Cloud Storage 的檔案路徑，
+ * 並在後端使用 Firebase Admin SDK 直接讀取該檔案，然後使用 AI 模型從中解析並提取結構化的工作項目。
+ * 這是整個「智慧檔案解析」功能的核心 AI 邏輯。
  * 
- * @exports extractWorkItems - 觸發數據提取過程的主要函數。
+ * @exports extractWorkItems - 觸發資料提取過程的主要函數。
  * @exports ExtractWorkItemsInput - `extractWorkItems` 函數的輸入 Zod Schema 型別。
  * @exports ExtractWorkItemsOutput - `extractWorkItems` 函數的輸出 Zod Schema 型別。
  */
@@ -12,21 +13,21 @@
 'use server';
 
 import {ai} from '@/ai/genkit';
-import { logAiTokenUsage } from '@/services/logging.service';
+import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import {z} from 'genkit';
-import { media } from 'genkit/ai';
+import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({
-  storageUrl: z
+  storagePath: z
     .string()
     .describe(
-      "一份文件（合約、報價單或估價單）在 Firebase Storage 中的 URL。"
+      "一份檔案（合約、報價單或估價單）在 Firebase Storage 中的路徑 (e.g., 'uploads/document.pdf')。"
     ),
 });
 export type ExtractWorkItemsInput = z.infer<typeof ExtractWorkItemsInputSchema>;
 
-// 定義流程的輸出 Schema (使用 Zod)，現在包含 totalTokens
+// 定義流程的輸出 Schema (使用 Zod)
 const ExtractWorkItemsOutputSchema = z.object({
   workItems: z.array(
     z.object({
@@ -37,17 +38,16 @@ const ExtractWorkItemsOutputSchema = z.object({
     })
   ).
   describe('一個包含提取出的工作項目及其數量和單價的列表。'),
-  totalTokens: z.number().describe('該次操作消耗的總 token 數量。'),
 });
 export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema>;
 
 /**
  * 導出的異步函數，作為外部呼叫此 AI 流程的入口點。
- * @param {ExtractWorkItemsInput} input - 包含文件 Storage URL 的輸入物件。
- * @returns {Promise<ExtractWorkItemsOutput>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
+ * @param {ExtractWorkItemsInput} input - 包含檔案 Storage 路徑的輸入物件。
+ * @returns {Promise<ExtractWorkItemsOutput & { totalTokens: number }>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
  * @throws 如果流程沒有返回結果，則拋出錯誤。
  */
-export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<ExtractWorkItemsOutput> {
+export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<ExtractWorkItemsOutput & { totalTokens: number }> {
   const result = await extractWorkItemsFlow(input);
   if (!result) {
     throw new Error('Flow returned no result');
@@ -58,8 +58,8 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
 // 定義 Genkit Prompt
 const extractWorkItemsPrompt = ai.definePrompt({
   name: 'extractWorkItemsPrompt', // Prompt 的唯一名稱
-  input: {schema: ExtractWorkItemsInputSchema}, // 輸入 Schema
-  output: {schema: ExtractWorkItemsOutputSchema.omit({ totalTokens: true })}, // 輸出 Schema，讓 AI 知道要以何種格式回應
+  input: { schema: z.object({ fileDataUri: z.string() }) }, // 輸入改為接收 Data URI
+  output: { schema: ExtractWorkItemsOutputSchema }, // 輸出 Schema，讓 AI 知道要以何種格式回應
   // 提示語模板 (使用 Handlebars 語法)
   prompt: `You are an expert AI assistant specialized in parsing construction and engineering documents like contracts, quotes, and estimates to extract a bill of materials or work items.
 
@@ -69,7 +69,7 @@ const extractWorkItemsPrompt = ai.definePrompt({
   3.  **quantity**: The quantity of the item. If not explicitly provided, default to 1.
   4.  **unitPrice**: The price per unit for the item. If not explicitly provided, do your best to find it. If it's impossible, default to 0.
 
-  Document: {{media url=storageUrl}}
+  Document: {{media url=fileDataUri}}
   
   Ensure that the extracted data is accurate and well-formatted. Do NOT extract the total price, only the unit price.
   `,
@@ -80,40 +80,49 @@ const extractWorkItemsFlow = ai.defineFlow(
   {
     name: 'extractWorkItemsFlow', // Flow 的唯一名稱
     inputSchema: ExtractWorkItemsInputSchema,
-    outputSchema: ExtractWorkItemsOutputSchema,
+    outputSchema: ExtractWorkItemsOutputSchema.extend({
+      totalTokens: z.number().describe('該次操作消耗的總 token 數量。'),
+    }),
   },
   // Flow 的核心執行邏輯
-  async input => {
+  async (input) => {
     let result;
+    
     try {
-      // 呼叫定義好的 prompt，並傳入輸入
-      result = await extractWorkItemsPrompt(input);
+      // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
+      const bucket = adminStorage.bucket();
+      const file = bucket.file(input.storagePath);
+
+      const [metadata, fileBuffer] = await Promise.all([
+        file.getMetadata(),
+        file.download().then(data => data[0])
+      ]);
+
+      const mimeType = metadata[0].contentType || 'application/octet-stream';
+      
+      // 步驟 2: 將檔案內容轉換為 Data URI
+      const fileDataUri = `data:${mimeType};base64,${fileBuffer.toString('base64')}`;
+      
+      // 步驟 3: 呼叫定義好的 prompt，並傳入 Data URI
+      result = await extractWorkItemsPrompt({ fileDataUri });
       const output = result.output;
       if (!output) {
         throw new Error('No output from AI');
       }
       
       const totalTokens = result.usage?.totalTokens || 0;
-      // 記錄 AI Token 使用量（成功時）
-      await logAiTokenUsage({
-        flowName: 'extractWorkItemsFlow',
-        totalTokens: totalTokens,
-        status: 'succeeded',
-      });
+      
+      // 极简化的 token 日志记录
+      logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'succeeded');
       
       return {
         ...output,
         totalTokens: totalTokens,
       };
     } catch (error) {
-        // 記錄 AI Token 使用量（失敗時）
+        // 极简化的失败日志记录
         const totalTokens = result?.usage?.totalTokens || 0;
-        await logAiTokenUsage({
-            flowName: 'extractWorkItemsFlow',
-            totalTokens: totalTokens,
-            status: 'failed',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        });
+        logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
         // 向上拋出錯誤
         throw error;
     }

@@ -1,0 +1,34 @@
+---
+globs: *
+alwaysApply: false
+---
+
+# 確保 100% 觸發 context7 的配置
+[[calls]]
+match = "^7$"
+tool = "context7"
+exact = true
+priority = 100
+
+[[calls]]
+match = "^c7$"  
+tool = "context7"
+exact = true
+priority = 100
+
+# 其他相關觸發條件（優先級較低）
+[[calls]]
+match = "when discussing code libraries or asking for documentation"
+tool = "context7"
+priority = 50
+
+[[calls]]
+match = "when the user mentions specific libraries like 'react', 'vue', 'angular', 'express', etc."
+tool = "context7"
+autoTrigger = true
+priority = 50
+
+[[calls]]
+match = "when the user asks 'how to use', 'documentation for', or 'docs for'"
+tool = "context7"
+priority = 50
