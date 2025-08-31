@@ -88,79 +88,87 @@ export function TaskItem({
     taskQuantity > 0 ? (completedQuantity / taskQuantity) * 100 : 0;
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
-        <div
-          className={cn(
-            'flex items-center gap-2 rounded-lg border p-2 pl-3 bg-card',
-            statusColors[status],
-            isPending && 'opacity-50'
-          )}
-        >
-          <CollapsibleTrigger asChild>
-            <button
-              className={cn(
-                'p-1 rounded-md hover:bg-muted',
-                task.subTasks.length === 0 && 'invisible'
-              )}
-            >
-              <ChevronRight
-                className={cn(
-                  'h-4 w-4 transition-transform',
-                  isOpen && 'rotate-90'
-                )}
-              />
-            </button>
-          </CollapsibleTrigger>
-
-          <div className="flex items-center gap-2 w-28 justify-start">
-            {statusIcons[status]}
-            <span className="text-sm font-medium">{status}</span>
-          </div>
-
-          <span
-            className="flex-grow font-medium cursor-pointer"
-            onClick={() => setIsProgressDialogOpen(true)}
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="relative space-y-2"
+    >
+      <div
+        className={cn(
+          'flex items-center gap-2 rounded-lg border bg-card p-2 pl-3',
+          statusColors[status],
+          isPending && 'opacity-50'
+        )}
+      >
+        <CollapsibleTrigger asChild>
+          <button
+            className={cn(
+              'p-1 rounded-md hover:bg-muted',
+              task.subTasks.length === 0 && 'invisible'
+            )}
           >
-            {task.title}
-          </span>
+            <ChevronRight
+              className={cn(
+                'h-4 w-4 transition-transform',
+                isOpen && 'rotate-90'
+              )}
+            />
+          </button>
+        </CollapsibleTrigger>
 
-          <div className="w-32 space-y-1">
-            <div className="flex justify-between items-baseline">
-              <span className="text-sm font-medium text-muted-foreground">
-                進度: {completedQuantity} / {taskQuantity}
-              </span>
-              <span className="text-sm font-semibold">
-                {Math.round(progressPercentage)}%
-              </span>
-            </div>
-            <Progress value={progressPercentage} className="h-2" />
-          </div>
-
-          <Badge variant="secondary" className="h-8">
-            ${taskValue.toLocaleString()}
-          </Badge>
-
+        <TooltipProvider delayDuration={200}>
           <Tooltip>
-            <TooltipTrigger>
-              <span className="text-xs text-muted-foreground mr-2">
-                {formatDistanceToNow(new Date(task.lastUpdated), {
-                  addSuffix: true,
-                })}
-              </span>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2">
+                {statusIcons[status]}
+                <span className="text-sm font-medium w-16">{status}</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>上次更新：{new Date(task.lastUpdated).toLocaleString()}</p>
+              <p>上次更新於: {new Date(task.lastUpdated).toLocaleString()}</p>
             </TooltipContent>
           </Tooltip>
+        </TooltipProvider>
 
-          <TaskActions
-            onShowAISuggestions={() => setShowAISuggestions(true)}
-            onStartAddTask={() => setIsAddingSubtask(true)}
-            onDeleteTask={() => onDeleteTask(task.id)}
-          />
+        <span
+          className="flex-grow font-medium cursor-pointer"
+          onClick={() => setIsProgressDialogOpen(true)}
+        >
+          {task.title}
+        </span>
+        <div className="w-40 space-y-1">
+          <div className="flex justify-between items-baseline">
+            <span className="text-sm font-medium text-muted-foreground">
+              進度: {completedQuantity} / {taskQuantity}
+            </span>
+            <span className="text-sm font-semibold">
+              {Math.round(progressPercentage)}%
+            </span>
+          </div>
+          <Progress value={progressPercentage} className="h-2" />
         </div>
+        <Badge variant="secondary" className="h-8">
+          ${taskValue.toLocaleString()}
+        </Badge>
+        <TaskActions
+          onShowAISuggestions={() => setShowAISuggestions(true)}
+          onStartAddTask={() => setIsAddingSubtask(true)}
+          onDeleteTask={() => onDeleteTask(task.id)}
+        />
+      </div>
 
+      <CollapsibleContent className="pl-6 space-y-2 relative before:absolute before:left-[1.3rem] before:top-0 before:bottom-0 before:w-px before:bg-border">
+        {task.subTasks.map((subTask) => (
+          <div key={subTask.id} className="relative before:absolute before:left-[-1.1rem] before:top-1/2 before:h-px before:w-4 before:border-b before:border-border">
+            <TaskItem
+              task={subTask}
+              project={project}
+              onAddSubtask={onAddSubtask}
+              onDeleteTask={onDeleteTask}
+              onUpdateTaskStatus={onUpdateTaskStatus}
+            />
+          </div>
+        ))}
         {isAddingSubtask && (
           <AddSubtaskForm
             parentTaskId={task.id}
@@ -168,7 +176,6 @@ export function TaskItem({
             onCancel={() => setIsAddingSubtask(false)}
           />
         )}
-
         {showAISuggestions && project && (
           <AiSubtaskSuggestions
             project={project}
@@ -178,20 +185,7 @@ export function TaskItem({
             onClose={() => setShowAISuggestions(false)}
           />
         )}
-
-        <CollapsibleContent className="pl-6 space-y-2">
-          {task.subTasks.map((subTask) => (
-            <TaskItem
-              key={subTask.id}
-              task={subTask}
-              project={project}
-              onAddSubtask={onAddSubtask}
-              onDeleteTask={onDeleteTask}
-              onUpdateTaskStatus={onUpdateTaskStatus}
-            />
-          ))}
-        </CollapsibleContent>
-      </Collapsible>
+      </CollapsibleContent>
       <SubmitProgressDialog
         isOpen={isProgressDialogOpen}
         onOpenChange={setIsProgressDialogOpen}
@@ -199,6 +193,6 @@ export function TaskItem({
         project={project}
         remainingQuantity={remainingQuantity}
       />
-    </TooltipProvider>
+    </Collapsible>
   );
 }
