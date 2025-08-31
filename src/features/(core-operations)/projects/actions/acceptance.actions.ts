@@ -5,7 +5,6 @@ import {
   addDoc,
   collection,
   doc,
-  FieldValue,
   getDoc,
   serverTimestamp,
   updateDoc,
@@ -35,35 +34,30 @@ interface CreateAcceptanceInput {
 export async function createAcceptanceRecord(
   input: CreateAcceptanceInput
 ): Promise<{ success: boolean; error?: string; recordId?: string }> {
-  const batch = writeBatch(firestore);
-  const newRecordRef = doc(collection(firestore, 'acceptance_records'));
-  
   try {
-    const record: Omit<AcceptanceRecord, 'id' | 'history'> = {
+    const record: Omit<AcceptanceRecord, 'id'> = {
       ...input,
       status: '草稿',
-      submittedAt: serverTimestamp(), // Use serverTimestamp for the main field
+      submittedAt: new Date(),
+      history: [
+        {
+          action: '建立',
+          userId: input.applicantId,
+          timestamp: new Date(),
+        },
+      ],
     };
 
-    // Step 1: Create the document without the history array
-    batch.set(newRecordRef, record);
-
-    // Step 2: Update the newly created document to add the first history entry
-    batch.update(newRecordRef, {
-      history: arrayUnion({
-        action: '建立',
-        userId: input.applicantId,
-        timestamp: serverTimestamp(),
-      }),
-    });
-    
-    await batch.commit();
+    const newRecordRef = await addDoc(
+      collection(firestore, 'acceptance_records'),
+      record
+    );
 
     revalidatePath('/projects');
     return { success: true, recordId: newRecordRef.id };
   } catch (error) {
     const message = error instanceof Error ? error.message : '發生未知錯誤';
-    console.error("Create Acceptance Record Error:", message);
+    console.error('Create Acceptance Record Error:', message);
     return { success: false, error: message };
   }
 }
@@ -83,9 +77,9 @@ export async function submitAcceptanceRecord(
     await updateDoc(recordRef, {
       status: '待審批',
       history: arrayUnion({
-          action: '提交審批',
-          userId: applicantId,
-          timestamp: serverTimestamp(),
+        action: '提交審批',
+        userId: applicantId,
+        timestamp: new Date(),
       }),
     });
     revalidatePath('/projects');
@@ -104,7 +98,6 @@ export async function approveAcceptanceRecord(
   id: string,
   adminId: string
 ): Promise<{ success: boolean; error?: string }> {
-  const batch = writeBatch(firestore);
   const recordRef = doc(firestore, 'acceptance_records', id);
 
   try {
@@ -123,15 +116,6 @@ export async function approveAcceptanceRecord(
       throw new Error('驗收單資料不完整，無法更新任務進度。');
     }
 
-    // 1. Update the acceptance record
-    batch.update(recordRef, {
-      status: '已批准',
-      reviewerId: adminId,
-      reviewedAt: serverTimestamp(),
-      history: arrayUnion({ action: '批准', userId: adminId, timestamp: serverTimestamp() }),
-    });
-
-    // 2. Update the corresponding task's completedQuantity
     const projectRef = doc(firestore, 'projects', projectId);
     const projectSnap = await getDoc(projectRef);
     if (!projectSnap.exists()) throw new Error('找不到對應的專案。');
@@ -162,6 +146,17 @@ export async function approveAcceptanceRecord(
       throw new Error('在專案中找不到對應的任務ID。');
     }
 
+    const batch = writeBatch(firestore);
+    
+    // 1. Update the acceptance record
+    batch.update(recordRef, {
+      status: '已批准',
+      reviewerId: adminId,
+      reviewedAt: new Date(),
+      history: arrayUnion({ action: '批准', userId: adminId, timestamp: new Date() }),
+    });
+
+    // 2. Update the project's tasks
     batch.update(projectRef, { tasks: newTasks });
 
     await batch.commit();
