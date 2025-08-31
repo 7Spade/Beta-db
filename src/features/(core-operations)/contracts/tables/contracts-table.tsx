@@ -3,7 +3,6 @@
 import { ContractStatusBadge } from '@/features/(core-operations)/contracts/components';
 import { ContractDetailsSheet } from '@/features/(core-operations)/contracts/sheets';
 import type { Contract } from '@/features/(core-operations)/contracts/types';
-import { formatDate } from '@/lib/utils/utils';
 import { toDate } from '@/lib/utils/date-utils';
 import { Button } from '@/ui/button';
 import {
@@ -27,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
+import { formatDate } from '@/utils';
 import { Download, Eye, MoreHorizontal } from 'lucide-react';
 import * as React from 'react';
 

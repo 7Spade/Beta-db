@@ -13,8 +13,8 @@ import { Briefcase, DollarSign, FileText, PlusCircle } from 'lucide-react';
 import { useCallback, useEffect, useState, type FC } from 'react';
 
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { formatDate } from '@/lib/utils/utils';
 import { Skeleton } from '@/ui/skeleton';
+import { formatDate } from '@/utils';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { Timestamp, addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import Link from 'next/link';

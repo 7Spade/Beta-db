@@ -1,9 +1,9 @@
 "use client"
 
-import * as React from "react"
-import { User, Settings, LogOut, ChevronDown } from "lucide-react"
-import { cn } from "@/lib/utils/utils"
+import { cn } from "@/utils"
+import { ChevronDown, LogOut, Settings, User } from "lucide-react"
 import Image from 'next/image'
+import * as React from "react"
 
 interface UserMenuProps {
   className?: string

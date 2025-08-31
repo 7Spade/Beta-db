@@ -4,7 +4,6 @@
 'use client';
 
 import type { Payment } from '@/features/(core-operations)/contracts/types';
-import { formatDate } from '@/lib/utils/utils';
 import { toDate } from '@/lib/utils/date-utils';
 import { Badge } from '@/ui/badge';
 import {
@@ -15,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
+import { formatDate } from '@/utils';
 
 interface PaymentsTableProps {
   payments: Payment[];

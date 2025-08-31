@@ -1,18 +1,18 @@
 'use client';
 
+import { cn } from '@/utils';
 import * as React from 'react';
-import { cn } from '@/lib/utils/utils';
 
 interface StatusIndicatorProps {
   status:
-    | 'online'
-    | 'offline'
-    | 'away'
-    | 'busy'
-    | 'pending'
-    | 'success'
-    | 'warning'
-    | 'error';
+  | 'online'
+  | 'offline'
+  | 'away'
+  | 'busy'
+  | 'pending'
+  | 'success'
+  | 'warning'
+  | 'error';
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
   className?: string;

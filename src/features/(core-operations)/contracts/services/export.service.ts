@@ -3,7 +3,7 @@
  */
 import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { toDate } from '@/lib/utils/date-utils';
-import { formatDate } from '@/lib/utils/utils';
+import { formatDate } from '@/utils';
 
 export const exportService = {
   exportContractsToCSV: (contracts: Contract[]) => {

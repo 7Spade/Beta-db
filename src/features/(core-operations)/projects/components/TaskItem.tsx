@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@/lib/utils/utils';
 import { Badge } from '@/ui/badge';
 import {
   Collapsible,
@@ -13,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/ui/tooltip';
+import { cn } from '@/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { CheckCircle2, ChevronRight, Circle, Clock } from 'lucide-react';
 import { useState } from 'react';

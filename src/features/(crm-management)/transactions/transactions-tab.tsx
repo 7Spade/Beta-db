@@ -1,18 +1,18 @@
 
 'use client';
 
-import type { FC } from 'react';
+import type { Partner } from '@/lib/types/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
-import type { Partner } from '@/lib/types/types';
-import { formatDate } from '@/lib/utils/utils';
+import { formatDate } from '@/utils';
+import type { FC } from 'react';
 
 interface TransactionsTabProps {
     partner: Partner;
 }
 
 export const TransactionsTab: FC<TransactionsTabProps> = ({ partner }) => {
-    
+
     const transactionStatusColor = (status: '已完成' | '待處理' | '失敗') => {
         switch (status) {
             case '已完成': return 'text-green-600';
@@ -24,8 +24,8 @@ export const TransactionsTab: FC<TransactionsTabProps> = ({ partner }) => {
     return (
         <Card>
             <CardHeader>
-              <CardTitle>交易歷史</CardTitle>
-              <CardDescription>與 {partner.name} 相關的財務記錄。</CardDescription>
+                <CardTitle>交易歷史</CardTitle>
+                <CardDescription>與 {partner.name} 相關的財務記錄。</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -53,6 +53,6 @@ export const TransactionsTab: FC<TransactionsTabProps> = ({ partner }) => {
                     </TableBody>
                 </Table>
             </CardContent>
-          </Card>
+        </Card>
     );
 }

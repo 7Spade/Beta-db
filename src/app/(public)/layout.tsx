@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils/utils';
 import { Toaster } from '@/ui/toaster';
+import { cn } from '@/utils';
 import { FolderKanban } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';

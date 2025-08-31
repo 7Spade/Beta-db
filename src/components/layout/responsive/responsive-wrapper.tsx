@@ -1,7 +1,7 @@
 'use client';
 
+import { cn } from '@/utils';
 import * as React from 'react';
-import { cn } from '@/lib/utils/utils';
 
 interface ResponsiveWrapperProps {
   children: React.ReactNode;

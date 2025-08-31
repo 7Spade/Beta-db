@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/ui/card";
-import { Button } from "@/ui/button";
-import { Pin, MoreVertical, Trash2, Edit3 } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { type Note, NOTE_COLORS } from "@/kanban/types";
-import { cn } from "@/lib/utils/utils";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
+import { Button } from "@/ui/button";
+import { Card, CardContent, CardHeader } from "@/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
+import { cn } from "@/utils";
+import { Edit3, MoreVertical, Pin, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 interface NoteCardProps {
   note: Note;
@@ -30,7 +30,7 @@ export const NoteCard = ({ note, onDeleteNote, onUpdateNote, onPinNote }: NoteCa
   };
 
   return (
-    <Card 
+    <Card
       className="w-full max-w-sm transition-all duration-200 hover:shadow-lg cursor-pointer group"
       style={{ backgroundColor: note.color }}
     >
@@ -47,7 +47,7 @@ export const NoteCard = ({ note, onDeleteNote, onUpdateNote, onPinNote }: NoteCa
           ) : (
             <h3 className="font-semibold text-sm line-clamp-2">{note.title}</h3>
           )}
-          
+
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button
               variant="ghost"
@@ -57,7 +57,7 @@ export const NoteCard = ({ note, onDeleteNote, onUpdateNote, onPinNote }: NoteCa
             >
               <Pin className={cn("h-3 w-3", note.isPinned && "fill-current text-primary")} />
             </Button>
-            
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-6 w-6">
@@ -108,7 +108,7 @@ export const NoteCard = ({ note, onDeleteNote, onUpdateNote, onPinNote }: NoteCa
                 />
               ))}
             </div>
-            
+
             <div className="flex gap-1">
               <Button size="sm" variant="outline" onClick={() => setIsEditing(false)}>
                 取消

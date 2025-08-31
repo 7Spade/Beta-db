@@ -5,7 +5,6 @@
 
 import { ContractStatusBadge } from '@/features/(core-operations)/contracts/components';
 import type { Receipt } from '@/features/(core-operations)/contracts/types';
-import { formatDate } from '@/lib/utils/utils';
 import {
   Table,
   TableBody,
@@ -14,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
+import { formatDate } from '@/utils';
 
 interface ReceiptsTableProps {
   receipts: Receipt[];
@@ -75,10 +75,10 @@ export function ReceiptsTable({ receipts }: ReceiptsTableProps) {
             <TableCell>
               {receipt.receivedDate
                 ? formatDate(
-                    receipt.receivedDate instanceof Date
-                      ? receipt.receivedDate
-                      : receipt.receivedDate?.toDate()
-                  )
+                  receipt.receivedDate instanceof Date
+                    ? receipt.receivedDate
+                    : receipt.receivedDate?.toDate()
+                )
                 : '未收款'}
             </TableCell>
             <TableCell>{receipt.invoiceNumber || '-'}</TableCell>

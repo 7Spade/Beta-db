@@ -1,8 +1,8 @@
 "use client"
 
-import * as React from "react"
+import { cn } from "@/utils"
 import { Search } from "lucide-react"
-import { cn } from "@/lib/utils/utils"
+import * as React from "react"
 
 interface SearchCommandProps {
   className?: string
@@ -64,7 +64,7 @@ const SearchCommand = React.forwardRef<HTMLDivElement, SearchCommandProps>(
                   ESC
                 </button>
               </form>
-              
+
               <div className="p-4">
                 <div className="text-sm text-muted-foreground">
                   Type to search...

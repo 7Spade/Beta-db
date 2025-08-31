@@ -3,7 +3,6 @@
 import { ContractStatusBadge } from '@/features/(core-operations)/contracts/components';
 import { ReceiptProgress } from '@/features/(core-operations)/contracts/components/receipt-progress';
 import type { Contract } from '@/features/(core-operations)/contracts/types';
-import { formatDate } from '@/lib/utils/utils';
 import {
   Card,
   CardContent,
@@ -30,6 +29,7 @@ import {
   TableRow,
 } from '@/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
+import { formatDate } from '@/utils';
 import { useMemo } from 'react';
 
 interface ContractDetailsSheetProps {
@@ -259,20 +259,20 @@ export function ContractDetailsSheet({
                               <ContractStatusBadge
                                 status={
                                   payment.status as
-                                    | '啟用中'
-                                    | '已完成'
-                                    | '暫停中'
-                                    | '已終止'
+                                  | '啟用中'
+                                  | '已完成'
+                                  | '暫停中'
+                                  | '已終止'
                                 }
                               />
                             </TableCell>
                             <TableCell>
                               {payment.paidDate
                                 ? formatDate(
-                                    payment.paidDate instanceof Date
-                                      ? payment.paidDate
-                                      : payment.paidDate?.toDate()
-                                  )
+                                  payment.paidDate instanceof Date
+                                    ? payment.paidDate
+                                    : payment.paidDate?.toDate()
+                                )
                                 : '未付款'}
                             </TableCell>
                           </TableRow>
@@ -332,20 +332,20 @@ export function ContractDetailsSheet({
                               <ContractStatusBadge
                                 status={
                                   receipt.status as
-                                    | '啟用中'
-                                    | '已完成'
-                                    | '暫停中'
-                                    | '已終止'
+                                  | '啟用中'
+                                  | '已完成'
+                                  | '暫停中'
+                                  | '已終止'
                                 }
                               />
                             </TableCell>
                             <TableCell>
                               {receipt.receivedDate
                                 ? formatDate(
-                                    receipt.receivedDate instanceof Date
-                                      ? receipt.receivedDate
-                                      : receipt.receivedDate?.toDate()
-                                  )
+                                  receipt.receivedDate instanceof Date
+                                    ? receipt.receivedDate
+                                    : receipt.receivedDate?.toDate()
+                                )
                                 : '未收款'}
                             </TableCell>
                             <TableCell>
@@ -399,10 +399,10 @@ export function ContractDetailsSheet({
                               <ContractStatusBadge
                                 status={
                                   order.status as
-                                    | '啟用中'
-                                    | '已完成'
-                                    | '暫停中'
-                                    | '已終止'
+                                  | '啟用中'
+                                  | '已完成'
+                                  | '暫停中'
+                                  | '已終止'
                                 }
                               />
                             </TableCell>

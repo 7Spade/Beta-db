@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useEffect, type FC } from 'react';
+import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import type { Contract, Partner } from '@/lib/types/types';
+import { toDate } from '@/lib/utils/date-utils';
+import { Badge } from '@/ui/badge';
 import {
   Card,
   CardContent,
@@ -16,20 +19,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { Badge } from '@/ui/badge';
-import { Loader2 } from 'lucide-react';
-import type { Partner, Contract } from '@/lib/types/types';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { formatDate } from '@/utils';
 import {
   collection,
-  query,
-  where,
   getDocs,
-  Timestamp,
+  query,
+  where
 } from 'firebase/firestore';
-import { formatDate } from '@/lib/utils/utils';
-import { toDate } from '@/lib/utils/date-utils';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState, type FC } from 'react';
 
 interface ContractsTabProps {
   partner: Partner;

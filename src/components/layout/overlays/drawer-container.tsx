@@ -1,8 +1,8 @@
 'use client';
 
-import * as React from 'react';
+import { cn } from '@/utils';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils/utils';
+import * as React from 'react';
 
 interface DrawerContainerProps {
   isOpen: boolean;

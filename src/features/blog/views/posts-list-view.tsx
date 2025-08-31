@@ -3,7 +3,7 @@
 
 import { deletePost } from '@/features/blog/actions/posts.actions';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { formatDate } from '@/lib/utils/utils';
+import { formatDate } from '@/utils';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { collection, onSnapshot, orderBy, query, Timestamp } from 'firebase/firestore';
 import Link from 'next/link';
