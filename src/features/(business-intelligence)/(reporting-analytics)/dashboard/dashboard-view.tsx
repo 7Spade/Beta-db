@@ -13,7 +13,7 @@
  */
 
 import { ContractDashboard } from '@/features/(core-operations)/contracts/dashboard';
-import { Dashboard as PartnerDashboard } from '@/features/(crm-management)/dashboard/dashboard';
+import { Dashboard as PartnerDashboard } from '@/features/(resource-management)/(crm-management)/dashboard/dashboard';
 import { Separator } from '@/ui/separator';
 import { AiUsageLog } from '@root/src/features/(business-intelligence)/(reporting-analytics)/dashboard/ai-usage-log';
 

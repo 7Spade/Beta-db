@@ -8,7 +8,7 @@ import { useEffect, useState, type FC } from 'react';
 import type { Contact, Partner } from '@/types/types';
 import type { Role } from '@root/src/lib/constants/roles';
 
-import { ContactForm } from '@/features/(crm-management)/contacts/forms/contact-form';
+import { ContactForm } from '@/features/(resource-management)/(crm-management)/contacts/forms/contact-form';
 import { Skeleton } from '@/ui/skeleton';
 import { PartnerForm } from './forms/partner-form';
 import { PartnerList } from './list/partner-list';
