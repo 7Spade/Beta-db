@@ -208,49 +208,49 @@ export const navigationConfig: NavigationItem[] = [
     id: 'admin',
     label: '後台管理',
     icon: Shield,
-    href: '/admin',
+    href: '/website-cms',
     children: [
       {
         id: 'admin-dashboard',
         label: '總覽',
         icon: LayoutGrid,
-        href: '/dashboard-management',
+        href: '/website-cms/dashboard-management',
       },
       {
         id: 'admin-user-management',
         label: '使用者管理',
         icon: Users,
-        href: '/user-management',
+        href: '/website-cms/user-management',
       },
       {
         id: 'admin-blog-management',
         label: '文章管理',
         icon: BookOpen,
-        href: '/blog-management/posts',
+        href: '/website-cms/blog-management/posts',
       },
       {
         id: 'admin-career-management',
         label: '職涯管理',
         icon: Briefcase,
-        href: '/career-management',
+        href: '/website-cms/career-management',
       },
       {
         id: 'admin-contact-management',
         label: '聯絡管理',
         icon: Mail,
-        href: '/contact-management',
+        href: '/website-cms/contact-management',
       },
       {
         id: 'admin-content-management',
         label: '內容管理',
         icon: FileText,
-        href: '/content-management',
+        href: '/website-cms/content-management',
       },
       {
         id: 'admin-system-management',
         label: '系統管理',
         icon: Cog,
-        href: '/system-management',
+        href: '/website-cms/system-management',
       },
     ],
   },
@@ -296,8 +296,8 @@ export function isPathActive(itemPath: string, currentPath: string): boolean {
   if (itemPath === '/partnerverse') {
     return currentPath.startsWith('/partnerverse');
   }
-  if (itemPath.startsWith('/admin')) {
-    return currentPath.startsWith('/admin');
+  if (itemPath.startsWith('/website-cms')) {
+    return currentPath.startsWith('/website-cms');
   }
   return currentPath === itemPath || currentPath.startsWith(itemPath + '/');
 }
