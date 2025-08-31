@@ -1,13 +1,13 @@
 
 'use client';
 
-import { CreateMemberDialog } from '@/features/team/members/create-member-dialog';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { TeamMember } from '@/lib/types/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/ui/avatar';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
+import { CreateMemberDialog } from '@root/src/features/(resource-management)/(hr-management)/members/create-member-dialog';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { addDoc, collection, onSnapshot } from 'firebase/firestore';
 import { Mail, Phone, PlusCircle } from 'lucide-react';

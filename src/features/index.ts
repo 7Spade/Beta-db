@@ -37,13 +37,5 @@ export * from '@/dashboard/dashboard-view';
 export * from '@/(crm-management)/partners/partners-view';
 export * from '@/(crm-management)/workflows/workflow-builder';
 
-// Quick Actions Features
-export * from '@/features/quick-actions/daily-report';
-export * from '@/features/quick-actions/project-progress';
-export * from '@/features/quick-actions/staff-attendance';
-
 // Settings Features
 export * from '@/features/(system-admin)/settings/settings-view';
-
-// Team Features
-export * from '@/team/index';

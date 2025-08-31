@@ -7,13 +7,13 @@ import { useToast } from '@root/src/lib/hooks/use-toast';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';
 
-import { EntryFormDialog } from '@/features/team/knowledge-base/entry-form-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Input } from '@/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
 import { Skeleton } from '@/ui/skeleton';
+import { EntryFormDialog } from '@root/src/features/(document-management)/knowledge-base/entry-form-dialog';
 import { PlusCircle, Search } from 'lucide-react';
 
 export default function KnowledgeBasePage() {

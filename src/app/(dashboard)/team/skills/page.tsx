@@ -1,7 +1,7 @@
 
 'use client';
 
-import { SkillsList } from '@/features/team/skills/skills-list';
+import { SkillsList } from '@root/src/features/(resource-management)/(hr-management)/skills/skills-list';
 
 export default function TeamSkillsPage() {
   return (
