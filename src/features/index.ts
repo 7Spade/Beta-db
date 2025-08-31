@@ -34,8 +34,8 @@ export * from '@/features/(core-operations)/contracts/index';
 export * from '@root/src/features/(business-intelligence)/(reporting-analytics)/dashboard/dashboard-view';
 
 // PartnerVerse Features
-export * from '@/(crm-management)/partners/partners-view';
-export * from '@/(crm-management)/workflows/workflow-builder';
+export * from '@/features/(crm-management)/partners/partners-view';
+export * from '@/features/(crm-management)/workflows/workflow-builder';
 
 // Settings Features
 export * from '@/features/(system-admin)/settings/settings-view';

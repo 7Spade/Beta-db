@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Dashboard } from '@/(crm-management)/dashboard/dashboard';
+import { Dashboard } from '@/features/(crm-management)/dashboard/dashboard';
 import type { Partner } from '@/lib/types/types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
