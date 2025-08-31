@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview Projects View (Client Component)
  * @description This component is now a pure client component responsible for UI and interactions.
@@ -16,7 +17,7 @@ import {
 import { addTaskAction } from '../actions/task.actions';
 import { AcceptanceList } from '../components/AcceptanceList';
 import { CreateProjectDialog } from '../components/CreateProjectDialog';
-import { ProjectDetailsSheet } from '../components/ProjectDetailsDialog';
+import { ProjectDetailsSheet } from '../components/ProjectDetailsSheet';
 import { ProjectList } from '../components/ProjectList';
 import type { AcceptanceRecord, Project } from '../types';
 

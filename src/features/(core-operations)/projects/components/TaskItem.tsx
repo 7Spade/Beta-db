@@ -8,14 +8,8 @@ import {
   CollapsibleTrigger,
 } from '@/ui/collapsible';
 import { Progress } from '@/ui/progress';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/ui/tooltip';
 import { cn } from '@/utils';
-import { formatDistanceToNow } from 'date-fns';
 import { CheckCircle2, ChevronRight, Circle, Clock } from 'lucide-react';
 import { useState } from 'react';
 import type { Project, Task } from '../types';
@@ -35,6 +29,8 @@ interface TaskItemProps {
   ) => void;
   onDeleteTask: (taskId: string) => void;
   onUpdateTaskStatus: (taskId: string) => void;
+  expandedTasks: Set<string>;
+  onToggleExpand: (taskId: string) => void;
 }
 
 const getTaskStatus = (task: Task): '待處理' | '進行中' | '已完成' => {
@@ -71,14 +67,16 @@ export function TaskItem({
   onAddSubtask,
   onDeleteTask,
   onUpdateTaskStatus,
+  expandedTasks,
+  onToggleExpand,
 }: TaskItemProps) {
-  const [isOpen, setIsOpen] = useState(true);
   const [isAddingSubtask, setIsAddingSubtask] = useState(false);
   const [showAISuggestions, setShowAISuggestions] = useState(false);
   const [isProgressDialogOpen, setIsProgressDialogOpen] = useState(false);
 
   const status = getTaskStatus(task);
   const isPending = false; // Placeholder for transition state
+  const isOpen = expandedTasks.has(task.id);
 
   const taskQuantity = task.quantity || 0;
   const taskValue = task.value || 0;
@@ -90,71 +88,73 @@ export function TaskItem({
   return (
     <Collapsible
       open={isOpen}
-      onOpenChange={setIsOpen}
-      className="relative space-y-2"
+      onOpenChange={() => onToggleExpand(task.id)}
+      className="space-y-2"
     >
-      <div
-        className={cn(
-          'flex items-center gap-2 rounded-lg border bg-card p-2 pl-3',
-          statusColors[status],
-          isPending && 'opacity-50'
-        )}
-      >
-        <CollapsibleTrigger asChild>
-          <button
-            className={cn(
-              'p-1 rounded-md hover:bg-muted',
-              task.subTasks.length === 0 && 'invisible'
-            )}
-          >
-            <ChevronRight
-              className={cn(
-                'h-4 w-4 transition-transform',
-                isOpen && 'rotate-90'
-              )}
-            />
-          </button>
-        </CollapsibleTrigger>
-
-        <TooltipProvider delayDuration={200}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-2">
-                {statusIcons[status]}
-                <span className="text-sm font-medium w-16">{status}</span>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>上次更新於: {new Date(task.lastUpdated).toLocaleString()}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <span
-          className="flex-grow font-medium cursor-pointer"
-          onClick={() => setIsProgressDialogOpen(true)}
+      <div className="relative">
+        <div
+          className={cn(
+            'flex items-center gap-2 rounded-lg border bg-card p-2 pl-3',
+            statusColors[status],
+            isPending && 'opacity-50'
+          )}
         >
-          {task.title}
-        </span>
-        <div className="w-40 space-y-1">
-          <div className="flex justify-between items-baseline">
-            <span className="text-sm font-medium text-muted-foreground">
-              進度: {completedQuantity} / {taskQuantity}
-            </span>
-            <span className="text-sm font-semibold">
-              {Math.round(progressPercentage)}%
-            </span>
+          <CollapsibleTrigger asChild>
+            <button
+              className={cn(
+                'p-1 rounded-md hover:bg-muted',
+                task.subTasks.length === 0 && 'invisible'
+              )}
+            >
+              <ChevronRight
+                className={cn(
+                  'h-4 w-4 transition-transform',
+                  isOpen && 'rotate-90'
+                )}
+              />
+            </button>
+          </CollapsibleTrigger>
+          
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-2">
+                  {statusIcons[status]}
+                  <span className="text-sm font-medium w-16">{status}</span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>上次更新於: {new Date(task.lastUpdated).toLocaleString()}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <span
+            className="flex-grow font-medium cursor-pointer"
+            onClick={() => setIsProgressDialogOpen(true)}
+          >
+            {task.title}
+          </span>
+          <div className="w-40 space-y-1">
+            <div className="flex justify-between items-baseline">
+              <span className="text-sm font-medium text-muted-foreground">
+                進度: {completedQuantity} / {taskQuantity}
+              </span>
+              <span className="text-sm font-semibold">
+                {Math.round(progressPercentage)}%
+              </span>
+            </div>
+            <Progress value={progressPercentage} className="h-2" />
           </div>
-          <Progress value={progressPercentage} className="h-2" />
+          <Badge variant="secondary" className="h-8">
+            ${taskValue.toLocaleString()}
+          </Badge>
+          <TaskActions
+            onShowAISuggestions={() => setShowAISuggestions(true)}
+            onStartAddTask={() => setIsAddingSubtask(true)}
+            onDeleteTask={() => onDeleteTask(task.id)}
+          />
         </div>
-        <Badge variant="secondary" className="h-8">
-          ${taskValue.toLocaleString()}
-        </Badge>
-        <TaskActions
-          onShowAISuggestions={() => setShowAISuggestions(true)}
-          onStartAddTask={() => setIsAddingSubtask(true)}
-          onDeleteTask={() => onDeleteTask(task.id)}
-        />
       </div>
 
       <CollapsibleContent className="pl-6 space-y-2 relative before:absolute before:left-[1.3rem] before:top-0 before:bottom-0 before:w-px before:bg-border">
@@ -166,6 +166,8 @@ export function TaskItem({
               onAddSubtask={onAddSubtask}
               onDeleteTask={onDeleteTask}
               onUpdateTaskStatus={onUpdateTaskStatus}
+              expandedTasks={expandedTasks}
+              onToggleExpand={onToggleExpand}
             />
           </div>
         ))}

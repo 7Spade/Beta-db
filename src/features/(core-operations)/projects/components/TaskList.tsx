@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { Project, Task } from '../types';
@@ -14,6 +15,8 @@ interface TaskListProps {
   ) => void;
   onDeleteTask: (taskId: string) => void;
   onUpdateTaskStatus: (taskId: string) => void;
+  expandedTasks: Set<string>;
+  onToggleExpand: (taskId: string) => void;
 }
 
 export function TaskList({
@@ -21,6 +24,8 @@ export function TaskList({
   onAddSubtask,
   onDeleteTask,
   onUpdateTaskStatus,
+  expandedTasks,
+  onToggleExpand,
 }: TaskListProps) {
   if (project.tasks.length === 0) {
     return (
@@ -48,6 +53,8 @@ export function TaskList({
               onAddSubtask={onAddSubtask}
               onDeleteTask={onDeleteTask}
               onUpdateTaskStatus={onUpdateTaskStatus}
+              expandedTasks={expandedTasks}
+              onToggleExpand={onToggleExpand}
             />
           ))}
         </div>
