@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Badge } from '@/ui/badge';
@@ -108,6 +109,12 @@ export function TaskItem({
               />
             </button>
           </CollapsibleTrigger>
+
+          <div className="flex items-center gap-2 w-28 justify-start">
+            {statusIcons[status]}
+            <span className="text-sm font-medium">{status}</span>
+          </div>
+
           <span
             className="flex-grow font-medium cursor-pointer"
             onClick={() => setIsProgressDialogOpen(true)}
@@ -135,11 +142,6 @@ export function TaskItem({
               <p>上次更新：{new Date(task.lastUpdated).toLocaleString()}</p>
             </TooltipContent>
           </Tooltip>
-
-          <div className="flex items-center gap-2 w-[120px] justify-center h-8">
-            {statusIcons[status]}
-            <span className="text-sm">{status}</span>
-          </div>
 
           <TaskActions
             onShowAISuggestions={() => setShowAISuggestions(true)}
