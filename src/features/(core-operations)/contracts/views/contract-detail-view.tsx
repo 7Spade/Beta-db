@@ -6,6 +6,7 @@
 import { ContractDetailsSheet } from '@/features/(core-operations)/contracts/sheets';
 import type { Contract } from '@/features/(core-operations)/contracts/types';
 import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { Card, CardContent, CardHeader } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
 import {
   doc,
@@ -14,11 +15,11 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface ContractDetailViewProps {
   contractId: string;
-  router?: AppRouterInstance;
 }
 
 const processFirestoreContract = (
@@ -59,13 +60,38 @@ const processFirestoreContract = (
   } as Contract;
 };
 
+const ContractDetailSkeleton = () => (
+  <div className="space-y-4">
+    <div className="flex items-center justify-between">
+      <div>
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-64 mt-2" />
+      </div>
+    </div>
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-6 w-1/4" />
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <Skeleton className="h-20 w-full" />
+      </CardContent>
+    </Card>
+  </div>
+);
+
 export function ContractDetailView({
   contractId,
-  router,
 }: ContractDetailViewProps) {
   const [contract, setContract] = useState<Contract | null>(null);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (!contractId) return;
@@ -92,17 +118,17 @@ export function ContractDetailView({
   }, [contractId]);
 
   if (loading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-10 w-1/4" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-64 w-full" />
-      </div>
-    );
+    return <ContractDetailSkeleton />;
   }
 
   if (!contract) {
-    return <div>找不到合約資料。</div>;
+    return (
+        <Card>
+            <CardHeader>
+                <CardContent>找不到合約資料。</CardContent>
+            </CardHeader>
+        </Card>
+    )
   }
 
   return (
@@ -118,7 +144,7 @@ export function ContractDetailView({
         isOpen={isOpen}
         onOpenChange={(nextOpen) => {
           setIsOpen(nextOpen);
-          if (!nextOpen && router) {
+          if (!nextOpen) {
             router.back();
           }
         }}

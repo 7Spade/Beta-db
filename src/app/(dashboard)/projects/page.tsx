@@ -3,14 +3,21 @@
  * @description This page is now a Server Component responsible for fetching
  * initial project and acceptance data and passing it down to client components.
  */
+import {
+  AcceptanceList,
+  ProjectList,
+  ProjectsView,
+} from '@/features/(core-operations)/projects/components';
 import type {
   AcceptanceRecord,
   Project,
   Task,
 } from '@/features/(core-operations)/projects/types';
 import { adminDb } from '@/lib/db/firebase-admin/firebase-admin';
-import { ProjectsView } from '@root/src/features/(core-operations)/projects/views/ProjectView';
+import { Skeleton } from '@/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import { Timestamp } from 'firebase-admin/firestore';
+import { Suspense } from 'react';
 
 async function getProjectsAndAcceptances() {
   try {
@@ -63,10 +70,36 @@ async function getProjectsAndAcceptances() {
   }
 }
 
-export default async function ProjectsPage() {
-  const { projects, acceptances } = await getProjectsAndAcceptances();
+function ProjectPageSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-10 w-48" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <div className="space-y-4">
+        <Skeleton className="h-10 w-48" />
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-6">
+          <Skeleton className="h-72 w-full" />
+          <Skeleton className="h-72 w-full" />
+          <Skeleton className="h-72 w-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
+async function ProjectsPageContent() {
+  const { projects, acceptances } = await getProjectsAndAcceptances();
   return (
     <ProjectsView initialProjects={projects} initialAcceptances={acceptances} />
+  );
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={<ProjectPageSkeleton />}>
+      <ProjectsPageContent />
+    </Suspense>
   );
 }

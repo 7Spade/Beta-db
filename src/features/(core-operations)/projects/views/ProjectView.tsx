@@ -1,4 +1,3 @@
-
 /**
  * @fileoverview Projects View (Client Component)
  * @description This component is now a pure client component responsible for UI and interactions.
