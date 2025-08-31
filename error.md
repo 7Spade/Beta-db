@@ -1,322 +1,301 @@
-studio-8713123741:~/studio{main}$ tsc --noEmit
-functions/src/genkit-sample.ts:3:24 - error TS2307: Cannot find module '@genkit-ai/vertexai' or its corresponding type declarations.
+PS D:\7Spade\Beta-db> npx tsc --noEmit
+functions/src/genkit-sample.ts:11:29 - error TS2459: Module '"firebase-functions/https"' declares 'AuthData' locally, but it is not exported.
 
-3 import {vertexAI} from "@genkit-ai/vertexai";
+11 import { onCallGenkit, type AuthData } from 'firebase-functions/https';
+                               ~~~~~~~~
 
-```
-
-functions/src/genkit-sample.ts:7:29 - error TS2307: Cannot find module '@genkit-ai/vertexai' or its corresponding type declarations.
-
-7 import {gemini20Flash} from "@genkit-ai/vertexai";
-```
-
-functions/src/genkit-sample.ts:11:30 - error TS2307: Cannot find module 'firebase-functions/https' or its corresponding type declarations.
-
-11 import { onCallGenkit } from "firebase-functions/https";
-
-```
-
-functions/src/genkit-sample.ts:16:30 - error TS2307: Cannot find module 'firebase-functions/params' or its corresponding type declarations.
-
-16 import { defineSecret } from "firebase-functions/params";
-```
-
-functions/src/genkit-sample.ts:21:39 - error TS2307: Cannot find module '@genkit-ai/firebase' or its corresponding type declarations.
-
-21 import {enableFirebaseTelemetry} from "@genkit-ai/firebase";
-
-```
-
-functions/src/genkit-sample.ts:69:16 - error TS7006: Parameter 'authData' implicitly has an 'any' type.
-
-69 authPolicy: (authData) => {
-~~~~~~~~
-
-functions/src/index.ts:10:32 - error TS2307: Cannot find module 'firebase-functions' or its corresponding type declarations.
-
-10 import {setGlobalOptions} from "firebase-functions";
-~~~~~~~~~~~~~~~~~~~~
-
-functions/src/index.ts:11:25 - error TS2307: Cannot find module 'firebase-functions/https' or its corresponding type declarations.
-
-11 import {onRequest} from "firebase-functions/https";
-```
-
-functions/src/index.ts:12:25 - error TS2307: Cannot find module 'firebase-functions/logger' or its corresponding type declarations.
-
-12 import \* as logger from "firebase-functions/logger";
-
-```
-
-functions/src/index.ts:30:38 - error TS7006: Parameter 'request' implicitly has an 'any' type.
-
-30 export const helloWorld = onRequest((request, response) => {
-~~~~~~~
-
-functions/src/index.ts:30:47 - error TS7006: Parameter 'response' implicitly has an 'any' type.
-
-30 export const helloWorld = onRequest((request, response) => {
-~~~~~~~~
+  functions/node_modules/firebase-functions/lib/v2/providers/https.d.ts:3:86
+    3 import { CallableRequest, CallableResponse, FunctionsErrorCode, HttpsError, Request, AuthData } from "../../common/providers/https";
+                                                                                           ~~~~~~~~
+    'AuthData' is declared here.
 
 src/components/layout/core/app-header.tsx:49:30 - error TS2339: Property 'avatarUrl' does not exist on type 'UserProfile'.
 
-49 avatar: profile?.avatarUrl,
-~~~~~~~~~
+49             avatar: profile?.avatarUrl,
+                                ~~~~~~~~~
 
-src/features/(core-operations)/contracts/components/version-timeline.tsx:30:54 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+src/features/(core-operations)/contracts/components/version-timeline.tsx:31:61 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-30 <p className="font-semibold">{formatDate(version.date)}</p>
-~~~~~~~~~~~~
+31             <p className="font-semibold">{formatDate(toDate(version.date))}</p>
+                                                               ~~~~~~~~~~~~
 
-src/features/(core-operations)/contracts/dialogs/create-contract-dialog.tsx:64:34 - error TS2345: Argument of type '{ name: string; client: string; startDate: Date; endDate: Date; status: "啟用中" | "已完成" | "暫停中" | "已終止"; scope: string; totalValue: number; contractor: string; customId?: string | undefined; clientRepresentative?: string | undefined; }' is not assignable to parameter of type 'Omit<Contract, "id" | "payments" | "changeOrders" | "versions">'.
-Property 'receipts' is missing in type '{ name: string; client: string; startDate: Date; endDate: Date; status: "啟用中" | "已完成" | "暫停中" | "已終止"; scope: string; totalValue: number; contractor: string; customId?: string | undefined; clientRepresentative?: string | undefined; }' but required in type 'Omit<Contract, "id" | "payments" | "changeOrders" | "versions">'.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-64 const success = await onSave(values);
-~~~~~~
+src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:29:25 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.    
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/contracts/types/contract.types.ts:25:3
-25 receipts: Receipt[];
-~~~~~~~~
-'receipts' is declared here.
+29       startDate: toDate(contract.startDate),
+                           ~~~~~~~~~~~~~~~~~~
 
-src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:26:5 - error TS2322: Type 'Contract' is not assignable to type '{ name?: string | undefined; client?: string | undefined; startDate?: Date | undefined; endDate?: Date | undefined; status?: "啟用中" | "已完成" | "暫停中" | "已終止" | undefined; ... 4 more ...; clientRepresentative?: string | undefined; } | AsyncDefaultValues<...> | undefined'.
-Type 'Contract' is not assignable to type '{ name?: string | undefined; client?: string | undefined; startDate?: Date | undefined; endDate?: Date | undefined; status?: "啟用中" | "已完成" | "暫停中" | "已終止" | undefined; scope?: string | undefined; totalValue?: number | undefined; contractor?: string | undefined; customId?: string | undefined; clientRepresentative?: s...'.
-Types of property 'startDate' are incompatible.
-Type 'Date | Timestamp' is not assignable to type 'Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-26 defaultValues: contract,
-~~~~~~~~~~~~~
+src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:30:23 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.    
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:30:16 - error TS2345: Argument of type 'Contract' is not assignable to parameter of type '{ name: string; client: string; startDate: Date; endDate: Date; status: "啟用中" | "已完成" | "暫停中" | "已終止"; scope: string; totalValue: number; contractor: string; customId?: string | undefined; clientRepresentative?: string | undefined; } | { ...; } | ResetAction<...> | undefined'.
-Type 'Contract' is not assignable to type '{ name: string; client: string; startDate: Date; endDate: Date; status: "啟用中" | "已完成" | "暫停中" | "已終止"; scope: string; totalValue: number; contractor: string; customId?: string | undefined; clientRepresentative?: string | undefined; } | { ...; }'.
-Type 'Contract' is not assignable to type '{ name?: string | undefined; client?: string | undefined; startDate?: Date | undefined; endDate?: Date | undefined; status?: "啟用中" | "已完成" | "暫停中" | "已終止" | undefined; scope?: string | undefined; totalValue?: number | undefined; contractor?: string | undefined; customId?: string | undefined; clientRepresentative?: s...'.
-Types of property 'startDate' are incompatible.
-Type 'Date | Timestamp' is not assignable to type 'Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+30       endDate: toDate(contract.endDate),
+                         ~~~~~~~~~~~~~~~~
 
-30 form.reset(contract);
-~~~~~~~~
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-src/features/(core-operations)/contracts/hooks/use-contract-form.ts:33:18 - error TS2345: Argument of type 'Contract' is not assignable to parameter of type '{ name: string; client: string; startDate: Date; endDate: Date; status: "啟用中" | "已完成" | "暫停中" | "已終止"; scope: string; totalValue: number; contractor: string; customId?: string | undefined; clientRepresentative?: string | undefined; } | { ...; } | ResetAction<...> | undefined'.
-Type 'Contract' is not assignable to type '{ name: string; client: string; startDate: Date; endDate: Date; status: "啟用中" | "已完成" | "暫停中" | "已終止"; scope: string; totalValue: number; contractor: string; customId?: string | undefined; clientRepresentative?: string | undefined; } | { ...; }'.
-Type 'Contract' is not assignable to type '{ name?: string | undefined; client?: string | undefined; startDate?: Date | undefined; endDate?: Date | undefined; status?: "啟用中" | "已完成" | "暫停中" | "已終止" | undefined; scope?: string | undefined; totalValue?: number | undefined; contractor?: string | undefined; customId?: string | undefined; clientRepresentative?: s...'.
-Types of property 'startDate' are incompatible.
-Type 'Date | Timestamp' is not assignable to type 'Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:37:25 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.    
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-33 form.reset(contract);
-~~~~~~~~
+37       startDate: toDate(contract.startDate),
+                           ~~~~~~~~~~~~~~~~~~
 
-src/features/(core-operations)/contracts/services/export.service.ts:25:20 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-25 formatDate(c.startDate),
-~~~~~~~~~~~
+src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:38:23 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.    
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/contracts/services/export.service.ts:26:20 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+38       endDate: toDate(contract.endDate),
+                         ~~~~~~~~~~~~~~~~
 
-26 formatDate(c.endDate),
-~~~~~~~~~
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-src/features/(core-operations)/contracts/tables/change-orders-table.tsx:38:38 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+src/features/(core-operations)/contracts/hooks/use-contract-form.ts:36:27 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.      
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-38 <TableCell>{formatDate(order.date)}</TableCell>
-~~~~~~~~~~
+36         startDate: toDate(contract.startDate),
+                             ~~~~~~~~~~~~~~~~~~
 
-src/features/(core-operations)/contracts/tables/contracts-table.tsx:70:20 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-70 formatDate(c.startDate),
-~~~~~~~~~~~
+src/features/(core-operations)/contracts/hooks/use-contract-form.ts:37:25 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.      
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/contracts/tables/contracts-table.tsx:71:20 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+37         endDate: toDate(contract.endDate),
+                           ~~~~~~~~~~~~~~~~
 
-71 formatDate(c.endDate),
-~~~~~~~~~
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-src/features/(core-operations)/contracts/tables/contracts-table.tsx:132:33 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+src/features/(core-operations)/contracts/services/export.service.ts:26:27 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.      
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-132 {formatDate(contract.endDate)}
-~~~~~~~~~~~~~~~~
+26         formatDate(toDate(c.startDate)),
+                             ~~~~~~~~~~~
 
-src/features/(core-operations)/contracts/tables/payments-table.tsx:38:38 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-38 <TableCell>{formatDate(payment.requestDate)}</TableCell>
-~~~~~~~~~~~~~~~~~~~
+src/features/(core-operations)/contracts/services/export.service.ts:27:27 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.      
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/contracts/tables/payments-table.tsx:43:48 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+27         formatDate(toDate(c.endDate)),
+                             ~~~~~~~~~
 
-43 {payment.paidDate ? formatDate(payment.paidDate) : '未付款'}
-~~~~~~~~~~~~~~~~
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-src/features/(core-operations)/projects/actions/acceptance-actions.ts:30:11 - error TS2739: Type '{ status: "草稿"; submittedAt: Date; history: { action: string; userId: string; timestamp: Date; }[]; title: string; projectId: string; projectName: string; applicantId: string; applicantName: string; reviewerId: string; linkedTaskIds: string[]; notes?: string | undefined; }' is missing the following properties from type 'Omit<AcceptanceRecord, "id">': taskId, submittedQuantity
+src/features/(core-operations)/contracts/tables/change-orders-table.tsx:39:45 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.  
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-30 const record: Omit<AcceptanceRecord, 'id'> = {
-~~~~~~
+39               <TableCell>{formatDate(toDate(order.date))}</TableCell>
+                                               ~~~~~~~~~~
 
-src/features/(core-operations)/projects/actions/acceptance-actions.ts:67:37 - error TS2339: Property 'get' does not exist on type 'DocumentReference<DocumentData, DocumentData>'.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-67 ...((await (await recordRef.get()).data())?.history || []),
-~~~
+src/features/(core-operations)/contracts/tables/contracts-table.tsx:71:27 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.      
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/projects/actions/acceptance-actions.ts:96:37 - error TS2339: Property 'get' does not exist on type 'DocumentReference<DocumentData, DocumentData>'.
+71         formatDate(toDate(c.startDate)),
+                             ~~~~~~~~~~~
 
-96 ...((await (await recordRef.get()).data())?.history || []),
-~~~
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-src/features/(core-operations)/projects/actions/project.actions.ts:14:37 - error TS2352: Conversion of type 'string' to type 'Date' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+src/features/(core-operations)/contracts/tables/contracts-table.tsx:72:27 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.      
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-14 startDate: Timestamp.fromDate(project.startDate as Date),
-~~~~~~~~~~~~~~~~~~~~~~~~~
+72         formatDate(toDate(c.endDate)),
+                             ~~~~~~~~~
 
-src/features/(core-operations)/projects/actions/project.actions.ts:15:35 - error TS2352: Conversion of type 'string' to type 'Date' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-15 endDate: Timestamp.fromDate(project.endDate as Date),
-~~~~~~~~~~~~~~~~~~~~~~~
+src/features/(core-operations)/contracts/tables/contracts-table.tsx:133:40 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.     
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/projects/actions/task-actions.ts:57:5 - error TS2353: Object literal may only specify known properties, and 'status' does not exist in type 'Task'.
+133                     {formatDate(toDate(contract.endDate))}
+                                           ~~~~~~~~~~~~~~~~
 
-57 status: '待處理',
-~~~~~~
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-src/features/(core-operations)/projects/components/create-project-dialog.tsx:61:43 - error TS2345: Argument of type '{ title: string; description: string; startDate: Date; endDate: Date; value: number; }' is not assignable to parameter of type 'Omit<Project, "id" | "tasks">'.
-Types of property 'startDate' are incompatible.
-Type 'Date' is not assignable to type 'string'.
+src/features/(core-operations)/contracts/tables/payments-table.tsx:39:45 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.       
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-61 const result = await addProjectAction(values);
-~~~~~~
+39               <TableCell>{formatDate(toDate(payment.requestDate))}</TableCell>
+                                               ~~~~~~~~~~~~~~~~~~~
 
-src/features/(core-operations)/projects/components/project-details-sheet.tsx:56:28 - error TS2322: Type '{ startDate: Date; endDate: Date; id: string; customId?: string; title: string; description: string; client?: string; clientRepresentative?: string; tasks: Task[]; value: number; }' is not assignable to type 'Project'.
-Types of property 'startDate' are incompatible.
-Type 'Date' is not assignable to type 'string'.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-56 <ProjectHeader project={projectWithDates} />
-~~~~~~~
+src/features/(core-operations)/contracts/tables/payments-table.tsx:45:39 - error TS2345: Argument of type 'Date | FirebaseFirestore.Timestamp' is not assignable to parameter of type 'Date | import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.       
+  Type 'Timestamp' is not assignable to type 'Date | Timestamp'.
+    Property 'toJSON' is missing in type 'FirebaseFirestore.Timestamp' but required in type 'import("D:/7Spade/Beta-db/node_modules/@firebase/firestore/dist/index").Timestamp'.
 
-src/features/(core-operations)/projects/components/project-header.tsx:9:3
-9 project: Project;
-~~~~~~~
-The expected type comes from property 'project' which is declared here on type 'IntrinsicAttributes & ProjectHeaderProps'
+45                   ? formatDate(toDate(payment.paidDate))
+                                         ~~~~~~~~~~~~~~~~
 
-src/features/(core-operations)/projects/components/project-details-sheet.tsx:57:26 - error TS2322: Type '{ startDate: Date; endDate: Date; id: string; customId?: string; title: string; description: string; client?: string; clientRepresentative?: string; tasks: Task[]; value: number; }' is not assignable to type 'Project'.
-Types of property 'startDate' are incompatible.
-Type 'Date' is not assignable to type 'string'.
+  node_modules/@firebase/firestore/dist/index.d.ts:2647:5
+    2647     toJSON(): {
+             ~~~~~~
+    'toJSON' is declared here.
 
-57 <AddTaskForm project={projectWithDates} />
-~~~~~~~
+src/features/(core-operations)/contracts/views/contracts-view.tsx:53:11 - error TS2322: Type '(data: Omit<Contract, "id" | "payments" | "changeOrders" | "versions">) => Promise<boolean>' is not assignable to type '(data: Omit<Contract, "id" | "versions" | "payments" | "receipts" | "changeOrders">) => Promise<boolean>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Property 'receipts' is missing in type 'Omit<Contract, "id" | "versions" | "payments" | "receipts" | "changeOrders">' but required in type 'Omit<Contract, "id" | "versions" | "payments" | "changeOrders">'.
 
-src/features/(core-operations)/projects/components/add-task-form.tsx:28:3
-28 project: Project;
-~~~~~~~
-The expected type comes from property 'project' which is declared here on type 'IntrinsicAttributes & AddTaskFormProps'
+53           onSave={handleAddContract}
+             ~~~~~~
 
-src/features/(core-operations)/projects/components/project-details-sheet.tsx:58:23 - error TS2322: Type '{ startDate: Date; endDate: Date; id: string; customId?: string; title: string; description: string; client?: string; clientRepresentative?: string; tasks: Task[]; value: number; }' is not assignable to type 'Project'.
-Types of property 'startDate' are incompatible.
-Type 'Date' is not assignable to type 'string'.
+  src/features/(core-operations)/contracts/types/contract.types.ts:25:3
+    25   receipts: Receipt[];
+         ~~~~~~~~
+    'receipts' is declared here.
+  src/features/(core-operations)/contracts/dialogs/create-contract-dialog.tsx:25:3
+    25   onSave: (
+         ~~~~~~
+    The expected type comes from property 'onSave' which is declared here on type 'IntrinsicAttributes & CreateContractDialogProps'
 
-58 <TaskList project={projectWithDates} />
-~~~~~~~
+src/features/(core-operations)/contracts/views/create-contract-view.tsx:46:7 - error TS2322: Type '(data: Omit<Contract, "id" | "payments" | "changeOrders" | "versions">) => Promise<boolean>' is not assignable to type '(data: Omit<Contract, "id" | "versions" | "payments" | "receipts" | "changeOrders">) => Promise<boolean>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Property 'receipts' is missing in type 'Omit<Contract, "id" | "versions" | "payments" | "receipts" | "changeOrders">' but required in type 'Omit<Contract, "id" | "versions" | "payments" | "changeOrders">'.
 
-src/features/(core-operations)/projects/components/task-list.tsx:8:3
-8 project: Project;
-~~~~~~~
-The expected type comes from property 'project' which is declared here on type 'IntrinsicAttributes & TaskListProps'
+46       onSave={handleSave}
+         ~~~~~~
 
-src/features/(crm-management)/contracts/contracts-tab.tsx:86:44 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+  src/features/(core-operations)/contracts/types/contract.types.ts:25:3
+    25   receipts: Receipt[];
+         ~~~~~~~~
+    'receipts' is declared here.
+  src/features/(core-operations)/contracts/dialogs/create-contract-dialog.tsx:25:3
+    25   onSave: (
+         ~~~~~~
+    The expected type comes from property 'onSave' which is declared here on type 'IntrinsicAttributes & CreateContractDialogProps'
 
-86 <TableCell>{formatDate(contract.startDate)}</TableCell>
-~~~~~~~~~~~~~~~~~~
+src/features/(core-operations)/projects/components/ProjectDetailsDialog.tsx:81:14 - error TS2739: Type '{ project: { startDate: Date; endDate: Date; id: string; customId?: string | undefined; title: string; description: string; client?: string | undefined; clientRepresentative?: string | undefined; tasks: Task[]; value: number; }; onAddSubtask: (parentTaskId: string, taskTitle: string, quantity: number, unitPrice: num...' is missing the following properties from type 'TaskListProps': expandedTasks, onToggleExpand
 
-src/features/(crm-management)/contracts/contracts-tab.tsx:87:44 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
-Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
-Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
+81             <TaskList
+                ~~~~~~~~
 
-87 <TableCell>{formatDate(contract.endDate)}</TableCell>
-~~~~~~~~~~~~~~~~
+src/features/(crm-management)/contracts/contracts-tab.tsx:113:44 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
+  Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
+    Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
 
-src/features/auth/auth-actions.ts:15:3 - error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+113                     <TableCell>{formatDate(contract.startDate)}</TableCell>
+                                               ~~~~~~~~~~~~~~~~~~
 
-15 return (
-~~~~~~
+src/features/(crm-management)/contracts/contracts-tab.tsx:114:44 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
+  Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
+    Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.
 
-src/features/blog/views/post-form-view.tsx:85:25 - error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type '{ title: string; content: string; status: "草稿" | "已發布" | "已封存"; slug: string; excerpt?: string | undefined; imageUrl?: string | undefined; } | { title?: string | undefined; content?: string | undefined; status?: "草稿" | ... 2 more ... | undefined; slug?: string | undefined; excerpt?: string | undefined; imageUrl?: st...'.
+114                     <TableCell>{formatDate(contract.endDate)}</TableCell>
+                                               ~~~~~~~~~~~~~~~~
 
-85 createdAt: (data.createdAt as Timestamp)?.toDate(),
-~~~~~~~~~
+src/features/(crm-management)/workflows/workflow-builder.tsx:150:99 - error TS2345: Argument of type 'Date | Timestamp' is not assignable to parameter of type 'string | Date | undefined'.
+  Type 'Timestamp' is not assignable to type 'string | Date | undefined'.
+    Type 'Timestamp' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 36 more.
 
-src/features/docu-parse/actions/docu-parse-commit.actions.ts:26:3 - error TS2322: Type '{ id: string; title: string; status: string; lastUpdated: string; quantity: number; unitPrice: number; value: number; subTasks: never[]; }[]' is not assignable to type 'Task[]'.
-Property 'completedQuantity' is missing in type '{ id: string; title: string; status: string; lastUpdated: string; quantity: number; unitPrice: number; value: number; subTasks: never[]; }' but required in type 'Task'.
+150                                     <p className="text-xs text-muted-foreground">到期日: {formatDate(doc.dueDate)}</p>
+                                                                                                      ~~~~~~~~~~~
 
-26 return items.map((item, index) => ({
-~~~~~~
+src/features/(system-admin)/(security-compliance)/auth/auth-actions.ts:15:3 - error TS2322: Type 'unknown' is not assignable to type 'boolean'.
 
-src/lib/types/types.ts:189:3
-189 completedQuantity: number; // New field, replaces status
-~~~~~~~~~~~~~~~~~
-'completedQuantity' is declared here.
+15   return (
+     ~~~~~~
+
+src/features/(system-admin)/website-cms/blog/views/post-form-view.tsx:85:25 - error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type '{ title: string; status: "草稿" | "已發布" | "已封存"; content: string; slug: string; excerpt?: string | undefined; imageUrl?: string | undefined; } | { title?: string | undefined; status?: "草稿" | "已發布" | "已封存" | undefined; content?: string | undefined; slug?: string | undefined; excerpt?: string | undefined; imageUrl?: str...'.
+
+85                         createdAt: (data.createdAt as Timestamp)?.toDate(),
+                           ~~~~~~~~~
 
 src/lib/types/errors.ts:28:3 - error TS2322: Type 'unknown' is not assignable to type 'boolean'.
 
-28 return error && typeof error === 'object' && 'code' in error && 'message' in error;
-~~~~~~
+28   return error && typeof error === 'object' && 'code' in error && 'message' in error;
+     ~~~~~~
 
 src/lib/types/errors.ts:32:3 - error TS2322: Type 'unknown' is not assignable to type 'boolean'.
 
-32 return error && typeof error === 'object' && 'error' in error && 'code' in error;
-~~~~~~
+32   return error && typeof error === 'object' && 'error' in error && 'code' in error;
+     ~~~~~~
 
 src/lib/types/errors.ts:36:3 - error TS2322: Type 'unknown' is not assignable to type 'boolean'.
 
-36 return error && typeof error === 'object' && 'message' in error;
-~~~~~~
+36   return error && typeof error === 'object' && 'message' in error;
+     ~~~~~~
 
-src/lib/utils/date-utils.ts:46:3 - error TS2322: Type 'unknown' is not assignable to type 'boolean'.
 
-46 return value && typeof value === 'object' && 'toDate' in value && typeof value.toDate === 'function';
-~~~~~~
+Found 28 errors in 17 files.
 
-Found 44 errors in 22 files.
-
-Errors Files
-6 functions/src/genkit-sample.ts:3
-5 functions/src/index.ts:10
-1 src/components/layout/core/app-header.tsx:49
-1 src/features/(core-operations)/contracts/components/version-timeline.tsx:30
-1 src/features/(core-operations)/contracts/dialogs/create-contract-dialog.tsx:64
-2 src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:26
-1 src/features/(core-operations)/contracts/hooks/use-contract-form.ts:33
-2 src/features/(core-operations)/contracts/services/export.service.ts:25
-1 src/features/(core-operations)/contracts/tables/change-orders-table.tsx:38
-3 src/features/(core-operations)/contracts/tables/contracts-table.tsx:70
-2 src/features/(core-operations)/contracts/tables/payments-table.tsx:38
-3 src/features/(core-operations)/projects/actions/acceptance-actions.ts:30
-2 src/features/(core-operations)/projects/actions/project.actions.ts:14
-1 src/features/(core-operations)/projects/actions/task-actions.ts:57
-1 src/features/(core-operations)/projects/components/create-project-dialog.tsx:61
-3 src/features/(core-operations)/projects/components/project-details-sheet.tsx:56
-2 src/features/(crm-management)/contracts/contracts-tab.tsx:86
-1 src/features/auth/auth-actions.ts:15
-1 src/features/blog/views/post-form-view.tsx:85
-1 src/features/docu-parse/actions/docu-parse-commit.actions.ts:26
-3 src/lib/types/errors.ts:28
-1 src/lib/utils/date-utils.ts:46
-```
+Errors  Files
+     1  functions/src/genkit-sample.ts:11
+     1  src/components/layout/core/app-header.tsx:49
+     1  src/features/(core-operations)/contracts/components/version-timeline.tsx:31
+     4  src/features/(core-operations)/contracts/forms/edit-contract-form.tsx:29
+     2  src/features/(core-operations)/contracts/hooks/use-contract-form.ts:36
+     2  src/features/(core-operations)/contracts/services/export.service.ts:26
+     1  src/features/(core-operations)/contracts/tables/change-orders-table.tsx:39
+     3  src/features/(core-operations)/contracts/tables/contracts-table.tsx:71
+     2  src/features/(core-operations)/contracts/tables/payments-table.tsx:39
+     1  src/features/(core-operations)/contracts/views/contracts-view.tsx:53
+     1  src/features/(core-operations)/contracts/views/create-contract-view.tsx:46
+     1  src/features/(core-operations)/projects/components/ProjectDetailsDialog.tsx:81
+     2  src/features/(crm-management)/contracts/contracts-tab.tsx:113
+     1  src/features/(crm-management)/workflows/workflow-builder.tsx:150
+     1  src/features/(system-admin)/(security-compliance)/auth/auth-actions.ts:15
+     1  src/features/(system-admin)/website-cms/blog/views/post-form-view.tsx:85
+     3  src/lib/types/errors.ts:28
+PS D:\7Spade\Beta-db> 
