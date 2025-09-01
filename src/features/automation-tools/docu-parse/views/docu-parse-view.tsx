@@ -196,7 +196,8 @@ export function DocuParseView() {
   };
 
   const handleReset = () => {
-    router.push('/resource-management/document/cloud-drive');
+    // By setting selectedFilePath to null, the component will re-render the FileSelector
+    setSelectedFilePath(null); 
   };
 
   if (!selectedFilePath) {
