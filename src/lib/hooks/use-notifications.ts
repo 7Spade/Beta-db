@@ -1,8 +1,8 @@
 'use client';
 
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import { collection, deleteDoc, doc, DocumentData, onSnapshot, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc, where, DocumentData } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
 
 export interface NotificationDoc {
   id: string;

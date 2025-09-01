@@ -8,7 +8,7 @@
  * @exports GenerateSubtasksOutput - generateSubtasks 函數的返回類型。
  */
 
-import { ai } from '@/ai/genkit';
+import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import { z } from 'zod';
 
@@ -53,22 +53,22 @@ const generateSubtasksFlow = ai.defineFlow(
   async (input) => {
     let result;
     try {
-        result = await prompt(input);
-        const output = result.output;
-        if (!output) {
-          throw new Error('No output from AI');
-        }
+      result = await prompt(input);
+      const output = result.output;
+      if (!output) {
+        throw new Error('No output from AI');
+      }
 
-        const totalTokens = result.usage?.totalTokens || 0;
-        // 极简化的 token 日志记录
-        logAiTokenUsage('generateSubtasksFlow', totalTokens, 'succeeded');
-        
-        return output;
-    } catch(error) {
-        const totalTokens = result?.usage?.totalTokens || 0;
-        // 极简化的失败日志记录
-        logAiTokenUsage('generateSubtasksFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
-        throw error;
+      const totalTokens = result.usage?.totalTokens || 0;
+      // 极简化的 token 日志记录
+      logAiTokenUsage('generateSubtasksFlow', totalTokens, 'succeeded');
+
+      return output;
+    } catch (error) {
+      const totalTokens = result?.usage?.totalTokens || 0;
+      // 极简化的失败日志记录
+      logAiTokenUsage('generateSubtasksFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      throw error;
     }
   }
 );

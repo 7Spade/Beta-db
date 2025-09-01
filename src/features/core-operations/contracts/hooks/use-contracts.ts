@@ -3,7 +3,7 @@
  */
 
 import type { Contract } from '@/features/core-operations/contracts/types';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import {
   collection,
   DocumentData,

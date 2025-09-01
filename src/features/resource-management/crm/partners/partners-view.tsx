@@ -1,6 +1,6 @@
 'use client';
 
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { addDoc, collection, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState, type FC } from 'react';

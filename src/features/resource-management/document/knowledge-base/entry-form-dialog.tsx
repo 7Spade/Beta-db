@@ -1,6 +1,6 @@
 'use client';
 
-import { generateKnowledgeEntry } from '@/ai/flows/generate-knowledge-entry-flow';
+import { generateKnowledgeEntry } from '@/features/integrations/ai/flows/generate-knowledge-entry-flow';
 import { handleDeleteKnowledgeBaseEntry } from '@/features/resource-management/document/knowledge-base/actions/knowledge-actions';
 import type { KnowledgeBaseEntry } from '@/lib/types/types';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';

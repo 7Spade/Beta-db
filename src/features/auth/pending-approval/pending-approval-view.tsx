@@ -1,8 +1,8 @@
 'use client';
 
-import { auth } from '@/lib/db/firebase-client/firebase-client';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { auth } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { signOut } from 'firebase/auth';
 import { Clock } from 'lucide-react';

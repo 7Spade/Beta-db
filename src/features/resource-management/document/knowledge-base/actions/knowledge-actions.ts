@@ -1,8 +1,8 @@
 "use server";
 
-import { firestore } from '@/firebase-client/firebase-client';
 import type { KnowledgeBaseEntry } from '@/types/types';
-import { collection, addDoc, doc, setDoc, deleteDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import { addDoc, collection, deleteDoc, doc, serverTimestamp, setDoc, writeBatch } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import type { SaveResult } from './types';
 
@@ -27,7 +27,7 @@ export async function handleSaveKnowledgeBaseEntry(
                 updatedAt: serverTimestamp(),
             });
         }
-        
+
         revalidatePath('/team/knowledge-base');
         return { message: `工法 "${data.title}" 已成功儲存。` };
 
@@ -62,7 +62,7 @@ export async function handleBatchKnowledgeBaseOperation(
 ): Promise<SaveResult> {
     try {
         const batch = writeBatch(firestore);
-        
+
         entryIds.forEach(entryId => {
             const entryRef = doc(firestore, 'knowledgeBaseEntries', entryId);
             const updateData: {
@@ -71,7 +71,7 @@ export async function handleBatchKnowledgeBaseOperation(
             } = {
                 updatedAt: serverTimestamp(),
             };
-            
+
             switch (operation) {
                 case 'archive':
                     updateData.status = 'archived';
@@ -83,15 +83,15 @@ export async function handleBatchKnowledgeBaseOperation(
                     updateData.status = 'draft';
                     break;
             }
-            
+
             batch.update(entryRef, updateData);
         });
-        
+
         await batch.commit();
         revalidatePath('/team/knowledge-base');
-        
+
         return { message: `已成功${operation === 'archive' ? '封存' : operation === 'publish' ? '發布' : '取消發布'} ${entryIds.length} 個工法。` };
-        
+
     } catch (error) {
         console.error(`批量${operation}操作時發生錯誤：`, error);
         const errorMessage = error instanceof Error ? error.message : "發生未知錯誤。";

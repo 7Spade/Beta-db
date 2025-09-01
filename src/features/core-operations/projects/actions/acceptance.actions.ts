@@ -1,19 +1,18 @@
 
 'use server';
 
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import {
   addDoc,
+  arrayUnion,
   collection,
   doc,
   getDoc,
-  serverTimestamp,
   updateDoc,
-  writeBatch,
-  arrayUnion,
+  writeBatch
 } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import type { AcceptanceRecord, Task } from '../types';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
 
 interface CreateAcceptanceInput {
   title: string;
@@ -147,7 +146,7 @@ export async function approveAcceptanceRecord(
     }
 
     const batch = writeBatch(firestore);
-    
+
     // 1. Update the acceptance record
     batch.update(recordRef, {
       status: '已批准',

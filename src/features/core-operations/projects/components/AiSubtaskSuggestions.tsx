@@ -1,6 +1,6 @@
 'use client';
 
-import { generateSubtasks } from '@/ai/flows/generate-subtasks-flow';
+import { generateSubtasks } from '@/features/integrations/ai/flows/generate-subtasks-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/ui/alert';
 import { Button } from '@/ui/button';
 import { useToast } from '@root/src/lib/hooks/use-toast';

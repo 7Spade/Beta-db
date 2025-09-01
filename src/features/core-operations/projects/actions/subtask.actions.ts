@@ -5,10 +5,10 @@
  */
 'use server';
 
-import type { Task } from '../types';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { doc, updateDoc } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
+import type { Task } from '../types';
 
 /**
  * Recursively searches for a task by its ID and applies an update function.

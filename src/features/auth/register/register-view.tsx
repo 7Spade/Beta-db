@@ -1,6 +1,5 @@
 'use client';
 
-import { auth } from '@/lib/db/firebase-client/firebase-client';
 import { dispatch } from '@/lib/events/event-dispatcher';
 import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 import { Button } from '@/ui/button';
@@ -21,6 +20,7 @@ import {
 } from '@/ui/form';
 import { Input } from '@/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { auth } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import {
   createUserWithEmailAndPassword,

@@ -4,9 +4,9 @@
  * 它作為一個伺服器元件，負責從後端獲取當前用戶的認證資訊和設定檔資料，
  * 然後將這些資料傳遞給客戶端子元件進行渲染。
  */
-import { adminAuth, adminDb } from '@/firebase-admin/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import type { UserProfile } from '@root/src/features/auth/use-auth';
+import { adminAuth, adminDb } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { cookies } from 'next/headers';
 import { ProfileForm } from './profile-form';
 

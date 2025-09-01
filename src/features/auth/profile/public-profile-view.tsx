@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
-import { doc, getDoc, DocumentData } from 'firebase/firestore';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import { doc, DocumentData, getDoc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 
 interface PublicUserProfile {
   displayName?: string;

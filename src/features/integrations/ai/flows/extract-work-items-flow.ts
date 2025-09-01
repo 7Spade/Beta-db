@@ -12,10 +12,10 @@
 
 'use server';
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
-import {z} from 'genkit';
-import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
+import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
+import { z } from 'genkit';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({
@@ -37,7 +37,7 @@ const ExtractWorkItemsOutputSchema = z.object({
       unitPrice: z.number().describe('工作項目的單價。'),
     })
   ).
-  describe('一個包含提取出的工作項目及其數量和單價的列表。'),
+    describe('一個包含提取出的工作項目及其數量和單價的列表。'),
 });
 export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema>;
 
@@ -87,7 +87,7 @@ const extractWorkItemsFlow = ai.defineFlow(
   // Flow 的核心執行邏輯
   async (input) => {
     let result;
-    
+
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
       const bucket = adminStorage.bucket();
@@ -99,32 +99,32 @@ const extractWorkItemsFlow = ai.defineFlow(
       ]);
 
       const mimeType = metadata[0].contentType || 'application/octet-stream';
-      
+
       // 步驟 2: 將檔案內容轉換為 Data URI
       const fileDataUri = `data:${mimeType};base64,${fileBuffer.toString('base64')}`;
-      
+
       // 步驟 3: 呼叫定義好的 prompt，並傳入 Data URI
       result = await extractWorkItemsPrompt({ fileDataUri });
       const output = result.output;
       if (!output) {
         throw new Error('No output from AI');
       }
-      
+
       const totalTokens = result.usage?.totalTokens || 0;
-      
+
       // 极简化的 token 日志记录
       logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'succeeded');
-      
+
       return {
         ...output,
         totalTokens: totalTokens,
       };
     } catch (error) {
-        // 极简化的失败日志记录
-        const totalTokens = result?.usage?.totalTokens || 0;
-        logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
-        // 向上拋出錯誤
-        throw error;
+      // 极简化的失败日志记录
+      const totalTokens = result?.usage?.totalTokens || 0;
+      logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      // 向上拋出錯誤
+      throw error;
     }
   }
 );

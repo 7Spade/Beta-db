@@ -1,9 +1,9 @@
 'use server';
 
-import { z } from 'zod';
-import { adminAuth, adminDb } from '@/lib/db/firebase-admin/firebase-admin';
-import { cookies } from 'next/headers';
+import { adminAuth, adminDb } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
+import { z } from 'zod';
 
 const profileSchema = z.object({
   displayName: z.string().min(2, '名稱至少需要 2 個字元。'),
@@ -29,13 +29,13 @@ export async function updateUserProfile(values: z.infer<typeof profileSchema>) {
     const userId = decodedToken.uid;
 
     const userRef = adminDb.collection('users').doc(userId);
-    
+
     // 更新 Firestore
     await userRef.update({ displayName });
-    
+
     // (可選) 更新 Firebase Auth 使用者顯示名稱
     await adminAuth.updateUser(userId, { displayName });
-    
+
     revalidatePath('/profile');
     return { success: '個人資料已成功更新。' };
 

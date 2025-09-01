@@ -1,6 +1,6 @@
 'use client';
 
-import { auth, firestore } from '@/lib/db/firebase-client/firebase-client';
+import { auth, firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import {
   signInWithEmailAndPassword,
   type AuthError,

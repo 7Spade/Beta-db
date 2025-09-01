@@ -2,10 +2,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table'
-import { Cpu, CheckCircle, XCircle } from 'lucide-react'
+import { getSupabaseClient } from '@root/src/features/integrations/database/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import { zhTW } from 'date-fns/locale'
-import { getSupabaseClient } from '@/lib/db/supabase'
+import { CheckCircle, Cpu, XCircle } from 'lucide-react'
 
 // 定义AI Token日志类型
 interface AiTokenLog {
@@ -20,7 +20,7 @@ interface AiTokenLog {
 export async function AiUsageLog() {
   try {
     const supabase = await getSupabaseClient()
-    
+
     // 自动获取最近的日志记录
     const { data: logs } = await supabase
       .from('ai_token_logs')
@@ -59,8 +59,8 @@ export async function AiUsageLog() {
                 <TableRow key={log.id}>
                   <TableCell className="font-medium">{log.flow_name}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {log.timestamp ? 
-                      formatDistanceToNow(new Date(log.timestamp), { addSuffix: true, locale: zhTW }) : 
+                    {log.timestamp ?
+                      formatDistanceToNow(new Date(log.timestamp), { addSuffix: true, locale: zhTW }) :
                       'N/A'
                     }
                   </TableCell>

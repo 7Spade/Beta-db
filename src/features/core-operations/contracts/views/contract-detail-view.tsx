@@ -5,16 +5,15 @@
 
 import { ContractDetailsSheet } from '@/features/core-operations/contracts/sheets';
 import type { Contract } from '@/features/core-operations/contracts/types';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import { Card, CardContent, CardHeader } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import {
   doc,
   DocumentData,
   DocumentSnapshot,
   onSnapshot,
 } from 'firebase/firestore';
-import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -123,11 +122,11 @@ export function ContractDetailView({
 
   if (!contract) {
     return (
-        <Card>
-            <CardHeader>
-                <CardContent>找不到合約資料。</CardContent>
-            </CardHeader>
-        </Card>
+      <Card>
+        <CardHeader>
+          <CardContent>找不到合約資料。</CardContent>
+        </CardHeader>
+      </Card>
     )
   }
 

@@ -5,7 +5,7 @@
 'use server';
 
 import type { StorageAction, StorageItem, StorageListResult } from '@/features/resource-management/document/cloud-drive/types/storage.types';
-import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
+import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { revalidatePath } from 'next/cache';
 
 // 從環境變數讀取儲存桶名稱，如果不存在則拋出錯誤

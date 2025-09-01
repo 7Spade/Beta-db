@@ -1,12 +1,12 @@
 
 'use client';
 
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { TeamMember } from '@/lib/types/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/ui/avatar';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { CreateMemberDialog } from '@root/src/features/resource-management/hr/members/create-member-dialog';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { addDoc, collection, onSnapshot } from 'firebase/firestore';

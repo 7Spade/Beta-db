@@ -4,8 +4,8 @@
  */
 'use server';
 
-import { adminDb } from '@/lib/db/firebase-admin/firebase-admin';
 import type { Post } from '@/features/system-administration/website-cms/blog/types/blog.types';
+import { adminDb } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
 const postsCollection = adminDb.collection('posts');
@@ -20,11 +20,11 @@ export async function getPublishedPosts(): Promise<Post[]> {
       .where('status', '==', '已發布')
       .orderBy('publishedAt', 'desc')
       .get();
-      
+
     if (snapshot.empty) {
       return [];
     }
-    
+
     return snapshot.docs.map(doc => {
       const data = doc.data();
       return {

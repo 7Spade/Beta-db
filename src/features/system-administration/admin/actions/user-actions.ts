@@ -1,9 +1,9 @@
 'use server';
 
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client'; // Using client SDK for server components is fine
-import { revalidatePath } from 'next/cache';
 import { dispatch } from '@/lib/events/event-dispatcher';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client'; // Using client SDK for server components is fine
+import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { revalidatePath } from 'next/cache';
 
 interface ActionResult {
   success: boolean;
@@ -23,7 +23,7 @@ export async function approveUser(userId: string): Promise<ActionResult> {
       // approvedBy: 'ADMIN_UID' // TODO: Get current admin user's UID
     });
     await dispatch('user.approved', { userId });
-    
+
     revalidatePath('/admin/user-management');
     return { success: true };
   } catch (error) {

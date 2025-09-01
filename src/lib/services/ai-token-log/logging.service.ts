@@ -3,7 +3,7 @@
  * @description 基于 Supabase 官方推荐的最简配置
  */
 
-import { getSupabaseClient } from '@/db/supabase'
+import { getSupabaseClient } from '@root/src/features/integrations/database/supabase'
 
 // 自动记录 AI Token 使用情况
 export async function logAiTokenUsage(
@@ -14,7 +14,7 @@ export async function logAiTokenUsage(
 ): Promise<void> {
   try {
     const supabase = await getSupabaseClient()
-    
+
     // 自动插入日志记录
     await supabase
       .from('ai_token_logs')
@@ -35,10 +35,10 @@ export async function logAiTokenUsage(
 export async function getAiTokenUsageStats(days: number = 30) {
   try {
     const supabase = await getSupabaseClient()
-    
+
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - days)
-    
+
     const { data } = await supabase
       .from('ai_token_logs')
       .select('*')

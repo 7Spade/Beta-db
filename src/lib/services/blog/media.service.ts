@@ -4,7 +4,7 @@
  */
 'use server';
 
-import { adminStorage } from '@/lib/db/firebase-admin/firebase-admin';
+import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 
 /**
  * Uploads an image for a blog post.
@@ -15,7 +15,7 @@ export async function uploadBlogImage(file: File): Promise<{ url: string }> {
   const bucket = adminStorage.bucket();
   const filePath = `blog-media/${Date.now()}-${file.name}`;
   const fileUpload = bucket.file(filePath);
-  
+
   const buffer = Buffer.from(await file.arrayBuffer());
 
   await fileUpload.save(buffer, {

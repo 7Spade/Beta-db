@@ -1,8 +1,8 @@
 'use client';
 
 import { handleSaveKnowledgeBaseEntry } from '@/features/resource-management/document/knowledge-base/actions/knowledge-actions';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { KnowledgeBaseEntry } from '@/lib/types/types';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { useToast } from '@root/src/lib/hooks/use-toast';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { collection, onSnapshot, orderBy, query, Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import type { Post } from '../types/blog.types';

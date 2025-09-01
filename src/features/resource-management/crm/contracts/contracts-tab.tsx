@@ -1,6 +1,5 @@
 'use client';
 
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
 import type { Contract, Partner } from '@/lib/types/types';
 import { toDate } from '@/lib/utils/date-utils';
 import { Badge } from '@/ui/badge';
@@ -20,6 +19,7 @@ import {
   TableRow,
 } from '@/ui/table';
 import { formatDate } from '@/utils';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import {
   collection,
   getDocs,

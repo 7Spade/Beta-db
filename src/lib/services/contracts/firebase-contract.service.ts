@@ -2,9 +2,9 @@
  * @fileoverview Firebase 合約服務
  */
 
-import { adminDb as firestore } from '@/db/firebase-admin';
 import type { Contract } from '@/features/core-operations/contracts/types';
 import { Timestamp } from '@firebase/firestore';
+import { adminDb as firestore } from '@root/src/features/integrations/database/firebase-admin';
 
 // 定义Firestore文档数据类型
 interface FirestoreContractData {

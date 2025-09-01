@@ -8,7 +8,7 @@
  * @exports GenerateSkillOutput - generateSkillSuggestion 函數的返回類型。
  */
 
-import { ai } from '@/ai/genkit';
+import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import { z } from 'zod';
 
@@ -54,32 +54,32 @@ const generateSkillFlow = ai.defineFlow(
     name: 'generateSkillFlow',
     inputSchema: GenerateSkillInputSchema,
     outputSchema: z.object({
-        skills: z.array(z.object({ name: z.string(), description: z.string() })),
-        totalTokens: z.number(),
+      skills: z.array(z.object({ name: z.string(), description: z.string() })),
+      totalTokens: z.number(),
     }),
   },
   async (input) => {
     let result;
     try {
-        result = await prompt(input);
-        const output = result.output;
-        if (!output) {
-            throw new Error('No output from AI');
-        }
+      result = await prompt(input);
+      const output = result.output;
+      if (!output) {
+        throw new Error('No output from AI');
+      }
 
-        const totalTokens = result.usage?.totalTokens || 0;
-        // 极简化的 token 日志记录
-        logAiTokenUsage('generateSkillFlow', totalTokens, 'succeeded');
+      const totalTokens = result.usage?.totalTokens || 0;
+      // 极简化的 token 日志记录
+      logAiTokenUsage('generateSkillFlow', totalTokens, 'succeeded');
 
-        return {
-            skills: output.skills,
-            totalTokens: totalTokens,
-        };
+      return {
+        skills: output.skills,
+        totalTokens: totalTokens,
+      };
     } catch (error) {
-        const totalTokens = result?.usage?.totalTokens || 0;
-        // 极简化的失败日志记录
-        logAiTokenUsage('generateSkillFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
-        throw error;
+      const totalTokens = result?.usage?.totalTokens || 0;
+      // 极简化的失败日志记录
+      logAiTokenUsage('generateSkillFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      throw error;
     }
   }
 );

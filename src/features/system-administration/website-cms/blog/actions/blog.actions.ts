@@ -4,14 +4,14 @@
  */
 'use server';
 
-import { adminAuth, adminDb } from '@/lib/db/firebase-admin/firebase-admin';
+import { getPostById } from '@/lib/services/blog/blog.service';
+import * as CacheService from '@/lib/services/blog/cache.service';
+import { adminAuth, adminDb } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { slugify } from '../utils/slug.utils';
-import { Timestamp } from 'firebase-admin/firestore';
-import * as CacheService from '@/lib/services/blog/cache.service';
-import { getPostById } from '@/lib/services/blog/blog.service';
 
 const postSchema = z.object({
   title: z.string().min(3, '標題至少需要 3 個字元。'),
@@ -43,7 +43,7 @@ export async function savePostAction(data: PostFormValues, postId?: string | nul
     const decodedToken = await adminAuth.verifySessionCookie(sessionCookie, true);
 
     const postsCollection = adminDb.collection('posts');
-    
+
     // Check for slug uniqueness
     const existingPostQuery = await postsCollection.where('slug', '==', finalSlug).limit(1).get();
     if (!existingPostQuery.empty && existingPostQuery.docs[0].id !== postId) {
@@ -86,7 +86,7 @@ export async function savePostAction(data: PostFormValues, postId?: string | nul
     revalidatePath('/website-cms/blog-management/posts');
     revalidatePath('/blog');
     revalidatePath(`/blog/${finalSlug}`);
-    
+
     return { success: true, postId };
   } catch (error) {
     console.error('Error saving post:', error);
@@ -99,26 +99,26 @@ export async function savePostAction(data: PostFormValues, postId?: string | nul
  * Deletes a blog post from Firestore.
  */
 export async function deletePostAction(postId: string): Promise<PostActionResponse> {
-    if (!postId) {
-        return { success: false, error: '缺少文章 ID。' };
+  if (!postId) {
+    return { success: false, error: '缺少文章 ID。' };
+  }
+  try {
+    const post = await getPostById(postId);
+    if (!post) {
+      return { success: false, error: '找不到要刪除的文章。' };
     }
-    try {
-        const post = await getPostById(postId);
-        if (!post) {
-            return { success: false, error: '找不到要刪除的文章。' };
-        }
 
-        await adminDb.collection('posts').doc(postId).delete();
-        
-        await CacheService.invalidateBlogListCache();
-        await CacheService.invalidatePostCache(post.slug);
+    await adminDb.collection('posts').doc(postId).delete();
 
-        revalidatePath('/website-cms/blog-management/posts');
-        revalidatePath('/blog');
-        
-        return { success: true };
-    } catch(error) {
-        const errorMessage = error instanceof Error ? error.message : "發生未知錯誤。";
-        return { success: false, error: `刪除文章失敗: ${errorMessage}` };
-    }
+    await CacheService.invalidateBlogListCache();
+    await CacheService.invalidatePostCache(post.slug);
+
+    revalidatePath('/website-cms/blog-management/posts');
+    revalidatePath('/blog');
+
+    return { success: true };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "發生未知錯誤。";
+    return { success: false, error: `刪除文章失敗: ${errorMessage}` };
+  }
 }

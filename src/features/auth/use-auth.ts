@@ -18,7 +18,7 @@
  * - useRegister: 註冊流程管理
  * - usePermission: 權限檢查管理
  */
-import { auth, firestore } from '@/lib/db/firebase-client/firebase-client';
+import { auth, firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { generateSkillSuggestion } from '@/ai/flows/generate-skill-flow';
+import { generateSkillSuggestion } from '@/features/integrations/ai/flows/generate-skill-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/ui/alert';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';

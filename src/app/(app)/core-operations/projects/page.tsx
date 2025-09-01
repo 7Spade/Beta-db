@@ -4,18 +4,15 @@
  * initial project and acceptance data and passing it down to client components.
  */
 import {
-  AcceptanceList,
-  ProjectList,
-  ProjectsView,
+  ProjectsView
 } from '@/features/core-operations/projects';
 import type {
   AcceptanceRecord,
   Project,
   Task,
 } from '@/features/core-operations/projects/types';
-import { adminDb } from '@/lib/db/firebase-admin/firebase-admin';
 import { Skeleton } from '@/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
+import { adminDb } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { Suspense } from 'react';
 

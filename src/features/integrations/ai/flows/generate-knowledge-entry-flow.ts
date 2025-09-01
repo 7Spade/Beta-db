@@ -8,7 +8,7 @@
  * @exports GenerateKnowledgeEntryOutput - generateKnowledgeEntry 函數的返回類型。
  */
 
-import { ai } from '@/ai/genkit';
+import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
 import { z } from 'zod';
 
@@ -27,7 +27,7 @@ export type GenerateKnowledgeEntryOutput = z.infer<typeof GenerateKnowledgeEntry
 
 export async function generateKnowledgeEntry(input: GenerateKnowledgeEntryInput): Promise<GenerateKnowledgeEntryOutput & { totalTokens: number }> {
   const result = await generateKnowledgeEntryFlow(input);
-   if (!result) {
+  if (!result) {
     throw new Error('Flow returned no result');
   }
   return result;
@@ -53,34 +53,34 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
     name: 'generateKnowledgeEntryFlow',
     inputSchema: GenerateKnowledgeEntryInputSchema,
     outputSchema: z.object({
-        category: z.string(),
-        content: z.string(),
-        tags: z.array(z.string()),
-        totalTokens: z.number(),
+      category: z.string(),
+      content: z.string(),
+      tags: z.array(z.string()),
+      totalTokens: z.number(),
     }),
   },
   async (input) => {
     let result;
     try {
-        result = await prompt(input);
-        const output = result.output;
-        if (!output) {
-            throw new Error('No output from AI');
-        }
+      result = await prompt(input);
+      const output = result.output;
+      if (!output) {
+        throw new Error('No output from AI');
+      }
 
-        const totalTokens = result.usage?.totalTokens || 0;
-        // 极简化的 token 日志记录
-        logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'succeeded');
+      const totalTokens = result.usage?.totalTokens || 0;
+      // 极简化的 token 日志记录
+      logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'succeeded');
 
-        return {
-            ...output,
-            totalTokens: totalTokens,
-        };
+      return {
+        ...output,
+        totalTokens: totalTokens,
+      };
     } catch (error) {
-        const totalTokens = result?.usage?.totalTokens || 0;
-        // 极简化的失败日志记录
-        logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
-        throw error;
+      const totalTokens = result?.usage?.totalTokens || 0;
+      // 极简化的失败日志记录
+      logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      throw error;
     }
   }
 );

@@ -1,8 +1,8 @@
-import { subscribe } from '@/lib/events/event-dispatcher';
 import type { AppEventPayloadMap } from '@/lib/events/app-events';
+import { subscribe } from '@/lib/events/event-dispatcher';
 import { createNotification } from '@/lib/services/notification/notification.service';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { firestore } from '@/lib/db/firebase-client/firebase-client';
 
 async function getAdminUserIds(): Promise<string[]> {
   const q = query(collection(firestore, 'users'), where('role', '==', 'Admin'));
@@ -16,9 +16,8 @@ function onUserRegistered(payload: AppEventPayloadMap['user.registered']) {
       createNotification({
         recipientId: adminId,
         type: 'new_user_for_approval',
-        message: `新用戶 ${
-          payload.displayName || payload.email || payload.userId
-        } 等待審核。`,
+        message: `新用戶 ${payload.displayName || payload.email || payload.userId
+          } 等待審核。`,
         link: '/user-management',
       });
     });
