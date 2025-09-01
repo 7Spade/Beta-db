@@ -9,4 +9,4 @@
 - **[合作夥伴 (PartnerVerse)](./partnerverse.md)**
 - **[內部團隊 (Team)](./team.md)**
 - **[部落格 (Blog)](./blog.md)**
-- **[倉儲管理 (Warehousing)](../../../features/warehousing/README.md)**
+- **[倉儲管理 (Warehousing)](./warehousing.md)**
