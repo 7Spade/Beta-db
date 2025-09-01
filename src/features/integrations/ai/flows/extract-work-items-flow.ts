@@ -29,7 +29,7 @@ const ExtractWorkItemsInputSchema = z.object({
 });
 export type ExtractWorkItemsInput = z.infer<typeof ExtractWorkItemsInputSchema>;
 
-// 定義流程的輸出 Schema (使用 Zod)，包含審計功能
+// 定義流程的輸出 Schema (使用 Zod)，現在只提取基礎數據
 const ExtractWorkItemsOutputSchema = z.object({
   workItems: z.array(
     z.object({
@@ -37,7 +37,6 @@ const ExtractWorkItemsOutputSchema = z.object({
       name: z.string().describe('料號、品名或項目說明。'),
       quantity: z.number().describe('工作項目的數量。'),
       unitPrice: z.number().describe('工作項目的單價。'),
-      total: z.number().describe('該項目的總價 (數量 * 單價)。')
     })
   ).
     describe('一個包含提取出的工作項目及其數量和單價的列表。'),
@@ -63,10 +62,8 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
 const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your goal is to extract a list of work items and a final subtotal from the document.
 
 Key Concepts:
-- Audit Target: The final '未稅總計' (subtotal before tax) is your single source of truth.
-- Valid Amount: For items with discounts, the final net amount, often in parentheses (), is the correct value.
-- Item Identification: Extract the item number (項次), description (品名), quantity (數量), unit price (單價), and final total (總價).
-- Financial Logic: You must independently figure out how '金額', '折扣', and '小計' relate to each other to ensure the sum of all item totals equals the '未稅總計'.
+- Data Points: Extract the item number (項次), description (品名), quantity (數量), and unit price (單價). DO NOT extract the total price for each item.
+- Audit Target: The final '未稅總計' (subtotal before tax) is your single source of truth for the grand total.
 
 Document: {{media url=fileDataUri}}`;
 
