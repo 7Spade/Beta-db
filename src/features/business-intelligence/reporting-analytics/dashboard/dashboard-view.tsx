@@ -24,8 +24,8 @@ export function DashboardView() {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">用戶總覽</h2>
-        <UserDashboard />
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">合約總覽</h2>
+        <ContractDashboard />
       </section>
 
       <Separator />
@@ -38,17 +38,17 @@ export function DashboardView() {
       <Separator />
 
       <section>
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">合約總覽</h2>
-        <ContractDashboard />
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">夥伴總覽</h2>
+        <PartnerDashboard />
       </section>
 
       <Separator />
 
       <section>
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">夥伴總覽</h2>
-        <PartnerDashboard />
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">用戶總覽</h2>
+        <UserDashboard />
       </section>
-      
+
       <Separator />
 
       <section>
