@@ -3,11 +3,15 @@
  * @description 基于 Supabase 官方推荐的最简配置
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { AiTokenLogInsert, AiTokenLogRow, Database } from '@root/src/features/integrations/database/supabase/types';
+import type {
+  AiTokenLogInsert,
+  AiTokenLogRow,
+  Database,
+} from '@root/src/features/integrations/database/supabase/types';
 
 // 自动记录 AI Token 使用情况
 export async function logAiTokenUsage(
-  supabase: SupabaseClient<Database>,
+  supabase: SupabaseClient<Database>, // Use the specific Database type
   logData: Omit<AiTokenLogInsert, 'timestamp' | 'id'>
 ): Promise<void> {
   try {
@@ -25,7 +29,7 @@ export async function logAiTokenUsage(
 
 // 自动获取 Token 使用统计
 export async function getAiTokenUsageStats(
-  supabase: SupabaseClient<Database>,
+  supabase: SupabaseClient<Database>, // Use the specific Database type
   days: number = 30
 ): Promise<AiTokenLogRow[]> {
   try {
