@@ -15,7 +15,7 @@ src/app/
 │   ├── business-intelligence/   # 商業智慧
 │   ├── core-operations/         # 核心操作
 │   ├── resource-management/     # 資源管理
-│   └── system-administration/   # 系統管理
+│   └── website-cms/   # 系統管理
 ├── (auth)/                       # 認證路由群組
 │   ├── layout.tsx               # 認證佈局 (置中佈局)
 │   ├── login/                   # 登入頁面

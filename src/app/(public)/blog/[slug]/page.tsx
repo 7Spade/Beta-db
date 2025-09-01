@@ -2,8 +2,8 @@
  * @fileoverview Public Single Blog Post Page
  * @description Fetches and displays a single published blog post by its slug.
  */
-import { generatePostSeo } from '@/features/system-administration/website-cms/blog/utils/seo.utils';
-import { BlogDetailView } from '@/features/system-administration/website-cms/blog/views/BlogDetailView';
+import { generatePostSeo } from '@/features/website-cms/blog/utils/seo.utils';
+import { BlogDetailView } from '@/features/website-cms/blog/views/BlogDetailView';
 import { getPostBySlug, getPublishedPosts } from '@/shared/services/blog/blog.service';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';

@@ -4,7 +4,7 @@
  */
 'use server';
 
-import type { Post } from '@/features/system-administration/website-cms/blog/types/blog.types';
+import type { Post } from '@/features/website-cms/blog/types/blog.types';
 import { adminDb } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 

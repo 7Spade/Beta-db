@@ -2,7 +2,7 @@
  * @fileoverview Public Blog Listing Page
  * @description Fetches and displays all published blog posts.
  */
-import { PublicBlogView } from '@/features/system-administration/website-cms/blog/views/PublicBlogView';
+import { PublicBlogView } from '@/features/website-cms/blog/views/PublicBlogView';
 import { getPublishedPosts } from '@/shared/services/blog/blog.service';
 
 export const revalidate = 3600; // Revalidate every hour
