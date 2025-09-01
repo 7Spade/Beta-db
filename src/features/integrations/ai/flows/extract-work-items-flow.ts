@@ -15,7 +15,7 @@
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
 import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
-import { createServerClient } from '@root/src/features/integrations/database/supabase/server';
+import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
 import { cookies } from 'next/headers';
 
@@ -90,7 +90,7 @@ const extractWorkItemsFlow = ai.defineFlow(
   async (input) => {
     let result;
     const cookieStore = cookies();
-    const supabase = createServerClient(cookieStore);
+    const supabase = createClient(cookieStore);
 
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容

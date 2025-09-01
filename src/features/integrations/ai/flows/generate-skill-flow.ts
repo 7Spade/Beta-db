@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -10,7 +11,7 @@
 
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
-import { createServerClient } from '@root/src/features/integrations/database/supabase/server';
+import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
 import { cookies } from 'next/headers';
 
@@ -63,7 +64,7 @@ const generateSkillFlow = ai.defineFlow(
   async (input) => {
     let result;
     const cookieStore = cookies();
-    const supabase = createServerClient(cookieStore);
+    const supabase = createClient(cookieStore);
 
     try {
       result = await prompt(input);
