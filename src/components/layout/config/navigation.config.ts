@@ -188,9 +188,15 @@ export const navigationConfig: NavigationItem[] = [
         children: [
           {
             id: 'warehousing-dashboard',
-            label: '倉儲儀表板',
+            label: '倉儲總覽',
             icon: LayoutGrid,
             href: '/resource-management/warehousing',
+          },
+          {
+            id: 'warehouses',
+            label: '倉庫管理',
+            icon: Warehouse,
+            href: '/resource-management/warehousing/warehouses',
           },
           {
             id: 'items',
@@ -209,12 +215,6 @@ export const navigationConfig: NavigationItem[] = [
             label: '跨倉調撥',
             icon: Truck,
             href: '/resource-management/warehousing/transfers',
-          },
-          {
-            id: 'warehouses',
-            label: '倉庫管理',
-            icon: Warehouse,
-            href: '/resource-management/warehousing/warehouses',
           },
         ],
       },

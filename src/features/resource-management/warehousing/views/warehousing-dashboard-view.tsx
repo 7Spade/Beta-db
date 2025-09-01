@@ -18,20 +18,20 @@ import { useEffect, useState } from 'react';
 
 const warehousingModules = [
   {
-    title: '仓库管理',
-    description: '管理您的所有仓库、厂房或工地库房据点。',
+    title: '倉庫管理',
+    description: '管理您的所有倉庫、廠房或工地庫房據點。',
     icon: WarehouseIcon,
     href: '/resource-management/warehousing/warehouses',
   },
   {
-    title: '物料主档',
-    description: '建立和维护公司统一的物料与工具目录。',
+    title: '物料主檔',
+    description: '建立和維護公司統一的物料與工具目錄。',
     icon: Package,
     href: '/resource-management/warehousing/items',
   },
   {
-    title: '出入库与调拨',
-    description: '记录所有物料的移动、领用与跨仓调拨。',
+    title: '出入庫與調撥',
+    description: '記錄所有物料的移動、領用與跨倉調撥。',
     icon: Truck,
     href: '/resource-management/warehousing/movements',
   },
@@ -49,8 +49,8 @@ export function WarehousingDashboardView() {
             setWarehouses(warehousesData);
             setLoading(false);
         }, (error) => {
-            console.error("获取仓库时发生错误：", error);
-            toast({ title: "错误", description: "无法载入仓库列表。", variant: "destructive" });
+            console.error("獲取倉庫時發生錯誤：", error);
+            toast({ title: "錯誤", description: "無法載入倉庫列表。", variant: "destructive" });
             setLoading(false);
         });
 
@@ -76,15 +76,15 @@ export function WarehousingDashboardView() {
     
     const stats: StatCardData[] = [
         {
-            title: '仓库总数',
+            title: '倉庫總數',
             value: warehouses.length.toString(),
-            description: '所有已建立的仓库据点',
+            description: '所有已建立的倉庫據點',
             icon: WarehouseIcon,
         },
         {
-            title: '启用中据点',
+            title: '啟用中據點',
             value: warehouses.filter(w => w.isActive).length.toString(),
-            description: '目前正在运作的仓库',
+            description: '目前正在運作的倉庫',
             icon: WarehouseIcon,
         }
     ];
@@ -92,8 +92,8 @@ export function WarehousingDashboardView() {
   return (
     <div className="space-y-6">
         <div>
-            <h1 className="text-3xl font-bold tracking-tight">仓储管理总览</h1>
-            <p className="text-muted-foreground">管理您的库存、仓库和物料移动。</p>
+            <h1 className="text-3xl font-bold tracking-tight">倉儲管理總覽</h1>
+            <p className="text-muted-foreground">管理您的庫存、倉庫和物料移動。</p>
         </div>
         
         <DashboardStats stats={stats} />
