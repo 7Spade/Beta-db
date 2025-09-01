@@ -58,8 +58,8 @@ export default function InventoryManagementPage() {
                                 <p className="text-xs text-muted-foreground">{module.description}</p>
                                 <div className="mt-2">
                                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${module.status === 'active'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-orange-100 text-orange-800'
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-orange-100 text-orange-800'
                                         }`}>
                                         {module.status === 'active' ? '活躍' : '監控中'}
                                     </span>
