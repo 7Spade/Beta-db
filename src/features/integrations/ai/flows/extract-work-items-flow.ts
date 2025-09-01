@@ -59,8 +59,19 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// The Ultimate, Simplified Prompt
-const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. From the document, extract a list of all work items.
+// 最终版 Prompt - 注入观念与提示
+const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your task is to analyze the provided document and extract a list of all work items.
+
+**Core Objective**:
+Your goal is to produce a list of items whose individual totals sum up precisely to the document's **'未稅總計' (subtotal before tax)**.
+
+**Key Concepts & Hints**:
+*   **Financial Structure**: Remember the relationship: **未稅 (pre-tax) + 稅金 (tax) = 含稅 (tax-included)**. Your audit is based on the **未稅** value.
+*   **Parentheses are Important**: In many commercial documents, a number in parentheses `()` next to a main price often represents the final, effective amount after discounts. Treat this parenthesized number as the true `total` for that line item.
+*   **Item vs. Summary**: You must differentiate between individual line items and summary lines (like '小計', '合計'). Only extract individual items.
+*   **Self-Correction**: After your initial extraction, you must internally sum up the 'total' for every item you've listed. If this sum does not match the document's '未稅總計', you must re-analyze the document to find and correct your extraction errors until the totals match perfectly.
+
+Analyze the following document based on these principles.
 
 Document: {{media url=fileDataUri}}`;
 
@@ -115,7 +126,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       // Log the metadata without returning it to the client
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result.model,
+        model: result.model || modelName,
         status: 'succeeded',
         input_tokens: result.usage?.inputTokens,
         output_tokens: result.usage?.outputTokens,
@@ -130,7 +141,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result?.model,
+        model: result?.model || modelName,
         status: 'failed',
         input_tokens: result?.usage?.inputTokens,
         output_tokens: result?.usage?.outputTokens,
