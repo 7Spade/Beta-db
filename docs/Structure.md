@@ -54,6 +54,162 @@
 │  │  layout.tsx
 │  │  README.md
 │  │
+│  ├─(app)
+│  │  │  layout.tsx
+│  │  │  README.md
+│  │  │
+│  │  ├─automation-tools
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─kanban
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─knowledge-base
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─project-progress
+│  │  │          page.tsx
+│  │  │
+│  │  ├─business-intelligence
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  └─reporting-analytics
+│  │  │      │  README.md
+│  │  │      │
+│  │  │      ├─daily-report
+│  │  │      │      page.tsx
+│  │  │      │
+│  │  │      └─dashboard
+│  │  │              page.tsx
+│  │  │
+│  │  ├─core-operations
+│  │  │  ├─contracts
+│  │  │  │  ├─billing
+│  │  │  │  │      page.tsx
+│  │  │  │  │
+│  │  │  │  └─contracts
+│  │  │  │      │  layout.tsx
+│  │  │  │      │  page.tsx
+│  │  │  │      │
+│  │  │  │      ├─create
+│  │  │  │      │      page.tsx
+│  │  │  │      │
+│  │  │  │      └─[id]
+│  │  │  │              page.tsx
+│  │  │  │
+│  │  │  ├─projects
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  ├─quality
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─schedule
+│  │  │  │      page.tsx
+│  │  │  │
+│  │  │  └─security
+│  │  │          README.md
+│  │  │
+│  │  ├─resource-management
+│  │  │  ├─crm
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  ├─partners
+│  │  │  │  │      page.tsx
+│  │  │  │  │
+│  │  │  │  └─workflows
+│  │  │  │          page.tsx
+│  │  │  │
+│  │  │  ├─document
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  ├─cloud-drive
+│  │  │  │  │      page.tsx
+│  │  │  │  │
+│  │  │  │  └─docu-parse
+│  │  │  │          page.tsx
+│  │  │  │
+│  │  │  ├─finance
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  ├─hr
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  ├─attendance
+│  │  │  │  │      page.tsx
+│  │  │  │  │
+│  │  │  │  ├─members
+│  │  │  │  │      page.tsx
+│  │  │  │  │
+│  │  │  │  └─skills
+│  │  │  │          page.tsx
+│  │  │  │
+│  │  │  └─inventory
+│  │  │      │  README.md
+│  │  │      │
+│  │  │      ├─items
+│  │  │      │      page.tsx
+│  │  │      │
+│  │  │      ├─movements
+│  │  │      │      page.tsx
+│  │  │      │
+│  │  │      ├─transfers
+│  │  │      │      page.tsx
+│  │  │      │
+│  │  │      └─warehouses
+│  │  │              page.tsx
+│  │  │
+│  │  └─system-administration
+│  │      │  README.md
+│  │      │
+│  │      ├─settings
+│  │      │      page.tsx
+│  │      │
+│  │      └─website-cms
+│  │          │  layout.tsx
+│  │          │
+│  │          ├─blog-management
+│  │          │  └─posts
+│  │          │      │  page.tsx
+│  │          │      │
+│  │          │      ├─create
+│  │          │      │      page.tsx
+│  │          │      │
+│  │          │      └─[id]
+│  │          │          │  page.tsx
+│  │          │          │
+│  │          │          └─edit
+│  │          │                  page.tsx
+│  │          │
+│  │          ├─career-management
+│  │          │  │  page.tsx
+│  │          │  │
+│  │          │  ├─applications
+│  │          │  │      page.tsx
+│  │          │  │
+│  │          │  └─jobs
+│  │          │          page.tsx
+│  │          │
+│  │          ├─contact-management
+│  │          │      page.tsx
+│  │          │
+│  │          ├─content-management
+│  │          │  │  page.tsx
+│  │          │  │
+│  │          │  ├─media
+│  │          │  │      page.tsx
+│  │          │  │
+│  │          │  └─pages
+│  │          │          page.tsx
+│  │          │
+│  │          ├─dashboard-management
+│  │          │      page.tsx
+│  │          │
+│  │          ├─system-management
+│  │          │      page.tsx
+│  │          │
+│  │          └─user-management
+│  │                  page.tsx
+│  │
 │  ├─(auth)
 │  │  │  layout.tsx
 │  │  │  README.md
@@ -78,161 +234,6 @@
 │  │  │
 │  │  └─verify-email
 │  │          page.tsx
-│  │
-│  ├─(dashboard)
-│  │  │  layout.tsx
-│  │  │  README.md
-│  │  │
-│  │  ├─(business-intelligence)
-│  │  │      README.md
-│  │  │
-│  │  ├─(communication)
-│  │  │      README.md
-│  │  │
-│  │  ├─(crm-management)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─partners
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─workflows
-│  │  │          page.tsx
-│  │  │
-│  │  ├─(document-management)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─cloud-drive
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─docu-parse
-│  │  │          page.tsx
-│  │  │
-│  │  ├─(enhanced-inventory)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─items
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  ├─movements
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  ├─transfers
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─warehouses
-│  │  │          page.tsx
-│  │  │
-│  │  ├─(finance-management)
-│  │  │      README.md
-│  │  │
-│  │  ├─(hr-management)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─attendance
-│  │  │          page.tsx
-│  │  │
-│  │  ├─(project-management)
-│  │  │      README.md
-│  │  │
-│  │  ├─(quality-management)
-│  │  │      README.md
-│  │  │
-│  │  ├─(reporting-analytics)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  └─daily-report
-│  │  │          page.tsx
-│  │  │
-│  │  ├─(security-compliance)
-│  │  │      README.md
-│  │  │
-│  │  ├─(system-administration)
-│  │  │      README.md
-│  │  │
-│  │  ├─(workflow-automation)
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─kanban
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─project-progress
-│  │  │          page.tsx
-│  │  │
-│  │  ├─contracts
-│  │  │  ├─billing
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─contracts
-│  │  │      │  layout.tsx
-│  │  │      │  page.tsx
-│  │  │      │
-│  │  │      ├─create
-│  │  │      │      page.tsx
-│  │  │      │
-│  │  │      └─[id]
-│  │  │              page.tsx
-│  │  │
-│  │  ├─dashboard
-│  │  │      page.tsx
-│  │  │
-│  │  ├─projects
-│  │  │      page.tsx
-│  │  │
-│  │  ├─settings
-│  │  │      page.tsx
-│  │  │
-│  │  ├─team
-│  │  │  ├─knowledge-base
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  ├─members
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  ├─schedule
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─skills
-│  │  │          page.tsx
-│  │  │
-│  │  └─website-cms
-│  │      │  layout.tsx
-│  │      │
-│  │      ├─blog-management
-│  │      │  └─posts
-│  │      │      │  page.tsx
-│  │      │      │
-│  │      │      └─[id]
-│  │      │              page.tsx
-│  │      │
-│  │      ├─career-management
-│  │      │  │  page.tsx
-│  │      │  │
-│  │      │  ├─applications
-│  │      │  │      page.tsx
-│  │      │  │
-│  │      │  └─jobs
-│  │      │          page.tsx
-│  │      │
-│  │      ├─contact-management
-│  │      │      page.tsx
-│  │      │
-│  │      ├─content-management
-│  │      │  │  page.tsx
-│  │      │  │
-│  │      │  ├─media
-│  │      │  │      page.tsx
-│  │      │  │
-│  │      │  └─pages
-│  │      │          page.tsx
-│  │      │
-│  │      ├─dashboard-management
-│  │      │      page.tsx
-│  │      │
-│  │      ├─system-management
-│  │      │      page.tsx
-│  │      │
-│  │      └─user-management
-│  │              page.tsx
 │  │
 │  └─(public)
 │      │  layout.tsx
@@ -265,7 +266,6 @@
 │  │
 │  ├─layout
 │  │  │  index.ts
-│  │  │  README.md
 │  │  │
 │  │  ├─core
 │  │  │      app-header.tsx
@@ -337,7 +337,6 @@
 │          popover.tsx
 │          progress.tsx
 │          radio-group.tsx
-│          README.md
 │          resizable.tsx
 │          scroll-area.tsx
 │          select.tsx
@@ -648,6 +647,9 @@
 │  ├─(integrations)
 │  │      README.md
 │  │
+│  ├─(quality-management)
+│  │      README.md
+│  │
 │  ├─(resource-management)
 │  │  │  README.md
 │  │  │
@@ -801,14 +803,97 @@
 │          │  │  README.md
 │          │  │
 │          │  ├─actions
-│          │  │      posts.actions.ts
+│          │  │      blog.actions.ts
+│          │  │      cache.actions.ts
+│          │  │      media.actions.ts
+│          │  │
+│          │  ├─components
+│          │  │  ├─BlogCard
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  ├─BlogEditor
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  ├─BlogList
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  └─MediaUploader
+│          │  │          index.tsx
+│          │  │
+│          │  ├─hooks
+│          │  │      use-blog-form.ts
+│          │  │      use-blog-list.ts
+│          │  │
+│          │  ├─types
+│          │  │      blog.types.ts
+│          │  │      media.types.ts
+│          │  │
+│          │  ├─utils
+│          │  │      content.utils.ts
+│          │  │      seo.utils.ts
+│          │  │      slug.utils.ts
 │          │  │
 │          │  └─views
-│          │          post-form-view.tsx
-│          │          posts-list-view.tsx
+│          │          BlogDetailView.tsx
+│          │          BlogFormView.tsx
+│          │          BlogListView.tsx
+│          │          PublicBlogView.tsx
 │          │
 │          ├─blog-management
 │          │      README.md
+│          │
+│          ├─career
+│          │  │  README.md
+│          │  │
+│          │  ├─actions
+│          │  │      application.actions.ts
+│          │  │      email.actions.ts
+│          │  │      interview.actions.ts
+│          │  │      job.actions.ts
+│          │  │
+│          │  ├─components
+│          │  │  ├─ApplicationCard
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  ├─ApplicationList
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  ├─ApplyForm
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  ├─InterviewScheduler
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  ├─JobCard
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  ├─JobEditor
+│          │  │  │      index.tsx
+│          │  │  │
+│          │  │  └─JobList
+│          │  │          index.tsx
+│          │  │
+│          │  ├─hooks
+│          │  │      use-applications.ts
+│          │  │      use-job-form.ts
+│          │  │      use-job-list.ts
+│          │  │
+│          │  ├─types
+│          │  │      application.types.ts
+│          │  │      interview.types.ts
+│          │  │      job.types.ts
+│          │  │
+│          │  ├─utils
+│          │  │      notification.utils.ts
+│          │  │      slug.utils.ts
+│          │  │      status.utils.ts
+│          │  │
+│          │  └─views
+│          │          ApplicationDetailView.tsx
+│          │          ApplicationListView.tsx
+│          │          JobFormView.tsx
+│          │          JobListView.tsx
+│          │          PublicCareerView.tsx
 │          │
 │          ├─career-management
 │          │      README.md
@@ -892,6 +977,19 @@
 │  │  │
 │  │  ├─ai-token-log
 │  │  │      logging.service.ts
+│  │  │      README.md
+│  │  │
+│  │  ├─blog
+│  │  │      blog.service.ts
+│  │  │      cache.service.ts
+│  │  │      media.service.ts
+│  │  │
+│  │  ├─career
+│  │  │      analytics.service.ts
+│  │  │      application.service.ts
+│  │  │      email.service.ts
+│  │  │      interview.service.ts
+│  │  │      job.service.ts
 │  │  │      README.md
 │  │  │
 │  │  ├─contracts
