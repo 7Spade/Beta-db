@@ -12,7 +12,7 @@ import {
   footerNavigationConfig,
   navigationConfig,
   shouldExpandSection,
-} from '@root/src/lib/config/navigation.config'
+} from '@root/src/shared/config/navigation.config'
 import { Package2 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'

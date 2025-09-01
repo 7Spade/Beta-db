@@ -1,14 +1,3 @@
-├─ai
-│  │  dev.ts
-│  │  genkit.ts
-│  │  README.md
-│  │
-│  └─flows
-│          extract-work-items-flow.ts
-│          generate-knowledge-entry-flow.ts
-│          generate-skill-flow.ts
-│          generate-subtasks-flow.ts
-│
 ├─api
 │  │  README.md
 │  │
@@ -646,7 +635,47 @@
 │  │          README.md
 │  │
 │  ├─integrations
-│  │      README.md
+│  │  │  README.md
+│  │  │
+│  │  ├─ai
+│  │  │  │  dev.ts
+│  │  │  │  genkit.ts
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  └─flows
+│  │  │          extract-work-items-flow.ts
+│  │  │          generate-knowledge-entry-flow.ts
+│  │  │          generate-skill-flow.ts
+│  │  │          generate-subtasks-flow.ts
+│  │  │
+│  │  └─database
+│  │      │  README.md
+│  │      │
+│  │      ├─firebase-admin
+│  │      │      firebase-admin.ts
+│  │      │      index.ts
+│  │      │      README.md
+│  │      │
+│  │      ├─firebase-client
+│  │      │      firebase-client.ts
+│  │      │      index.ts
+│  │      │      README.md
+│  │      │
+│  │      ├─mongoose
+│  │      │      mongodb.ts
+│  │      │      README.md
+│  │      │
+│  │      ├─redis
+│  │      │      README.md
+│  │      │      redis-client.ts
+│  │      │
+│  │      └─supabase
+│  │              client.ts
+│  │              index.ts
+│  │              middleware.ts
+│  │              README.md
+│  │              server.ts
+│  │              types.ts
 │  │
 │  ├─resource-management
 │  │  │  README.md
@@ -919,35 +948,6 @@
 │  │
 │  ├─constants
 │  │      roles.ts
-│  │
-│  ├─db
-│  │  │  README.md
-│  │  │
-│  │  ├─firebase-admin
-│  │  │      firebase-admin.ts
-│  │  │      index.ts
-│  │  │      README.md
-│  │  │
-│  │  ├─firebase-client
-│  │  │      firebase-client.ts
-│  │  │      index.ts
-│  │  │      README.md
-│  │  │
-│  │  ├─mongoose
-│  │  │      mongodb.ts
-│  │  │      README.md
-│  │  │
-│  │  ├─redis
-│  │  │      README.md
-│  │  │      redis-client.ts
-│  │  │
-│  │  └─supabase
-│  │          client.ts
-│  │          index.ts
-│  │          middleware.ts
-│  │          README.md
-│  │          server.ts
-│  │          types.ts
 │  │
 │  ├─events
 │  │      app-events.ts

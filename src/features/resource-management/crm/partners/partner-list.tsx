@@ -8,7 +8,7 @@ import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Input } from '@/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
-import type { Role } from '@root/src/lib/constants/roles';
+import type { Role } from '@root/src/shared/constants/roles';
 import { Plus, Search } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState, type FC } from 'react';

@@ -11,7 +11,7 @@ import { TransactionsTab } from '@/features/resource-management/crm/transactions
 import type { Contact, Partner } from '@/types/types';
 import { Button } from '@/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
-import type { Role } from '@root/src/lib/constants/roles';
+import type { Role } from '@root/src/shared/constants/roles';
 import { ArrowLeft, ArrowLeftRight, Briefcase, DollarSign, ShieldCheck, Star, Users } from 'lucide-react';
 import type { FC } from 'react';
 import { ProfileHeader } from './profile-header';

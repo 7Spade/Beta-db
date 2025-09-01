@@ -6,7 +6,7 @@ import { addDoc, collection, doc, onSnapshot, setDoc, updateDoc } from 'firebase
 import { useEffect, useState, type FC } from 'react';
 
 import type { Contact, Partner } from '@/types/types';
-import type { Role } from '@root/src/lib/constants/roles';
+import type { Role } from '@root/src/shared/constants/roles';
 
 import { ContactForm } from '@/features/resource-management/crm/contacts/forms/contact-form';
 import { Skeleton } from '@/ui/skeleton';

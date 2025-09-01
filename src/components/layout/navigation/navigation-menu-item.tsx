@@ -8,7 +8,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@/ui/sidebar'
-import type { NavigationItem } from '@root/src/lib/config/navigation.config'
+import type { NavigationItem } from '@root/src/shared/config/navigation.config'
 import { ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 

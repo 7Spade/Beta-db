@@ -6,7 +6,7 @@ import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardHeader, CardTitle } from '@/ui/card';
 import { formatDate } from '@/utils';
-import type { Role } from '@root/src/lib/constants/roles';
+import type { Role } from '@root/src/shared/constants/roles';
 import { Calendar, Edit, Globe } from 'lucide-react';
 import Image from 'next/image';
 import type { FC } from 'react';
