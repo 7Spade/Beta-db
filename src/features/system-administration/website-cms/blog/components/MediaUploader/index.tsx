@@ -1,6 +1,6 @@
 'use client';
 
-import { uploadImageAction } from '@/features/(system-admin)/website-cms/blog/actions/media.actions';
+import { uploadImageAction } from '@/features/system-administration/website-cms/blog/actions/media.actions';
 import { Button } from '@/ui/button';
 import { Input } from '@/ui/input';
 import { useToast } from '@root/src/lib/hooks/use-toast';

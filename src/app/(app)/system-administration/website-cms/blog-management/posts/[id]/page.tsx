@@ -3,7 +3,7 @@
  * @description This page is for viewing the details of a single blog post from an admin's perspective.
  * In this new structure, this route is for viewing details, and a sub-route is for editing.
  */
-import { BlogDetailView } from '@/features/(system-admin)/website-cms/blog/views/BlogDetailView';
+import { BlogDetailView } from '@/features/system-administration/website-cms/blog/views/BlogDetailView';
 import { getPostById } from '@/lib/services/blog/blog.service';
 import { Button } from '@/ui/button';
 import { Edit } from 'lucide-react';

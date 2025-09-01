@@ -6,7 +6,7 @@
  */
 import { adminAuth, adminDb } from '@/firebase-admin/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import type { UserProfile } from '@root/src/features/(system-admin)/(security-compliance)/auth/use-auth';
+import type { UserProfile } from '@root/src/features/auth/use-auth';
 import { cookies } from 'next/headers';
 import { ProfileForm } from './profile-form';
 

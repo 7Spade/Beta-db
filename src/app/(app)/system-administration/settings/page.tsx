@@ -1,4 +1,4 @@
-import { SettingsView } from '@/features/(system-admin)/settings/settings-view';
+import { SettingsView } from '@/features/system-administration/settings/settings-view';
 
 export default function SettingsPage() {
   return <SettingsView />;

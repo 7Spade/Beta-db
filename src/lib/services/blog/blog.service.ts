@@ -5,7 +5,7 @@
 'use server';
 
 import { adminDb } from '@/lib/db/firebase-admin/firebase-admin';
-import type { Post } from '@/features/(system-admin)/website-cms/blog/types/blog.types';
+import type { Post } from '@/features/system-administration/website-cms/blog/types/blog.types';
 import { Timestamp } from 'firebase-admin/firestore';
 
 const postsCollection = adminDb.collection('posts');

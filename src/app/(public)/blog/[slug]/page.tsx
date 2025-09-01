@@ -3,9 +3,9 @@
  * @description Fetches and displays a single published blog post by its slug.
  */
 import { getPostBySlug, getPublishedPosts } from '@/lib/services/blog/blog.service';
-import { generatePostSeo } from '@/features/(system-admin)/website-cms/blog/utils/seo.utils';
+import { generatePostSeo } from '@/features/system-administration/website-cms/blog/utils/seo.utils';
 import { notFound } from 'next/navigation';
-import { BlogDetailView } from '@/features/(system-admin)/website-cms/blog/views/BlogDetailView';
+import { BlogDetailView } from '@/features/system-administration/website-cms/blog/views/BlogDetailView';
 import type { Metadata } from 'next';
 
 export const revalidate = 3600; // Revalidate every hour

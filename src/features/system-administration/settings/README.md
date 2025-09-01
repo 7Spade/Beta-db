@@ -20,7 +20,7 @@
 
 ```tsx
 // src/app/(dashboard)/settings/page.tsx
-import { SettingsView } from '@/features/(system-admin)/settings-view';
+import { SettingsView } from '@/features/system-administration/settings-view';
 
 export default function SettingsPage() {
   return <SettingsView />;

@@ -1,4 +1,4 @@
-import type { Post } from '@/features/(system-admin)/website-cms/blog/types/blog.types';
+import type { Post } from '@/features/system-administration/website-cms/blog/types/blog.types';
 import { Badge } from '@/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { formatDate } from '@/utils';

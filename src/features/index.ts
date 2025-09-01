@@ -12,17 +12,17 @@
  */
 
 // Admin Features
-export * from '@root/src/features/(system-admin)/admin/views/admin-dashboard-view';
+export * from '@root/src/features/system-administration/admin/views/admin-dashboard-view';
 
 // Core App Features
 export * from '@root/src/features/core-operations/projects/views/ProjectView';
 
 // Auth Features
-export * from '@root/src/features/(system-admin)/(security-compliance)/auth/index';
+export * from '@root/src/features/auth/index';
 
 // Blog Features
-export * from '@/features/(system-admin)/website-cms/blog/views/BlogFormView';
-export * from '@/features/(system-admin)/website-cms/blog/views/BlogListView';
+export * from '@/features/system-administration/website-cms/blog/views/BlogFormView';
+export * from '@/features/system-administration/website-cms/blog/views/BlogListView';
 
 // Cloud Drive Features
 export * from '@/features/resource-management/document/cloud-drive/views/cloud-drive-view';
@@ -38,4 +38,4 @@ export * from '@/features/resource-management/crm/partners/partners-view';
 export * from '@/features/resource-management/crm/workflows/workflow-builder';
 
 // Settings Features
-export * from '@/features/(system-admin)/settings/settings-view';
+export * from '@/features/system-administration/settings/settings-view';
