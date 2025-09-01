@@ -3,7 +3,7 @@
  */
 
 import { adminDb as firestore } from '@/db/firebase-admin';
-import type { Contract } from '@/features/(core-operations)/contracts/types';
+import type { Contract } from '@/features/core-operations/contracts/types';
 import { Timestamp } from '@firebase/firestore';
 
 // 定义Firestore文档数据类型

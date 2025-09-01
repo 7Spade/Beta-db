@@ -7,12 +7,12 @@ import {
   AcceptanceList,
   ProjectList,
   ProjectsView,
-} from '@/features/(core-operations)/projects';
+} from '@/features/core-operations/projects';
 import type {
   AcceptanceRecord,
   Project,
   Task,
-} from '@/features/(core-operations)/projects/types';
+} from '@/features/core-operations/projects/types';
 import { adminDb } from '@/lib/db/firebase-admin/firebase-admin';
 import { Skeleton } from '@/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';

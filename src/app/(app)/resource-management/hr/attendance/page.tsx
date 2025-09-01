@@ -1,4 +1,4 @@
-import { StaffAttendanceView } from '@/features/(resource-management)/(hr-management)/attendance/staff-attendance-view';
+import { StaffAttendanceView } from '@/features/resource-management/hr/attendance/staff-attendance-view';
 
 export default function StaffAttendancePage() {
   return <StaffAttendanceView />;

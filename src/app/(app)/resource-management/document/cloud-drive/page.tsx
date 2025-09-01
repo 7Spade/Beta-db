@@ -2,7 +2,7 @@
  * @fileoverview Cloud Drive Page - 雲端硬碟功能的進入點
  * @description 此頁面負責渲染雲端硬碟的主視圖 (CloudDriveView)。
  */
-import { CloudDriveView } from '@/features/(document-management)/cloud-drive/views/cloud-drive-view';
+import { CloudDriveView } from '@/features/resource-management/document/cloud-drive/views/cloud-drive-view';
 import { Skeleton } from '@/ui/skeleton';
 import { Suspense } from 'react';
 

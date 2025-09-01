@@ -5,7 +5,7 @@ import type {
   ContractVersion,
   Payment,
   Receipt,
-} from '@/features/(core-operations)/contracts/types';
+} from '@/features/core-operations/contracts/types';
 import type { Timestamp } from '@firebase/firestore';
 
 export type {

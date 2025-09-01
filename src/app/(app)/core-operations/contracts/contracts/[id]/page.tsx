@@ -1,7 +1,7 @@
 /**
  * @fileoverview 合約詳情頁面
  */
-import { ContractDetailView } from '@/features/(core-operations)/contracts/views';
+import { ContractDetailView } from '@/features/core-operations/contracts/views';
 
 export default async function ContractDetailPage({
   params,

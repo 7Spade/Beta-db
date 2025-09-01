@@ -15,7 +15,7 @@
 export * from '@root/src/features/(system-admin)/admin/views/admin-dashboard-view';
 
 // Core App Features
-export * from '@root/src/features/(core-operations)/projects/views/ProjectView';
+export * from '@root/src/features/core-operations/projects/views/ProjectView';
 
 // Auth Features
 export * from '@root/src/features/(system-admin)/(security-compliance)/auth/index';
@@ -25,17 +25,17 @@ export * from '@/features/(system-admin)/website-cms/blog/views/BlogFormView';
 export * from '@/features/(system-admin)/website-cms/blog/views/BlogListView';
 
 // Cloud Drive Features
-export * from '@/features/(document-management)/cloud-drive/views/cloud-drive-view';
+export * from '@/features/resource-management/document/cloud-drive/views/cloud-drive-view';
 
 // Contracts Features
-export * from '@/features/(core-operations)/contracts/index';
+export * from '@/features/core-operations/contracts/index';
 
 // Dashboard Features
-export * from '@root/src/features/(business-intelligence)/(reporting-analytics)/dashboard/dashboard-view';
+export * from '@root/src/features/business-intelligence/reporting-analytics/dashboard/dashboard-view';
 
 // PartnerVerse Features
-export * from '@/features/(resource-management)/(crm-management)/partners/partners-view';
-export * from '@/features/(resource-management)/(crm-management)/workflows/workflow-builder';
+export * from '@/features/resource-management/crm/partners/partners-view';
+export * from '@/features/resource-management/crm/workflows/workflow-builder';
 
 // Settings Features
 export * from '@/features/(system-admin)/settings/settings-view';
