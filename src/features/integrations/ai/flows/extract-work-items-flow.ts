@@ -59,19 +59,23 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 最终版 Prompt - 注入观念与提示
-const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your task is to analyze the provided document and extract a list of all work items.
+// 最终版 Prompt
+const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your primary task is to extract a flattened, pre-tax list of work items from a given commercial document.
 
-**Core Objective**:
-Your goal is to produce a list of items whose individual totals sum up precisely to the document's **'未稅總計' (subtotal before tax)**.
+**Core Concepts & Reminders for Your Analysis:**
 
-**Key Concepts & Hints**:
-*   **Financial Structure**: Remember the relationship: **未稅 (pre-tax) + 稅金 (tax) = 含稅 (tax-included)**. Your audit is based on the **未稅** value.
-*   **Parentheses are Important**: In many commercial documents, a number in parentheses `()` next to a main price often represents the final, effective amount after discounts. Treat this parenthesized number as the true `total` for that line item.
-*   **Item vs. Summary**: You must differentiate between individual line items and summary lines (like '小計', '合計'). Only extract individual items.
-*   **Self-Correction**: After your initial extraction, you must internally sum up the 'total' for every item you've listed. If this sum does not match the document's '未稅總計', you must re-analyze the document to find and correct your extraction errors until the totals match perfectly.
+*   **Financial Structure Concept**: Remember the fundamental relationship: **未稅 (pre-tax) + 稅金 (tax) = 含稅 (tax-included)**. Your entire audit must be based on the **'未稅總計' (Subtotal before tax)**. This is your single source of truth.
 
-Analyze the following document based on these principles.
+*   **The Parentheses Rule**: In many Taiwanese commercial documents, a number in parentheses `()` next to a main price often represents the **final, effective amount** after discounts. You must prioritize this parenthesized number as the true `total` for that line item.
+
+*   **Item Identification**: To correctly structure your output, you must identify three key elements for each work item:
+    *   **項次 (Item ID)**: This is the sequential number (like 10, 20, 30) that marks the beginning of a new item.
+    *   **品名 (Item Name)**: This is the descriptive text detailing the product or service.
+    *   **數量 (Quantity)**: This is the number of units for the item.
+
+*   **Quantity vs. Unit Price Logic**: When you see multiple numbers, remember that '數量 (Quantity)' is typically a whole number (like 1, 2, 10), while '單價 (Unit Price)' and '總價 (Total Price)' are often larger, more complex numbers. Use this logic to distinguish them correctly.
+
+Now, analyze the following document based on these injected concepts and perform the audit.
 
 Document: {{media url=fileDataUri}}`;
 
@@ -141,7 +145,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result?.model || modelName,
+        model: result?.model,
         status: 'failed',
         input_tokens: result?.usage?.inputTokens,
         output_tokens: result?.usage?.outputTokens,
