@@ -91,8 +91,6 @@ export function DocuParseView() {
   const serverError = state.error;
 
   useEffect(() => {
-    // This effect now runs only when a file path is selected.
-    // It no longer depends on `selectedPartnerId`.
     if (selectedFilePath) {
       startTransition(() => {
         formAction({ filePath: selectedFilePath });
@@ -198,17 +196,7 @@ export function DocuParseView() {
   };
 
   const handleReset = () => {
-    setSelectedFilePath(null);
-    router.replace('/automation-tools/docu-parse'); // Clear URL params
-    // Reset all local states
-    setWorkItems([]);
-    setDocDetails({
-      customId: '',
-      name: '',
-      client: '',
-      clientRepresentative: '',
-    });
-    setSelectedPartnerId('');
+    router.push('/resource-management/document/cloud-drive');
   };
 
   if (!selectedFilePath) {
