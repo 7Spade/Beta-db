@@ -105,6 +105,7 @@ export async function createProjectAndContractFromParsedData(
     const contractId = newContractRef.id;
 
     const contractData = {
+      projectId: projectId, // **核心修改：關聯專案 ID**
       customId: docDetails.customId,
       name: docDetails.name,
       contractor: '本公司', // Placeholder value
@@ -113,6 +114,7 @@ export async function createProjectAndContractFromParsedData(
       totalValue: totalValue, // Use corrected total value
       status: '啟用中',
       scope: workItemsToScope(workItems, docDetails.name), // Use updated scope text
+      tasks: tasks, // **核心修改：儲存結構化的任務快照**
       startDate: projectData.startDate,
       endDate: projectData.endDate,
       payments: [],

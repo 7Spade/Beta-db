@@ -6,7 +6,8 @@ import {
   ContractStatusBadge,
 } from '@/features/core-operations/contracts/components';
 import { ReceiptProgress } from '@/features/core-operations/contracts/components/receipt-progress';
-import type { Contract, Task } from '@/features/core-operations/contracts/types';
+import type { Contract } from '@/features/core-operations/contracts/types';
+import type { Project } from '@/features/core-operations/projects/types';
 import {
   Card,
   CardContent,
@@ -16,7 +17,7 @@ import {
 } from '@/ui/card';
 import { Progress } from '@/ui/progress';
 import { ScrollArea } from '@/ui/scroll-area';
-import { Separator } from '@/ui/separator';
+import { Skeleton } from '@/ui/skeleton';
 import {
   Sheet,
   SheetContent,
@@ -33,8 +34,11 @@ import {
   TableRow,
 } from '@/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
+import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import { doc, onSnapshot, type DocumentData, type DocumentSnapshot } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+
 import { formatDate } from '@root/src/shared/utils';
-import { useState } from 'react';
 
 interface ContractDetailsSheetProps {
   contract: Contract;
@@ -42,29 +46,59 @@ interface ContractDetailsSheetProps {
   onOpenChange: (isOpen: boolean) => void;
 }
 
-function getAllTaskIds(tasks: Task[]): string[] {
-  let ids: string[] = [];
-  for (const task of tasks) {
-    ids.push(task.id);
-    if (task.subTasks && task.subTasks.length > 0) {
-      ids = ids.concat(getAllTaskIds(task.subTasks));
-    }
-  }
-  return ids;
-}
+const processFirestoreProject = (
+  docSnap: DocumentSnapshot<DocumentData>
+): Project => {
+  const data = docSnap.data()!;
+  // Helper to convert Timestamps within tasks recursively
+  const processTasks = (tasks: any[]): any[] => {
+    return tasks.map((task) => ({
+      ...task,
+      subTasks:
+        task.subTasks && Array.isArray(task.subTasks)
+          ? processTasks(task.subTasks)
+          : [],
+    }));
+  };
+
+  return {
+    id: docSnap.id,
+    ...data,
+    startDate: data.startDate?.toDate(),
+    endDate: data.endDate?.toDate(),
+    tasks: data.tasks ? processTasks(data.tasks) : [],
+  } as Project;
+};
+
 
 export function ContractDetailsSheet({
   contract,
   isOpen,
   onOpenChange,
 }: ContractDetailsSheetProps) {
-  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(() => {
-    // Initially expand all tasks
-    if (contract.tasks) {
-      return new Set(getAllTaskIds(contract.tasks));
+  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
+  const [relatedProject, setRelatedProject] = useState<Project | null>(null);
+  const [isLoadingProject, setIsLoadingProject] = useState(true);
+
+  useEffect(() => {
+    if (contract.projectId) {
+      setIsLoadingProject(true);
+      const projectRef = doc(firestore, 'projects', contract.projectId);
+      const unsubscribe = onSnapshot(projectRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setRelatedProject(processFirestoreProject(docSnap));
+        } else {
+          setRelatedProject(null);
+        }
+        setIsLoadingProject(false);
+      });
+      return () => unsubscribe();
+    } else {
+      setIsLoadingProject(false);
+      setRelatedProject(null);
     }
-    return new Set();
-  });
+  }, [contract.projectId]);
+
 
   const handleToggleExpand = (taskId: string) => {
     setExpandedTasks((prev) => {
@@ -83,6 +117,9 @@ export function ContractDetailsSheet({
     .reduce((acc, p) => acc + p.amount, 0);
   const paymentProgress =
     contract.totalValue > 0 ? (totalPaid / contract.totalValue) * 100 : 0;
+
+  // **核心修改**: 使用關聯專案的任務清單，如果找不到，則退回使用合約自身的任務快照
+  const tasksToShow = relatedProject?.tasks || contract.tasks || [];
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -163,13 +200,22 @@ export function ContractDetailsSheet({
                 <Card>
                   <CardHeader>
                     <CardTitle>工作範疇</CardTitle>
+                    <CardDescription>
+                      {relatedProject
+                        ? '即時同步對應專案的任務進度。'
+                        : '未找到關聯專案，顯示合約建立時的任務快照。'}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ContractScopeList
-                      tasks={contract.tasks || []}
-                      expandedTasks={expandedTasks}
-                      onToggleExpand={handleToggleExpand}
-                    />
+                    {isLoadingProject ? (
+                        <Skeleton className="h-40 w-full" />
+                    ) : (
+                        <ContractScopeList
+                            tasks={tasksToShow}
+                            expandedTasks={expandedTasks}
+                            onToggleExpand={handleToggleExpand}
+                        />
+                    )}
                   </CardContent>
                 </Card>
               </div>
