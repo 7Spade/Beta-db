@@ -88,6 +88,7 @@ const extractWorkItemsFlow = ai.defineFlow(
   },
   // Flow 的核心執行邏輯
   async (input) => {
+    const startTime = Date.now();
     let result;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
@@ -113,20 +114,35 @@ const extractWorkItemsFlow = ai.defineFlow(
       if (!output) {
         throw new Error('No output from AI');
       }
+      
+      const durationMs = Date.now() - startTime;
 
-      const totalTokens = result.usage?.totalTokens || 0;
-
-      // 极简化的 token 日志记录
-      await logAiTokenUsage(supabase, 'extractWorkItemsFlow', totalTokens, 'succeeded');
+      await logAiTokenUsage(supabase, {
+        flow_name: 'extractWorkItemsFlow',
+        model: result.model,
+        status: 'succeeded',
+        input_tokens: result.usage?.inputTokens,
+        output_tokens: result.usage?.outputTokens,
+        total_tokens: result.usage?.totalTokens,
+        duration_ms: durationMs,
+      });
 
       return {
         ...output,
-        totalTokens: totalTokens,
+        totalTokens: result.usage?.totalTokens || 0,
       };
     } catch (error) {
-      // 极简化的失败日志记录
-      const totalTokens = result?.usage?.totalTokens || 0;
-      await logAiTokenUsage(supabase, 'extractWorkItemsFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      const durationMs = Date.now() - startTime;
+      await logAiTokenUsage(supabase, {
+        flow_name: 'extractWorkItemsFlow',
+        model: result?.model,
+        status: 'failed',
+        input_tokens: result?.usage?.inputTokens,
+        output_tokens: result?.usage?.outputTokens,
+        total_tokens: result?.usage?.totalTokens,
+        duration_ms: durationMs,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
       // 向上拋出錯誤
       throw error;
     }

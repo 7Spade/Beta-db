@@ -3,23 +3,17 @@
  * @description 基于 Supabase 官方推荐的最简配置
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@root/src/features/integrations/database/supabase/types';
+import type { AiTokenLogInsert, AiTokenLogRow, Database } from '@root/src/features/integrations/database/supabase/types';
 
 // 自动记录 AI Token 使用情况
 export async function logAiTokenUsage(
   supabase: SupabaseClient<Database>,
-  flowName: string,
-  totalTokens: number,
-  status: 'succeeded' | 'failed',
-  error?: string
+  logData: Omit<AiTokenLogInsert, 'timestamp' | 'id'>
 ): Promise<void> {
   try {
     // 自动插入日志记录
     const { error: insertError } = await supabase.from('ai_token_logs').insert({
-      flow_name: flowName,
-      total_tokens: totalTokens,
-      status: status,
-      error: error,
+      ...logData,
       timestamp: new Date().toISOString(),
     });
     if (insertError) throw insertError;
@@ -33,7 +27,7 @@ export async function logAiTokenUsage(
 export async function getAiTokenUsageStats(
   supabase: SupabaseClient<Database>,
   days: number = 30
-) {
+): Promise<AiTokenLogRow[]> {
   try {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);

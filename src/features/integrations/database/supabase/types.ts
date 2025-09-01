@@ -23,30 +23,42 @@ export type Json =
 export interface AiTokenLogRow {
   id: string
   flow_name: string
-  total_tokens: number
+  model: string | null
   status: 'succeeded' | 'failed'
-  user_id?: string  // 使用 string 类型避免 UUID 类型问题
-  error?: string
+  input_tokens: number | null
+  output_tokens: number | null
+  total_tokens: number | null
+  duration_ms: number | null
+  user_id: string | null
+  error: string | null
   timestamp: string
 }
 
 export interface AiTokenLogInsert {
   id?: string
   flow_name: string
-  total_tokens: number
+  model?: string | null
   status: 'succeeded' | 'failed'
-  user_id?: string  // 使用 string 类型避免 UUID 类型问题
-  error?: string
+  input_tokens?: number | null
+  output_tokens?: number | null
+  total_tokens?: number | null
+  duration_ms?: number | null
+  user_id?: string | null
+  error?: string | null
   timestamp?: string
 }
 
 export interface AiTokenLogUpdate {
   id?: string
   flow_name?: string
-  total_tokens?: number
+  model?: string | null
   status?: 'succeeded' | 'failed'
-  user_id?: string  // 使用 string 类型避免 UUID 类型问题
-  error?: string
+  input_tokens?: number | null
+  output_tokens?: number | null
+  total_tokens?: number | null
+  duration_ms?: number | null
+  user_id?: string | null
+  error?: string | null
   timestamp?: string
 }
 

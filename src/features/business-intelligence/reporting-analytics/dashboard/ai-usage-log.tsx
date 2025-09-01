@@ -2,10 +2,11 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table'
-import { getSupabaseAdmin } from '@root/src/features/integrations/database/supabase'
+import { createClient } from '@root/src/features/integrations/database/supabase/server'
 import { formatDistanceToNow } from 'date-fns'
 import { zhTW } from 'date-fns/locale'
 import { CheckCircle, Cpu, XCircle } from 'lucide-react'
+import { cookies } from 'next/headers'
 
 // 定义AI Token日志类型
 interface AiTokenLog {
@@ -19,7 +20,8 @@ interface AiTokenLog {
 // 极简配置：自动显示 AI Token 消耗记录
 export async function AiUsageLog() {
   try {
-    const supabase = await getSupabaseAdmin()
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
 
     // 自动获取最近的日志记录
     const { data: logs } = await supabase
