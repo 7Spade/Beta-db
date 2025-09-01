@@ -60,22 +60,23 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
 }
 
 // 最终版 Prompt
-const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your primary task is to extract a flattened, pre-tax list of work items from a given commercial document.
+const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your primary task is to extract a flattened, pre-tax list of work items from a commercial document.
 
-**Core Concepts & Reminders for Your Analysis:**
+**Your Goal is Absolute Accuracy:**
+The 'total' of each item you extract, when summed up, **must perfectly match** the document's final **'未稅總計' (Subtotal before tax)**. This is your only unbreakable rule and the measure of your success.
 
-*   **Financial Structure Concept**: Remember the fundamental relationship: **未稅 (pre-tax) + 稅金 (tax) = 含稅 (tax-included)**. Your entire audit must be based on the **'未稅總計' (Subtotal before tax)**. This is your single source of truth.
+**Key Financial Concepts for Your Reasoning:**
+To achieve this, you must understand the relationship between these key fields. It is your task to deduce the correct logic for each document:
+*   **'金額' (Amount)**: Often the initial or gross price.
+*   **'折扣' (Discount)**: A reduction from the amount.
+*   **'小計' (Subtotal)**: The result after considering amounts and discounts for a specific item or group.
 
-*   **Quantity vs. Unit Price Logic**: When you see multiple numbers, remember that '數量 (Quantity)' is typically a whole number (like 1, 2, 10), while '單價 (Unit Price)' and '總價 (Total Price)' are often larger, more complex numbers. Use this logic to distinguish them correctly.
+**Your Operational Logic:**
+1.  **Identify the Target**: First, find the document's final **'未稅總計'**. This is your verification target.
+2.  **Analyze and Extract**: For each line item, determine its true effective cost by correctly interpreting the '金額', '折扣', and '小計' fields. You must figure out how they combine.
+3.  **Audit and Self-Correct**: Sum your extracted totals. If they don't match the '未稅總計' target, you **must re-evaluate** your interpretation of the item blocks and correct your logic until the sum is perfect. Do not return a result until the audit passes.
 
-*   **Item Identification**: To correctly structure your output, you must identify three key elements for each work item:
-    *   **項次 (Item ID)**: This is the sequential number (like 10, 20, 30) that marks the beginning of a new item.
-    *   **品名 (Item Name)**: This is the descriptive text detailing the product or service.
-    *   **數量 (Quantity)**: This is the number of units for the item.
-
-*   **The Subtotal Rule**: When a single work item block contains multiple financial lines like '金額' (Amount), '折扣' (Discount), and '小計' (Subtotal), you must recognize that the **'小計' is the final, effective total for that item**. Ignore the initial '金額' and '折扣' lines for your final calculation, as they are merely intermediate steps.
-
-Now, analyze the following document based on these injected concepts and perform the audit.
+Your final output must be a clean list of work items, and the 'subtotal' field in your response must be the '未稅總計' you verified against.
 
 Document: {{media url=fileDataUri}}`;
 
@@ -130,7 +131,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       // Log the metadata without returning it to the client
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result.model,
+        model: result.model || 'unknown',
         status: 'succeeded',
         input_tokens: result.usage?.inputTokens,
         output_tokens: result.usage?.outputTokens,
@@ -145,7 +146,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result?.model,
+        model: result?.model || 'unknown',
         status: 'failed',
         input_tokens: result?.usage?.inputTokens,
         output_tokens: result?.usage?.outputTokens,
