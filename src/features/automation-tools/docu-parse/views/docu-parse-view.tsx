@@ -91,14 +91,14 @@ export function DocuParseView() {
   const serverError = state.error;
 
   useEffect(() => {
-    // This effect runs only when a file path is selected (either from URL or file selector)
+    // This effect now runs only when a file path is selected.
+    // It no longer depends on `selectedPartnerId`.
     if (selectedFilePath) {
       startTransition(() => {
-        const partnerId = selectedPartnerId || null;
-        formAction({ filePath: selectedFilePath, partnerId });
+        formAction({ filePath: selectedFilePath });
       });
     }
-  }, [selectedFilePath, selectedPartnerId, formAction]);
+  }, [selectedFilePath, formAction]);
 
   useEffect(() => {
     const fetchPartners = async () => {

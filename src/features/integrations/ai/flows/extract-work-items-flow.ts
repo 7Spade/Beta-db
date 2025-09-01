@@ -14,11 +14,10 @@
 
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/api/services/ai-token-log.service';
-import { adminDb, adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
+import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
 import { cookies } from 'next/headers';
-import type { Partner } from '@root/src/shared/types/types';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({
@@ -26,8 +25,7 @@ const ExtractWorkItemsInputSchema = z.object({
     .string()
     .describe(
       "一份檔案（合約、報價單或估價單）在 Firebase Storage 中的路徑 (e.g., 'uploads/document.pdf')。"
-    ),
-  partnerId: z.string().optional().describe("關聯的合作夥伴 ID (可選)，用於載入客製化 Prompt。")
+    )
 });
 export type ExtractWorkItemsInput = z.infer<typeof ExtractWorkItemsInputSchema>;
 
@@ -89,6 +87,13 @@ Finally, return your final, verified result in the specified JSON format. Ensure
 Document: {{media url=fileDataUri}}
 `;
 
+const prompt = ai.definePrompt({
+    name: 'extractWorkItemsPrompt',
+    input: { schema: z.object({ fileDataUri: z.string() }) },
+    output: { schema: ExtractWorkItemsOutputSchema },
+    prompt: DEFAULT_PROMPT,
+});
+
 
 // 定義 Genkit Flow
 const extractWorkItemsFlow = ai.defineFlow(
@@ -104,37 +109,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     
-    let promptText = DEFAULT_PROMPT;
     let modelName = 'googleai/gemini-1.5-flash'; // 默认模型
-
-    // 如果提供了 partnerId，尝试加载客制化配置
-    if (input.partnerId) {
-        try {
-            const partnerRef = adminDb.collection('partners').doc(input.partnerId);
-            const partnerSnap = await partnerRef.get();
-            if (partnerSnap.exists) {
-                const partnerData = partnerSnap.data() as Partner;
-                if (partnerData.parsingConfig?.prompt) {
-                    promptText = partnerData.parsingConfig.prompt;
-                    console.log(`使用合作夥伴 ${input.partnerId} 的客製化 Prompt。`);
-                }
-                if (partnerData.parsingConfig?.model) {
-                    modelName = partnerData.parsingConfig.model;
-                    console.log(`使用合作夥伴 ${input.partnerId} 的客製化模型: ${modelName}。`);
-                }
-            }
-        } catch(e) {
-            console.warn(`無法為 partnerId: ${input.partnerId} 載入 AI 配置，將使用預設值。錯誤:`, e);
-        }
-    }
-    
-    const prompt = ai.definePrompt({
-      name: 'dynamicExtractWorkItemsPrompt',
-      input: { schema: z.object({ fileDataUri: z.string() }) },
-      output: { schema: ExtractWorkItemsOutputSchema },
-      prompt: promptText,
-    });
-
 
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容

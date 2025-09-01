@@ -20,14 +20,14 @@ import { adminStorage } from '@root/src/features/integrations/database/firebase-
  * 此函數接收來自前端的檔案路徑，呼叫 AI 流程來解析文件內容，
  * 最後返回解析結果或錯誤訊息。
  * @param prevState - 上一個 Action 的狀態，由 useActionState Hook 管理。
- * @param payload - 包含檔案路徑和可選的合作夥伴 ID 的物件。
+ * @param payload - 包含檔案路徑的物件。
  * @returns {Promise<DocuParseActionState>} - 返回一個包含解析數據、檔名或錯誤訊息的狀態物件。
  */
 export async function extractWorkItemsFromDocument(
   prevState: DocuParseActionState,
-  payload: { filePath: string | null, partnerId: string | null }
+  payload: { filePath: string | null }
 ): Promise<DocuParseActionState> {
-  const { filePath, partnerId } = payload;
+  const { filePath } = payload;
 
   if (!filePath) {
     return { error: '未提供有效的檔案路徑。' };
@@ -42,7 +42,6 @@ export async function extractWorkItemsFromDocument(
     // 步驟 1: 調用 Genkit AI 流程以提取工作項目
     const result = await extractWorkItems({ 
       storagePath: filePath,
-      partnerId: partnerId || undefined // 傳遞 partnerId
     });
 
     if (!result || !result.workItems) {
