@@ -17,6 +17,14 @@ export type {
   Receipt
 };
 
+export interface Warehouse {
+  id: string;
+  name: string;
+  location?: string;
+  managerId?: string;
+  isActive: boolean;
+}
+
 export interface Contact {
   id: string;
   name: string;
