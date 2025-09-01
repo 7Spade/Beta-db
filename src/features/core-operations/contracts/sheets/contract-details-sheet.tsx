@@ -1,8 +1,12 @@
+
 'use client';
 
-import { ContractStatusBadge } from '@/features/core-operations/contracts/components';
+import {
+  ContractScopeList,
+  ContractStatusBadge,
+} from '@/features/core-operations/contracts/components';
 import { ReceiptProgress } from '@/features/core-operations/contracts/components/receipt-progress';
-import type { Contract } from '@/features/core-operations/contracts/types';
+import type { Contract, Task } from '@/features/core-operations/contracts/types';
 import {
   Card,
   CardContent,
@@ -30,7 +34,7 @@ import {
 } from '@/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import { formatDate } from '@root/src/shared/utils';
-import { useMemo } from 'react';
+import { useState } from 'react';
 
 interface ContractDetailsSheetProps {
   contract: Contract;
@@ -38,60 +42,51 @@ interface ContractDetailsSheetProps {
   onOpenChange: (isOpen: boolean) => void;
 }
 
+function getAllTaskIds(tasks: Task[]): string[] {
+  let ids: string[] = [];
+  for (const task of tasks) {
+    ids.push(task.id);
+    if (task.subTasks && task.subTasks.length > 0) {
+      ids = ids.concat(getAllTaskIds(task.subTasks));
+    }
+  }
+  return ids;
+}
+
 export function ContractDetailsSheet({
   contract,
   isOpen,
   onOpenChange,
 }: ContractDetailsSheetProps) {
+  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(() => {
+    // Initially expand all tasks
+    if (contract.tasks) {
+      return new Set(getAllTaskIds(contract.tasks));
+    }
+    return new Set();
+  });
+
+  const handleToggleExpand = (taskId: string) => {
+    setExpandedTasks((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(taskId)) {
+        newSet.delete(taskId);
+      } else {
+        newSet.add(taskId);
+      }
+      return newSet;
+    });
+  };
+
   const totalPaid = contract.payments
     .filter((p) => p.status === '已付款')
     .reduce((acc, p) => acc + p.amount, 0);
   const paymentProgress =
     contract.totalValue > 0 ? (totalPaid / contract.totalValue) * 100 : 0;
 
-  // 將合約的文字版「工作範疇」解析為結構化清單
-  const scopeItems = useMemo(() => {
-    const lines = (contract.scope || '')
-      .split(/\r?\n/)
-      .map((l) => l.trim())
-      .filter(Boolean);
-    const items: Array<{
-      id: string;
-      name: string;
-      quantity: number;
-      unitPrice: number;
-      subtotal: number;
-    }> = [];
-
-    const itemLineRegex =
-      /^([^.]+)\.\s*(.+?)（\s*數量：([\d.]+)\s*，\s*單價：([\d.]+)\s*，\s*小計：([\d.]+)\s*）$/;
-
-    for (const line of lines) {
-      const match = line.match(itemLineRegex);
-      if (match) {
-        const id = String(match[1]).trim();
-        const name = String(match[2]).trim();
-        const quantity = Number(match[3]);
-        const unitPrice = Number(match[4]);
-        const subtotal = Number(match[5]);
-        if (!Number.isNaN(quantity) && !Number.isNaN(unitPrice)) {
-          items.push({
-            id,
-            name,
-            quantity,
-            unitPrice,
-            subtotal: Number.isNaN(subtotal) ? quantity * unitPrice : subtotal,
-          });
-        }
-      }
-    }
-
-    return items;
-  }, [contract.scope]);
-
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="sm:max-w-2xl">
+      <SheetContent side="right" className="sm:max-w-3xl">
         <ScrollArea className="h-full pr-6">
           <SheetHeader className="mb-4">
             <SheetTitle>{contract.name}</SheetTitle>
@@ -108,106 +103,76 @@ export function ContractDetailsSheet({
               <TabsTrigger value="history">歷史紀錄</TabsTrigger>
             </TabsList>
             <TabsContent value="details" className="mt-4">
-              <Card>
-                <CardContent className="pt-6 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        承包商
-                      </h3>
-                      <p className="font-semibold">{contract.contractor}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        客戶
-                      </h3>
-                      <p className="font-semibold">{contract.client}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        開始日期
-                      </h3>
-                      <p className="font-semibold">
-                        {formatDate(
-                          contract.startDate instanceof Date
-                            ? contract.startDate
-                            : contract.startDate?.toDate()
-                        )}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        結束日期
-                      </h3>
-                      <p className="font-semibold">
-                        {formatDate(
-                          contract.endDate instanceof Date
-                            ? contract.endDate
-                            : contract.endDate?.toDate()
-                        )}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        總價值
-                      </h3>
-                      <p className="font-semibold">
-                        ${contract.totalValue.toLocaleString()}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        狀態
-                      </h3>
-                      <ContractStatusBadge status={contract.status} />
-                    </div>
-                  </div>
-                  <Separator />
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      工作範疇
-                    </h3>
-                    <div className="mt-2 space-y-2">
-                      {scopeItems.length > 0 ? (
-                        scopeItems.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex items-center justify-between rounded-lg border bg-card p-2 pl-3"
-                          >
-                            <div className="flex items-center gap-2">
-                              <div className="h-6 w-6 flex items-center justify-center text-xs rounded bg-muted text-muted-foreground">
-                                {item.id}
-                              </div>
-                              <div className="font-medium">{item.name}</div>
-                            </div>
-                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                              <div>
-                                數量:{' '}
-                                <span className="font-semibold text-foreground">
-                                  {item.quantity}
-                                </span>
-                              </div>
-                              <div>
-                                單價:{' '}
-                                <span className="font-semibold text-foreground">
-                                  ${item.unitPrice.toLocaleString()}
-                                </span>
-                              </div>
-                              <div className="rounded border px-2 py-0.5 text-foreground">
-                                小計: ${item.subtotal.toLocaleString()}
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm whitespace-pre-wrap">
-                          {contract.scope}
+              <div className="space-y-4">
+                <Card>
+                  <CardContent className="pt-6 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">
+                          承包商
+                        </h3>
+                        <p className="font-semibold">{contract.contractor}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">
+                          客戶
+                        </h3>
+                        <p className="font-semibold">{contract.client}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">
+                          開始日期
+                        </h3>
+                        <p className="font-semibold">
+                          {formatDate(
+                            contract.startDate instanceof Date
+                              ? contract.startDate
+                              : contract.startDate?.toDate()
+                          )}
                         </p>
-                      )}
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">
+                          結束日期
+                        </h3>
+                        <p className="font-semibold">
+                          {formatDate(
+                            contract.endDate instanceof Date
+                              ? contract.endDate
+                              : contract.endDate?.toDate()
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">
+                          總價值
+                        </h3>
+                        <p className="font-semibold">
+                          ${contract.totalValue.toLocaleString()}
+                        </p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">
+                          狀態
+                        </h3>
+                        <ContractStatusBadge status={contract.status} />
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>工作範疇</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ContractScopeList
+                      tasks={contract.tasks || []}
+                      expandedTasks={expandedTasks}
+                      onToggleExpand={handleToggleExpand}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
             <TabsContent value="payments" className="mt-4">
               <Card>
@@ -259,20 +224,20 @@ export function ContractDetailsSheet({
                               <ContractStatusBadge
                                 status={
                                   payment.status as
-                                  | '啟用中'
-                                  | '已完成'
-                                  | '暫停中'
-                                  | '已終止'
+                                    | '啟用中'
+                                    | '已完成'
+                                    | '暫停中'
+                                    | '已終止'
                                 }
                               />
                             </TableCell>
                             <TableCell>
                               {payment.paidDate
                                 ? formatDate(
-                                  payment.paidDate instanceof Date
-                                    ? payment.paidDate
-                                    : payment.paidDate?.toDate()
-                                )
+                                    payment.paidDate instanceof Date
+                                      ? payment.paidDate
+                                      : payment.paidDate?.toDate()
+                                  )
                                 : '未付款'}
                             </TableCell>
                           </TableRow>
@@ -332,20 +297,20 @@ export function ContractDetailsSheet({
                               <ContractStatusBadge
                                 status={
                                   receipt.status as
-                                  | '啟用中'
-                                  | '已完成'
-                                  | '暫停中'
-                                  | '已終止'
+                                    | '啟用中'
+                                    | '已完成'
+                                    | '暫停中'
+                                    | '已終止'
                                 }
                               />
                             </TableCell>
                             <TableCell>
                               {receipt.receivedDate
                                 ? formatDate(
-                                  receipt.receivedDate instanceof Date
-                                    ? receipt.receivedDate
-                                    : receipt.receivedDate?.toDate()
-                                )
+                                    receipt.receivedDate instanceof Date
+                                      ? receipt.receivedDate
+                                      : receipt.receivedDate?.toDate()
+                                  )
                                 : '未收款'}
                             </TableCell>
                             <TableCell>
@@ -399,10 +364,10 @@ export function ContractDetailsSheet({
                               <ContractStatusBadge
                                 status={
                                   order.status as
-                                  | '啟用中'
-                                  | '已完成'
-                                  | '暫停中'
-                                  | '已終止'
+                                    | '啟用中'
+                                    | '已完成'
+                                    | '暫停中'
+                                    | '已終止'
                                 }
                               />
                             </TableCell>
