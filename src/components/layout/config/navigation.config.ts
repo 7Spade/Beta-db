@@ -14,7 +14,6 @@
 
 import type { LucideIcon } from 'lucide-react';
 import {
-  Activity,
   ArrowLeftRight,
   BarChart3,
   BookOpen,
@@ -74,12 +73,6 @@ export const navigationConfig: NavigationItem[] = [
         label: '看板管理',
         icon: LayoutGrid,
         href: '/automation-tools/kanban',
-      },
-      {
-        id: 'project-progress',
-        label: '專案進度',
-        icon: Activity,
-        href: '/automation-tools/project-progress',
       },
       {
         id: 'knowledge-base',
