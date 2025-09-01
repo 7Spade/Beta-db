@@ -4,10 +4,11 @@
  */
 
 // 主要視圖元件
-export { LoginView } from './login-view';
-export { RegisterView } from './register-view';
-export { PendingApprovalView } from './pending-approval-view';
-export { VerifyEmailView } from './verify-email-view';
+export { LoginView } from './login/login-view';
+export { PendingApprovalView } from './pending-approval/pending-approval-view';
+export { RegisterView } from './register/register-view';
+export { ResetPasswordView } from './reset-password/reset-password-view';
+export { VerifyEmailView } from './verify-email/verify-email-view';
 
 // 社交認證元件
 export { SocialAuthButtons } from './social-auth-buttons';
@@ -17,8 +18,9 @@ export {
   loginSchema,
   registerSchema,
   type LoginValues,
-  type RegisterValues,
+  type RegisterValues
 } from './auth-form-schemas';
 
 // Hooks
 export { useAuth } from './use-auth';
+

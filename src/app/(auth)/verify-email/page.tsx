@@ -5,7 +5,7 @@
  * - 引導使用者完成郵箱驗證。
  * - 職責是渲染 VerifyEmailView 元件。
  */
-import { VerifyEmailView } from '@root/src/features/auth/verify-email-view';
+import { VerifyEmailView } from '@root/src/features/auth/verify-email/verify-email-view';
 
 export default function VerifyEmailPage() {
   return <VerifyEmailView />;

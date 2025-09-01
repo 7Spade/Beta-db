@@ -31,8 +31,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { createUserProfile } from './auth-actions';
-import { registerSchema, type RegisterValues } from './auth-form-schemas';
+import { createUserProfile } from '../auth-actions';
+import { registerSchema, type RegisterValues } from '../auth-form-schemas';
 
 function RegisterForm() {
   const { toast } = useToast();

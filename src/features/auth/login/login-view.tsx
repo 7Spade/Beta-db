@@ -30,8 +30,8 @@ import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { createUserProfile } from './auth-actions';
-import { loginSchema, type LoginValues } from './auth-form-schemas';
+import { createUserProfile } from '../auth-actions';
+import { loginSchema, type LoginValues } from '../auth-form-schemas';
 
 function LoginForm() {
   const { toast } = useToast();
