@@ -11,12 +11,13 @@ import type { Metadata } from 'next';
 export const revalidate = 3600; // Revalidate every hour
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   if (!post) {
     return {
       title: '找不到文章',
@@ -34,7 +35,8 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();

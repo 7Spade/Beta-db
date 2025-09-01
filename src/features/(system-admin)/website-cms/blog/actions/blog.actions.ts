@@ -38,7 +38,7 @@ export async function savePostAction(data: PostFormValues, postId?: string | nul
   const finalSlug = slugify(slug);
 
   try {
-    const sessionCookie = cookies().get('session')?.value;
+    const sessionCookie = (await cookies()).get('session')?.value;
     if (!sessionCookie) return { success: false, error: '未授權' };
     const decodedToken = await adminAuth.verifySessionCookie(sessionCookie, true);
 

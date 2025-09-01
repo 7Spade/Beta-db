@@ -2,10 +2,10 @@
 // For this example, we'll keep it as a simple Textarea.
 'use client';
 
-import { Textarea, type TextareaProps } from '@/ui/textarea';
+import { Textarea } from '@/ui/textarea';
 import * as React from 'react';
 
-export const BlogEditor = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+export const BlogEditor = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<'textarea'>>(
   ({ ...props }, ref) => {
     return (
       <Textarea

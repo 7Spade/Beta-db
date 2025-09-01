@@ -21,8 +21,8 @@ export * from '@root/src/features/(core-operations)/projects/views/ProjectView';
 export * from '@root/src/features/(system-admin)/(security-compliance)/auth/index';
 
 // Blog Features
-export * from '@root/src/features/(system-admin)/website-cms/blog/views/post-form-view';
-export * from '@root/src/features/(system-admin)/website-cms/blog/views/posts-list-view';
+export * from '@/features/(system-admin)/website-cms/blog/views/BlogFormView';
+export * from '@/features/(system-admin)/website-cms/blog/views/BlogListView';
 
 // Cloud Drive Features
 export * from '@/features/(document-management)/cloud-drive/views/cloud-drive-view';

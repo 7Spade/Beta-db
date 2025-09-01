@@ -1,5 +1,6 @@
 
-import type { JobStatus, ApplicationStatus } from '../types';
+import type { JobStatus } from '../types/job.types';
+import type { ApplicationStatus } from '../types/application.types';
 
 export function getJobStatusVariant(status: JobStatus) {
   switch (status) {

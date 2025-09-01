@@ -53,18 +53,8 @@
       "@/ui/*": [
         "./src/components/ui/*"
       ],
-      // 布局组件映射
-      "@/core/*": [
-        "./src/components/layout/core/*"
-      ],
       "@/navigation/*": [
         "./src/components/layout/navigation/*"
-      ],
-      "@/overlays/*": [
-        "./src/components/layout/overlays/*"
-      ],
-      "@/responsive/*": [
-        "./src/components/layout/responsive/*"
       ],
       "@/shared/*": [
         "./src/components/layout/shared/*"
