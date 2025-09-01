@@ -12,8 +12,8 @@
 
 'use server';
 
-import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/api/services/ai-token-log.service';
+import { ai } from '@/features/integrations/ai/genkit';
 import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
@@ -65,17 +65,13 @@ const DEFAULT_PROMPT = `You are a professional, extremely meticulous contract au
 **Step 1: Locate the Final Total.**
 First, read through the entire document to find and lock onto the final total amount, such as '未税总计' (Subtotal), '合计', or a similar final sum. Record this number as your 'verification target'.
 
-**Step 2: Extract Line Items with Special Rules.**
+**Step 2: Extract Line Items.**
 Next, start from the beginning and extract each work item one by one. For each item, you must extract:
 - \`id\`: The item or serial number.
 - \`name\`: The material code, product name, or description.
 - \`quantity\`: The quantity of the item.
 - \`unitPrice\`: The price per unit.
 - \`total\`: The total price for that line item (quantity * unitPrice).
-
-**Special Handling Rules for Extraction:**
-- **Discount/Allowance Rule**: If you encounter a line item where the 'total' column contains multiple numbers, especially a positive and a negative value (e.g., \`250,000\` and \`-190,000\`), you must understand this is a special item with a discount. You must calculate its net value (e.g., \`250,000 - 190,000 = 60,000\`) and use **only this net value** as the final effective \`total\` for that line item.
-- **Subtotal Line Rule**: If a line's description is clearly a 'Sub-total' or '合计', it is not an independent work item. **You must ignore this line** in your final list of items.
 
 **Step 3: Internal Cross-Validation.**
 After extracting all valid items, you **must** perform an internal audit. Sum up the 'total' of all the line items you extracted to get a 'calculated sum'.
@@ -92,10 +88,10 @@ Document: {{media url=fileDataUri}}
 `;
 
 const prompt = ai.definePrompt({
-    name: 'extractWorkItemsPrompt',
-    input: { schema: z.object({ fileDataUri: z.string() }) },
-    output: { schema: ExtractWorkItemsOutputSchema },
-    prompt: DEFAULT_PROMPT,
+  name: 'extractWorkItemsPrompt',
+  input: { schema: z.object({ fileDataUri: z.string() }) },
+  output: { schema: ExtractWorkItemsOutputSchema },
+  prompt: DEFAULT_PROMPT,
 });
 
 
@@ -112,7 +108,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     let result;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    
+
     let modelName = 'googleai/gemini-1.5-flash'; // 默认模型
 
     try {
@@ -136,7 +132,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       if (!output) {
         throw new Error('No output from AI');
       }
-      
+
       const durationMs = Date.now() - startTime;
 
       // Log the metadata without returning it to the client
