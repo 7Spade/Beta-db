@@ -11,11 +11,54 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Constructo - 專案管理平台',
-  description: '專業的營造專案管理應用程式',
+  title: {
+    default: 'Beta-db - 專案管理平台',
+    template: '%s | Beta-db'
+  },
+  description: '專業的營造專案管理應用程式，提供完整的專案追蹤、合約管理和團隊協作功能',
+  keywords: ['專案管理', '營造業', '合約管理', '團隊協作', 'Beta-db'],
+  authors: [{ name: 'Beta-db Team' }],
+  creator: 'Beta-db',
+  publisher: 'Beta-db',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://beta-db.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'zh_TW',
+    url: 'https://beta-db.com',
+    title: 'Beta-db - 專案管理平台',
+    description: '專業的營造專案管理應用程式',
+    siteName: 'Beta-db',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Beta-db - 專案管理平台',
+    description: '專業的營造專案管理應用程式',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({

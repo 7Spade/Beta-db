@@ -156,7 +156,7 @@
 │  │      └─website-cms
 │  │          │  layout.tsx
 │  │          │
-│  │          ├─blog-management
+│  │          ├─blog
 │  │          │  └─posts
 │  │          │      │  page.tsx
 │  │          │      │
@@ -169,7 +169,7 @@
 │  │          │          └─edit
 │  │          │                  page.tsx
 │  │          │
-│  │          ├─career-management
+│  │          ├─career
 │  │          │  │  page.tsx
 │  │          │  │
 │  │          │  ├─applications
@@ -178,10 +178,10 @@
 │  │          │  └─jobs
 │  │          │          page.tsx
 │  │          │
-│  │          ├─contact-management
+│  │          ├─contact
 │  │          │      page.tsx
 │  │          │
-│  │          ├─content-management
+│  │          ├─content
 │  │          │  │  page.tsx
 │  │          │  │
 │  │          │  ├─media
@@ -190,13 +190,13 @@
 │  │          │  └─pages
 │  │          │          page.tsx
 │  │          │
-│  │          ├─dashboard-management
+│  │          ├─dashboard
 │  │          │      page.tsx
 │  │          │
-│  │          ├─system-management
+│  │          ├─system
 │  │          │      page.tsx
 │  │          │
-│  │          └─user-management
+│  │          └─user
 │  │                  page.tsx
 │  │
 │  ├─(auth)
@@ -868,79 +868,58 @@
 │          │          BlogListView.tsx
 │          │          PublicBlogView.tsx
 │          │
-│          ├─blog-management
-│          │      README.md
-│          │
-│          ├─career
-│          │  │  README.md
-│          │  │
-│          │  ├─actions
-│          │  │      application.actions.ts
-│          │  │      email.actions.ts
-│          │  │      interview.actions.ts
-│          │  │      job.actions.ts
-│          │  │
-│          │  ├─components
-│          │  │  ├─ApplicationCard
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  ├─ApplicationList
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  ├─ApplyForm
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  ├─InterviewScheduler
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  ├─JobCard
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  ├─JobEditor
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  └─JobList
-│          │  │          index.tsx
-│          │  │
-│          │  ├─hooks
-│          │  │      use-applications.ts
-│          │  │      use-job-form.ts
-│          │  │      use-job-list.ts
-│          │  │
-│          │  ├─types
-│          │  │      application.types.ts
-│          │  │      interview.types.ts
-│          │  │      job.types.ts
-│          │  │
-│          │  ├─utils
-│          │  │      notification.utils.ts
-│          │  │      slug.utils.ts
-│          │  │      status.utils.ts
-│          │  │
-│          │  └─views
-│          │          ApplicationDetailView.tsx
-│          │          ApplicationListView.tsx
-│          │          JobFormView.tsx
-│          │          JobListView.tsx
-│          │          PublicCareerView.tsx
-│          │
-│          ├─career-management
-│          │      README.md
-│          │
-│          ├─contact-management
-│          │      README.md
-│          │
-│          ├─content-management
-│          │      README.md
-│          │
-│          ├─dashboard-management
-│          │      README.md
-│          │
-│          ├─system-management
-│          │      README.md
-│          │
-│          └─user-management
-│                  README.md
+│          └─career
+│              │  README.md
+│              │
+│              ├─actions
+│              │      application.actions.ts
+│              │      email.actions.ts
+│              │      interview.actions.ts
+│              │      job.actions.ts
+│              │
+│              ├─components
+│              │  ├─ApplicationCard
+│              │  │      index.tsx
+│              │  │
+│              │  ├─ApplicationList
+│              │  │      index.tsx
+│              │  │
+│              │  ├─ApplyForm
+│              │  │      index.tsx
+│              │  │
+│              │  ├─InterviewScheduler
+│              │  │      index.tsx
+│              │  │
+│              │  ├─JobCard
+│              │  │      index.tsx
+│              │  │
+│              │  ├─JobEditor
+│              │  │      index.tsx
+│              │  │
+│              │  └─JobList
+│              │          index.tsx
+│              │
+│              ├─hooks
+│              │      use-applications.ts
+│              │      use-job-form.ts
+│              │      use-job-list.ts
+│              │
+│              ├─types
+│              │      application.types.ts
+│              │      interview.types.ts
+│              │      job.types.ts
+│              │
+│              ├─utils
+│              │      notification.utils.ts
+│              │      slug.utils.ts
+│              │      status.utils.ts
+│              │
+│              └─views
+│                      ApplicationDetailView.tsx
+│                      ApplicationListView.tsx
+│                      JobFormView.tsx
+│                      JobListView.tsx
+│                      PublicCareerView.tsx
 │
 └─shared
     │  index.ts
