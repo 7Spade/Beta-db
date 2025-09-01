@@ -59,25 +59,14 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 最终版 Prompt
-const DEFAULT_PROMPT = `You are a world-class financial auditing AI specializing in complex commercial documents. Your task is to extract a flattened, pre-tax list of work items with absolute accuracy. Follow these steps meticulously:
+// 最终版 Prompt (Token 最優化策略)
+const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your goal is to extract a list of work items and a final subtotal from the document.
 
-**Step 1: Establish the Audit Benchmark.**
-Scan the entire document to find the final **'未稅總計' (Subtotal before tax)**. This is your single, non-negotiable verification target. Ignore all other totals like '含稅總價'.
-
-**Step 2: Identify and Extract Item Amounts Using Structural Rules.**
-Analyze each line item sequentially. You must apply the following structural rules to determine the effective amount for each item:
-*   **Rule for Simple Items**: If all information for an item (description, quantity, price, total) is contained within a **single row**, extract that row's amount directly as its \`total\`.
-*   **Rule for Complex Items**: If an item's information spans **multiple rows** (e.g., it has separate lines for '金額', '折扣', '小計'), your task is to find and extract **only the '小計' (subtotal) amount** for that item block. This '小計' is the sole valid \`total\` for that complex item.
-*   **Exclusion Rule**: You must ignore any line that is a summary of other items (e.g., a grand total row) and is not part of a specific item block's structure.
-
-**Step 3: Perform Final Audit.**
-Sum up all the effective \`total\` amounts you extracted according to the rules in Step 2. This sum is your 'calculated total'.
-
-**Verification**: Your 'calculated total' **must perfectly match** the 'verification target' from Step 1. If it does not, you must repeat Step 2, re-evaluating your application of the structural rules until the audit passes.
-
-**Step 4: Format Output.**
-Return your final, audited list. The 'subtotal' field in your response must be the 'verification target' you audited against.
+Key Concepts:
+- Audit Target: The final '未稅總計' (subtotal before tax) is your single source of truth.
+- Valid Amount: For items with discounts, the final net amount, often in parentheses (), is the correct value.
+- Item Identification: Extract the item number (項次), description (品名), quantity (數量), unit price (單價), and final total (總價).
+- Financial Logic: You must independently figure out how '金額', '折扣', and '小計' relate to each other to ensure the sum of all item totals equals the '未稅總計'.
 
 Document: {{media url=fileDataUri}}`;
 
@@ -103,7 +92,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    let modelName = 'googleai/gemini-1.5-flash'; // 默认模型
+    const modelName = 'googleai/gemini-1.5-flash'; // 默认模型
 
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
@@ -138,6 +127,7 @@ const extractWorkItemsFlow = ai.defineFlow(
         output_tokens: result.usage?.outputTokens,
         total_tokens: result.usage?.totalTokens,
         duration_ms: durationMs,
+        user_id: 'system' // Placeholder for user ID
       });
 
       // Return only the business data
@@ -154,6 +144,7 @@ const extractWorkItemsFlow = ai.defineFlow(
         total_tokens: result?.usage?.totalTokens,
         duration_ms: durationMs,
         error: error instanceof Error ? error.message : 'Unknown error',
+        user_id: 'system' // Placeholder for user ID
       });
       // 向上拋出錯誤
       throw error;
