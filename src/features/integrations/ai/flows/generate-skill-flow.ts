@@ -10,7 +10,7 @@
  */
 
 import { ai } from '@/features/integrations/ai/genkit';
-import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
+import { logAiTokenUsage } from '@/shared/services/ai-token-log/ai-token-log.service';
 import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
 import { cookies } from 'next/headers';

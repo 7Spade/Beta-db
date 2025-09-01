@@ -32,7 +32,7 @@ export * from './services/activity-log/activity-log.listeners';
 export * from './services/activity-log/activity-log.service';
 
 // AI Token Log 服務
-export * from './services/ai-token-log/logging.service';
+export * from './services/ai-token-log/ai-token-log.service';
 
 // Blog 服務
 export * from './services/blog/blog.service';
@@ -64,4 +64,3 @@ export * from './types/types';
 export * from './utils/auth-utils';
 export * from './utils/date-utils';
 export * from './utils/utils';
-
