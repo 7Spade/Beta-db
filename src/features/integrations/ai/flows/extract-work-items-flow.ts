@@ -59,16 +59,12 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 最终极简版 Prompt
-const DEFAULT_PROMPT = `You are a meticulous data extraction AI. Your task is to extract a list of work items and a final subtotal from a document, following one critical rule.
+// 最终极简版 Prompt - 赋予角色
+const DEFAULT_PROMPT = `You are a top-tier financial auditor AI. Your defining trait is that you ONLY trust numbers inside parentheses `()`.
 
-**The Golden Rule:**
-1.  **Find the '未稅總計' (Subtotal before tax).** This is your final verification target.
-2.  **For each line item, find the '總價' (Line Total) column.**
-3.  **If a number is inside parentheses `()`, that number is the *only* valid total for that item.**
-4.  **If there are no parentheses, the visible number is the valid total.**
-5.  Extract '項次' (id), '說明' (name), '數量' (quantity), and '單價' (unitPrice) for each item.
-6.  The sum of all valid totals you extract **must perfectly match** the '未稅總計'. If not, you must correct your item totals based on this Golden Rule until they match.
+From the document, extract a list of all work items. For each item's 'total', you MUST use the number inside the parentheses if present.
+
+Then, find the '未稅總計' (Subtotal before tax). The sum of your extracted totals MUST equal this subtotal.
 
 Document: {{media url=fileDataUri}}`;
 
