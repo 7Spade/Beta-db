@@ -1,5 +1,6 @@
 'use client';
 
+import { Card, CardContent } from '@/ui/card';
 import { cn } from '@root/src/shared/utils';
 import * as React from 'react';
 
@@ -10,11 +11,12 @@ interface EmptyStateProps {
   action?: React.ReactNode;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'card';
 }
 
 const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(
   (
-    { icon, title, description, action, className, size = 'md', ...props },
+    { icon, title, description, action, className, size = 'md', variant = 'default', ...props },
     ref
   ) => {
     const sizeClasses = {
@@ -29,16 +31,8 @@ const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(
       lg: 'h-16 w-16',
     };
 
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          'flex flex-col items-center justify-center text-center',
-          sizeClasses[size],
-          className
-        )}
-        {...props}
-      >
+    const content = (
+      <>
         {icon && (
           <div
             className={cn('text-muted-foreground mb-4', iconSizeClasses[size])}
@@ -56,6 +50,30 @@ const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(
         )}
 
         {action && <div className="flex items-center gap-2">{action}</div>}
+      </>
+    );
+
+    if (variant === 'card') {
+      return (
+        <Card ref={ref} className={cn('w-full', className)} {...props}>
+          <CardContent className={cn('flex flex-col items-center justify-center text-center', sizeClasses[size])}>
+            {content}
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'flex flex-col items-center justify-center text-center',
+          sizeClasses[size],
+          className
+        )}
+        {...props}
+      >
+        {content}
       </div>
     );
   }
