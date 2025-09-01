@@ -1,7 +1,9 @@
+
 'use client';
 
 import { saveWarehouseAction, deleteWarehouseAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
 import { WarehouseFormDialog } from '@/features/resource-management/warehousing/forms/warehouse-form';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
@@ -53,6 +55,8 @@ export function WarehousesView() {
     };
 
     const handleDeleteWarehouse = async (warehouse: Warehouse) => {
+        // Here you might want to add a check if the warehouse has inventory
+        // For now, we directly delete.
         const result = await deleteWarehouseAction(warehouse.id);
         if (result.success) {
             toast({ title: '成功', description: `倉庫 "${warehouse.name}" 已刪除。` });
@@ -108,15 +112,31 @@ export function WarehousesView() {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Badge variant={wh.isActive ? 'default' : 'outline'}>{wh.isActive ? '啟用中' : '已停用'}</Badge>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4" /></Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenForm(wh)}><Edit className="mr-2 h-4 w-4" />編輯</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleDeleteWarehouse(wh)} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" />刪除</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        <AlertDialog>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4" /></Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => handleOpenForm(wh)}><Edit className="mr-2 h-4 w-4" />編輯</DropdownMenuItem>
+                                                    <AlertDialogTrigger asChild>
+                                                        <DropdownMenuItem onSelect={e => e.preventDefault()} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" />刪除</DropdownMenuItem>
+                                                    </AlertDialogTrigger>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                             <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>確定要刪除「{wh.name}」嗎？</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                    此操作無法復原。如果此倉庫尚有庫存，您可能需要先將庫存轉移。
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>取消</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDeleteWarehouse(wh)}>繼續刪除</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </div>
                                 </CardHeader>
                             </Card>
