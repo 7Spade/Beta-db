@@ -13,7 +13,7 @@
 'use server';
 
 import { ai } from '@/features/integrations/ai/genkit';
-import { logAiTokenUsage } from '@/shared/services/ai-token-log/ai-token-log.service';
+import { logAiTokenUsage } from '@/api/services/ai-token-log.service';
 import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';

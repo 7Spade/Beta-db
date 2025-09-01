@@ -3,7 +3,7 @@
  */
 'use client';
 
-import { getAiTokenUsageStats } from '@/shared/services/ai-token-log/ai-token-log.service';
+import { getAiTokenUsageStats } from '@/api/services/ai-token-log.service';
 import { createClient } from '@root/src/features/integrations/database/supabase/client';
 import type { AiTokenLogRow } from '@root/src/features/integrations/database/supabase/types';
 import { useEffect, useState } from 'react';
