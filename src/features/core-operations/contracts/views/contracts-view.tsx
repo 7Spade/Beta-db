@@ -13,10 +13,24 @@ import { useToast } from '@root/src/shared/hooks/use-toast';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 
+type SortDirection = 'asc' | 'desc';
+
 export function ContractsView() {
-  const { contracts, loading } = useContracts();
+  const [sortBy, setSortBy] = useState<keyof Contract>('startDate');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const { contracts, loading } = useContracts({ sortBy, sortDirection });
+
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const handleSort = (field: keyof Contract) => {
+    if (sortBy === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortDirection('desc');
+    }
+  };
 
   const handleAddContract = async (
     data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'>
@@ -70,7 +84,11 @@ export function ContractsView() {
           </CardContent>
         </Card>
       ) : (
-        <ContractsTable contracts={contracts} />
+        <ContractsTable 
+          contracts={contracts} 
+          onSort={handleSort}
+          sortDescriptor={{ field: sortBy, direction: sortDirection }}
+        />
       )}
     </div>
   );

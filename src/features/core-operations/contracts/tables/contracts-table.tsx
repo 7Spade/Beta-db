@@ -26,14 +26,16 @@ import {
   TableRow,
 } from '@/ui/table';
 import { formatDate } from '@root/src/shared/utils';
-import { Download, Eye, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, Download, Eye, MoreHorizontal } from 'lucide-react';
 import * as React from 'react';
 
 interface ContractsTableProps {
   contracts: Contract[];
+  onSort: (field: keyof Contract) => void;
+  sortDescriptor: { field: keyof Contract, direction: 'asc' | 'desc' };
 }
 
-export function ContractsTable({ contracts }: ContractsTableProps) {
+export function ContractsTable({ contracts, onSort, sortDescriptor }: ContractsTableProps) {
   const [selectedContract, setSelectedContract] =
     React.useState<Contract | null>(null);
   const [isSheetOpen, setSheetOpen] = React.useState(false);
@@ -88,6 +90,13 @@ export function ContractsTable({ contracts }: ContractsTableProps) {
     document.body.removeChild(link);
   };
 
+  const renderSortIndicator = (field: keyof Contract) => {
+    if (sortDescriptor.field !== field) return <ArrowUpDown className="ml-2 h-4 w-4" />;
+    if (sortDescriptor.direction === 'desc') return <ArrowUpDown className="ml-2 h-4 w-4 text-primary" />;
+    return <ArrowUpDown className="ml-2 h-4 w-4 text-primary" />;
+  };
+
+
   return (
     <>
       <Card>
@@ -107,10 +116,25 @@ export function ContractsTable({ contracts }: ContractsTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>合約名稱</TableHead>
+                <TableHead>
+                   <Button variant="ghost" onClick={() => onSort('name')}>
+                    合約名稱
+                    {renderSortIndicator('name')}
+                  </Button>
+                </TableHead>
                 <TableHead className="hidden md:table-cell">承包商</TableHead>
-                <TableHead className="hidden lg:table-cell">結束日期</TableHead>
-                <TableHead>價值</TableHead>
+                <TableHead className="hidden lg:table-cell">
+                   <Button variant="ghost" onClick={() => onSort('endDate')}>
+                    結束日期
+                    {renderSortIndicator('endDate')}
+                  </Button>
+                </TableHead>
+                <TableHead>
+                   <Button variant="ghost" onClick={() => onSort('totalValue')}>
+                    價值
+                    {renderSortIndicator('totalValue')}
+                  </Button>
+                </TableHead>
                 <TableHead>狀態</TableHead>
                 <TableHead>
                   <span className="sr-only">操作</span>

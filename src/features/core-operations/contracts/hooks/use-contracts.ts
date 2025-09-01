@@ -9,7 +9,10 @@ import {
   DocumentData,
   DocumentSnapshot,
   onSnapshot,
+  orderBy,
   query,
+  QueryOrderByConstraint,
+  Timestamp,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
@@ -46,14 +49,26 @@ const processFirestoreContract = (
   } as Contract;
 };
 
-export function useContracts() {
+interface UseContractsOptions {
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+export function useContracts(options: UseContractsOptions = {}) {
+  const { sortBy = 'startDate', sortDirection = 'desc' } = options;
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const contractsCollection = collection(firestore, 'contracts');
-    const q = query(contractsCollection);
+    const orderConstraints: QueryOrderByConstraint[] = [];
+
+    if (sortBy) {
+      orderConstraints.push(orderBy(sortBy, sortDirection));
+    }
+
+    const q = query(contractsCollection, ...orderConstraints);
 
     const unsubscribe = onSnapshot(
       q,
@@ -77,7 +92,7 @@ export function useContracts() {
     );
 
     return () => unsubscribe();
-  }, []);
+  }, [sortBy, sortDirection]);
 
   return {
     contracts,
