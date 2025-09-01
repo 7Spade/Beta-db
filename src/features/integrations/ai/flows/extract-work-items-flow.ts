@@ -46,10 +46,10 @@ export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema
 /**
  * 導出的異步函數，作為外部呼叫此 AI 流程的入口點。
  * @param {ExtractWorkItemsInput} input - 包含檔案 Storage 路徑的輸入物件。
- * @returns {Promise<ExtractWorkItemsOutput & { totalTokens: number }>} - 返回一個包含解析出的工料清單和 token 消耗量的 Promise。
+ * @returns {Promise<ExtractWorkItemsOutput>} - 返回一個包含解析出的工料清單的 Promise。
  * @throws 如果流程沒有返回結果，則拋出錯誤。
  */
-export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<ExtractWorkItemsOutput & { totalTokens: number }> {
+export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<ExtractWorkItemsOutput> {
   const result = await extractWorkItemsFlow(input);
   if (!result) {
     throw new Error('Flow returned no result');
@@ -82,9 +82,7 @@ const extractWorkItemsFlow = ai.defineFlow(
   {
     name: 'extractWorkItemsFlow', // Flow 的唯一名稱
     inputSchema: ExtractWorkItemsInputSchema,
-    outputSchema: ExtractWorkItemsOutputSchema.extend({
-      totalTokens: z.number().describe('該次操作消耗的總 token 數量。'),
-    }),
+    outputSchema: ExtractWorkItemsOutputSchema, // Output schema is now pure business data
   },
   // Flow 的核心執行邏輯
   async (input) => {
@@ -117,6 +115,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       
       const durationMs = Date.now() - startTime;
 
+      // Log the metadata without returning it to the client
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
         model: result.model,
@@ -127,10 +126,9 @@ const extractWorkItemsFlow = ai.defineFlow(
         duration_ms: durationMs,
       });
 
-      return {
-        ...output,
-        totalTokens: result.usage?.totalTokens || 0,
-      };
+      // Return only the business data
+      return output;
+
     } catch (error) {
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {

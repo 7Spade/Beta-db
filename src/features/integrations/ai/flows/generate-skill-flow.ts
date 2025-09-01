@@ -31,7 +31,7 @@ const GenerateSkillOutputSchema = z.object({
 export type GenerateSkillOutput = z.infer<typeof GenerateSkillOutputSchema>;
 
 
-export async function generateSkillSuggestion(input: GenerateSkillInput): Promise<GenerateSkillOutput & { totalTokens: number }> {
+export async function generateSkillSuggestion(input: GenerateSkillInput): Promise<GenerateSkillOutput> {
   const result = await generateSkillFlow(input);
   if (!result) {
     throw new Error('Flow returned no result');
@@ -56,10 +56,7 @@ const generateSkillFlow = ai.defineFlow(
   {
     name: 'generateSkillFlow',
     inputSchema: GenerateSkillInputSchema,
-    outputSchema: z.object({
-      skills: z.array(z.object({ name: z.string(), description: z.string() })),
-      totalTokens: z.number(),
-    }),
+    outputSchema: GenerateSkillOutputSchema,
   },
   async (input) => {
     const startTime = Date.now();
@@ -85,10 +82,7 @@ const generateSkillFlow = ai.defineFlow(
         duration_ms: durationMs,
       });
 
-      return {
-        skills: output.skills,
-        totalTokens: result.usage?.totalTokens || 0,
-      };
+      return output;
     } catch (error) {
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {

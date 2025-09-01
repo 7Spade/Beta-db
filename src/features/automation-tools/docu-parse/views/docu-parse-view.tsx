@@ -197,7 +197,7 @@ export function DocuParseView() {
 
   const handleReset = () => {
     setSelectedFilePath(null);
-    router.replace('/quick-actions/docu-parse'); // Clear URL params - 修正路由路径
+    router.replace('/automation-tools/docu-parse'); // Clear URL params
     // Reset all local states
     setWorkItems([]);
     setDocDetails({
@@ -265,12 +265,6 @@ export function DocuParseView() {
                   >
                     <Cpu className="w-4 h-4" />
                     <span>共提取 {extractedData.workItems.length} 個項目</span>
-                  </Badge>
-                )}
-                {extractedData.totalTokens && (
-                  <Badge variant="outline" className="flex items-center gap-2">
-                    <Cpu className="w-4 h-4" />
-                    <span>消耗 {extractedData.totalTokens} tokens</span>
                   </Badge>
                 )}
                 <Button variant="outline" size="sm" onClick={handleReset}>

@@ -28,7 +28,7 @@ const GenerateKnowledgeEntryOutputSchema = z.object({
 export type GenerateKnowledgeEntryOutput = z.infer<typeof GenerateKnowledgeEntryOutputSchema>;
 
 
-export async function generateKnowledgeEntry(input: GenerateKnowledgeEntryInput): Promise<GenerateKnowledgeEntryOutput & { totalTokens: number }> {
+export async function generateKnowledgeEntry(input: GenerateKnowledgeEntryInput): Promise<GenerateKnowledgeEntryOutput> {
   const result = await generateKnowledgeEntryFlow(input);
   if (!result) {
     throw new Error('Flow returned no result');
@@ -55,12 +55,7 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
   {
     name: 'generateKnowledgeEntryFlow',
     inputSchema: GenerateKnowledgeEntryInputSchema,
-    outputSchema: z.object({
-      category: z.string(),
-      content: z.string(),
-      tags: z.array(z.string()),
-      totalTokens: z.number(),
-    }),
+    outputSchema: GenerateKnowledgeEntryOutputSchema,
   },
   async (input) => {
     const startTime = Date.now();
@@ -86,10 +81,7 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
         duration_ms: durationMs,
       });
 
-      return {
-        ...output,
-        totalTokens: result.usage?.totalTokens || 0,
-      };
+      return output;
     } catch (error) {
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {

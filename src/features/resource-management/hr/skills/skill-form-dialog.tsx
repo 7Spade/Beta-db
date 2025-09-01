@@ -8,7 +8,6 @@ import { z } from 'zod';
 
 import { generateSkillSuggestion } from '@/features/integrations/ai/flows/generate-skill-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/ui/alert';
-import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import {
   Dialog,
@@ -23,7 +22,7 @@ import { Input } from '@/ui/input';
 import { Label } from '@/ui/label';
 import { Textarea } from '@/ui/textarea';
 import { useToast } from '@root/src/shared/hooks/use-toast';
-import { Cpu, Loader2, Wand2 } from 'lucide-react';
+import { Loader2, Wand2 } from 'lucide-react';
 
 const skillSchema = z.object({
   name: z.string().min(2, '技能名稱至少需要 2 個字元。'),
@@ -44,7 +43,6 @@ export function SkillFormDialog({ isOpen, onOpenChange, onSave, skill }: SkillFo
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiTopic, setAiTopic] = useState('');
   const [aiSuggestions, setAiSuggestions] = useState<{ name: string, description: string }[]>([]);
-  const [generatedTokens, setGeneratedTokens] = useState<number | null>(null);
   const { toast } = useToast();
 
   const form = useForm<SkillFormValues>({
@@ -64,7 +62,6 @@ export function SkillFormDialog({ isOpen, onOpenChange, onSave, skill }: SkillFo
       }
       setAiSuggestions([]);
       setAiTopic('');
-      setGeneratedTokens(null);
     }
   }, [skill, isOpen, form]);
 
@@ -89,11 +86,9 @@ export function SkillFormDialog({ isOpen, onOpenChange, onSave, skill }: SkillFo
     }
     setIsGenerating(true);
     setAiSuggestions([]);
-    setGeneratedTokens(null);
     try {
       const result = await generateSkillSuggestion({ topic: aiTopic });
       setAiSuggestions(result.skills);
-      setGeneratedTokens(result.totalTokens);
       toast({ title: "AI 建議已生成！", description: "點擊建議以填入表單。" });
     } catch (err) {
       console.error(err);
@@ -133,14 +128,6 @@ export function SkillFormDialog({ isOpen, onOpenChange, onSave, skill }: SkillFo
                 {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
               </Button>
             </div>
-            {generatedTokens !== null && (
-              <div className="flex justify-end">
-                <Badge variant="secondary" className="flex items-center gap-2">
-                  <Cpu className="w-4 h-4" />
-                  <span>{generatedTokens.toLocaleString()} tokens</span>
-                </Badge>
-              </div>
-            )}
             {aiSuggestions.length > 0 && (
               <Alert>
                 <AlertTitle>點擊一項建議以填入</AlertTitle>

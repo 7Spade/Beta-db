@@ -17,9 +17,10 @@ export type WorkItem = ExtractWorkItemsOutput['workItems'][0] & {
 
 /**
  * 文件處理 Server Action 的狀態，由 useActionState 管理。
+ * data 欄位不再包含 totalTokens。
  */
 export interface DocuParseActionState {
-  data?: ExtractWorkItemsOutput & { fileName: string; totalTokens: number; };
+  data?: ExtractWorkItemsOutput & { fileName: string; };
   error?: string;
 }
 

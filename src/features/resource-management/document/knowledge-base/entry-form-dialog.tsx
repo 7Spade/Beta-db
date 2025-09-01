@@ -3,7 +3,6 @@
 import { generateKnowledgeEntry } from '@/features/integrations/ai/flows/generate-knowledge-entry-flow';
 import { handleDeleteKnowledgeBaseEntry } from '@/features/resource-management/document/knowledge-base/actions/knowledge-actions';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
-import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
@@ -12,7 +11,7 @@ import { Textarea } from '@/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@root/src/shared/hooks/use-toast';
 import type { KnowledgeBaseEntry } from '@root/src/shared/types/types';
-import { Cpu, Loader2, Trash2, Wand2 } from 'lucide-react';
+import { Loader2, Trash2, Wand2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -38,7 +37,6 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedTokens, setGeneratedTokens] = useState<number | null>(null);
   const { toast } = useToast();
 
   const form = useForm<EntryFormValues>({
@@ -56,7 +54,6 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
       } else {
         form.reset({ title: '', category: '', content: '', tags: '' });
       }
-      setGeneratedTokens(null);
     }
   }, [entry, isOpen, form]);
 
@@ -98,13 +95,11 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
       return;
     }
     setIsGenerating(true);
-    setGeneratedTokens(null);
     try {
       const result = await generateKnowledgeEntry({ title });
       form.setValue('category', result.category);
       form.setValue('content', result.content);
       form.setValue('tags', result.tags.join(', '));
-      setGeneratedTokens(result.totalTokens);
       toast({ title: "AI 生成成功！" });
     } catch (err) {
       console.error(err);
@@ -144,14 +139,6 @@ export function EntryFormDialog({ isOpen, onOpenChange, onSave, entry }: EntryFo
                 </FormItem>
               )}
             />
-            {generatedTokens !== null && (
-              <div className="flex justify-end">
-                <Badge variant="secondary" className="flex items-center gap-2">
-                  <Cpu className="w-4 h-4" />
-                  <span>{generatedTokens.toLocaleString()} tokens</span>
-                </Badge>
-              </div>
-            )}
             <FormField
               control={form.control}
               name="category"

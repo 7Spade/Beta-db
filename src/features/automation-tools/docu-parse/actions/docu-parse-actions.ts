@@ -1,20 +1,18 @@
-
-
 /**
  * @fileoverview 文件處理相關的 Server Actions
  * @description 此檔案包含了用於處理文件上傳、驗證和數據提取的 Next.js Server Actions。
  * 這些 Action 被前端元件直接呼叫，以執行伺服器端的邏輯，例如與 AI 模型的互動。
  * 
  * @關聯檔案
- * - `src/ai/flows/extract-work-items-flow.ts`: `extractWorkItemsFromDocument` Action 會呼叫此 AI 流程來進行文件解析。
- * - `src/components/features/docu-parse/views/docu-parse-view.tsx`: 前端 UI，呼叫此處定義的 Actions。
+ * - `src/features/integrations/ai/flows/extract-work-items-flow.ts`: `extractWorkItemsFromDocument` Action 會呼叫此 AI 流程來進行文件解析。
+ * - `src/features/automation-tools/docu-parse/views/docu-parse-view.tsx`: 前端 UI，呼叫此處定義的 Actions。
  */
 
 "use server";
 
 import { extractWorkItems } from '@/features/integrations/ai/flows/extract-work-items-flow';
 import type { DocuParseActionState } from '@/features/automation-tools/docu-parse/types';
-import { getStorage } from 'firebase-admin/storage';
+import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 
 /**
  * Server Action: 從文件提取工作項目數據
@@ -35,7 +33,7 @@ export async function extractWorkItemsFromDocument(
   }
 
   try {
-    const file = getStorage().bucket().file(filePath);
+    const file = adminStorage.bucket().file(filePath);
     const [metadata] = await file.getMetadata();
     const safeName = (metadata && typeof metadata.name === 'string') ? metadata.name : '';
     const fileName = safeName.split('/').pop() || '未知檔案';
@@ -47,7 +45,7 @@ export async function extractWorkItemsFromDocument(
       return { error: '提取資料失敗。AI 模型回傳了非預期的結果。' };
     }
 
-    // 步驟 2: 返回成功的結果
+    // 步驟 2: 返回成功的結果 (不再包含 totalTokens)
     return {
       data: {
         ...result,
