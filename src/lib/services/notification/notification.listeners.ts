@@ -1,7 +1,7 @@
-import type { AppEventPayloadMap } from '@/lib/events/app-events';
-import { subscribe } from '@/lib/events/event-dispatcher';
 import { createNotification } from '@/lib/services/notification/notification.service';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import type { AppEventPayloadMap } from '@root/src/shared/events/app-events';
+import { subscribe } from '@root/src/shared/events/event-dispatcher';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 async function getAdminUserIds(): Promise<string[]> {

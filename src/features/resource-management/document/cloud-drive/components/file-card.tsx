@@ -9,7 +9,7 @@ import type { StorageItem } from '@/features/resource-management/document/cloud-
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardFooter } from '@/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/ui/dropdown-menu';
-import { formatBytes } from '@/utils';
+import { formatBytes } from '@root/src/shared/utils';
 import { Download, Edit, Eye, File as FileIcon, MoreVertical, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState, type FC } from 'react';

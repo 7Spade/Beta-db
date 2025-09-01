@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils';
+import { cn } from '@root/src/shared/utils';
 import { X } from 'lucide-react';
 import * as React from 'react';
 
@@ -80,3 +80,4 @@ const ModalContainer = React.forwardRef<HTMLDivElement, ModalContainerProps>(
 ModalContainer.displayName = 'ModalContainer';
 
 export { ModalContainer };
+

@@ -1,4 +1,4 @@
-import type { AppEventName, AppEventPayloadMap } from '@/lib/events/app-events';
+import type { AppEventName, AppEventPayloadMap } from '@root/src/shared/events/app-events';
 
 type Listener<T extends AppEventName> = (
   payload: AppEventPayloadMap[T]

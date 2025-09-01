@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { formatDate } from '@/utils';
+import { formatDate } from '@root/src/shared/utils';
 import { Download, Eye, MoreHorizontal } from 'lucide-react';
 import * as React from 'react';
 

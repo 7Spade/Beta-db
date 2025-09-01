@@ -9,7 +9,7 @@ import type { Contract } from '@/features/core-operations/contracts/types';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardHeader } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 

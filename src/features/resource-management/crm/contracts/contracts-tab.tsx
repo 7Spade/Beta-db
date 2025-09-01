@@ -1,7 +1,5 @@
 'use client';
 
-import type { Contract, Partner } from '@/lib/types/types';
-import { toDate } from '@/lib/utils/date-utils';
 import { Badge } from '@/ui/badge';
 import {
   Card,
@@ -18,8 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { formatDate } from '@/utils';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import type { Contract, Partner } from '@root/src/shared/types/types';
+import { formatDate } from '@root/src/shared/utils';
+import { toDate } from '@root/src/shared/utils/date-utils';
 import {
   collection,
   getDocs,

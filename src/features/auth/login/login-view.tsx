@@ -1,6 +1,5 @@
 'use client';
 
-import { isFirebaseAuthError } from '@/lib/utils/auth-utils';
 import { Button } from '@/ui/button';
 import {
   Card,
@@ -20,7 +19,8 @@ import {
 import { Input } from '@/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { auth } from '@root/src/features/integrations/database/firebase-client/firebase-client';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
+import { isFirebaseAuthError } from '@root/src/shared/utils/auth-utils';
 import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,

@@ -2,7 +2,6 @@
 
 import { generateKnowledgeEntry } from '@/features/integrations/ai/flows/generate-knowledge-entry-flow';
 import { handleDeleteKnowledgeBaseEntry } from '@/features/resource-management/document/knowledge-base/actions/knowledge-actions';
-import type { KnowledgeBaseEntry } from '@/lib/types/types';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
@@ -11,7 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/ui/input';
 import { Textarea } from '@/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
+import type { KnowledgeBaseEntry } from '@root/src/shared/types/types';
 import { Cpu, Loader2, Trash2, Wand2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';

@@ -8,10 +8,10 @@ import { FinancialsTab } from '@/features/resource-management/crm/financials/fin
 import { OverviewTab } from '@/features/resource-management/crm/overview/overview-tab';
 import { PerformanceTab } from '@/features/resource-management/crm/performance/performance-tab';
 import { TransactionsTab } from '@/features/resource-management/crm/transactions/transactions-tab';
-import type { Contact, Partner } from '@/types/types';
 import { Button } from '@/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import type { Role } from '@root/src/shared/constants/roles';
+import type { Contact, Partner } from '@root/src/shared/types/types';
 import { ArrowLeft, ArrowLeftRight, Briefcase, DollarSign, ShieldCheck, Star, Users } from 'lucide-react';
 import type { FC } from 'react';
 import { ProfileHeader } from './profile-header';

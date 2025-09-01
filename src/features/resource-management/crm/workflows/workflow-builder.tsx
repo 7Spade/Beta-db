@@ -1,7 +1,6 @@
 
 'use client';
 
-import type { Contract, FinancialDocument, Partner, ReceivablePayableType, Transaction } from '@/lib/types/types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
@@ -9,13 +8,14 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Input } from '@/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
 import { Textarea } from '@/ui/textarea';
+import type { Contract, FinancialDocument, Partner, ReceivablePayableType, Transaction } from '@root/src/shared/types/types';
 import { Briefcase, DollarSign, FileText, PlusCircle } from 'lucide-react';
 import { useCallback, useEffect, useState, type FC } from 'react';
 
 import { Skeleton } from '@/ui/skeleton';
-import { formatDate } from '@/utils';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
+import { formatDate } from '@root/src/shared/utils';
 import { Timestamp, addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import Link from 'next/link';
 

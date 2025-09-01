@@ -1,7 +1,7 @@
 "use server";
 
-import type { KnowledgeBaseEntry } from '@/types/types';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import type { KnowledgeBaseEntry } from '@root/src/shared/types/types';
 import { addDoc, collection, deleteDoc, doc, serverTimestamp, setDoc, writeBatch } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import type { SaveResult } from './types';

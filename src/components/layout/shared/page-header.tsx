@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils';
+import { cn } from '@root/src/shared/utils';
 import * as React from 'react';
 
 interface PageHeaderProps {
@@ -59,3 +59,4 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
 PageHeader.displayName = 'PageHeader';
 
 export { PageHeader };
+

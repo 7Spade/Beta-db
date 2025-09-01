@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils';
+import { cn } from '@root/src/shared/utils';
 import * as React from 'react';
 
 interface TooltipContextType {

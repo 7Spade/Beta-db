@@ -13,10 +13,10 @@
  */
 'use client';
 
-import type { Partner } from '@/lib/types/types';
 import { Skeleton } from '@/ui/skeleton';
 import { DashboardStats, type StatCardData } from '@root/src/features/business-intelligence/reporting-analytics/dashboard/dashboard-stats';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import type { Partner } from '@root/src/shared/types/types';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { CheckCircle, Clock, Users } from 'lucide-react';
 import type { FC } from 'react';

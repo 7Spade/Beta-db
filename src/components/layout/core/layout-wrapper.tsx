@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils';
+import { cn } from '@root/src/shared/utils';
 import * as React from 'react';
 
 interface LayoutWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -39,3 +39,4 @@ const LayoutWrapper = React.forwardRef<HTMLDivElement, LayoutWrapperProps>(
 LayoutWrapper.displayName = 'LayoutWrapper';
 
 export { LayoutWrapper };
+

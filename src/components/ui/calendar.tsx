@@ -9,7 +9,7 @@ import * as React from "react"
 import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
 
 import { Button, buttonVariants } from "@/ui/button"
-import { cn } from "@/utils"
+import { cn } from "@root/src/shared/utils"
 
 function Calendar({
   className,
@@ -211,3 +211,4 @@ function CalendarDayButton({
 }
 
 export { Calendar, CalendarDayButton }
+

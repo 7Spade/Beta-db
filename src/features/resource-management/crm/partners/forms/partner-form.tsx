@@ -1,18 +1,18 @@
 
 'use client';
 
-import * as React from 'react';
-import type { FC } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import type { Partner } from '@/lib/types/types';
 import { Button } from '@/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { Input } from '@/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
 import { Textarea } from '@/ui/textarea';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { Partner } from '@root/src/shared/types/types';
+import type { FC } from 'react';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const partnerSchema = z.object({
   name: z.string().min(2, { message: '合作夥伴名稱至少需要 2 個字元。' }),
@@ -120,7 +120,7 @@ export const PartnerForm: FC<PartnerFormProps> = ({ isOpen, onOpenChange, onSave
                   </FormItem>
                 )}
               />
-               <FormField
+              <FormField
                 control={form.control}
                 name="category"
                 render={({ field }) => (
@@ -142,7 +142,7 @@ export const PartnerForm: FC<PartnerFormProps> = ({ isOpen, onOpenChange, onSave
                   </FormItem>
                 )}
               />
-               <FormField
+              <FormField
                 control={form.control}
                 name="status"
                 render={({ field }) => (
@@ -160,7 +160,7 @@ export const PartnerForm: FC<PartnerFormProps> = ({ isOpen, onOpenChange, onSave
                   </FormItem>
                 )}
               />
-                <FormField
+              <FormField
                 control={form.control}
                 name="flowType"
                 render={({ field }) => (

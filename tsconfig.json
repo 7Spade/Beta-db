@@ -63,10 +63,10 @@
         "./src/lib/services/*"
       ],
       "@/events/*": [
-        "./src/lib/events/*"
+        "src/shared/events/*"
       ],
       "@/models/*": [
-        "./src/lib/models/*"
+        "src/shared/models/*"
       ],
       "@/types/*": [
         "./src/lib/types/*"

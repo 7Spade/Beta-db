@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { formatDate } from '@/utils';
+import { formatDate } from '@root/src/shared/utils';
 
 interface PaymentsTableProps {
   payments: Payment[];

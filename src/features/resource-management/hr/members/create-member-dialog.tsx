@@ -1,9 +1,9 @@
 
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { Button } from '@/ui/button';
@@ -15,9 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/ui/dialog';
-import { Input } from '@/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
-import type { TeamMember } from '@/lib/types/types';
+import { Input } from '@/ui/input';
+import type { TeamMember } from '@root/src/shared/types/types';
 
 const memberSchema = z.object({
   name: z.string().min(2, '姓名至少需要 2 個字元。'),
@@ -30,14 +30,14 @@ const memberSchema = z.object({
 type MemberFormValues = z.infer<typeof memberSchema>;
 
 interface CreateMemberDialogProps {
-    isOpen: boolean;
-    onOpenChange: (isOpen: boolean) => void;
-    onSave: (data: Omit<TeamMember, 'id'>) => Promise<boolean>;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onSave: (data: Omit<TeamMember, 'id'>) => Promise<boolean>;
 }
 
 export function CreateMemberDialog({ isOpen, onOpenChange, onSave }: CreateMemberDialogProps) {
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const form = useForm<MemberFormValues>({
     resolver: zodResolver(memberSchema),
     defaultValues: {
@@ -135,7 +135,7 @@ export function CreateMemberDialog({ isOpen, onOpenChange, onSave }: CreateMembe
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="avatarUrl"
               render={({ field }) => (

@@ -10,7 +10,7 @@ import type { StorageItem } from '@/features/resource-management/document/cloud-
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/ui/breadcrumb';
 import { Card, CardContent } from '@/ui/card';
 import { Skeleton } from '@/ui/skeleton';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { File as FileIcon, Folder } from 'lucide-react';
 import * as React from 'react';
 

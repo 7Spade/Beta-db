@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { approveAcceptanceWorkflow } from '../actions/workflow.actions';
 import type { AcceptanceRecord } from '../types';
 import { formatDate } from '../utils';

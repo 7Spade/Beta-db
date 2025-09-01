@@ -1,19 +1,19 @@
 'use client';
 
-import { useBlogList } from '../hooks/use-blog-list';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/ui/dropdown-menu';
 import { Skeleton } from '@/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
+import { useToast } from '@root/src/shared/hooks/use-toast';
+import { formatDate } from '@root/src/shared/utils';
 import { MoreHorizontal, PlusCircle, Trash2 } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { deletePostAction } from '../actions/blog.actions';
-import { useToast } from '@root/src/lib/hooks/use-toast';
-import { formatDate } from '@/utils';
+import { useBlogList } from '../hooks/use-blog-list';
 
 export function BlogListView() {
   const { posts, loading, error } = useBlogList();
@@ -106,7 +106,7 @@ export function BlogListView() {
                           <DropdownMenuItem onSelect={() => router.push(`/website-cms/blog-management/posts/${post.id}/edit`)}>
                             編輯
                           </DropdownMenuItem>
-                           <DropdownMenuItem onSelect={() => window.open(`/blog/${post.slug}`, '_blank')}>
+                          <DropdownMenuItem onSelect={() => window.open(`/blog/${post.slug}`, '_blank')}>
                             預覽
                           </DropdownMenuItem>
                           <AlertDialogTrigger asChild>
@@ -133,9 +133,9 @@ export function BlogListView() {
               ))}
             </TableBody>
           </Table>
-           {!loading && posts.length === 0 && (
+          {!loading && posts.length === 0 && (
             <div className="text-center py-16 text-muted-foreground">
-                尚無任何文章。
+              尚無任何文章。
             </div>
           )}
         </CardContent>

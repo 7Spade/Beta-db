@@ -1,8 +1,8 @@
 
 'use client';
 
+import type { Partner } from '@root/src/shared/types/types';
 import type { FC } from 'react';
-import type { Partner } from '@/types/types';
 import { WorkflowDesigner } from './workflow-designer';
 
 interface FinancialsTabProps {

@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/utils"
+import { cn } from "@root/src/shared/utils"
 import { ChevronDown, LogOut, Settings, User } from "lucide-react"
 import Image from 'next/image'
 import * as React from "react"

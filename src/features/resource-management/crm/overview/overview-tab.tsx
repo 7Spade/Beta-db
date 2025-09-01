@@ -1,9 +1,9 @@
 
 'use client';
 
-import type { FC } from 'react';
 import { Card, CardContent } from '@/ui/card';
-import type { Partner } from '@/lib/types/types';
+import type { Partner } from '@root/src/shared/types/types';
+import type { FC } from 'react';
 
 interface OverviewTabProps {
   partner: Partner;

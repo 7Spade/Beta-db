@@ -9,7 +9,7 @@ import {
 } from '@/ui/collapsible';
 import { Progress } from '@/ui/progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/ui/tooltip';
-import { cn } from '@/utils';
+import { cn } from '@root/src/shared/utils';
 import { CheckCircle2, ChevronRight, Circle, Clock } from 'lucide-react';
 import { useState } from 'react';
 import type { Project, Task } from '../types';
@@ -114,7 +114,7 @@ export function TaskItem({
               />
             </button>
           </CollapsibleTrigger>
-          
+
           <TooltipProvider delayDuration={200}>
             <Tooltip>
               <TooltipTrigger asChild>

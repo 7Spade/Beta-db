@@ -1,6 +1,6 @@
 import { Toaster } from '@/ui/toaster';
-import { cn } from '@/utils';
 import { AuthProvider } from '@root/src/features/auth/auth-provider';
+import { cn } from '@root/src/shared/utils';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';

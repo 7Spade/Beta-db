@@ -29,7 +29,7 @@ import {
   TableRow,
 } from '@/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
-import { formatDate } from '@/utils';
+import { formatDate } from '@root/src/shared/utils';
 import { useMemo } from 'react';
 
 interface ContractDetailsSheetProps {

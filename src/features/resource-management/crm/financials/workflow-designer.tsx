@@ -1,12 +1,12 @@
 
 'use client';
 
-import type { Partner } from '@/lib/types/types';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Input } from '@/ui/input';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
+import type { Partner } from '@root/src/shared/types/types';
 import { doc, setDoc } from 'firebase/firestore';
 import { GripVertical, PlusCircle, Save, Trash2 } from 'lucide-react';
 import { useEffect, useState, type FC } from 'react';

@@ -1,18 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Loader2, Save } from 'lucide-react';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { Input } from '@/ui/input';
-import { Button } from '@/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
-import { useBlogForm, type PostFormValues } from '../hooks/use-blog-form';
-import type { Post } from '../types/blog.types';
+import { useToast } from '@root/src/shared/hooks/use-toast';
+import { ArrowLeft, Loader2, Save } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { savePostAction } from '../actions/blog.actions';
 import { BlogEditor } from '../components/BlogEditor';
 import { MediaUploader } from '../components/MediaUploader';
+import { useBlogForm, type PostFormValues } from '../hooks/use-blog-form';
+import type { Post } from '../types/blog.types';
 
 interface BlogFormViewProps {
   post: Post | null;
@@ -22,7 +22,7 @@ export function BlogFormView({ post }: BlogFormViewProps) {
   const router = useRouter();
   const { toast } = useToast();
   const form = useBlogForm(post);
-  
+
   const onSubmit = async (values: PostFormValues) => {
     const result = await savePostAction(values, post?.id);
     if (result.success) {
@@ -116,22 +116,22 @@ export function BlogFormView({ post }: BlogFormViewProps) {
                 />
               </CardContent>
             </Card>
-             <Card>
+            <Card>
               <CardHeader><CardTitle>文章主圖</CardTitle></CardHeader>
               <CardContent>
-                 <FormField
+                <FormField
                   control={form.control}
                   name="imageUrl"
                   render={({ field }) => (
-                     <FormItem>
+                    <FormItem>
                       <MediaUploader
                         currentImageUrl={field.value}
                         onUploadSuccess={(url) => field.onChange(url)}
                       />
-                       <FormDescription>或貼上圖片網址</FormDescription>
-                       <FormControl><Input placeholder="https://..." {...field} /></FormControl>
-                       <FormMessage />
-                     </FormItem>
+                      <FormDescription>或貼上圖片網址</FormDescription>
+                      <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
               </CardContent>

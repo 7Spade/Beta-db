@@ -6,7 +6,7 @@
 
 import { uploadFile } from '@/features/resource-management/document/cloud-drive/actions/storage-actions';
 import { Button } from '@/ui/button';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { Loader2, Upload } from 'lucide-react';
 import { useRef, useState, type FC } from 'react';
 

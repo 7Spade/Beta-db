@@ -3,7 +3,7 @@
 import { generateSubtasks } from '@/features/integrations/ai/flows/generate-subtasks-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/ui/alert';
 import { Button } from '@/ui/button';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { Loader, PlusCircle, X } from 'lucide-react';
 import { useEffect, useState, useTransition } from 'react';
 import type { Project } from '../types';

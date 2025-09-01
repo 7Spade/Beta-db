@@ -6,7 +6,7 @@ import { Skeleton } from '@/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import { approveUser, rejectUser } from '@root/src/features/system-administration/admin/actions/user-actions';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { collection, DocumentData, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 

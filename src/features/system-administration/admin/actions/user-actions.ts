@@ -1,7 +1,7 @@
 'use server';
 
-import { dispatch } from '@/lib/events/event-dispatcher';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client'; // Using client SDK for server components is fine
+import { dispatch } from '@root/src/shared/events/event-dispatcher';
 import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 

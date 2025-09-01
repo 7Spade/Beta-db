@@ -1,4 +1,4 @@
-import { cn } from "@/utils"
+import { cn } from "@root/src/shared/utils"
 
 function Skeleton({
   className,
@@ -13,3 +13,4 @@ function Skeleton({
 }
 
 export { Skeleton }
+

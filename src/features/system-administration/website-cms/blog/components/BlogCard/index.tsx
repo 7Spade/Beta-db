@@ -1,7 +1,7 @@
 import type { Post } from '@/features/system-administration/website-cms/blog/types/blog.types';
 import { Badge } from '@/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { formatDate } from '@/utils';
+import { CardDescription, CardTitle } from '@/ui/card';
+import { formatDate } from '@root/src/shared/utils';
 import { ArrowRight, Calendar, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

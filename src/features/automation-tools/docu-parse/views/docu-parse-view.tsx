@@ -18,8 +18,8 @@
 
 'use client';
 
-import type { Partner } from '@/lib/types/types';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import type { Partner } from '@root/src/shared/types/types';
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -55,7 +55,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/ui/select';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { Cpu, File, FileCog, Loader2, RefreshCcw } from 'lucide-react';
 
 const initialState = {

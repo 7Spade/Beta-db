@@ -2,7 +2,7 @@
  * @fileoverview 匯出功能服務
  */
 import type { Contract } from '@/features/core-operations/contracts/types';
-import { formatDate } from '@/utils';
+import { formatDate } from '@root/src/shared/utils';
 
 export const exportService = {
   exportContractsToCSV: (contracts: Contract[]) => {

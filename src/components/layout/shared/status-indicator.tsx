@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils';
+import { cn } from '@root/src/shared/utils';
 import * as React from 'react';
 
 interface StatusIndicatorProps {
@@ -107,3 +107,4 @@ const StatusIndicator = React.forwardRef<HTMLDivElement, StatusIndicatorProps>(
 StatusIndicator.displayName = 'StatusIndicator';
 
 export { StatusIndicator };
+

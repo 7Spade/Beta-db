@@ -1,12 +1,12 @@
 'use client';
 
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { addDoc, collection, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState, type FC } from 'react';
 
-import type { Contact, Partner } from '@/types/types';
 import type { Role } from '@root/src/shared/constants/roles';
+import type { Contact, Partner } from '@root/src/shared/types/types';
 
 import { ContactForm } from '@/features/resource-management/crm/contacts/forms/contact-form';
 import { Skeleton } from '@/ui/skeleton';

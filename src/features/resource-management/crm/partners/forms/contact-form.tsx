@@ -1,16 +1,16 @@
 
 'use client';
 
-import * as React from 'react';
-import type { FC } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import type { Contact } from '@/lib/types/types';
 import { Button } from '@/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { Input } from '@/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { Contact } from '@root/src/shared/types/types';
+import type { FC } from 'react';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: '姓名至少需要 2 個字元。' }),
@@ -57,15 +57,15 @@ export const ContactForm: FC<ContactFormProps> = ({ isOpen, onOpenChange, onSave
   const onSubmit = async (data: ContactFormValues) => {
     setIsSaving(true);
     const success = await onSave(data, contact?.id);
-    if(success) {
-        onOpenChange(false);
+    if (success) {
+      onOpenChange(false);
     }
     setIsSaving(false);
   };
-  
+
   const handleOpenChange = (open: boolean) => {
-      if(isSaving) return;
-      onOpenChange(open);
+    if (isSaving) return;
+    onOpenChange(open);
   }
 
   return (
@@ -101,7 +101,7 @@ export const ContactForm: FC<ContactFormProps> = ({ isOpen, onOpenChange, onSave
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -112,7 +112,7 @@ export const ContactForm: FC<ContactFormProps> = ({ isOpen, onOpenChange, onSave
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="phone"
               render={({ field }) => (

@@ -3,7 +3,7 @@
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Input } from '@/ui/input';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import React, { useState } from 'react';
 
 interface AddSubtaskFormProps {

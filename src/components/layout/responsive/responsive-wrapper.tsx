@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils';
+import { cn } from '@root/src/shared/utils';
 import * as React from 'react';
 
 interface ResponsiveWrapperProps {
@@ -47,3 +47,4 @@ const ResponsiveWrapper = React.forwardRef<
 ResponsiveWrapper.displayName = 'ResponsiveWrapper';
 
 export { ResponsiveWrapper };
+

@@ -1,7 +1,7 @@
 'use client';
 
-import type { Skill } from '@/lib/types/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Skill } from '@root/src/shared/types/types';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -22,7 +22,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/ui/input';
 import { Label } from '@/ui/label';
 import { Textarea } from '@/ui/textarea';
-import { useToast } from '@root/src/lib/hooks/use-toast';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import { Cpu, Loader2, Wand2 } from 'lucide-react';
 
 const skillSchema = z.object({

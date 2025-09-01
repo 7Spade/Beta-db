@@ -2,13 +2,13 @@
 'use client';
 
 import { Dashboard } from '@/features/resource-management/crm/dashboard/dashboard';
-import type { Partner } from '@/lib/types/types';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Input } from '@/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select';
 import type { Role } from '@root/src/shared/constants/roles';
+import type { Partner } from '@root/src/shared/types/types';
 import { Plus, Search } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState, type FC } from 'react';

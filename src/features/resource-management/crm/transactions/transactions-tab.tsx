@@ -1,10 +1,10 @@
 
 'use client';
 
-import type { Partner } from '@/lib/types/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table';
-import { formatDate } from '@/utils';
+import type { Partner } from '@root/src/shared/types/types';
+import { formatDate } from '@root/src/shared/utils';
 import type { FC } from 'react';
 
 interface TransactionsTabProps {

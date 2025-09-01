@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/utils"
+import { cn } from "@root/src/shared/utils"
 import { Plus, Search, Settings, User } from "lucide-react"
 import * as React from "react"
 
