@@ -16,6 +16,7 @@ import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
   ArrowLeftRight,
+  BarChart3,
   BookOpen,
   Briefcase,
   Building2,
@@ -32,6 +33,7 @@ import {
   LayoutGrid,
   Mail,
   Package,
+  Plus,
   Rocket,
   Shield,
   Truck,
@@ -51,206 +53,270 @@ export interface NavigationItem {
 
 export const navigationConfig: NavigationItem[] = [
   {
-    id: 'quick-actions',
-    label: '快捷操作',
+    id: 'dashboard',
+    label: '儀表板',
+    icon: LayoutGrid,
+    href: '/dashboard',
+  },
+  {
+    id: 'automation-tools',
+    label: '自動化工具',
     icon: Rocket,
-    href: '/quick-actions',
+    href: '/automation-tools',
     children: [
-      {
-        id: 'daily-report',
-        label: '工地日報',
-        icon: Calendar,
-        href: '/daily-report',
-      },
-      {
-        id: 'attendance',
-        label: '人員出勤',
-        icon: UserCheck,
-        href: '/attendance',
-      },
-      {
-        id: 'progress',
-        label: '進度回報',
-        icon: Activity,
-        href: '/project-progress',
-      },
       {
         id: 'kanban',
-        label: '速記看板',
+        label: '看板管理',
         icon: LayoutGrid,
-        href: '/kanban',
+        href: '/automation-tools/kanban',
       },
       {
-        id: 'docu-parse',
-        label: '文件解析',
-        icon: FileText,
-        href: '/docu-parse',
-      },
-      {
-        id: 'cloud-drive',
-        label: '雲端硬碟',
-        icon: Cloud,
-        href: '/cloud-drive',
-      },
-    ],
-  },
-  {
-    id: 'projects',
-    label: '專案管理',
-    icon: FolderKanban,
-    href: '/projects',
-  },
-  {
-    id: 'contracts',
-    label: '合約管理',
-    icon: Building2,
-    href: '/contracts',
-    children: [
-      {
-        id: 'contract-list',
-        label: '合約列表',
-        icon: ClipboardList,
-        href: '/contracts/contracts',
-      },
-      {
-        id: 'billing',
-        label: '計價作業',
-        icon: Calculator,
-        href: '/contracts/billing',
-      },
-    ],
-  },
-  {
-    id: 'warehousing',
-    label: '倉儲管理',
-    icon: Warehouse,
-    href: '/enhanced-inventory',
-    children: [
-      {
-        id: 'inventory-items',
-        label: '物料主檔',
-        icon: Package,
-        href: '/items',
-      },
-      {
-        id: 'inventory-movements',
-        label: '出入庫紀錄',
-        icon: ArrowLeftRight,
-        href: '/movements',
-      },
-      {
-        id: 'inventory-transfers',
-        label: '跨倉調撥',
-        icon: Truck,
-        href: '/transfers',
-      },
-      {
-        id: 'inventory-warehouses',
-        label: '倉庫管理',
-        icon: Warehouse,
-        href: '/warehouses',
-      },
-    ],
-  },
-  {
-    id: 'partnerverse',
-    label: '合作夥伴',
-    icon: Handshake,
-    href: '/partnerverse/partners',
-    children: [
-      {
-        id: 'partners',
-        label: '夥伴列表',
-        icon: Users,
-        href: '/partners',
-      },
-      {
-        id: 'workflows',
-        label: '收支流程',
-        icon: DollarSign,
-        href: '/workflows',
-      },
-    ],
-  },
-  {
-    id: 'team',
-    label: '內部團隊',
-    icon: Users,
-    href: '/team/members',
-    children: [
-      {
-        id: 'schedule',
-        label: '排班表',
-        icon: CalendarDays,
-        href: '/team/schedule',
-      },
-      {
-        id: 'members',
-        label: '同伴列表',
-        icon: ClipboardList,
-        href: '/team/members',
-      },
-      {
-        id: 'skills',
-        label: '技能清單',
-        icon: Wrench,
-        href: '/team/skills',
+        id: 'project-progress',
+        label: '專案進度',
+        icon: Activity,
+        href: '/automation-tools/project-progress',
       },
       {
         id: 'knowledge-base',
         label: '工法工序庫',
         icon: BookOpen,
-        href: '/team/knowledge-base',
+        href: '/automation-tools/knowledge-base',
       },
     ],
   },
   {
-    id: 'admin',
-    label: '後台管理',
-    icon: Shield,
-    href: '/website-cms',
+    id: 'business-intelligence',
+    label: '商業智慧',
+    icon: BarChart3,
+    href: '/business-intelligence',
     children: [
       {
-        id: 'admin-dashboard',
-        label: '總覽',
+        id: 'analytics-dashboard',
+        label: '分析儀表板',
         icon: LayoutGrid,
-        href: '/website-cms/dashboard',
+        href: '/business-intelligence/reporting-analytics/dashboard',
       },
       {
-        id: 'admin-user',
-        label: '使用者管理',
+        id: 'daily-report',
+        label: '日報系統',
+        icon: Calendar,
+        href: '/business-intelligence/reporting-analytics/daily-report',
+      },
+    ],
+  },
+  {
+    id: 'core-operations',
+    label: '核心操作',
+    icon: Cog,
+    href: '/core-operations',
+    children: [
+      {
+        id: 'projects',
+        label: '專案管理',
+        icon: FolderKanban,
+        href: '/core-operations/projects',
+      },
+      {
+        id: 'contracts',
+        label: '合約管理',
+        icon: Building2,
+        href: '/core-operations/contracts/contracts',
+        children: [
+          {
+            id: 'contract-list',
+            label: '合約列表',
+            icon: ClipboardList,
+            href: '/core-operations/contracts/contracts',
+          },
+          {
+            id: 'create-contract',
+            label: '建立合約',
+            icon: Plus,
+            href: '/core-operations/contracts/contracts/create',
+          },
+          {
+            id: 'billing',
+            label: '計價作業',
+            icon: Calculator,
+            href: '/core-operations/contracts/billing',
+          },
+        ],
+      },
+      {
+        id: 'schedule',
+        label: '排班表',
+        icon: CalendarDays,
+        href: '/core-operations/schedule',
+      },
+    ],
+  },
+  {
+    id: 'resource-management',
+    label: '資源管理',
+    icon: Package,
+    href: '/resource-management',
+    children: [
+      {
+        id: 'hr',
+        label: '人力資源',
         icon: Users,
-        href: '/website-cms/user',
+        href: '/resource-management/hr',
+        children: [
+          {
+            id: 'members',
+            label: '團隊成員',
+            icon: Users,
+            href: '/resource-management/hr/members',
+          },
+          {
+            id: 'attendance',
+            label: '出勤管理',
+            icon: UserCheck,
+            href: '/resource-management/hr/attendance',
+          },
+          {
+            id: 'skills',
+            label: '技能清單',
+            icon: Wrench,
+            href: '/resource-management/hr/skills',
+          },
+        ],
       },
       {
-        id: 'admin-blog',
-        label: '文章管理',
-        icon: BookOpen,
-        href: '/website-cms/blog/posts',
+        id: 'inventory',
+        label: '庫存管理',
+        icon: Warehouse,
+        href: '/resource-management/inventory',
+        children: [
+          {
+            id: 'items',
+            label: '物料主檔',
+            icon: Package,
+            href: '/resource-management/inventory/items',
+          },
+          {
+            id: 'movements',
+            label: '出入庫紀錄',
+            icon: ArrowLeftRight,
+            href: '/resource-management/inventory/movements',
+          },
+          {
+            id: 'transfers',
+            label: '跨倉調撥',
+            icon: Truck,
+            href: '/resource-management/inventory/transfers',
+          },
+          {
+            id: 'warehouses',
+            label: '倉庫管理',
+            icon: Warehouse,
+            href: '/resource-management/inventory/warehouses',
+          },
+        ],
       },
       {
-        id: 'admin-career',
-        label: '職涯管理',
-        icon: Briefcase,
-        href: '/website-cms/career',
+        id: 'crm',
+        label: '客戶關係',
+        icon: Handshake,
+        href: '/resource-management/crm',
+        children: [
+          {
+            id: 'partners',
+            label: '合作夥伴',
+            icon: Users,
+            href: '/resource-management/crm/partners',
+          },
+          {
+            id: 'workflows',
+            label: '工作流程',
+            icon: DollarSign,
+            href: '/resource-management/crm/workflows',
+          },
+        ],
       },
       {
-        id: 'admin-contact',
-        label: '聯絡管理',
-        icon: Mail,
-        href: '/website-cms/contact',
-      },
-      {
-        id: 'admin-content',
-        label: '內容管理',
+        id: 'document',
+        label: '文件管理',
         icon: FileText,
-        href: '/website-cms/content',
+        href: '/resource-management/document',
+        children: [
+          {
+            id: 'cloud-drive',
+            label: '雲端硬碟',
+            icon: Cloud,
+            href: '/resource-management/document/cloud-drive',
+          },
+          {
+            id: 'docu-parse',
+            label: '文件解析',
+            icon: FileText,
+            href: '/resource-management/document/docu-parse',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'system-administration',
+    label: '系統管理',
+    icon: Shield,
+    href: '/system-administration',
+    children: [
+      {
+        id: 'settings',
+        label: '系統設定',
+        icon: Cog,
+        href: '/system-administration/settings',
       },
       {
-        id: 'admin-system',
-        label: '系統管理',
-        icon: Cog,
-        href: '/website-cms/system',
+        id: 'website-cms',
+        label: '網站管理',
+        icon: LayoutGrid,
+        href: '/system-administration/website-cms',
+        children: [
+          {
+            id: 'cms-dashboard',
+            label: '管理總覽',
+            icon: LayoutGrid,
+            href: '/system-administration/website-cms/dashboard',
+          },
+          {
+            id: 'user-management',
+            label: '使用者管理',
+            icon: Users,
+            href: '/system-administration/website-cms/user',
+          },
+          {
+            id: 'blog-management',
+            label: '文章管理',
+            icon: BookOpen,
+            href: '/system-administration/website-cms/blog/posts',
+          },
+          {
+            id: 'career-management',
+            label: '職涯管理',
+            icon: Briefcase,
+            href: '/system-administration/website-cms/career',
+          },
+          {
+            id: 'contact-management',
+            label: '聯絡管理',
+            icon: Mail,
+            href: '/system-administration/website-cms/contact',
+          },
+          {
+            id: 'content-management',
+            label: '內容管理',
+            icon: FileText,
+            href: '/system-administration/website-cms/content',
+          },
+          {
+            id: 'system-management',
+            label: '系統管理',
+            icon: Cog,
+            href: '/system-administration/website-cms/system',
+          },
+        ],
       },
     ],
   },
@@ -293,11 +359,26 @@ export function shouldExpandSection(
 
 // 工具函數：檢查路徑是否為活躍狀態
 export function isPathActive(itemPath: string, currentPath: string): boolean {
-  if (itemPath === '/partnerverse') {
-    return currentPath.startsWith('/partnerverse');
+  // 特殊處理某些路徑
+  if (itemPath === '/dashboard') {
+    return currentPath === '/dashboard';
   }
-  if (itemPath.startsWith('/website-cms')) {
-    return currentPath.startsWith('/website-cms');
+  if (itemPath.startsWith('/automation-tools')) {
+    return currentPath.startsWith('/automation-tools');
   }
+  if (itemPath.startsWith('/business-intelligence')) {
+    return currentPath.startsWith('/business-intelligence');
+  }
+  if (itemPath.startsWith('/core-operations')) {
+    return currentPath.startsWith('/core-operations');
+  }
+  if (itemPath.startsWith('/resource-management')) {
+    return currentPath.startsWith('/resource-management');
+  }
+  if (itemPath.startsWith('/system-administration')) {
+    return currentPath.startsWith('/system-administration');
+  }
+
+  // 一般情況：精確匹配或子路徑匹配
   return currentPath === itemPath || currentPath.startsWith(itemPath + '/');
 }

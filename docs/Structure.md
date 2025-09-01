@@ -98,6 +98,9 @@
 │  │  │  └─security
 │  │  │          README.md
 │  │  │
+│  │  ├─dashboard
+│  │  │      page.tsx
+│  │  │
 │  │  ├─resource-management
 │  │  │  ├─crm
 │  │  │  │  │  README.md
