@@ -120,9 +120,9 @@ const extractWorkItemsFlow = ai.defineFlow(
         flow_name: 'extractWorkItemsFlow',
         model: result.model || 'unknown',
         status: 'succeeded',
-        input_tokens: result.usage?.inputTokens,
-        output_tokens: result.usage?.outputTokens,
-        total_tokens: result.usage?.totalTokens,
+        input_tokens: result.usage?.inputTokens || 0,
+        output_tokens: result.usage?.outputTokens || 0,
+        total_tokens: result.usage?.totalTokens || 0,
         duration_ms: durationMs,
         user_id: 'system' // Placeholder for user ID
       });
@@ -134,11 +134,11 @@ const extractWorkItemsFlow = ai.defineFlow(
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result?.model,
+        model: result?.model || modelName,
         status: 'failed',
-        input_tokens: result?.usage?.inputTokens,
-        output_tokens: result?.usage?.outputTokens,
-        total_tokens: result?.usage?.totalTokens,
+        input_tokens: result?.usage?.inputTokens || 0,
+        output_tokens: result?.usage?.outputTokens || 0,
+        total_tokens: result?.usage?.totalTokens || 0,
         duration_ms: durationMs,
         error: error instanceof Error ? error.message : 'Unknown error',
         user_id: 'system' // Placeholder for user ID
