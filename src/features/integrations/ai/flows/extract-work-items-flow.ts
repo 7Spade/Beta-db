@@ -37,9 +37,9 @@ const ExtractWorkItemsOutputSchema = z.object({
       name: z.string().describe('料號、品名或項目說明。'),
       quantity: z.number().describe('工作項目的數量。'),
       unitPrice: z.number().describe('工作項目的單價。'),
+      discount: z.number().describe('該項目的折扣金額 (如果有的話)。').optional(),
     })
-  ).
-    describe('一個包含提取出的工作項目及其數量和單價的列表。'),
+  ).describe('一個包含提取出的工作項目及其數量、單價和折扣的列表。'),
   subtotal: z.number().describe("從文件上提取出的、明確標示的『未稅總計』金額。").optional(),
 });
 export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema>;
@@ -62,7 +62,7 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
 const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your goal is to extract a list of work items and a final subtotal from the document.
 
 Key Concepts:
-- Data Points: Extract the item number (項次), description (品名), quantity (數量), and unit price (單價). DO NOT extract the total price for each item.
+- Data Points: Extract the item number (項次), description (品名), quantity (數量), unit price (單價), and discount (折扣).
 - Audit Target: The final '未稅總計' (subtotal before tax) is your single source of truth for the grand total.
 
 Document: {{media url=fileDataUri}}`;
