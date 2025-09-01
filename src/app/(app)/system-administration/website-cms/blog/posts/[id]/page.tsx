@@ -22,7 +22,7 @@ export default async function AdminPostDetailPage({ params }: { params: Promise<
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button asChild>
-          <Link href={`/website-cms/blog-management/posts/${post.id}/edit`}>
+          <Link href={`/website-cms/blog/posts/${post.id}/edit`}>
             <Edit className="mr-2 h-4 w-4" /> 編輯此文章
           </Link>
         </Button>

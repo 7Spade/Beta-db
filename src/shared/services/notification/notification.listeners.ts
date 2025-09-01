@@ -18,7 +18,7 @@ function onUserRegistered(payload: AppEventPayloadMap['user.registered']) {
         type: 'new_user_for_approval',
         message: `新用戶 ${payload.displayName || payload.email || payload.userId
           } 等待審核。`,
-        link: '/user-management',
+        link: '/user',
       });
     });
   });

@@ -14,21 +14,21 @@ admin/
 │   └── user-actions.ts
 └── views/        # 包含構成管理頁面的主要 React 元件
     ├── admin-dashboard-view.tsx
-    └── user-management-view.tsx
+    └── user-view.tsx
 ```
 
 ### 核心功能
 
 - **儀表板 (`admin-dashboard-view.tsx`)**: 顯示系統概覽和關鍵指標，作為管理員的入口頁面。
-- **使用者管理 (`user-management-view.tsx`)**: 核心功能之一，用於審核新註冊的使用者，批准或拒絕其訪問申請。
+- **使用者管理 (`user-view.tsx`)**: 核心功能之一，用於審核新註冊的使用者，批准或拒絕其訪問申請。
 
 ## 使用方式
 
 `views/` 中的元件被用作 `app/(admin)/` 路由群組下各個頁面的主要內容。Server Actions 則由這些 `view` 元件直接呼叫，以執行後端操作。
 
 ```tsx
-// src/app/(admin)/user-management/page.tsx
-import { UserManagementView } from '@/features/admin/views/user-management-view';
+// src/app/(admin)/user/page.tsx
+import { UserManagementView } from '@/features/admin/views/user-view';
 
 export default function UserManagementPage() {
   return <UserManagementView />;

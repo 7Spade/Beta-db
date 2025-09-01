@@ -9,7 +9,7 @@ export default function SystemManagementPage() {
       title: '用戶管理',
       description: '管理後台使用者、權限和角色',
       icon: Users,
-      href: '/system-management/users',
+      href: '/system/users',
       count: 24,
       status: 'active'
     },
@@ -17,7 +17,7 @@ export default function SystemManagementPage() {
       title: '系統設定',
       description: '管理網站基本設定和配置',
       icon: Settings,
-      href: '/system-management/settings',
+      href: '/system/settings',
       count: 8,
       status: 'configured'
     },
@@ -25,7 +25,7 @@ export default function SystemManagementPage() {
       title: '數據統計',
       description: '查看網站訪問統計和分析',
       icon: BarChart3,
-      href: '/system-management/analytics',
+      href: '/system/analytics',
       count: 156,
       status: 'monitoring'
     }

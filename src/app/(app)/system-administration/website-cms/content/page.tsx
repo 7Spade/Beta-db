@@ -8,21 +8,21 @@ export default function ContentManagementPage() {
       title: '部落格文章',
       description: '管理部落格文章，包括创建、编辑、发布和下架',
       icon: BookOpen,
-      href: '/blog-management/posts',
+      href: '/blog/posts',
       count: 12
     },
     {
       title: '頁面內容',
       description: '管理静态页面内容，如关于我们、服务条款等',
       icon: FileText,
-      href: '/content-management/pages',
+      href: '/content/pages',
       count: 6
     },
     {
       title: '媒體檔案',
       description: '管理图片、文档等媒体资源',
       icon: Cloud,
-      href: '/content-management/media',
+      href: '/content/media',
       count: 48
     }
   ];

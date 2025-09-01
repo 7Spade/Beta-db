@@ -16,7 +16,7 @@ export function JobListView() {
           <p className="text-muted-foreground">管理招聘职位，包括发布、编辑和下架</p>
         </div>
         <Button asChild>
-            <Link href="/website-cms/career-management/jobs/create">
+            <Link href="/website-cms/career/jobs/create">
                 <PlusCircle className="mr-2 h-4 w-4" />
                 新增職位
             </Link>

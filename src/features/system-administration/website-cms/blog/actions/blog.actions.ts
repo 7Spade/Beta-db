@@ -83,7 +83,7 @@ export async function savePostAction(data: PostFormValues, postId?: string | nul
     await CacheService.invalidatePostCache(finalSlug);
 
     // Revalidate Next.js paths
-    revalidatePath('/website-cms/blog-management/posts');
+    revalidatePath('/website-cms/blog/posts');
     revalidatePath('/blog');
     revalidatePath(`/blog/${finalSlug}`);
 
@@ -113,7 +113,7 @@ export async function deletePostAction(postId: string): Promise<PostActionRespon
     await CacheService.invalidateBlogListCache();
     await CacheService.invalidatePostCache(post.slug);
 
-    revalidatePath('/website-cms/blog-management/posts');
+    revalidatePath('/website-cms/blog/posts');
     revalidatePath('/blog');
 
     return { success: true };

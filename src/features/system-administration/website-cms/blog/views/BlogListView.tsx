@@ -54,7 +54,7 @@ export function BlogListView() {
           <p className="text-muted-foreground">建立、編輯和管理您的所有部落格文章。</p>
         </div>
         <Button asChild>
-          <Link href="/website-cms/blog-management/posts/create">
+          <Link href="/website-cms/blog/posts/create">
             <PlusCircle className="mr-2 h-4 w-4" />
             新增文章
           </Link>
@@ -82,7 +82,7 @@ export function BlogListView() {
                 <TableRow key={post.id}>
                   <TableCell
                     className="font-medium hover:text-primary cursor-pointer"
-                    onClick={() => router.push(`/website-cms/blog-management/posts/${post.id}/edit`)}
+                    onClick={() => router.push(`/website-cms/blog/posts/${post.id}/edit`)}
                   >
                     {post.title}
                   </TableCell>
@@ -103,7 +103,7 @@ export function BlogListView() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onSelect={() => router.push(`/website-cms/blog-management/posts/${post.id}/edit`)}>
+                          <DropdownMenuItem onSelect={() => router.push(`/website-cms/blog/posts/${post.id}/edit`)}>
                             編輯
                           </DropdownMenuItem>
                           <DropdownMenuItem onSelect={() => window.open(`/blog/${post.slug}`, '_blank')}>

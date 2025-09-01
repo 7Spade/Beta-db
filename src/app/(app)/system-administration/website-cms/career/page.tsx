@@ -9,7 +9,7 @@ export default function CareerManagementPage() {
       title: '職位管理',
       description: '發布、編輯和管理招聘職位資訊',
       icon: Briefcase,
-      href: '/website-cms/career-management/jobs',
+      href: '/website-cms/career/jobs',
       count: 3,
       status: 'active'
     },
@@ -17,7 +17,7 @@ export default function CareerManagementPage() {
       title: '應徵者管理',
       description: '查看和管理收到的履歷和應徵資訊',
       icon: Users,
-      href: '/website-cms/career-management/applications',
+      href: '/website-cms/career/applications',
       count: 15,
       status: 'new'
     }

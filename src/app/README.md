@@ -95,21 +95,21 @@
 
 #### 🔹 (website-cms) - 網站內容管理系統
 - **`layout.tsx`** - 管理後台佈局
-- **`dashboard-management/page.tsx`** - 管理儀表板頁面
-- **`user-management/page.tsx`** - 用戶管理頁面
-- **`system-management/page.tsx`** - 系統管理頁面
-- **`content-management/`** - 內容管理模組
+- **`dashboard/page.tsx`** - 管理儀表板頁面
+- **`user/page.tsx`** - 用戶管理頁面
+- **`system/page.tsx`** - 系統管理頁面
+- **`content/`** - 內容管理模組
   - **`page.tsx`** - 內容管理主頁
   - **`pages/page.tsx`** - 頁面內容管理
   - **`media/page.tsx`** - 媒體檔案管理
-- **`blog-management/`** - 部落格管理模組
+- **`blog/`** - 部落格管理模組
   - **`posts/page.tsx`** - 文章管理頁面
   - **`posts/[id]/page.tsx`** - 文章編輯頁面
-- **`career-management/`** - 徵才管理模組
+- **`career/`** - 徵才管理模組
   - **`page.tsx`** - 徵才管理主頁
   - **`jobs/page.tsx`** - 職位管理頁面
   - **`applications/page.tsx`** - 應聘者管理頁面
-- **`contact-management/page.tsx`** - 聯絡管理頁面
+- **`contact/page.tsx`** - 聯絡管理頁面
 
 ### 📁 (public) - 公開頁面模組
 - **`layout.tsx`** - 公開頁面佈局，包含頁首和頁尾

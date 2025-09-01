@@ -27,7 +27,7 @@ export function BlogFormView({ post }: BlogFormViewProps) {
     const result = await savePostAction(values, post?.id);
     if (result.success) {
       toast({ title: "成功", description: "文章已成功儲存。" });
-      router.push('/website-cms/blog-management/posts');
+      router.push('/website-cms/blog/posts');
     } else {
       toast({ title: "儲存失敗", description: result.error, variant: "destructive" });
     }

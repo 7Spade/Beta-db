@@ -25,10 +25,10 @@ blog/
 ## 使用方式
 
 ### 後台頁面
-在 `/app/(admin)/blog-management/` 路由群組下的頁面中，導入 `views/` 中的後台元件。
+在 `/app/(admin)/blog/` 路由群組下的頁面中，導入 `views/` 中的後台元件。
 
 ```tsx
-// src/app/(admin)/blog-management/posts/page.tsx
+// src/app/(admin)/blog/posts/page.tsx
 import { PostsListView } from '@/features/blog/views/posts-list-view';
 
 export default function AdminBlogPostsPage() {

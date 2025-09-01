@@ -8,7 +8,7 @@ export default function ContactManagementPage() {
       title: '諮詢管理',
       description: '查看和管理收到的聯絡表單和客戶諮詢',
       icon: MessageSquare,
-      href: '/contact-management/inquiries',
+      href: '/contact/inquiries',
       count: 18,
       status: 'new'
     },
@@ -16,7 +16,7 @@ export default function ContactManagementPage() {
       title: '合作夥伴',
       description: '管理合作夥伴資訊和關係',
       icon: Handshake,
-      href: '/contact-management/partners',
+      href: '/contact/partners',
       count: 12,
       status: 'active'
     }
