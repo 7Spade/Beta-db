@@ -3,8 +3,9 @@
  */
 'use client';
 
+import { createClient } from '@root/src/features/integrations/database/supabase/client';
 import { getAiTokenUsageStats } from '@/shared/services/ai-token-log/logging.service';
-import type { AiTokenLog } from '@root/src/shared/types/types';
+import type { AiTokenLogRow } from '@root/src/features/integrations/database/supabase/types';
 import { useEffect, useState } from 'react';
 
 interface AiTokenStats {
@@ -27,10 +28,11 @@ export function useAiTokenStats() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        const logs: AiTokenLog[] = await getAiTokenUsageStats(30); // Get last 30 days of stats
+        const supabase = createClient();
+        const logs: AiTokenLogRow[] = await getAiTokenUsageStats(supabase, 30); // Get last 30 days of stats
 
         const newStats = logs.reduce(
-          (acc: AiTokenStats, log: AiTokenLog) => {
+          (acc: AiTokenStats, log: AiTokenLogRow) => {
             acc.totalTokens += log.total_tokens || 0;
             acc.totalCalls += 1;
             if (log.status === 'succeeded') {

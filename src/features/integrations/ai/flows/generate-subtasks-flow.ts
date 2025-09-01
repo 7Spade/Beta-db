@@ -10,7 +10,9 @@
 
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
-import { z } from 'zod';
+import { createServerClient } from '@root/src/features/integrations/database/supabase/server';
+import { z } from 'genkit';
+import { cookies } from 'next/headers';
 
 const GenerateSubtasksInputSchema = z.object({
   projectTitle: z.string().describe('The title of the main project.'),
@@ -52,6 +54,8 @@ const generateSubtasksFlow = ai.defineFlow(
   },
   async (input) => {
     let result;
+    const cookieStore = cookies();
+    const supabase = createServerClient(cookieStore);
     try {
       result = await prompt(input);
       const output = result.output;
@@ -61,13 +65,13 @@ const generateSubtasksFlow = ai.defineFlow(
 
       const totalTokens = result.usage?.totalTokens || 0;
       // 极简化的 token 日志记录
-      logAiTokenUsage('generateSubtasksFlow', totalTokens, 'succeeded');
+      await logAiTokenUsage(supabase, 'generateSubtasksFlow', totalTokens, 'succeeded');
 
       return output;
     } catch (error) {
       const totalTokens = result?.usage?.totalTokens || 0;
       // 极简化的失败日志记录
-      logAiTokenUsage('generateSubtasksFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      await logAiTokenUsage(supabase, 'generateSubtasksFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
       throw error;
     }
   }

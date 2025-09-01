@@ -15,7 +15,9 @@
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
 import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
+import { createServerClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
+import { cookies } from 'next/headers';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({
@@ -87,6 +89,8 @@ const extractWorkItemsFlow = ai.defineFlow(
   // Flow 的核心執行邏輯
   async (input) => {
     let result;
+    const cookieStore = cookies();
+    const supabase = createServerClient(cookieStore);
 
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
@@ -113,7 +117,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       const totalTokens = result.usage?.totalTokens || 0;
 
       // 极简化的 token 日志记录
-      logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'succeeded');
+      await logAiTokenUsage(supabase, 'extractWorkItemsFlow', totalTokens, 'succeeded');
 
       return {
         ...output,
@@ -122,7 +126,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     } catch (error) {
       // 极简化的失败日志记录
       const totalTokens = result?.usage?.totalTokens || 0;
-      logAiTokenUsage('extractWorkItemsFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      await logAiTokenUsage(supabase, 'extractWorkItemsFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
       // 向上拋出錯誤
       throw error;
     }

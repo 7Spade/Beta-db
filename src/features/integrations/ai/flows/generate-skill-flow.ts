@@ -10,7 +10,9 @@
 
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
-import { z } from 'zod';
+import { createServerClient } from '@root/src/features/integrations/database/supabase/server';
+import { z } from 'genkit';
+import { cookies } from 'next/headers';
 
 const GenerateSkillInputSchema = z.object({
   topic: z.string().describe('The topic or job role for which to generate skills. For example: "Plumber", "Electrician", "Project Manager".'),
@@ -60,6 +62,9 @@ const generateSkillFlow = ai.defineFlow(
   },
   async (input) => {
     let result;
+    const cookieStore = cookies();
+    const supabase = createServerClient(cookieStore);
+
     try {
       result = await prompt(input);
       const output = result.output;
@@ -69,7 +74,7 @@ const generateSkillFlow = ai.defineFlow(
 
       const totalTokens = result.usage?.totalTokens || 0;
       // 极简化的 token 日志记录
-      logAiTokenUsage('generateSkillFlow', totalTokens, 'succeeded');
+      await logAiTokenUsage(supabase, 'generateSkillFlow', totalTokens, 'succeeded');
 
       return {
         skills: output.skills,
@@ -78,7 +83,7 @@ const generateSkillFlow = ai.defineFlow(
     } catch (error) {
       const totalTokens = result?.usage?.totalTokens || 0;
       // 极简化的失败日志记录
-      logAiTokenUsage('generateSkillFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      await logAiTokenUsage(supabase, 'generateSkillFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
       throw error;
     }
   }

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table'
-import { getSupabaseClient } from '@root/src/features/integrations/database/supabase'
+import { getSupabaseAdmin } from '@root/src/features/integrations/database/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import { zhTW } from 'date-fns/locale'
 import { CheckCircle, Cpu, XCircle } from 'lucide-react'
@@ -19,7 +19,7 @@ interface AiTokenLog {
 // 极简配置：自动显示 AI Token 消耗记录
 export async function AiUsageLog() {
   try {
-    const supabase = await getSupabaseClient()
+    const supabase = await getSupabaseAdmin()
 
     // 自动获取最近的日志记录
     const { data: logs } = await supabase
@@ -82,12 +82,19 @@ export async function AiUsageLog() {
         </CardContent>
       </Card>
     )
-  } catch {
+  } catch(e) {
+    const error = e as Error;
     return (
       <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Cpu className="h-6 w-6" />
+            <span>AI Token 消耗紀錄</span>
+          </CardTitle>
+        </CardHeader>
         <CardContent className="p-6">
           <div className="text-center text-destructive">
-            載入 AI 使用紀錄時發生錯誤
+            載入 AI 使用紀錄時發生錯誤: {error.message}
           </div>
         </CardContent>
       </Card>

@@ -19,12 +19,14 @@ export type {
 export { createClient as createBrowserClient } from '@root/src/features/integrations/database/supabase/client';
 export { createClient as createServerClient } from '@root/src/features/integrations/database/supabase/server';
 
-// 自动获取合适的客户端
+// DEPRECATED - Use createBrowserClient or createServerClient directly
 export async function getSupabaseClient() {
   if (typeof window === 'undefined') {
-    // 服务端
-    const { createClient } = await import('@root/src/features/integrations/database/supabase/server');
-    return createClient();
+    // This dynamic import is problematic. It's better to explicitly
+    // create the server client where cookies are available.
+    // For now, returning null to avoid build errors.
+    console.warn("getSupabaseClient on server is deprecated. Use createServerClient with cookieStore.");
+    return null;
   } else {
     // 客户端
     const { createClient } = await import('@root/src/features/integrations/database/supabase/client');
@@ -32,6 +34,15 @@ export async function getSupabaseClient() {
   }
 }
 
+export async function getSupabaseAdmin() {
+  if (typeof window !== 'undefined') {
+    throw new Error('getSupabaseAdmin can only be called on the server.');
+  }
+  const { createClient } = await import('@/features/integrations/database/supabase/server');
+  const { cookies } = await import('next/headers');
+  return createClient(cookies());
+}
+
+
 // 默认导出浏览器客户端
 export { createClient as default } from '@root/src/features/integrations/database/supabase/client';
-

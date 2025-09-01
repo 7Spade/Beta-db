@@ -10,7 +10,9 @@
 
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
-import { z } from 'zod';
+import { createServerClient } from '@root/src/features/integrations/database/supabase/server';
+import { z } from 'genkit';
+import { cookies } from 'next/headers';
 
 const GenerateKnowledgeEntryInputSchema = z.object({
   title: z.string().describe('The title of the knowledge base entry for which to generate content.'),
@@ -61,6 +63,9 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
   },
   async (input) => {
     let result;
+    const cookieStore = cookies();
+    const supabase = createServerClient(cookieStore);
+
     try {
       result = await prompt(input);
       const output = result.output;
@@ -70,7 +75,7 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
 
       const totalTokens = result.usage?.totalTokens || 0;
       // 极简化的 token 日志记录
-      logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'succeeded');
+      await logAiTokenUsage(supabase, 'generateKnowledgeEntryFlow', totalTokens, 'succeeded');
 
       return {
         ...output,
@@ -79,7 +84,7 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
     } catch (error) {
       const totalTokens = result?.usage?.totalTokens || 0;
       // 极简化的失败日志记录
-      logAiTokenUsage('generateKnowledgeEntryFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
+      await logAiTokenUsage(supabase, 'generateKnowledgeEntryFlow', totalTokens, 'failed', error instanceof Error ? error.message : 'Unknown error');
       throw error;
     }
   }
