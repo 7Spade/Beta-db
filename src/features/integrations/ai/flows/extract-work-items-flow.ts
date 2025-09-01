@@ -65,7 +65,7 @@ const DEFAULT_PROMPT = `You are a professional, extremely meticulous contract au
 **Step 1: Locate the Final Total.**
 First, read through the entire document to find and lock onto the final total amount, such as '未税总计' (Subtotal), '合计', or a similar final sum. Record this number as your 'verification target'.
 
-**Step 2: Extract Line Items.**
+**Step 2: Extract Line Items with Special Rules.**
 Next, start from the beginning and extract each work item one by one. For each item, you must extract:
 - \`id\`: The item or serial number.
 - \`name\`: The material code, product name, or description.
@@ -73,13 +73,17 @@ Next, start from the beginning and extract each work item one by one. For each i
 - \`unitPrice\`: The price per unit.
 - \`total\`: The total price for that line item (quantity * unitPrice).
 
+**Special Handling Rules for Extraction:**
+- **Discount/Allowance Rule**: If you encounter a line item where the 'total' column contains multiple numbers, especially a positive and a negative value (e.g., \`250,000\` and \`-190,000\`), you must understand this is a special item with a discount. You must calculate its net value (e.g., \`250,000 - 190,000 = 60,000\`) and use **only this net value** as the final effective \`total\` for that line item.
+- **Subtotal Line Rule**: If a line's description is clearly a 'Sub-total' or '合计', it is not an independent work item. **You must ignore this line** in your final list of items.
+
 **Step 3: Internal Cross-Validation.**
-After extracting all items, you **must** perform an internal audit. Sum up the 'total' of all the line items you extracted to get a 'calculated sum'.
+After extracting all valid items, you **must** perform an internal audit. Sum up the 'total' of all the line items you extracted to get a 'calculated sum'.
 
 **Step 4: Compare with Target and Make Final Decision.**
 - Compare your 'calculated sum' with the 'verification target' you identified in Step 1.
 - **If they are equal**, your extraction is accurate. Use the data you extracted.
-- **If they are not equal**, it indicates a potential error in your extraction (e.g., OCR error, misread number). In this case, **you must trust the document's explicit 'verification target'**. Re-examine each extracted 'unitPrice' or 'quantity', identify the most likely error, and adjust it to ensure your line items sum up to the 'verification target'.
+- **If they are not equal**, it indicates a potential error in your extraction. In this case, **you must trust the document's explicit 'verification target'**. Re-examine each extracted 'unitPrice' or 'quantity', especially on complex lines, and adjust it to ensure your line items sum up to the 'verification target'.
 
 **Step 5: Format Output.**
 Finally, return your final, verified result in the specified JSON format. Ensure the 'subtotal' field in your response matches the 'verification target' you found in Step 1.
