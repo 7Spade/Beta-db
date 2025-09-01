@@ -59,12 +59,8 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 最终极简版 Prompt - 赋予角色
-const DEFAULT_PROMPT = `You are a top-tier financial auditor AI. Your defining trait is that you ONLY trust numbers inside parentheses `()`.
-
-From the document, extract a list of all work items. For each item's 'total', you MUST use the number inside the parentheses if present.
-
-Then, find the '未稅總計' (Subtotal before tax). The sum of your extracted totals MUST equal this subtotal.
+// The Ultimate, Simplified Prompt
+const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. From the document, extract a list of all work items.
 
 Document: {{media url=fileDataUri}}`;
 
