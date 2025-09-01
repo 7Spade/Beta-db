@@ -59,19 +59,16 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 极简版 Prompt - 专注于核心规则
-const DEFAULT_PROMPT = `You are a data extraction AI. Your task is to extract a flattened list of work items from a document, focusing on two critical rules.
+// 最终极简版 Prompt
+const DEFAULT_PROMPT = `You are a meticulous data extraction AI. Your task is to extract a list of work items and a final subtotal from a document, following one critical rule.
 
-**Rule 1: The Parenthesis Rule.**
-For each line item, find the '總價' (Line Total) column.
-*   If a number is inside parentheses `()`, that number is the **final, effective total** for that item.
-*   If there are no parentheses, the visible line total is the effective total.
-You must extract this effective total for each item.
-
-**Rule 2: The Audit Rule.**
-Find the '未稅總計' (Subtotal before tax). The sum of all effective totals you extracted **must perfectly match** this '未稅總計'. If it doesn't, you must re-examine your application of The Parenthesis Rule and correct your list until it does.
-
-Extract '項次' (id), '說明' (name), '數量' (quantity), and '單價' (unitPrice) for each item. The 'subtotal' in your output must be the '未稅總計' from the document.
+**The Golden Rule:**
+1.  **Find the '未稅總計' (Subtotal before tax).** This is your final verification target.
+2.  **For each line item, find the '總價' (Line Total) column.**
+3.  **If a number is inside parentheses `()`, that number is the *only* valid total for that item.**
+4.  **If there are no parentheses, the visible number is the valid total.**
+5.  Extract '項次' (id), '說明' (name), '數量' (quantity), and '單價' (unitPrice) for each item.
+6.  The sum of all valid totals you extract **must perfectly match** the '未稅總計'. If not, you must correct your item totals based on this Golden Rule until they match.
 
 Document: {{media url=fileDataUri}}`;
 
