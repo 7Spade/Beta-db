@@ -360,7 +360,42 @@
 │  │  index.ts
 │  │  README.md
 │  │
-│  ├─(automation-tools)
+│  ├─auth
+│  │  │  auth-actions.ts
+│  │  │  auth-form-schemas.ts
+│  │  │  auth-provider.tsx
+│  │  │  auth.config.ts
+│  │  │  auth.utils.ts
+│  │  │  index.ts
+│  │  │  README.md
+│  │  │  social-auth-buttons.tsx
+│  │  │  use-auth.ts
+│  │  │
+│  │  ├─login
+│  │  │      login-view.tsx
+│  │  │
+│  │  ├─pending-approval
+│  │  │      pending-approval-view.tsx
+│  │  │
+│  │  ├─profile
+│  │  │  │  profile-form.tsx
+│  │  │  │  profile-view.tsx
+│  │  │  │  public-profile-view.tsx
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  └─actions
+│  │  │          profile-actions.ts
+│  │  │
+│  │  ├─register
+│  │  │      register-view.tsx
+│  │  │
+│  │  ├─reset-password
+│  │  │      reset-password-view.tsx
+│  │  │
+│  │  └─verify-email
+│  │          verify-email-view.tsx
+│  │
+│  ├─automation-tools
 │  │  │  README.md
 │  │  │
 │  │  ├─docu-parse
@@ -418,16 +453,13 @@
 │  │      └─views
 │  │              kanban-view.tsx
 │  │
-│  ├─(business-intelligence)
+│  ├─business-intelligence
 │  │  │  README.md
 │  │  │
-│  │  ├─(finance-management)
+│  │  ├─finance
 │  │  │      README.md
 │  │  │
-│  │  ├─(quality-management)
-│  │  │      README.md
-│  │  │
-│  │  └─(reporting-analytics)
+│  │  └─reporting-analytics
 │  │      │  README.md
 │  │      │
 │  │      ├─daily-report
@@ -440,7 +472,7 @@
 │  │              dashboard.tsx
 │  │              README.md
 │  │
-│  ├─(core-operations)
+│  ├─core-operations
 │  │  │  README.md
 │  │  │
 │  │  ├─contracts
@@ -607,53 +639,19 @@
 │  │  │          index.ts
 │  │  │          ProjectView.tsx
 │  │  │
+│  │  ├─quality
+│  │  │      README.md
+│  │  │
 │  │  └─schedule
 │  │          README.md
 │  │
-│  ├─(document-management)
-│  │  │  README.md
-│  │  │
-│  │  ├─cloud-drive
-│  │  │  │  README.md
-│  │  │  │
-│  │  │  ├─actions
-│  │  │  │      storage-actions.ts
-│  │  │  │
-│  │  │  ├─components
-│  │  │  │      file-browser.tsx
-│  │  │  │      file-card.tsx
-│  │  │  │      folder-card.tsx
-│  │  │  │      upload-button.tsx
-│  │  │  │
-│  │  │  ├─types
-│  │  │  │      storage.types.ts
-│  │  │  │
-│  │  │  ├─utils
-│  │  │  │      path.utils.ts
-│  │  │  │
-│  │  │  └─views
-│  │  │          cloud-drive-view.tsx
-│  │  │
-│  │  └─knowledge-base
-│  │      │  entry-form-dialog.tsx
-│  │      │  page.tsx
-│  │      │  README.md
-│  │      │
-│  │      └─actions
-│  │              index.ts
-│  │              knowledge-actions.ts
-│  │              types.ts
-│  │
-│  ├─(integrations)
+│  ├─integrations
 │  │      README.md
 │  │
-│  ├─(quality-management)
-│  │      README.md
-│  │
-│  ├─(resource-management)
+│  ├─resource-management
 │  │  │  README.md
 │  │  │
-│  │  ├─(crm-management)
+│  │  ├─crm
 │  │  │  │  README.md
 │  │  │  │
 │  │  │  ├─compliance
@@ -717,70 +715,72 @@
 │  │  │          README.md
 │  │  │          workflow-builder.tsx
 │  │  │
-│  │  ├─(enhanced-inventory)
+│  │  ├─document
 │  │  │  │  README.md
 │  │  │  │
-│  │  │  ├─items
-│  │  │  │      README.md
+│  │  │  ├─cloud-drive
+│  │  │  │  │  README.md
+│  │  │  │  │
+│  │  │  │  ├─actions
+│  │  │  │  │      storage-actions.ts
+│  │  │  │  │
+│  │  │  │  ├─components
+│  │  │  │  │      file-browser.tsx
+│  │  │  │  │      file-card.tsx
+│  │  │  │  │      folder-card.tsx
+│  │  │  │  │      upload-button.tsx
+│  │  │  │  │
+│  │  │  │  ├─types
+│  │  │  │  │      storage.types.ts
+│  │  │  │  │
+│  │  │  │  ├─utils
+│  │  │  │  │      path.utils.ts
+│  │  │  │  │
+│  │  │  │  └─views
+│  │  │  │          cloud-drive-view.tsx
 │  │  │  │
-│  │  │  ├─movements
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  ├─transfers
-│  │  │  │      README.md
-│  │  │  │
-│  │  │  └─warehouses
-│  │  │          README.md
+│  │  │  └─knowledge-base
+│  │  │      │  entry-form-dialog.tsx
+│  │  │      │  page.tsx
+│  │  │      │  README.md
+│  │  │      │
+│  │  │      └─actions
+│  │  │              index.ts
+│  │  │              knowledge-actions.ts
+│  │  │              types.ts
 │  │  │
-│  │  └─(hr-management)
+│  │  ├─hr
+│  │  │  │  README.md
+│  │  │  │
+│  │  │  ├─attendance
+│  │  │  │      staff-attendance-view.tsx
+│  │  │  │
+│  │  │  ├─members
+│  │  │  │      create-member-dialog.tsx
+│  │  │  │      page.tsx
+│  │  │  │      README.md
+│  │  │  │
+│  │  │  └─skills
+│  │  │          README.md
+│  │  │          skill-form-dialog.tsx
+│  │  │          skills-list.tsx
+│  │  │
+│  │  └─inventory
 │  │      │  README.md
 │  │      │
-│  │      ├─attendance
-│  │      │      staff-attendance-view.tsx
-│  │      │
-│  │      ├─members
-│  │      │      create-member-dialog.tsx
-│  │      │      page.tsx
+│  │      ├─items
 │  │      │      README.md
 │  │      │
-│  │      └─skills
+│  │      ├─movements
+│  │      │      README.md
+│  │      │
+│  │      ├─transfers
+│  │      │      README.md
+│  │      │
+│  │      └─warehouses
 │  │              README.md
-│  │              skill-form-dialog.tsx
-│  │              skills-list.tsx
 │  │
-│  └─(system-admin)
-│      │  README.md
-│      │
-│      ├─(security-compliance)
-│      │  │  README.md
-│      │  │
-│      │  └─auth
-│      │          auth-actions.ts
-│      │          auth-form-schemas.ts
-│      │          auth-provider.tsx
-│      │          auth.config.ts
-│      │          auth.utils.ts
-│      │          index.ts
-│      │          login-view.tsx
-│      │          pending-approval-view.tsx
-│      │          README.md
-│      │          register-view.tsx
-│      │          social-auth-buttons.tsx
-│      │          use-auth.ts
-│      │          verify-email-view.tsx
-│      │
-│      ├─(system-administration)
-│      │  │  README.md
-│      │  │
-│      │  └─profile
-│      │      │  profile-form.tsx
-│      │      │  profile-view.tsx
-│      │      │  public-profile-view.tsx
-│      │      │  README.md
-│      │      │
-│      │      └─actions
-│      │              profile-actions.ts
-│      │
+│  └─system-administration
 │      ├─admin
 │      │  │  README.md
 │      │  │
@@ -790,9 +790,6 @@
 │      │  └─views
 │      │          admin-dashboard-view.tsx
 │      │          user-management-view.tsx
-│      │
-│      ├─multi-tenancy
-│      │      README.md
 │      │
 │      ├─settings
 │      │      README.md
