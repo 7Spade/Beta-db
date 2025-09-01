@@ -64,6 +64,12 @@ export const navigationConfig: NavigationItem[] = [
     href: '/automation-tools',
     children: [
       {
+        id: 'docu-parse',
+        label: '文件解析',
+        icon: FileText,
+        href: '/resource-management/document/docu-parse',
+      },
+      {
         id: 'kanban',
         label: '看板管理',
         icon: LayoutGrid,
@@ -238,13 +244,7 @@ export const navigationConfig: NavigationItem[] = [
         label: '雲端硬碟',
         icon: Cloud,
         href: '/resource-management/document/cloud-drive',
-      },
-      {
-        id: 'docu-parse',
-        label: '文件解析',
-        icon: FileText,
-        href: '/resource-management/document/docu-parse',
-      },
+      }
     ],
   },
   {
