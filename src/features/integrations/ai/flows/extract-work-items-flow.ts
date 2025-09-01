@@ -59,33 +59,32 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 默认的 Prompt
-const DEFAULT_PROMPT = `You are a professional, extremely meticulous contract auditing AI. Your task is to extract a list of work items from the provided document. You must strictly follow these thinking and operational steps:
+// 最终版 Prompt
+const DEFAULT_PROMPT = `You are a world-class, professional, and extremely meticulous contract auditing AI. Your specialty is parsing complex, multi-page commercial documents. Your task is to extract a flattened, pre-tax list of work items. You must strictly follow these thinking and operational steps:
 
-**Step 1: Locate the Final Total.**
-First, read through the entire document to find and lock onto the final total amount, such as '未税总计' (Subtotal), '合计', or a similar final sum. Record this number as your 'verification target'.
+**Step 1: Understand the Structure and Lock the Audit Target.**
+First, quickly scan the entire document. Your primary goal is to locate and distinguish between '未稅總計' (Subtotal before tax) and '含稅總價' (Grand Total with tax). Your **verification target** must always be the **'未稅總計' (Subtotal)**. This number is the single source of truth for your audit. Ignore the '含稅總價'. Also, identify repeating headers and footers (like 'Page X of Y') which are document artifacts, not data.
 
-**Step 2: Extract Line Items.**
-Next, start from the beginning and extract each work item one by one. For each item, you must extract:
-- \`id\`: The item or serial number.
-- \`name\`: The material code, product name, or description.
-- \`quantity\`: The quantity of the item.
-- \`unitPrice\`: The price per unit.
-- \`total\`: The total price for that line item (quantity * unitPrice).
+**Step 2: Identify and Extract "Base Work Items".**
+Now, read from the beginning. Your goal is to extract only the most basic, indivisible, cost-contributing line items.
 
-**Step 3: Internal Cross-Validation.**
-After extracting all valid items, you **must** perform an internal audit. Sum up the 'total' of all the line items you extracted to get a 'calculated sum'.
+*   **Inclusion Criteria**: A "base work item" typically has a clear description, quantity, and unit price.
+*   **Exclusion Rule (Very Important)**: If a line is a summary of other lines (e.g., its description includes '小計', '合計', 'Total', 'Summary'), or if it's a page header/footer, you **must ignore this line**. Do not include it in your extracted list.
 
-**Step 4: Compare with Target and Make Final Decision.**
-- Compare your 'calculated sum' with the 'verification target' you identified in Step 1.
-- **If they are equal**, your extraction is accurate. Use the data you extracted.
-- **If they are not equal**, it indicates a potential error in your extraction. In this case, **you must trust the document's explicit 'verification target'**. Re-examine each extracted 'unitPrice' or 'quantity', especially on complex lines, and adjust it to ensure your line items sum up to the 'verification target'.
+**Step 3: Process Special Items (like Discounts).**
+Within your list of identified "base work items", check for special formats.
 
-**Step 5: Format Output.**
-Finally, return your final, verified result in the specified JSON format. Ensure the 'subtotal' field in your response matches the 'verification target' you found in Step 1.
+*   **Discount Handling**: If an item's row contains multiple values in the amount column, especially a positive and a negative number (e.g., a main price of 250,000 and a rebate of -190,000), you must understand this financial logic. Calculate the **net value** (e.g., 250,000 - 190,000 = 60,000) and use this **net value** as the single effective 'total' for that item.
 
-Document: {{media url=fileDataUri}}
-`;
+**Step 4: Perform the Final Audit.**
+Sum the 'total' of all the "base work items" you have identified and processed. This is your 'calculated sum'. Compare this 'calculated sum' with your 'verification target' from Step 1.
+
+*   They **must be equal**. If they are not, you must go back and review your Steps 2 and 3. Re-examine your item identification (Did you miss a discount? Did you mistakenly include a subtotal?). You must adjust your findings until the sum perfectly matches the 'verification target'.
+
+**Step 5: Format the Output.**
+Return your final, audited list. Ensure it contains only the "base work items" and that the 'subtotal' field in your response exactly matches your 'verification target'.
+
+Document: {{media url=fileDataUri}}`;
 
 const prompt = ai.definePrompt({
   name: 'extractWorkItemsPrompt',
