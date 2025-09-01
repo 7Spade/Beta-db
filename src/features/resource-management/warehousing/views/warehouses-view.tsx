@@ -6,7 +6,7 @@ import { WarehouseFormDialog } from '@/features/resource-management/warehousing/
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/ui/dropdown-menu';
 import { Skeleton } from '@/ui/skeleton';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
