@@ -35,12 +35,11 @@ import {
   Package,
   Plus,
   Rocket,
-  Shield,
   Truck,
   UserCheck,
   Users,
   Warehouse,
-  Wrench,
+  Wrench
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -235,32 +234,24 @@ export const navigationConfig: NavigationItem[] = [
         ],
       },
       {
-        id: 'document',
-        label: '文件管理',
+        id: 'cloud-drive',
+        label: '雲端硬碟',
+        icon: Cloud,
+        href: '/resource-management/document/cloud-drive',
+      },
+      {
+        id: 'docu-parse',
+        label: '文件解析',
         icon: FileText,
-        href: '/resource-management/document',
-        children: [
-          {
-            id: 'cloud-drive',
-            label: '雲端硬碟',
-            icon: Cloud,
-            href: '/resource-management/document/cloud-drive',
-          },
-          {
-            id: 'docu-parse',
-            label: '文件解析',
-            icon: FileText,
-            href: '/resource-management/document/docu-parse',
-          },
-        ],
+        href: '/resource-management/document/docu-parse',
       },
     ],
   },
   {
-    id: 'system-administration',
-    label: '系統管理',
-    icon: Shield,
-    href: '/system-administration',
+    id: 'website-cms',
+    label: '網站管理',
+    icon: LayoutGrid,
+    href: '/website-cms',
     children: [
       {
         id: 'settings',
@@ -269,54 +260,46 @@ export const navigationConfig: NavigationItem[] = [
         href: '/website-cms/settings',
       },
       {
-        id: 'website-cms',
-        label: '網站管理',
+        id: 'cms-dashboard',
+        label: '管理總覽',
         icon: LayoutGrid,
-        href: '/website-cms/website-cms',
-        children: [
-          {
-            id: 'cms-dashboard',
-            label: '管理總覽',
-            icon: LayoutGrid,
-            href: '/website-cms/dashboard',
-          },
-          {
-            id: 'user-management',
-            label: '使用者管理',
-            icon: Users,
-            href: '/website-cms/user',
-          },
-          {
-            id: 'blog-management',
-            label: '文章管理',
-            icon: BookOpen,
-            href: '/website-cms/blog/posts',
-          },
-          {
-            id: 'career-management',
-            label: '職涯管理',
-            icon: Briefcase,
-            href: '/website-cms/career',
-          },
-          {
-            id: 'contact-management',
-            label: '聯絡管理',
-            icon: Mail,
-            href: '/website-cms/contact',
-          },
-          {
-            id: 'content-management',
-            label: '內容管理',
-            icon: FileText,
-            href: '/website-cms/content',
-          },
-          {
-            id: 'system-management',
-            label: '系統管理',
-            icon: Cog,
-            href: '/website-cms/system',
-          },
-        ],
+        href: '/website-cms/dashboard',
+      },
+      {
+        id: 'user-management',
+        label: '使用者管理',
+        icon: Users,
+        href: '/website-cms/user',
+      },
+      {
+        id: 'blog-management',
+        label: '文章管理',
+        icon: BookOpen,
+        href: '/website-cms/blog/posts',
+      },
+      {
+        id: 'career-management',
+        label: '職涯管理',
+        icon: Briefcase,
+        href: '/website-cms/career',
+      },
+      {
+        id: 'contact-management',
+        label: '聯絡管理',
+        icon: Mail,
+        href: '/website-cms/contact',
+      },
+      {
+        id: 'content-management',
+        label: '內容管理',
+        icon: FileText,
+        href: '/website-cms/content',
+      },
+      {
+        id: 'system-management',
+        label: '系統管理',
+        icon: Cog,
+        href: '/website-cms/system',
       },
     ],
   },
