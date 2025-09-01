@@ -57,22 +57,7 @@
         "./src/components/layout/navigation/*"
       ],
       "@/shared/*": [
-        "./src/components/layout/shared/*"
-      ],
-      "@/services/*": [
-        "./src/lib/services/*"
-      ],
-      "@/events/*": [
-        "src/shared/events/*"
-      ],
-      "@/models/*": [
-        "src/shared/models/*"
-      ],
-      "@/types/*": [
-        "./src/lib/types/*"
-      ],
-      "@/utils": [
-        "./src/lib/utils"
+        "./src/shared/*"
       ]
     }
   },

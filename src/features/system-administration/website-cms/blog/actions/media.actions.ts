@@ -4,7 +4,7 @@
  */
 'use server';
 
-import * as MediaService from '@/lib/services/blog/media.service';
+import * as MediaService from '@/shared/services/blog/media.service';
 
 export type MediaUploadResponse = {
   success: boolean;

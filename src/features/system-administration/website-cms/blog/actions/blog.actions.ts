@@ -4,8 +4,8 @@
  */
 'use server';
 
-import { getPostById } from '@/lib/services/blog/blog.service';
-import * as CacheService from '@/lib/services/blog/cache.service';
+import { getPostById } from '@/shared/services/blog/blog.service';
+import * as CacheService from '@/shared/services/blog/cache.service';
 import { adminAuth, adminDb } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { revalidatePath } from 'next/cache';

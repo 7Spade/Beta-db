@@ -2,11 +2,11 @@
  * @fileoverview Public Single Blog Post Page
  * @description Fetches and displays a single published blog post by its slug.
  */
-import { getPostBySlug, getPublishedPosts } from '@/lib/services/blog/blog.service';
 import { generatePostSeo } from '@/features/system-administration/website-cms/blog/utils/seo.utils';
-import { notFound } from 'next/navigation';
 import { BlogDetailView } from '@/features/system-administration/website-cms/blog/views/BlogDetailView';
+import { getPostBySlug, getPublishedPosts } from '@/shared/services/blog/blog.service';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 3600; // Revalidate every hour
 

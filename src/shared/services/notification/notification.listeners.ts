@@ -1,4 +1,4 @@
-import { createNotification } from '@/lib/services/notification/notification.service';
+import { createNotification } from '@/shared/services/notification/notification.service';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
 import type { AppEventPayloadMap } from '@root/src/shared/events/app-events';
 import { subscribe } from '@root/src/shared/events/event-dispatcher';

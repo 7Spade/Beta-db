@@ -9,7 +9,7 @@
  */
 
 import { ai } from '@/features/integrations/ai/genkit';
-import { logAiTokenUsage } from '@/lib/services/ai-token-log/logging.service';
+import { logAiTokenUsage } from '@/shared/services/ai-token-log/logging.service';
 import { z } from 'zod';
 
 const GenerateSkillInputSchema = z.object({

@@ -4,7 +4,7 @@
  */
 'use server';
 
-import * as CacheService from '@/lib/services/blog/cache.service';
+import * as CacheService from '@/shared/services/blog/cache.service';
 import { revalidatePath } from 'next/cache';
 
 /**

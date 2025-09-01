@@ -44,7 +44,7 @@ src/lib/services/
     ```typescript
     // In e.g., activity-log.listeners.ts
     import { subscribe } from '@/lib/events/event-dispatcher';
-    import { createLogEntry } from '@/lib/services/activity-log.service';
+    import { createLogEntry } from '@/shared/services/activity-log.service';
 
     subscribe('contract.created', async ({ contractId, userId }) => {
       await createLogEntry({
