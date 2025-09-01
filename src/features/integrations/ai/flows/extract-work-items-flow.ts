@@ -59,33 +59,26 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 终极版 Prompt - V3 (三层思维模型)
-const DEFAULT_PROMPT = `You are a world-class, professional, and extremely meticulous contract auditing AI. Your specialty is parsing complex, multi-page commercial documents. Your task is to extract a flattened, pre-tax list of work items. You must strictly follow these thinking and operational steps:
+// 最终版 Prompt - 基于“括号模式”
+const DEFAULT_PROMPT = `You are a world-class, professional, and meticulous data extraction AI. Your task is to extract a flattened, pre-tax list of work items from a commercial document. You must follow these steps precisely:
 
-**Step 1: Understand the Structure and Lock the Audit Target.**
-First, quickly scan the entire document. Your primary goal is to locate and distinguish between '未稅總計' (Subtotal before tax) and '含稅總價' (Grand Total with tax). Your **verification target** must always be the **'未稅總計' (Subtotal)**. This number is the single source of truth for your audit. Ignore the '含稅總價'. Also, identify repeating headers and footers (like 'Page X of Y') which are document artifacts, not data.
+**Step 1: Lock the Verification Target.**
+First, scan the entire document to find the '未稅總計' (Subtotal before tax). This number is your **single source of truth** for verification. Ignore '含稅總價' (Grand Total with tax) and all other totals.
 
-**Step 2: Identify and Extract "Base Work Items".**
-Now, read from the beginning. Your goal is to extract only the most basic, indivisible, cost-contributing line items.
+**Step 2: Extract Line Items Based on a Visual Pattern.**
+Analyze each line item. To determine the final 'total' for each item, you must follow this critical rule:
+*   **The Parenthesis Rule**: Look at the '總價' (Line Total) column for each item. If you see a number inside parentheses `()`, that number is the **final, effective total** for that line item because it represents the value after all discounts. If there are no parentheses, then the visible line total is the effective total.
 
-*   **Inclusion Criteria**: A "base work item" typically has a clear description, quantity, and unit price.
-*   **Exclusion Rule (Very Important)**: If a line is a summary of other lines (e.g., its description includes '小計', '合計', 'Total', 'Summary'), or if it's a page header/footer, you **must ignore this line**. Do not include it in your extracted list.
+**Step 3: Extract Other Item Details.**
+For each line item, also extract its '項次' (id), '說明' (name), '數量' (quantity), and '單價' (unitPrice).
 
-**Step 3: Process Special Items (like Discounts).**
-Within your list of identified "base work items", check for special formats.
-
-*   **Discount Handling**: If an item's row contains multiple values in the amount column, especially a positive and a negative number (e.g., a main price of 250,000 and a rebate of -190,000), you must understand this financial logic. Calculate the **net value** (e.g., 250,000 - 190,000 = 60,000) and use this **net value** as the single effective 'total' for that item.
-
-**Step 4: Perform the Final Audit.**
-Sum the 'total' of all the "base work items" you have identified and processed. This is your 'calculated sum'. Compare this 'calculated sum' with your 'verification target' from Step 1.
-
-*   They **must be equal**. If they are not, you must go back and review your Steps 2 and 3. Re-examine your item identification (Did you miss a discount? Did you mistakenly include a subtotal?). You must adjust your findings until the sum perfectly matches the 'verification target'.
+**Step 4: Audit Your Work.**
+Sum up all the effective 'total' amounts you extracted (using The Parenthesis Rule). This is your 'calculated sum'. It **must perfectly match** the 'verification target' ('未稅總計') from Step 1. If it does not, you must review your extraction, especially your application of The Parenthesis Rule, until the sum is correct.
 
 **Step 5: Format the Output.**
-Return your final, audited list. Ensure it contains only the "base work items" and that the 'subtotal' field in your response exactly matches your 'verification target'.
+Return the final, audited list. The 'subtotal' field in your response must be the '未稅總計' value you identified in Step 1.
 
 Document: {{media url=fileDataUri}}`;
-
 
 const prompt = ai.definePrompt({
   name: 'extractWorkItemsPrompt',
@@ -109,7 +102,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    let modelName = 'googleai/gemini-1.5-flash'; // 默认模型
+    const modelName = 'googleai/gemini-1.5-flash'; // 默认模型
 
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
