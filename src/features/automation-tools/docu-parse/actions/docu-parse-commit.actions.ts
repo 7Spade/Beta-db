@@ -21,37 +21,47 @@ interface ActionResult {
   error?: string;
 }
 
-// Helper to convert work items to tasks
+// Helper to convert work items to tasks, now including discount
 function workItemsToTasks(items: WorkItem[]): Task[] {
-  return items.map((item, index) => ({
-    id: `task-${Date.now()}-${index}`,
-    title: item.name,
-    lastUpdated: new Date().toISOString(),
-    quantity: item.quantity,
-    unitPrice: item.unitPrice,
-    value: item.quantity * item.unitPrice,
-    subTasks: [],
-    completedQuantity: 0,
-  }));
+  return items.map((item, index) => {
+    const quantity = item.quantity || 0;
+    const unitPrice = item.unitPrice || 0;
+    const discount = item.discount || 0;
+    return {
+      id: `task-${Date.now()}-${index}`,
+      title: item.name,
+      lastUpdated: new Date().toISOString(),
+      quantity: quantity,
+      unitPrice: unitPrice,
+      discount: discount,
+      value: quantity * unitPrice - discount, // Net value
+      subTasks: [],
+      completedQuantity: 0,
+    };
+  });
 }
 
-// Helper to convert work items to a readable scope string for contracts
+// Helper to convert work items to a readable scope string for contracts, now including discount
 function workItemsToScope(items: WorkItem[], contractName: string): string {
   const lines: string[] = [];
   lines.push(`「${contractName}」工作範疇（依文件解析生成）：`);
   lines.push('');
   items.forEach((item, index) => {
     const lineNumber = item.id || String(index + 1);
-    const quantity = Number.isFinite(item.quantity) ? item.quantity : 0;
-    const unitPrice = Number.isFinite(item.unitPrice) ? item.unitPrice : 0;
-    const subtotal = quantity * unitPrice;
+    const quantity = item.quantity || 0;
+    const unitPrice = item.unitPrice || 0;
+    const discount = item.discount || 0;
+    const subtotal = quantity * unitPrice - discount;
     lines.push(
-      `${lineNumber}. ${item.name}（數量：${quantity}，單價：${unitPrice}，小計：${subtotal}）`
+      `${lineNumber}. ${item.name}（數量：${quantity}，單價：${unitPrice}, 折扣：${discount}, 小計：${subtotal.toLocaleString()}）`
     );
   });
-  const total = items.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0);
+  const total = items.reduce(
+    (sum, it) => sum + (it.quantity || 0) * (it.unitPrice || 0) - (it.discount || 0),
+    0
+  );
   lines.push('');
-  lines.push(`合計金額（依項目小計相加）：${total}`);
+  lines.push(`合計總金額（已扣除折扣）：${total.toLocaleString()}`);
   return lines.join('\n');
 }
 
@@ -68,8 +78,9 @@ export async function createProjectAndContractFromParsedData(
     // 1. Prepare Project data
     const newProjectRef = doc(collection(firestore, 'projects'));
     const projectId = newProjectRef.id;
+    // Correctly calculate total value including discounts
     const totalValue = workItems.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice,
+      (sum, item) => sum + (item.quantity || 0) * (item.unitPrice || 0) - (item.discount || 0),
       0
     );
     const tasks = workItemsToTasks(workItems);
@@ -99,9 +110,9 @@ export async function createProjectAndContractFromParsedData(
       contractor: '本公司', // Placeholder value
       client: docDetails.client,
       clientRepresentative: docDetails.clientRepresentative,
-      totalValue: totalValue,
+      totalValue: totalValue, // Use corrected total value
       status: '啟用中',
-      scope: workItemsToScope(workItems, docDetails.name),
+      scope: workItemsToScope(workItems, docDetails.name), // Use updated scope text
       startDate: projectData.startDate,
       endDate: projectData.endDate,
       payments: [],

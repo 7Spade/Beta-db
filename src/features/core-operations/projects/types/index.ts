@@ -11,6 +11,7 @@ export interface Task {
   value: number;
   quantity: number;
   unitPrice: number;
+  discount?: number; // 新增折扣欄位
   completedQuantity: number;
 }
 
