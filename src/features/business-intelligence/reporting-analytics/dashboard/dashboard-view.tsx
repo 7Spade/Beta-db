@@ -1,3 +1,4 @@
+
 /**
  * @project Beta-db Integrated Platform - 統一整合平台儀表板頁面
  * @framework Next.js 15+ (App Router)
@@ -14,6 +15,7 @@
 
 import { ContractDashboard } from '@/features/core-operations/contracts/dashboard';
 import { ProjectDashboard } from '@/features/core-operations/projects/dashboard/project-dashboard';
+import { Dashboard as PartnerDashboard } from '@/features/resource-management/crm/dashboard/dashboard';
 import { Separator } from '@/ui/separator';
 import { AiUsageLog } from '@root/src/features/business-intelligence/reporting-analytics/dashboard/ai-usage-log';
 
@@ -32,6 +34,13 @@ export function DashboardView() {
         <ContractDashboard />
       </section>
 
+      <Separator />
+
+      <section>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">夥伴總覽</h2>
+        <PartnerDashboard />
+      </section>
+      
       <Separator />
 
       <section>
