@@ -59,32 +59,30 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 最終版 Prompt - 引入三層思維模型
-const DEFAULT_PROMPT = `You are a world-class, professional, and extremely meticulous contract auditing AI with deep financial knowledge. Your task is to extract a flattened, pre-tax list of work items from a complex document that may span multiple pages. You must strictly follow this three-stage thinking model: Structural Recognition, Logical Calculation, and Auditing Verification.
+// 终极版 Prompt - V3 (三层思维模型)
+const DEFAULT_PROMPT = `You are a world-class, professional, and extremely meticulous contract auditing AI. Your specialty is parsing complex, multi-page commercial documents. Your task is to extract a flattened, pre-tax list of work items. You must strictly follow these thinking and operational steps:
 
-**Stage 1: Structural Recognition & Benchmark Establishment.**
-First, quickly scan the entire document to understand its structure and identify key elements.
--   **Identify the Audit Benchmark**: Your primary goal is to find the **'未稅總計' (Subtotal)**. This is your one and only ground truth for verification. You must ignore any '含稅總價' (Grand Total).
--   **Identify Page Markers**: Recognize and completely ignore repeating page headers and footers (like 'Page X of Y', company logos, addresses). Treat the content across pages as a single, continuous table.
--   **Identify Item Blocks**: Understand that each item number (項次) defines a self-contained "Item Block," which may span multiple visual rows.
+**Step 1: Understand the Structure and Lock the Audit Target.**
+First, quickly scan the entire document. Your primary goal is to locate and distinguish between '未稅總計' (Subtotal before tax) and '含稅總價' (Grand Total with tax). Your **verification target** must always be the **'未稅總計' (Subtotal)**. This number is the single source of truth for your audit. Ignore the '含稅總價'. Also, identify repeating headers and footers (like 'Page X of Y') which are document artifacts, not data.
 
-**Stage 2: Logical Calculation within each Item Block.**
-Now, process the document again, focusing on each "Item Block" you identified. For each block, your task is to derive a single, final 'total' value by applying financial logic.
--   **Base Logic**: Start by identifying the '原始金額' (Original Amount) for the item.
--   **Discount Logic**: Check if an explicit '折扣' (Discount) value exists within the same Item Block.
-    -   If a discount exists, the final 'total' for this block **MUST** be the calculated net value (Original Amount - Discount Amount).
-    -   If no discount exists, the final 'total' is simply the Original Amount.
--   **Ignore Sub-lines**: Within an Item Block, you must only use the 'Original Amount' and 'Discount' figures for your calculation. Ignore any intermediate lines labeled '小計' (subtotal for the item block) to avoid double-counting. The '小計' line is merely a verification for your calculation, not a source for extraction.
--   **Extract Core Data**: For each Item Block, extract its 'id' (項次), 'name' (品名/說明), 'quantity', 'unitPrice', and the final 'total' you just calculated.
+**Step 2: Identify and Extract "Base Work Items".**
+Now, read from the beginning. Your goal is to extract only the most basic, indivisible, cost-contributing line items.
 
-**Stage 3: Auditing Verification.**
-This is the final and most critical stage.
--   **Summation**: Sum up the final 'total' from every Item Block you processed in Stage 2. This gives you the 'Calculated Sum'.
--   **Verification**: Compare your 'Calculated Sum' with the 'Audit Benchmark' ('未稅總計') you established in Stage 1.
--   **Self-Correction**: They **MUST** be perfectly equal. If they are not, you must go back and re-evaluate your work in Stage 2. Did you misinterpret an Item Block? Did you apply the discount logic incorrectly? You must repeat this process until your sum matches the benchmark.
+*   **Inclusion Criteria**: A "base work item" typically has a clear description, quantity, and unit price.
+*   **Exclusion Rule (Very Important)**: If a line is a summary of other lines (e.g., its description includes '小計', '合計', 'Total', 'Summary'), or if it's a page header/footer, you **must ignore this line**. Do not include it in your extracted list.
 
-**Final Output Formatting:**
-Return your final, audited list. Ensure the 'subtotal' field in your response **exactly** matches the 'Audit Benchmark' figure from the document.
+**Step 3: Process Special Items (like Discounts).**
+Within your list of identified "base work items", check for special formats.
+
+*   **Discount Handling**: If an item's row contains multiple values in the amount column, especially a positive and a negative number (e.g., a main price of 250,000 and a rebate of -190,000), you must understand this financial logic. Calculate the **net value** (e.g., 250,000 - 190,000 = 60,000) and use this **net value** as the single effective 'total' for that item.
+
+**Step 4: Perform the Final Audit.**
+Sum the 'total' of all the "base work items" you have identified and processed. This is your 'calculated sum'. Compare this 'calculated sum' with your 'verification target' from Step 1.
+
+*   They **must be equal**. If they are not, you must go back and review your Steps 2 and 3. Re-examine your item identification (Did you miss a discount? Did you mistakenly include a subtotal?). You must adjust your findings until the sum perfectly matches the 'verification target'.
+
+**Step 5: Format the Output.**
+Return your final, audited list. Ensure it contains only the "base work items" and that the 'subtotal' field in your response exactly matches your 'verification target'.
 
 Document: {{media url=fileDataUri}}`;
 
@@ -146,7 +144,6 @@ const extractWorkItemsFlow = ai.defineFlow(
         output_tokens: result.usage?.outputTokens,
         total_tokens: result.usage?.totalTokens,
         duration_ms: durationMs,
-        user_id: 'system' // Placeholder for user ID
       });
 
       // Return only the business data
@@ -163,12 +160,9 @@ const extractWorkItemsFlow = ai.defineFlow(
         total_tokens: result?.usage?.totalTokens,
         duration_ms: durationMs,
         error: error instanceof Error ? error.message : 'Unknown error',
-        user_id: 'system' // Placeholder for user ID
       });
       // 向上拋出錯誤
       throw error;
     }
   }
 );
-
-    
