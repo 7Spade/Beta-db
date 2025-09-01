@@ -66,14 +66,14 @@ const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intell
 
 *   **Financial Structure Concept**: Remember the fundamental relationship: **未稅 (pre-tax) + 稅金 (tax) = 含稅 (tax-included)**. Your entire audit must be based on the **'未稅總計' (Subtotal before tax)**. This is your single source of truth.
 
-*   **The Parentheses Rule**: In many Taiwanese commercial documents, a number in parentheses \`()\` next to a main price often represents the **final, effective amount** after discounts. You must prioritize this parenthesized number as the true \`total\` for that line item.
+*   **Quantity vs. Unit Price Logic**: When you see multiple numbers, remember that '數量 (Quantity)' is typically a whole number (like 1, 2, 10), while '單價 (Unit Price)' and '總價 (Total Price)' are often larger, more complex numbers. Use this logic to distinguish them correctly.
 
 *   **Item Identification**: To correctly structure your output, you must identify three key elements for each work item:
     *   **項次 (Item ID)**: This is the sequential number (like 10, 20, 30) that marks the beginning of a new item.
     *   **品名 (Item Name)**: This is the descriptive text detailing the product or service.
     *   **數量 (Quantity)**: This is the number of units for the item.
 
-*   **Quantity vs. Unit Price Logic**: When you see multiple numbers, remember that '數量 (Quantity)' is typically a whole number (like 1, 2, 10), while '單價 (Unit Price)' and '總價 (Total Price)' are often larger, more complex numbers. Use this logic to distinguish them correctly.
+*   **The Subtotal Rule**: When a single work item block contains multiple financial lines like '金額' (Amount), '折扣' (Discount), and '小計' (Subtotal), you must recognize that the **'小計' is the final, effective total for that item**. Ignore the initial '金額' and '折扣' lines for your final calculation, as they are merely intermediate steps.
 
 Now, analyze the following document based on these injected concepts and perform the audit.
 
@@ -101,7 +101,7 @@ const extractWorkItemsFlow = ai.defineFlow(
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    const modelName = 'googleai/gemini-1.5-flash'; // 默认模型
+    let modelName = 'googleai/gemini-1.5-flash'; // 默认模型
 
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
@@ -130,7 +130,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       // Log the metadata without returning it to the client
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result.model || modelName,
+        model: result.model,
         status: 'succeeded',
         input_tokens: result.usage?.inputTokens,
         output_tokens: result.usage?.outputTokens,
