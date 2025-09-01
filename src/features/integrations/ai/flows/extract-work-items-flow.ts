@@ -59,32 +59,34 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 最终版 Prompt
-const DEFAULT_PROMPT = `You are a world-class, professional, and extremely meticulous contract auditing AI. Your specialty is parsing complex, multi-page commercial documents. Your task is to extract a flattened, pre-tax list of work items. You must strictly follow these thinking and operational steps:
+// 最終版 Prompt - 引入審計員思維模型
+const DEFAULT_PROMPT = `You are a world-class, professional, and extremely meticulous contract auditing AI with deep financial knowledge. Your task is to extract a flattened, pre-tax list of work items from a complex document. You must strictly follow these thinking and operational steps:
 
-**Step 1: Understand the Structure and Lock the Audit Target.**
-First, quickly scan the entire document. Your primary goal is to locate and distinguish between '未稅總計' (Subtotal before tax) and '含稅總價' (Grand Total with tax). Your **verification target** must always be the **'未稅總計' (Subtotal)**. This number is the single source of truth for your audit. Ignore the '含稅總價'. Also, identify repeating headers and footers (like 'Page X of Y') which are document artifacts, not data.
+**Step 1: Establish the Audit Benchmark (Subtotal).**
+Your primary task is to scan the entire document to find and differentiate between two key figures: '未稅總計' (Subtotal) and '含稅總價' (Grand Total). Your audit benchmark, your **verification target**, must always be the **'未稅總計' (Subtotal)**. You must ignore the '含稅總價' for all subsequent calculations and verification.
 
-**Step 2: Identify and Extract "Base Work Items".**
-Now, read from the beginning. Your goal is to extract only the most basic, indivisible, cost-contributing line items.
+**Step 2: Identify and Extract Valid Line Items with Financial Logic.**
+Read from the beginning. Your goal is to extract only the most basic, indivisible, cost-contributing line items.
 
-*   **Inclusion Criteria**: A "base work item" typically has a clear description, quantity, and unit price.
-*   **Exclusion Rule (Very Important)**: If a line is a summary of other lines (e.g., its description includes '小計', '合計', 'Total', 'Summary'), or if it's a page header/footer, you **must ignore this line**. Do not include it in your extracted list.
+*   **Rule A (Identify the Base Amount):** For each item, first identify the '原始金額' (original amount).
+*   **Rule B (Apply Discounts):** Then, check if there is a '折扣金額' (discount amount) for that item.
+    *   If **only** an 'original amount' exists, its effective \`total\` is that amount.
+    *   If **both** an 'original amount' and a 'discount amount' exist, the effective \`total\` for that item **must be the calculated net value** (original amount - discount amount).
+*   **Rule C (Ignore Summaries):** If a line is a summary of other lines (e.g., its description includes '小計', '合計', 'Total', 'Summary'), you **must ignore this line**. It is not a base work item. Also, ignore repeating headers and footers (like 'Page X of Y').
 
-**Step 3: Process Special Items (like Discounts).**
-Within your list of identified "base work items", check for special formats.
+**Step 3: Perform the Internal Audit.**
+Sum the effective \`total\` of all the "base work items" you have identified and processed according to the rules in Step 2. This is your 'calculated sum'.
 
-*   **Discount Handling**: If an item's row contains multiple values in the amount column, especially a positive and a negative number (e.g., a main price of 250,000 and a rebate of -190,000), you must understand this financial logic. Calculate the **net value** (e.g., 250,000 - 190,000 = 60,000) and use this **net value** as the single effective 'total' for that item.
+**Step 4: Verify Against the Benchmark and Finalize.**
+Compare your 'calculated sum' with your 'verification target' from Step 1.
 
-**Step 4: Perform the Final Audit.**
-Sum the 'total' of all the "base work items" you have identified and processed. This is your 'calculated sum'. Compare this 'calculated sum' with your 'verification target' from Step 1.
-
-*   They **must be equal**. If they are not, you must go back and review your Steps 2 and 3. Re-examine your item identification (Did you miss a discount? Did you mistakenly include a subtotal?). You must adjust your findings until the sum perfectly matches the 'verification target'.
+*   They **must be equal**. If they are not, you must go back and review your Steps 2 and 3. Re-examine your item identification and calculations (Did you miss a discount? Did you mistakenly include a subtotal?). You must adjust your findings until the sum perfectly matches the 'verification target'.
 
 **Step 5: Format the Output.**
-Return your final, audited list. Ensure it contains only the "base work items" and that the 'subtotal' field in your response exactly matches your 'verification target'.
+Return your final, audited list. Ensure it contains only the "base work items" and that the \`subtotal\` field in your response exactly matches your 'verification target' from Step 1.
 
 Document: {{media url=fileDataUri}}`;
+
 
 const prompt = ai.definePrompt({
   name: 'extractWorkItemsPrompt',
