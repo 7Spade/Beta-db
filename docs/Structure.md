@@ -939,102 +939,84 @@
 │          └─user-management
 │                  README.md
 │
-├─lib
-│  │  README.md
-│  │
-│  ├─config
-│  │      navigation.config.ts
-│  │      README.md
-│  │
-│  ├─constants
-│  │      roles.ts
-│  │
-│  ├─events
-│  │      app-events.ts
-│  │      event-dispatcher.ts
-│  │
-│  ├─hooks
-│  │      index.ts
-│  │      README.md
-│  │      use-mobile.tsx
-│  │      use-notifications.ts
-│  │      use-toast.ts
-│  │
-│  ├─models
-│  │      ai-token-log.model.ts
-│  │      README.md
-│  │
-│  ├─services
-│  │  │  README.md
-│  │  │
-│  │  ├─activity-log
-│  │  │      activity-log.listeners.ts
-│  │  │      activity-log.service.ts
-│  │  │      README.md
-│  │  │
-│  │  ├─ai-token-log
-│  │  │      logging.service.ts
-│  │  │      README.md
-│  │  │
-│  │  ├─blog
-│  │  │      blog.service.ts
-│  │  │      cache.service.ts
-│  │  │      media.service.ts
-│  │  │
-│  │  ├─career
-│  │  │      analytics.service.ts
-│  │  │      application.service.ts
-│  │  │      email.service.ts
-│  │  │      interview.service.ts
-│  │  │      job.service.ts
-│  │  │      README.md
-│  │  │
-│  │  ├─contracts
-│  │  │      contract-api.service.ts
-│  │  │      contract-cache.service.ts
-│  │  │      firebase-contract.service.ts
-│  │  │      index.ts
-│  │  │      README.md
-│  │  │
-│  │  └─notification
-│  │          notification.listeners.ts
-│  │          notification.service.ts
-│  │          README.md
-│  │
-│  ├─types
-│  │  │  env.types.ts
-│  │  │  errors.ts
-│  │  │  README.md
-│  │  │  types.ts
-│  │  │
-│  │  └─contracts
-│  │          change-order.types.ts
-│  │          contract-version.types.ts
-│  │          contract.types.ts
-│  │          index.ts
-│  │          payment.types.ts
-│  │          README.md
-│  │
-│  └─utils
-│          auth-utils.ts
-│          date-utils.ts
-│          index.ts
-│          utils.ts
-│
 └─shared
     │  README.md
     │
-    ├─constants
+    ├─config
+    │      navigation.config.ts
     │      README.md
     │
+    ├─constants
+    │      README.md
+    │      roles.ts
+    │
     ├─enums
+    │      README.md
+    │
+    ├─events
+    │      app-events.ts
+    │      event-dispatcher.ts
+    │
+    ├─hooks
+    │      index.ts
+    │      README.md
+    │      use-mobile.tsx
+    │      use-notifications.ts
+    │      use-toast.ts
+    │
+    ├─models
+    │      ai-token-log.model.ts
     │      README.md
     │
     ├─schemas
     │      README.md
     │
+    ├─services
+    │  │  README.md
+    │  │
+    │  ├─activity-log
+    │  │      activity-log.listeners.ts
+    │  │      activity-log.service.ts
+    │  │      README.md
+    │  │
+    │  ├─ai-token-log
+    │  │      logging.service.ts
+    │  │      README.md
+    │  │
+    │  ├─blog
+    │  │      blog.service.ts
+    │  │      cache.service.ts
+    │  │      media.service.ts
+    │  │
+    │  ├─career
+    │  │      analytics.service.ts
+    │  │      application.service.ts
+    │  │      email.service.ts
+    │  │      interview.service.ts
+    │  │      job.service.ts
+    │  │      README.md
+    │  │
+    │  ├─contracts
+    │  │      contract-api.service.ts
+    │  │      contract-cache.service.ts
+    │  │      firebase-contract.service.ts
+    │  │      index.ts
+    │  │      README.md
+    │  │
+    │  └─notification
+    │          notification.listeners.ts
+    │          notification.service.ts
+    │          README.md
+    │
     ├─types
+    │      env.types.ts
+    │      errors.ts
     │      README.md
+    │      types.ts
     │
     └─utils
+            auth-utils.ts
+            date-utils.ts
+            index.ts
             README.md
+            utils.ts

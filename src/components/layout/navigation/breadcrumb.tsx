@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
   Breadcrumb as UiBreadcrumb,
 } from '@/ui/breadcrumb'
-import { navigationConfig } from '@root/src/shared/config/navigation.config'
+import { navigationConfig } from '@root/src/components/layout/config/navigation.config'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment, useMemo } from 'react'

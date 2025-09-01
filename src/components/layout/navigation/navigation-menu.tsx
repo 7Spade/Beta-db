@@ -1,7 +1,7 @@
 'use client';
 
 import { SidebarMenu } from '@/ui/sidebar';
-import type { NavigationItem } from '@root/src/shared/config/navigation.config';
+import type { NavigationItem } from '@root/src/components/layout/config/navigation.config';
 import { NavigationMenuItem } from './navigation-menu-item';
 
 interface NavigationMenuProps {
