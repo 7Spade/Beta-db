@@ -38,4 +38,4 @@ export * from '@/features/resource-management/crm/partners/partners-view';
 export * from '@/features/resource-management/crm/workflows/workflow-builder';
 
 // Settings Features
-export * from '@/features/website-cms/settings/settings-view';
+export * from '@root/src/features/website-cms/system/settings-view';
