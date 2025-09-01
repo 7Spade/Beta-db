@@ -39,19 +39,27 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
   const handleInputChange = (index: number, field: keyof WorkItem, value: string | number) => {
     const newData = [...data];
     const updatedItem = { ...newData[index] };
-
+  
+    const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
+  
+    // Update the changed field
     if (field === 'id' || field === 'name') {
       (updatedItem[field] as string) = String(value);
-    } else if (field === 'quantity' || field === 'unitPrice' || field === 'total') {
-      const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
+    } else {
       (updatedItem[field] as number) = numericValue;
     }
-
-    // Automatic calculation logic
+  
+    // Recalculate based on which field was changed
     if (field === 'quantity' || field === 'unitPrice') {
       updatedItem.total = parseFloat((updatedItem.quantity * updatedItem.unitPrice).toFixed(2));
+    } else if (field === 'total') {
+      if (updatedItem.quantity !== 0) {
+        updatedItem.unitPrice = parseFloat((updatedItem.total / updatedItem.quantity).toFixed(2));
+      } else {
+        updatedItem.unitPrice = 0; // Avoid division by zero
+      }
     }
-
+  
     newData[index] = updatedItem;
     updateData(newData);
   };
