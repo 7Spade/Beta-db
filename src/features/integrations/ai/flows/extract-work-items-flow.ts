@@ -60,23 +60,24 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
 }
 
 // 最终版 Prompt
-const DEFAULT_PROMPT = `You are a top-notch financial auditing artificial intelligence. Your primary task is to extract a flattened, pre-tax list of work items from a commercial document.
+const DEFAULT_PROMPT = `You are a world-class financial auditing AI specializing in complex commercial documents. Your task is to extract a flattened, pre-tax list of work items with absolute accuracy. Follow these steps meticulously:
 
-**Your Goal is Absolute Accuracy:**
-The 'total' of each item you extract, when summed up, **must perfectly match** the document's final **'未稅總計' (Subtotal before tax)**. This is your only unbreakable rule and the measure of your success.
+**Step 1: Establish the Audit Benchmark.**
+Scan the entire document to find the final **'未稅總計' (Subtotal before tax)**. This is your single, non-negotiable verification target. Ignore all other totals like '含稅總價'.
 
-**Key Financial Concepts for Your Reasoning:**
-To achieve this, you must understand the relationship between these key fields. It is your task to deduce the correct logic for each document:
-*   **'金額' (Amount)**: Often the initial or gross price.
-*   **'折扣' (Discount)**: A reduction from the amount.
-*   **'小計' (Subtotal)**: The result after considering amounts and discounts for a specific item or group.
+**Step 2: Identify and Extract Item Amounts Using Structural Rules.**
+Analyze each line item sequentially. You must apply the following structural rules to determine the effective amount for each item:
+*   **Rule for Simple Items**: If all information for an item (description, quantity, price, total) is contained within a **single row**, extract that row's amount directly as its \`total\`.
+*   **Rule for Complex Items**: If an item's information spans **multiple rows** (e.g., it has separate lines for '金額', '折扣', '小計'), your task is to find and extract **only the '小計' (subtotal) amount** for that item block. This '小計' is the sole valid \`total\` for that complex item.
+*   **Exclusion Rule**: You must ignore any line that is a summary of other items (e.g., a grand total row) and is not part of a specific item block's structure.
 
-**Your Operational Logic:**
-1.  **Identify the Target**: First, find the document's final **'未稅總計'**. This is your verification target.
-2.  **Analyze and Extract**: For each line item, determine its true effective cost by correctly interpreting the '金額', '折扣', and '小計' fields. You must figure out how they combine.
-3.  **Audit and Self-Correct**: Sum your extracted totals. If they don't match the '未稅總計' target, you **must re-evaluate** your interpretation of the item blocks and correct your logic until the sum is perfect. Do not return a result until the audit passes.
+**Step 3: Perform Final Audit.**
+Sum up all the effective \`total\` amounts you extracted according to the rules in Step 2. This sum is your 'calculated total'.
 
-Your final output must be a clean list of work items, and the 'subtotal' field in your response must be the '未稅總計' you verified against.
+**Verification**: Your 'calculated total' **must perfectly match** the 'verification target' from Step 1. If it does not, you must repeat Step 2, re-evaluating your application of the structural rules until the audit passes.
+
+**Step 4: Format Output.**
+Return your final, audited list. The 'subtotal' field in your response must be the 'verification target' you audited against.
 
 Document: {{media url=fileDataUri}}`;
 
@@ -146,7 +147,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       const durationMs = Date.now() - startTime;
       await logAiTokenUsage(supabase, {
         flow_name: 'extractWorkItemsFlow',
-        model: result?.model || 'unknown',
+        model: result?.model,
         status: 'failed',
         input_tokens: result?.usage?.inputTokens,
         output_tokens: result?.usage?.outputTokens,
