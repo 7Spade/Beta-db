@@ -1,5 +1,4 @@
 import type { Task } from '../types';
-import { format } from 'date-fns';
 
 export function formatDate(date: Date | undefined): string {
   if (!date) return 'N/A';

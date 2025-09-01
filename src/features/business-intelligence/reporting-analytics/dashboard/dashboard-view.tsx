@@ -13,7 +13,7 @@
  */
 
 import { ContractDashboard } from '@/features/core-operations/contracts/dashboard';
-import { Dashboard as PartnerDashboard } from '@/features/resource-management/crm/dashboard/dashboard';
+import { ProjectDashboard } from '@/features/core-operations/projects/dashboard/project-dashboard';
 import { Separator } from '@/ui/separator';
 import { AiUsageLog } from '@root/src/features/business-intelligence/reporting-analytics/dashboard/ai-usage-log';
 
@@ -21,17 +21,15 @@ export function DashboardView() {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">合約總覽</h2>
-        <ContractDashboard />
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">專案總覽</h2>
+        <ProjectDashboard />
       </section>
 
       <Separator />
 
       <section>
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">
-          合作夥伴總覽
-        </h2>
-        <PartnerDashboard />
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">合約總覽</h2>
+        <ContractDashboard />
       </section>
 
       <Separator />
