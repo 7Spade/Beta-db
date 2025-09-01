@@ -254,12 +254,6 @@ export const navigationConfig: NavigationItem[] = [
     href: '/website-cms',
     children: [
       {
-        id: 'settings',
-        label: '系統設定',
-        icon: Cog,
-        href: '/website-cms/settings',
-      },
-      {
         id: 'cms-dashboard',
         label: '管理總覽',
         icon: LayoutGrid,

@@ -1,25 +1,31 @@
+'use client';
+
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { Users, Settings, BarChart3, Shield, Database, Bell } from 'lucide-react';
+import { Label } from '@/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/ui/radio-group';
+import { Skeleton } from '@/ui/skeleton';
+import { BarChart3, Bell, Database, Palette, Settings, Shield, Users } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function SystemManagementPage() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  // useEffect only runs on the client, so now we can safely show the UI
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const systemModules = [
     {
       title: '用戶管理',
       description: '管理後台使用者、權限和角色',
       icon: Users,
-      href: '/system/users',
+      href: '/website-cms/user',
       count: 24,
       status: 'active'
-    },
-    {
-      title: '系統設定',
-      description: '管理網站基本設定和配置',
-      icon: Settings,
-      href: '/system/settings',
-      count: 8,
-      status: 'configured'
     },
     {
       title: '數據統計',
@@ -57,15 +63,11 @@ export default function SystemManagementPage() {
                 <div className="text-2xl font-bold">{module.count}</div>
                 <p className="text-xs text-muted-foreground">{module.description}</p>
                 <div className="mt-2">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    module.status === 'active' 
-                      ? 'bg-green-100 text-green-800' 
-                      : module.status === 'configured'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-orange-100 text-orange-800'
-                  }`}>
-                    {module.status === 'active' ? '活躍' : 
-                     module.status === 'configured' ? '已配置' : '監控中'}
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${module.status === 'active'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                    }`}>
+                    {module.status === 'active' ? '活躍' : '監控中'}
                   </span>
                 </div>
               </CardContent>
@@ -74,7 +76,7 @@ export default function SystemManagementPage() {
         ))}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -108,6 +110,44 @@ export default function SystemManagementPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
+              <Palette className="h-5 w-5" />
+              外觀設定
+            </CardTitle>
+            <CardDescription>自訂您應用程式的外觀與感覺</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!mounted ? (
+              <div className="space-y-4">
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-24" />
+              </div>
+            ) : (
+              <RadioGroup
+                value={theme}
+                onValueChange={setTheme}
+                aria-label="主題選擇"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="light" id="light" />
+                  <Label htmlFor="light">淺色</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="dark" id="dark" />
+                  <Label htmlFor="dark">深色</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="system" id="system" />
+                  <Label htmlFor="system">系統</Label>
+                </div>
+              </RadioGroup>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Database className="h-5 w-5" />
               快速操作
             </CardTitle>
@@ -131,6 +171,30 @@ export default function SystemManagementPage() {
                 <Settings className="mr-2 h-4 w-4" />
                 進階設定
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              關於系統
+            </CardTitle>
+            <CardDescription>查看應用程式的版本資訊</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <p className="text-sm font-medium">版本</p>
+                <p className="text-sm text-muted-foreground">1.0.0</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium">最後更新</p>
+                <p className="text-sm text-muted-foreground">2024-01-22</p>
+              </div>
             </div>
           </CardContent>
         </Card>
