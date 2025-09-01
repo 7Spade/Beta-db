@@ -1,6 +1,6 @@
 "use client";
 import { Input } from "@/ui/input";
-import { type Note } from "@root/src/features/(automation-tools)/kanban/types";
+import { type Note } from "@root/src/features/automation-tools/kanban/types";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { NoteCard } from "./note-card";

@@ -2,8 +2,8 @@
 "use client";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-import { useKanban } from "@root/src/features/(automation-tools)/kanban/hooks/use-kanban";
-import { type Column, Task } from "@root/src/features/(automation-tools)/kanban/types";
+import { useKanban } from "@root/src/features/automation-tools/kanban/hooks/use-kanban";
+import { type Column, Task } from "@root/src/features/automation-tools/kanban/types";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { KanbanCard } from "./kanban-card";

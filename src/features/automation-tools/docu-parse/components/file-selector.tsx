@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { SUPPORTED_FILE_TYPES, type SupportedFileType } from '@/features/(automation-tools)/docu-parse/constants';
+import { SUPPORTED_FILE_TYPES, type SupportedFileType } from '@/features/automation-tools/docu-parse/constants';
 import { listItems } from '@/features/(document-management)/cloud-drive/actions/storage-actions';
 import type { StorageItem } from '@/features/(document-management)/cloud-drive/types/storage.types';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/ui/breadcrumb';

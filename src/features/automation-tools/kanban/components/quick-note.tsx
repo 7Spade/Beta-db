@@ -2,7 +2,7 @@
 import { Button } from "@/ui/button";
 import { Card, CardContent } from "@/ui/card";
 import { Input } from "@/ui/input";
-import { NOTE_COLORS } from "@root/src/features/(automation-tools)/kanban/types";
+import { NOTE_COLORS } from "@root/src/features/automation-tools/kanban/types";
 import { Plus } from "lucide-react";
 import React, { useState } from "react";
 

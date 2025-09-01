@@ -1,4 +1,4 @@
-import { type Note, NOTE_COLORS } from "@root/src/features/(automation-tools)/kanban/types";
+import { type Note, NOTE_COLORS } from "@root/src/features/automation-tools/kanban/types";
 
 export const notes: Note[] = [
   {

@@ -1,8 +1,8 @@
 
 "use client";
 
-import type { WorkItem } from '@/features/(automation-tools)/docu-parse/types';
-import { exportToCSV, exportToJSON } from '@/features/(automation-tools)/docu-parse/utils';
+import type { WorkItem } from '@/features/automation-tools/docu-parse/types';
+import { exportToCSV, exportToJSON } from '@/features/automation-tools/docu-parse/utils';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Input } from '@/ui/input';

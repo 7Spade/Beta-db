@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { type Task } from "@root/src/features/(automation-tools)/kanban/types";
+import { type Task } from "@root/src/features/automation-tools/kanban/types";
 import { cva } from "class-variance-authority";
 import { GripVertical, MoreVertical } from "lucide-react";
 

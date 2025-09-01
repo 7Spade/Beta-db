@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from "@/ui/input";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { type Column, type Task } from "@root/src/features/(automation-tools)/kanban/types";
+import { type Column, type Task } from "@root/src/features/automation-tools/kanban/types";
 import { cva } from "class-variance-authority";
 import { GripVertical, MoreVertical, Plus } from "lucide-react";
 import { useMemo, useState } from "react";

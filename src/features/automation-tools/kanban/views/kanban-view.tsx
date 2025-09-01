@@ -1,10 +1,10 @@
 
 'use client';
 
-import { NotesGrid } from "@root/src/features/(automation-tools)/kanban/components/notes-grid";
-import { QuickNote } from "@root/src/features/(automation-tools)/kanban/components/quick-note";
-import { notes as initialNotes } from "@root/src/features/(automation-tools)/kanban/data";
-import type { Note } from '@root/src/features/(automation-tools)/kanban/types';
+import { NotesGrid } from "@root/src/features/automation-tools/kanban/components/notes-grid";
+import { QuickNote } from "@root/src/features/automation-tools/kanban/components/quick-note";
+import { notes as initialNotes } from "@root/src/features/automation-tools/kanban/data";
+import type { Note } from '@root/src/features/automation-tools/kanban/types';
 import { useState } from 'react';
 
 export const KanbanView = () => {
