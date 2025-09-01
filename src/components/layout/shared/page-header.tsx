@@ -1,78 +1,31 @@
-'use client';
+/**
+ * @fileoverview Dashboard Layout
+ * @description This is the main layout for all authenticated pages.
+ * It integrates the sidebar and header, creating the primary app shell.
+ */
+import { AppHeader } from '@/components/layout/core/app-header';
+import { AppProvider } from '@/components/layout/core/app-provider';
+import { UnifiedSidebar } from '@/components/layout/navigation/unified-sidebar';
+import { SidebarProvider } from '@/ui/sidebar';
 
-import { Card, CardHeader } from '@/ui/card';
-import { cn } from '@root/src/shared/utils';
-import * as React from 'react';
-
-interface PageHeaderProps {
-  title: string;
-  subtitle?: string;
-  children?: React.ReactNode;
-  className?: string;
-  size?: 'sm' | 'md' | 'lg';
-  actions?: React.ReactNode;
-  variant?: 'default' | 'card';
-}
-
-const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
-  (
-    { title, subtitle, children, className, size = 'md', actions, variant = 'default', ...props },
-    ref
-  ) => {
-    const sizeClasses = {
-      sm: 'py-4',
-      md: 'py-6',
-      lg: 'py-8',
-    };
-
-    const titleSizeClasses = {
-      sm: 'text-xl',
-      md: 'text-2xl',
-      lg: 'text-3xl',
-    };
-
-    const content = (
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h1
-            className={cn('font-bold tracking-tight', titleSizeClasses[size])}
-          >
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="text-muted-foreground mt-1">{subtitle}</p>
-          )}
-          {children && <div className="mt-4">{children}</div>}
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <AppProvider>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+          <UnifiedSidebar />
+          <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+            <AppHeader />
+            <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+              {children}
+            </main>
+          </div>
         </div>
-
-        {actions && (
-          <div className="flex items-center gap-2 ml-4">{actions}</div>
-        )}
-      </div>
-    );
-
-    if (variant === 'card') {
-      return (
-        <Card ref={ref} className={cn('mb-6', className)} {...props}>
-          <CardHeader className={sizeClasses[size]}>
-            {content}
-          </CardHeader>
-        </Card>
-      );
-    }
-
-    return (
-      <div
-        ref={ref}
-        className={cn('border-b bg-background', sizeClasses[size], className)}
-        {...props}
-      >
-        {content}
-      </div>
-    );
-  }
-);
-PageHeader.displayName = 'PageHeader';
-
-export { PageHeader };
-
+      </SidebarProvider>
+    </AppProvider>
+  );
+}

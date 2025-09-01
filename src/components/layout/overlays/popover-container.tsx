@@ -1,66 +1,31 @@
-'use client';
+/**
+ * @fileoverview Dashboard Layout
+ * @description This is the main layout for all authenticated pages.
+ * It integrates the sidebar and header, creating the primary app shell.
+ */
+import { AppHeader } from '@/components/layout/core/app-header';
+import { AppProvider } from '@/components/layout/core/app-provider';
+import { UnifiedSidebar } from '@/components/layout/navigation/unified-sidebar';
+import { SidebarProvider } from '@/ui/sidebar';
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/ui/popover';
-import * as React from 'react';
-
-interface PopoverContainerProps {
+export default function DashboardLayout({
+  children,
+}: {
   children: React.ReactNode;
-  content: React.ReactNode;
-  className?: string;
-  side?: 'top' | 'right' | 'bottom' | 'left';
-  align?: 'start' | 'center' | 'end';
-  sideOffset?: number;
-  alignOffset?: number;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  trigger?: React.ReactNode;
+}) {
+  return (
+    <AppProvider>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+          <UnifiedSidebar />
+          <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+            <AppHeader />
+            <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+              {children}
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
+    </AppProvider>
+  );
 }
-
-const PopoverContainer = React.forwardRef<
-  HTMLDivElement,
-  PopoverContainerProps
->(
-  (
-    {
-      children,
-      content,
-      className,
-      side = 'bottom',
-      align = 'center',
-      sideOffset = 4,
-      alignOffset = 0,
-      open,
-      onOpenChange,
-      trigger,
-      ...props
-    },
-    ref
-  ) => {
-    return (
-      <Popover open={open} onOpenChange={onOpenChange}>
-        <PopoverTrigger asChild>
-          {trigger || children}
-        </PopoverTrigger>
-        <PopoverContent
-          ref={ref}
-          side={side}
-          align={align}
-          sideOffset={sideOffset}
-          alignOffset={alignOffset}
-          className={className}
-          {...props}
-        >
-          {content}
-        </PopoverContent>
-      </Popover>
-    );
-  }
-);
-PopoverContainer.displayName = 'PopoverContainer';
-
-export { PopoverContainer };
-

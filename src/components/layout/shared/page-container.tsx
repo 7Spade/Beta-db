@@ -1,83 +1,31 @@
-'use client';
+/**
+ * @fileoverview Dashboard Layout
+ * @description This is the main layout for all authenticated pages.
+ * It integrates the sidebar and header, creating the primary app shell.
+ */
+import { AppHeader } from '@/components/layout/core/app-header';
+import { AppProvider } from '@/components/layout/core/app-provider';
+import { UnifiedSidebar } from '@/components/layout/navigation/unified-sidebar';
+import { SidebarProvider } from '@/ui/sidebar';
 
-import { Card, CardContent, CardHeader } from '@/ui/card';
-import { cn } from '@root/src/shared/utils';
-import * as React from 'react';
-
-interface PageContainerProps {
+export default function DashboardLayout({
+  children,
+}: {
   children: React.ReactNode;
-  className?: string;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
-  centered?: boolean;
-  variant?: 'default' | 'card';
-  title?: string;
-  description?: string;
+}) {
+  return (
+    <AppProvider>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+          <UnifiedSidebar />
+          <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+            <AppHeader />
+            <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+              {children}
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
+    </AppProvider>
+  );
 }
-
-const PageContainer = React.forwardRef<HTMLDivElement, PageContainerProps>(
-  (
-    {
-      children,
-      className,
-      maxWidth = 'xl',
-      padding = 'md',
-      centered = true,
-      variant = 'default',
-      title,
-      description,
-      ...props
-    },
-    ref
-  ) => {
-    const maxWidthClasses = {
-      sm: 'max-w-sm',
-      md: 'max-w-md',
-      lg: 'max-w-lg',
-      xl: 'max-w-xl',
-      '2xl': 'max-w-2xl',
-      full: 'max-w-full',
-    };
-
-    const paddingClasses = {
-      none: '',
-      sm: 'px-4 py-2',
-      md: 'px-6 py-4',
-      lg: 'px-8 py-6',
-    };
-
-    const containerClasses = cn(
-      'w-full',
-      maxWidth !== 'full' && maxWidthClasses[maxWidth],
-      centered && 'mx-auto',
-      variant === 'default' && paddingClasses[padding],
-      className
-    );
-
-    if (variant === 'card') {
-      return (
-        <Card ref={ref} className={containerClasses} {...props}>
-          {(title || description) && (
-            <CardHeader>
-              {title && <h1 className="text-2xl font-bold">{title}</h1>}
-              {description && <p className="text-muted-foreground">{description}</p>}
-            </CardHeader>
-          )}
-          <CardContent className={paddingClasses[padding]}>
-            {children}
-          </CardContent>
-        </Card>
-      );
-    }
-
-    return (
-      <div ref={ref} className={containerClasses} {...props}>
-        {children}
-      </div>
-    );
-  }
-);
-PageContainer.displayName = 'PageContainer';
-
-export { PageContainer };
-
