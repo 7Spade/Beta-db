@@ -16,6 +16,7 @@
 import { ContractDashboard } from '@/features/core-operations/contracts/dashboard/contract-dashboard';
 import { ProjectDashboard } from '@/features/core-operations/projects/dashboard/project-dashboard';
 import { Dashboard as PartnerDashboard } from '@/features/resource-management/crm/dashboard/dashboard';
+import { AiTokenDashboard } from '@/features/website-cms/admin/dashboard/ai-token-dashboard';
 import { UserDashboard } from '@/features/website-cms/admin/dashboard/user-dashboard';
 import { Separator } from '@/ui/separator';
 import { AiUsageLog } from '@root/src/features/business-intelligence/reporting-analytics/dashboard/ai-usage-log';
@@ -47,6 +48,15 @@ export function DashboardView() {
       <section>
         <h2 className="text-2xl font-semibold tracking-tight mb-4">用戶總覽</h2>
         <UserDashboard />
+      </section>
+
+      <Separator />
+
+      <section>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">
+          AI 使用總覽
+        </h2>
+        <AiTokenDashboard />
       </section>
 
       <Separator />
