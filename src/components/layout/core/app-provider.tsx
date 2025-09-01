@@ -1,4 +1,3 @@
-import { SidebarProvider } from '@/ui/sidebar';
 import { ThemeProvider } from './theme-provider';
 
 
@@ -10,7 +9,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <SidebarProvider>{children}</SidebarProvider>
+      {children}
     </ThemeProvider>
   );
 }

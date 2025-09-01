@@ -5,6 +5,7 @@ export { LayoutWrapper } from '@/components/layout/core/layout-wrapper';
 export { NotificationCenter } from '@/components/layout/navigation/notification-center';
 export { QuickActions } from '@/components/layout/navigation/quick-actions';
 export { SearchCommand } from '@/components/layout/navigation/search-command';
+export { UnifiedSidebar } from '@/components/layout/navigation/unified-sidebar';
 export { UserMenu } from '@/components/layout/navigation/user-menu';
 
 // Overlay Components
