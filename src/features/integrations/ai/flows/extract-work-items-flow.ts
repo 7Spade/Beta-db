@@ -14,10 +14,11 @@
 
 import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/api/services/ai-token-log.service';
-import { adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
+import { adminDb, adminStorage } from '@root/src/features/integrations/database/firebase-admin/firebase-admin';
 import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
 import { cookies } from 'next/headers';
+import type { Partner } from '@root/src/shared/types/types';
 
 // 定義流程的輸入 Schema (使用 Zod)
 const ExtractWorkItemsInputSchema = z.object({
@@ -26,10 +27,11 @@ const ExtractWorkItemsInputSchema = z.object({
     .describe(
       "一份檔案（合約、報價單或估價單）在 Firebase Storage 中的路徑 (e.g., 'uploads/document.pdf')。"
     ),
+  partnerId: z.string().optional().describe("關聯的合作夥伴 ID (可選)，用於載入客製化 Prompt。")
 });
 export type ExtractWorkItemsInput = z.infer<typeof ExtractWorkItemsInputSchema>;
 
-// 定義流程的輸出 Schema (使用 Zod)
+// 定義流程的輸出 Schema (使用 Zod)，包含審計功能
 const ExtractWorkItemsOutputSchema = z.object({
   workItems: z.array(
     z.object({
@@ -37,9 +39,11 @@ const ExtractWorkItemsOutputSchema = z.object({
       name: z.string().describe('料號、品名或項目說明。'),
       quantity: z.number().describe('工作項目的數量。'),
       unitPrice: z.number().describe('工作項目的單價。'),
+      total: z.number().describe('該項目的總價 (數量 * 單價)。')
     })
   ).
     describe('一個包含提取出的工作項目及其數量和單價的列表。'),
+  subtotal: z.number().describe("從文件上提取出的、明確標示的『未稅總計』金額。").optional(),
 });
 export type ExtractWorkItemsOutput = z.infer<typeof ExtractWorkItemsOutputSchema>;
 
@@ -57,32 +61,41 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 定義 Genkit Prompt
-const extractWorkItemsPrompt = ai.definePrompt({
-  name: 'extractWorkItemsPrompt', // Prompt 的唯一名稱
-  input: { schema: z.object({ fileDataUri: z.string() }) }, // 輸入改為接收 Data URI
-  output: { schema: ExtractWorkItemsOutputSchema }, // 輸出 Schema，讓 AI 知道要以何種格式回應
-  // 提示語模板 (使用 Handlebars 語法)
-  prompt: `You are an expert AI assistant specialized in parsing construction and engineering documents like contracts, quotes, and estimates to extract a bill of materials or work items.
+// 默认的 Prompt
+const DEFAULT_PROMPT = `You are a professional, extremely meticulous contract auditing AI. Your task is to extract a list of work items from the provided document. You must strictly follow these thinking and operational steps:
 
-  Analyze the provided document and extract every single work item you can find. For each item, you must extract the following four fields:
-  1.  **id**: The item number or serial number (e.g., "1", "A-1", "項次一").
-  2.  **name**: The material code, product name, or description of the work (e.g., "RC混凝土", "防水工程", "不銹鋼板").
-  3.  **quantity**: The quantity of the item. If not explicitly provided, default to 1.
-  4.  **unitPrice**: The price per unit for the item. If not explicitly provided, do your best to find it. If it's impossible, default to 0.
+**Step 1: Locate the Final Total.**
+First, read through the entire document to find and lock onto the final total amount, such as '未税总计' (Subtotal), '合计', or a similar final sum. Record this number as your 'verification target'.
 
-  Document: {{media url=fileDataUri}}
-  
-  Ensure that the extracted data is accurate and well-formatted. Do NOT extract the total price, only the unit price.
-  `,
-});
+**Step 2: Extract Line Items.**
+Next, start from the beginning and extract each work item one by one. For each item, you must extract:
+- \`id\`: The item or serial number.
+- \`name\`: The material code, product name, or description.
+- \`quantity\`: The quantity of the item.
+- \`unitPrice\`: The price per unit.
+- \`total\`: The total price for that line item (quantity * unitPrice).
+
+**Step 3: Internal Cross-Validation.**
+After extracting all items, you **must** perform an internal audit. Sum up the 'total' of all the line items you extracted to get a 'calculated sum'.
+
+**Step 4: Compare with Target and Make Final Decision.**
+- Compare your 'calculated sum' with the 'verification target' you identified in Step 1.
+- **If they are equal**, your extraction is accurate. Use the data you extracted.
+- **If they are not equal**, it indicates a potential error in your extraction (e.g., OCR error, misread number). In this case, **you must trust the document's explicit 'verification target'**. Re-examine each extracted 'unitPrice' or 'quantity', identify the most likely error, and adjust it to ensure your line items sum up to the 'verification target'.
+
+**Step 5: Format Output.**
+Finally, return your final, verified result in the specified JSON format. Ensure the 'subtotal' field in your response matches the 'verification target' you found in Step 1.
+
+Document: {{media url=fileDataUri}}
+`;
+
 
 // 定義 Genkit Flow
 const extractWorkItemsFlow = ai.defineFlow(
   {
     name: 'extractWorkItemsFlow', // Flow 的唯一名稱
     inputSchema: ExtractWorkItemsInputSchema,
-    outputSchema: ExtractWorkItemsOutputSchema, // Output schema is now pure business data
+    outputSchema: ExtractWorkItemsOutputSchema,
   },
   // Flow 的核心執行邏輯
   async (input) => {
@@ -90,6 +103,38 @@ const extractWorkItemsFlow = ai.defineFlow(
     let result;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
+    
+    let promptText = DEFAULT_PROMPT;
+    let modelName = 'googleai/gemini-1.5-flash'; // 默认模型
+
+    // 如果提供了 partnerId，尝试加载客制化配置
+    if (input.partnerId) {
+        try {
+            const partnerRef = adminDb.collection('partners').doc(input.partnerId);
+            const partnerSnap = await partnerRef.get();
+            if (partnerSnap.exists) {
+                const partnerData = partnerSnap.data() as Partner;
+                if (partnerData.parsingConfig?.prompt) {
+                    promptText = partnerData.parsingConfig.prompt;
+                    console.log(`使用合作夥伴 ${input.partnerId} 的客製化 Prompt。`);
+                }
+                if (partnerData.parsingConfig?.model) {
+                    modelName = partnerData.parsingConfig.model;
+                    console.log(`使用合作夥伴 ${input.partnerId} 的客製化模型: ${modelName}。`);
+                }
+            }
+        } catch(e) {
+            console.warn(`無法為 partnerId: ${input.partnerId} 載入 AI 配置，將使用預設值。錯誤:`, e);
+        }
+    }
+    
+    const prompt = ai.definePrompt({
+      name: 'dynamicExtractWorkItemsPrompt',
+      input: { schema: z.object({ fileDataUri: z.string() }) },
+      output: { schema: ExtractWorkItemsOutputSchema },
+      prompt: promptText,
+    });
+
 
     try {
       // 步驟 1: 使用 Firebase Admin SDK 直接讀取檔案內容
@@ -107,7 +152,7 @@ const extractWorkItemsFlow = ai.defineFlow(
       const fileDataUri = `data:${mimeType};base64,${fileBuffer.toString('base64')}`;
 
       // 步驟 3: 呼叫定義好的 prompt，並傳入 Data URI
-      result = await extractWorkItemsPrompt({ fileDataUri });
+      result = await prompt({ fileDataUri }, { model: modelName });
       const output = result.output;
       if (!output) {
         throw new Error('No output from AI');

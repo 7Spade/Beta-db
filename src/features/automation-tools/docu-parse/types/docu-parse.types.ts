@@ -7,17 +7,13 @@ import type { ExtractWorkItemsOutput } from '@/features/integrations/ai/flows/ex
 
 /**
  * 從 AI Flow 的原始輸出中提取的單個工作項目結構。
+ * 現在包含由 AI 直接提取的 total 欄位。
  */
-export type WorkItem = ExtractWorkItemsOutput['workItems'][0] & {
-  /**
-   * 前端計算的總價 (quantity * unitPrice)，用於 UI 顯示。
-   */
-  total?: number;
-};
+export type WorkItem = ExtractWorkItemsOutput['workItems'][0];
 
 /**
  * 文件處理 Server Action 的狀態，由 useActionState 管理。
- * data 欄位不再包含 totalTokens。
+ * data 欄位現在包含 workItems 和 subtotal。
  */
 export interface DocuParseActionState {
   data?: ExtractWorkItemsOutput & { fileName: string; };

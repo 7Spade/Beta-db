@@ -1,3 +1,4 @@
+
 /**
  * @project Beta-db Integrated Platform - 統一整合平台文檔處理頁面
  * @framework Next.js 15+ (App Router)
@@ -56,7 +57,7 @@ import {
   SelectValue,
 } from '@/ui/select';
 import { useToast } from '@root/src/shared/hooks/use-toast';
-import { Cpu, File, FileCog, Loader2, RefreshCcw } from 'lucide-react';
+import { BrainCircuit, Cpu, File, FileCog, Loader2, RefreshCcw } from 'lucide-react';
 
 const initialState = {
   data: undefined,
@@ -83,7 +84,7 @@ export function DocuParseView() {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [selectedPartnerId, setSelectedPartnerId] = useState('');
   const [selectedFilePath, setSelectedFilePath] = useState<string | null>(() =>
-    searchParams.get('filePath')
+    searchParams.get('path')
   );
 
   const extractedData = state.data;
@@ -93,10 +94,11 @@ export function DocuParseView() {
     // This effect runs only when a file path is selected (either from URL or file selector)
     if (selectedFilePath) {
       startTransition(() => {
-        formAction({ filePath: selectedFilePath });
+        const partnerId = selectedPartnerId || null;
+        formAction({ filePath: selectedFilePath, partnerId });
       });
     }
-  }, [selectedFilePath, formAction]);
+  }, [selectedFilePath, selectedPartnerId, formAction]);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -185,7 +187,7 @@ export function DocuParseView() {
           title: '成功！',
           description: `專案與合約 "${docDetails.name}" 已成功建立。`,
         });
-        // 停留在本頁，讓使用者自行前往合約或專案
+        // Stay on page, let user navigate
       }
     } catch (e) {
       const error = e instanceof Error ? e.message : '發生未知錯誤';
@@ -258,6 +260,12 @@ export function DocuParseView() {
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2">
+                {extractedData?.subtotal && (
+                  <Badge variant="outline" className="flex items-center gap-2">
+                    <BrainCircuit className="w-4 h-4" />
+                    <span>文件總計: ${extractedData.subtotal.toLocaleString()}</span>
+                  </Badge>
+                )}
                 {extractedData.workItems.length > 0 && (
                   <Badge
                     variant="secondary"
@@ -285,10 +293,10 @@ export function DocuParseView() {
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <div className="space-y-2">
-                <Label htmlFor="customId">名稱</Label>
+                <Label htmlFor="customId">自訂 ID</Label>
                 <Input
                   id="customId"
-                  placeholder="文件名稱"
+                  placeholder="文件 ID (可選)"
                   value={docDetails.customId}
                   onChange={(e) =>
                     handleDetailChange('customId', e.target.value)
@@ -299,7 +307,7 @@ export function DocuParseView() {
                 <Label htmlFor="name">名稱</Label>
                 <Input
                   id="name"
-                  placeholder="文件名稱"
+                  placeholder="專案/合約名稱"
                   value={docDetails.name}
                   onChange={(e) => handleDetailChange('name', e.target.value)}
                 />
@@ -356,6 +364,7 @@ export function DocuParseView() {
               key={state.data?.fileName}
               initialData={workItems}
               onDataChange={setWorkItems}
+              originalSubtotal={extractedData.subtotal}
             />
           </CardContent>
           <CardContent>

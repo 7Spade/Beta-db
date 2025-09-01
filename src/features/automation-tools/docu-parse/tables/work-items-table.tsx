@@ -21,9 +21,10 @@ import { useEffect, useState } from 'react';
 interface WorkItemsTableProps {
   initialData: WorkItem[];
   onDataChange: (data: WorkItem[]) => void;
+  originalSubtotal?: number;
 }
 
-export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProps) {
+export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: WorkItemsTableProps) {
   const [data, setData] = useState<WorkItem[]>(initialData.map(item => ({ ...item, total: item.quantity * item.unitPrice })));
 
   useEffect(() => {
@@ -41,11 +42,9 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
 
     if (field === 'id' || field === 'name') {
       (updatedItem[field] as string) = String(value);
-    } else if (field === 'quantity' || field === 'unitPrice') {
+    } else if (field === 'quantity' || field === 'unitPrice' || field === 'total') {
       const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
       (updatedItem[field] as number) = numericValue;
-    } else {
-      (updatedItem[field] as number) = 0;
     }
 
     // Automatic calculation logic
@@ -73,7 +72,8 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
     updateData([...data, newRow]);
   };
 
-  const totalAmount = data.reduce((sum, item) => sum + (item.total || 0), 0);
+  const calculatedTotal = data.reduce((sum, item) => sum + (item.total || 0), 0);
+  const totalMismatch = typeof originalSubtotal === 'number' && Math.abs(originalSubtotal - calculatedTotal) > 0.01;
 
   if (data.length === 0) {
     return (
@@ -115,7 +115,7 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
                 </TableCell>
                 <TableCell className="text-center">
                   <Badge variant="outline">
-                    {totalAmount > 0 ? (((row.total || 0) / totalAmount) * 100).toFixed(1) : '0.0'}%
+                    {calculatedTotal > 0 ? (((row.total || 0) / calculatedTotal) * 100).toFixed(1) : '0.0'}%
                   </Badge>
                 </TableCell>
                 <TableCell className="p-1">
@@ -146,8 +146,8 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
                   <Input
                     type="number"
                     value={row.total}
-                    readOnly
-                    className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring text-muted-foreground"
+                    onChange={(e) => handleInputChange(index, 'total', e.target.value)}
+                    className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
                     step="0.01"
                   />
                 </TableCell>
@@ -168,9 +168,23 @@ export function WorkItemsTable({ initialData, onDataChange }: WorkItemsTableProp
           <Plus className="mr-2 h-4 w-4" />
           新增一列
         </Button>
-        <div className="text-right">
-          <p className="text-sm text-muted-foreground">總金額</p>
-          <p className="text-2xl font-bold">${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+        <div className="text-right space-y-2">
+          {totalMismatch && (
+            <div>
+              <p className="text-xs text-muted-foreground">文件原始總計</p>
+              <p className="text-lg font-semibold text-muted-foreground line-through">
+                ${originalSubtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+            </div>
+          )}
+          <div>
+            <p className={`text-sm ${totalMismatch ? 'text-destructive' : 'text-muted-foreground'}`}>
+              {totalMismatch ? '計算總和（與原始總計不符）' : '總金額'}
+            </p>
+            <p className={`text-2xl font-bold ${totalMismatch ? 'text-destructive' : ''}`}>
+              ${calculatedTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+          </div>
         </div>
       </div>
 
