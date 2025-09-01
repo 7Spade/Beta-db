@@ -59,24 +59,19 @@ export async function extractWorkItems(input: ExtractWorkItemsInput): Promise<Ex
   return result;
 }
 
-// 最终版 Prompt - 基于“括号模式”
-const DEFAULT_PROMPT = `You are a world-class, professional, and meticulous data extraction AI. Your task is to extract a flattened, pre-tax list of work items from a commercial document. You must follow these steps precisely:
+// 极简版 Prompt - 专注于核心规则
+const DEFAULT_PROMPT = `You are a data extraction AI. Your task is to extract a flattened list of work items from a document, focusing on two critical rules.
 
-**Step 1: Lock the Verification Target.**
-First, scan the entire document to find the '未稅總計' (Subtotal before tax). This number is your **single source of truth** for verification. Ignore '含稅總價' (Grand Total with tax) and all other totals.
+**Rule 1: The Parenthesis Rule.**
+For each line item, find the '總價' (Line Total) column.
+*   If a number is inside parentheses `()`, that number is the **final, effective total** for that item.
+*   If there are no parentheses, the visible line total is the effective total.
+You must extract this effective total for each item.
 
-**Step 2: Extract Line Items Based on a Visual Pattern.**
-Analyze each line item. To determine the final 'total' for each item, you must follow this critical rule:
-*   **The Parenthesis Rule**: Look at the '總價' (Line Total) column for each item. If you see a number inside parentheses `()`, that number is the **final, effective total** for that line item because it represents the value after all discounts. If there are no parentheses, then the visible line total is the effective total.
+**Rule 2: The Audit Rule.**
+Find the '未稅總計' (Subtotal before tax). The sum of all effective totals you extracted **must perfectly match** this '未稅總計'. If it doesn't, you must re-examine your application of The Parenthesis Rule and correct your list until it does.
 
-**Step 3: Extract Other Item Details.**
-For each line item, also extract its '項次' (id), '說明' (name), '數量' (quantity), and '單價' (unitPrice).
-
-**Step 4: Audit Your Work.**
-Sum up all the effective 'total' amounts you extracted (using The Parenthesis Rule). This is your 'calculated sum'. It **must perfectly match** the 'verification target' ('未稅總計') from Step 1. If it does not, you must review your extraction, especially your application of The Parenthesis Rule, until the sum is correct.
-
-**Step 5: Format the Output.**
-Return the final, audited list. The 'subtotal' field in your response must be the '未稅總計' value you identified in Step 1.
+Extract '項次' (id), '說明' (name), '數量' (quantity), and '單價' (unitPrice) for each item. The 'subtotal' in your output must be the '未稅總計' from the document.
 
 Document: {{media url=fileDataUri}}`;
 
