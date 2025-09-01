@@ -181,11 +181,17 @@ export const navigationConfig: NavigationItem[] = [
         ],
       },
       {
-        id: 'inventory',
-        label: '庫存管理',
+        id: 'warehousing',
+        label: '倉儲管理',
         icon: Warehouse,
         href: '/resource-management/inventory',
         children: [
+          {
+            id: 'warehousing-dashboard',
+            label: '倉儲儀表板',
+            icon: LayoutGrid,
+            href: '/resource-management/inventory',
+          },
           {
             id: 'items',
             label: '物料主檔',

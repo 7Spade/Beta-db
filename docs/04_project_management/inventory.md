@@ -103,7 +103,7 @@
 ## 4. 前端架構與路由 (Frontend Architecture)
 
 ### 結構樹 (Structure Tree)
-```
+`\'\'\'
 src/
 ├── app/
 │   └── (dashboard)/
@@ -117,24 +117,22 @@ src/
 │           ├── transfers/                # 調撥專用頁面
 │           │   └── page.tsx
 │           └── page.tsx                  # 倉儲儀表板 (可按倉庫篩選)
-├── components/
-│   └── features/
-│       └── warehousing/                <-- 新目錄 (原 inventory)
-│           ├── actions/
-│           │   └── warehousing-actions.ts
-│           ├── components/
-│           │   ├── low-stock-alert.tsx
-│           │   └── warehouse-selector.tsx  # 重要的倉庫選擇器元件
-│           ├── forms/
-│           │   ├── item-form.tsx         # 物料主檔表單
-│           │   ├── movement-form.tsx     # 出入庫表單
-│           │   ├── transfer-form.tsx     # 調撥表單
-│           │   └── warehouse-form.tsx    # 倉庫表單
-│           ├── tables/
-│           │   └── stock-level-table.tsx   # 顯示特定倉庫庫存水平的表格
-│           └── views/
-│               └── warehousing-dashboard-view.tsx
+├── features/
+│   └── warehousing/                <-- 新目錄 (原 inventory)
+│       ├── actions/
+│       │   └── warehousing-actions.ts
+│       ├── components/
+│       │   ├── low-stock-alert.tsx
+│       │   └── warehouse-selector.tsx  # 重要的倉庫選擇器元件
+│       ├── forms/
+│       │   ├── item-form.tsx         # 物料主檔表單
+│       │   ├── movement-form.tsx     # 出入庫表單
+│       │   ├── transfer-form.tsx     # 調撥表單
+│       │   └── warehouse-form.tsx    # 倉庫表單
+│       ├── tables/
+│       │   └── stock-level-table.tsx   # 顯示特定倉庫庫存水平的表格
+│       └── views/
+│           └── warehousing-dashboard-view.tsx
 └── config/
     └── navigation.config.ts              <-- 修改「庫存管理」為「倉儲管理」
-
-```
+`\'\'\'
