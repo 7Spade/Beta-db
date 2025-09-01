@@ -9,7 +9,7 @@ import type { ExtractWorkItemsOutput } from '@/features/integrations/ai/flows/ex
  * 從 AI Flow 的原始輸出中提取的單個工作項目結構。
  * 現在只包含基礎數據，總價 (total) 將在前端計算。
  */
-export type WorkItem = Omit<ExtractWorkItemsOutput['workItems'][0], 'total'> & { total?: number };
+export type WorkItem = Omit<ExtractWorkItemsOutput['workItems'][0], 'total'> & { total?: number, discount?: number };
 
 
 /**

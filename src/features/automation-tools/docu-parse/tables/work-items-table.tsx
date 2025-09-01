@@ -25,10 +25,10 @@ interface WorkItemsTableProps {
 }
 
 export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: WorkItemsTableProps) {
-  const [data, setData] = useState<WorkItem[]>(initialData.map(item => ({ ...item, total: item.quantity * item.unitPrice })));
+  const [data, setData] = useState<WorkItem[]>(initialData.map(item => ({ ...item, total: item.quantity * item.unitPrice, discount: item.discount || 0 })));
 
   useEffect(() => {
-    setData(initialData.map(item => ({ ...item, total: item.quantity * item.unitPrice })));
+    setData(initialData.map(item => ({ ...item, total: (item.quantity * item.unitPrice) - (item.discount || 0), discount: item.discount || 0 })));
   }, [initialData]);
 
   const updateData = (newData: WorkItem[]) => {
@@ -40,27 +40,20 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
     const newData = [...data];
     const updatedItem = { ...newData[index] };
 
-    //直接更新字串值
+    // 直接更新值，不立即转换
     (updatedItem[field] as any) = value;
 
     const quantity = parseFloat(String(updatedItem.quantity)) || 0;
     const unitPrice = parseFloat(String(updatedItem.unitPrice)) || 0;
-    const total = parseFloat(String(updatedItem.total)) || 0;
+    const discount = parseFloat(String(updatedItem.discount)) || 0;
 
     // 根据变动的栏位进行重新计算
-    if (field === 'quantity' || field === 'unitPrice') {
-      updatedItem.total = quantity * unitPrice;
-    } else if (field === 'total') {
-      if (quantity !== 0) {
-        updatedItem.unitPrice = total / quantity;
-      } else {
-        updatedItem.unitPrice = 0; // 避免除以零
-      }
-    }
+    updatedItem.total = (quantity * unitPrice) - discount;
     
     newData[index] = updatedItem;
     updateData(newData);
   };
+
 
   const handleRemoveRow = (index: number) => {
     const newData = data.filter((_, i) => i !== index);
@@ -74,6 +67,7 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
       quantity: 1,
       unitPrice: 0,
       total: 0,
+      discount: 0,
     };
     updateData([...data, newRow]);
   };
@@ -103,8 +97,9 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
               <TableHead className="w-[10%] text-center">項次</TableHead>
               <TableHead className="w-[10%] text-center">佔比</TableHead>
               <TableHead className="w-[40%]">品名/說明</TableHead>
-              <TableHead className="text-right w-[120px]">數量</TableHead>
+              <TableHead className="text-right w-[120px]">数量</TableHead>
               <TableHead className="text-right w-[150px]">單價</TableHead>
+              <TableHead className="text-right w-[150px]">折扣</TableHead>
               <TableHead className="text-right w-[150px]">總價</TableHead>
               <TableHead className="w-12 p-2"></TableHead>
             </TableRow>
@@ -133,7 +128,7 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
                 </TableCell>
                 <TableCell className="p-1">
                   <Input
-                    type="number"
+                    type="text"
                     value={row.quantity}
                     onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
                     className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
@@ -141,20 +136,26 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
                 </TableCell>
                 <TableCell className="p-1">
                   <Input
-                    type="number"
+                    type="text"
                     value={row.unitPrice}
                     onChange={(e) => handleInputChange(index, 'unitPrice', e.target.value)}
                     className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
-                    step="any"
                   />
                 </TableCell>
                 <TableCell className="p-1">
                   <Input
-                    type="number"
-                    value={row.total}
-                    onChange={(e) => handleInputChange(index, 'total', e.target.value)}
+                    type="text"
+                    value={row.discount || ''}
+                    onChange={(e) => handleInputChange(index, 'discount', e.target.value)}
                     className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
-                    step="any"
+                  />
+                </TableCell>
+                <TableCell className="p-1">
+                  <Input
+                    type="text"
+                    value={row.total?.toFixed(2) || '0.00'}
+                    readOnly
+                    className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
                   />
                 </TableCell>
                 <TableCell className="p-1 text-center">
