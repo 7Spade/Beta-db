@@ -36,30 +36,28 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
     onDataChange(newData);
   }
 
-  const handleInputChange = (index: number, field: keyof WorkItem, value: string | number) => {
+  const handleInputChange = (index: number, field: keyof WorkItem, value: string) => {
     const newData = [...data];
     const updatedItem = { ...newData[index] };
-  
-    const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
-  
-    // Update the changed field
-    if (field === 'id' || field === 'name') {
-      (updatedItem[field] as string) = String(value);
-    } else {
-      (updatedItem[field] as number) = numericValue;
-    }
-  
-    // Recalculate based on which field was changed
+
+    //直接更新字串值
+    (updatedItem[field] as any) = value;
+
+    const quantity = parseFloat(String(updatedItem.quantity)) || 0;
+    const unitPrice = parseFloat(String(updatedItem.unitPrice)) || 0;
+    const total = parseFloat(String(updatedItem.total)) || 0;
+
+    // 根据变动的栏位进行重新计算
     if (field === 'quantity' || field === 'unitPrice') {
-      updatedItem.total = parseFloat((updatedItem.quantity * updatedItem.unitPrice).toFixed(2));
+      updatedItem.total = quantity * unitPrice;
     } else if (field === 'total') {
-      if (updatedItem.quantity !== 0) {
-        updatedItem.unitPrice = parseFloat((updatedItem.total / updatedItem.quantity).toFixed(2));
+      if (quantity !== 0) {
+        updatedItem.unitPrice = total / quantity;
       } else {
-        updatedItem.unitPrice = 0; // Avoid division by zero
+        updatedItem.unitPrice = 0; // 避免除以零
       }
     }
-  
+    
     newData[index] = updatedItem;
     updateData(newData);
   };
@@ -147,7 +145,7 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
                     value={row.unitPrice}
                     onChange={(e) => handleInputChange(index, 'unitPrice', e.target.value)}
                     className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
-                    step="0.01"
+                    step="any"
                   />
                 </TableCell>
                 <TableCell className="p-1">
@@ -156,7 +154,7 @@ export function WorkItemsTable({ initialData, onDataChange, originalSubtotal }: 
                     value={row.total}
                     onChange={(e) => handleInputChange(index, 'total', e.target.value)}
                     className="text-right bg-transparent border-0 h-9 focus-visible:ring-1 focus-visible:ring-ring"
-                    step="0.01"
+                    step="any"
                   />
                 </TableCell>
                 <TableCell className="p-1 text-center">
