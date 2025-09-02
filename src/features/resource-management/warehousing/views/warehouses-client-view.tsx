@@ -15,7 +15,7 @@ import {
 } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,

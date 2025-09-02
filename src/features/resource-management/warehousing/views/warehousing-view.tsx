@@ -7,10 +7,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import { Package, Shapes, Truck, Warehouse as WarehouseIcon } from 'lucide-react';
 import { Suspense } from 'react';
-import { InventoryCategoriesView } from './inventory-categories-view';
-import { InventoryItemsView } from './inventory-items-view';
-import { InventoryMovementsView } from './inventory-movements-view';
-import { WarehousesView } from './warehouses-view';
+import { CategoryList } from '../components/category-list';
+import { ItemList } from '../components/item-list';
+import { MovementList } from '../components/movement-list';
+import { WarehouseList } from '../components/warehouse-list';
 import { WarehousingDashboardView } from './warehousing-dashboard-view';
 import { Skeleton } from '@/ui/skeleton';
 
@@ -57,22 +57,22 @@ export async function WarehousingView() {
         </TabsContent>
         <TabsContent value="warehouses">
           <Suspense fallback={<LoadingFallback />}>
-            <WarehousesView />
+            <WarehouseList />
           </Suspense>
         </TabsContent>
         <TabsContent value="items">
           <Suspense fallback={<LoadingFallback />}>
-            <InventoryItemsView />
+            <ItemList />
           </Suspense>
         </TabsContent>
         <TabsContent value="categories">
           <Suspense fallback={<LoadingFallback />}>
-            <InventoryCategoriesView />
+            <CategoryList />
           </Suspense>
         </TabsContent>
         <TabsContent value="movements">
           <Suspense fallback={<LoadingFallback />}>
-            <InventoryMovementsView />
+            <MovementList />
           </Suspense>
         </TabsContent>
       </Tabs>

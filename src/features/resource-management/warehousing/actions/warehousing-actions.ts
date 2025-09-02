@@ -13,10 +13,7 @@ import type {
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
-const WAREHOUSES_PATH = '/resource-management/warehousing/warehouses';
-const ITEMS_PATH = '/resource-management/warehousing/items';
-const CATEGORIES_PATH = '/resource-management/warehousing/categories';
-const MOVEMENTS_PATH = '/resource-management/warehousing/movements';
+const WAREHOUSING_PATH = '/resource-management/warehousing';
 
 type ActionResult = {
   success: boolean;
@@ -47,7 +44,7 @@ export async function saveWarehouseAction(
       if (error) throw error;
     }
 
-    revalidatePath(WAREHOUSES_PATH);
+    revalidatePath(WAREHOUSING_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '發生未知錯誤';
@@ -68,7 +65,7 @@ export async function deleteWarehouseAction(
       .eq('id', warehouseId);
     if (error) throw error;
 
-    revalidatePath(WAREHOUSES_PATH);
+    revalidatePath(WAREHOUSING_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '发生未知错误';
@@ -111,7 +108,7 @@ export async function saveItemAction(
       const { error } = await supabase.from('inventory_items').insert(itemData);
       if (error) throw error;
     }
-    revalidatePath(ITEMS_PATH);
+    revalidatePath(WAREHOUSING_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '发生未知错误';
@@ -131,7 +128,7 @@ export async function deleteItemAction(itemId: string): Promise<ActionResult> {
       .eq('id', itemId);
     if (error) throw error;
 
-    revalidatePath(ITEMS_PATH);
+    revalidatePath(WAREHOUSING_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '发生未知错误';
@@ -218,8 +215,7 @@ export async function recordMovementAction(
 
     if (movementError) throw movementError;
 
-    revalidatePath(MOVEMENTS_PATH);
-    revalidatePath(WAREHOUSES_PATH);
+    revalidatePath(WAREHOUSING_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '发生未知错误';
@@ -229,23 +225,6 @@ export async function recordMovementAction(
 }
 
 // --- Inventory Category Actions ---
-
-export async function getInventoryCategories(): Promise<InventoryCategory[]> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data, error } = await supabase
-    .from('inventory_categories')
-    .select('*')
-    .order('name');
-  if (error) {
-    console.error('Error fetching categories:', error);
-    return [];
-  }
-  return data.map((cat) => ({
-    ...cat,
-    createdAt: cat.created_at ? new Date(cat.created_at) : undefined,
-  })) as InventoryCategory[];
-}
 
 export async function saveCategoryAction(
   data: Omit<InventoryCategory, 'id' | 'createdAt'>,
@@ -266,7 +245,7 @@ export async function saveCategoryAction(
         .insert(data);
       if (error) throw error;
     }
-    revalidatePath(CATEGORIES_PATH);
+    revalidatePath(WAREHOUSING_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '發生未知錯誤';
@@ -285,7 +264,7 @@ export async function deleteCategoryAction(
       .delete()
       .eq('id', categoryId);
     if (error) throw error;
-    revalidatePath(CATEGORIES_PATH);
+    revalidatePath(WAREHOUSING_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '發生未知錯誤';
