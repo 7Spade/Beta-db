@@ -21,6 +21,8 @@ interface EngagementListViewProps {
   onViewEngagement?: (id: string) => void;
   onEditEngagement?: (id: string) => void;
   onDeleteEngagement?: (id: string) => void;
+  showCreateForm?: boolean;
+  onCancelCreate?: () => void;
 }
 
 export function EngagementListView({
@@ -28,8 +30,13 @@ export function EngagementListView({
   onViewEngagement,
   onEditEngagement,
   onDeleteEngagement,
+  showCreateForm: externalShowCreateForm = false,
+  onCancelCreate,
 }: EngagementListViewProps) {
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [internalShowCreateForm, setInternalShowCreateForm] = useState(false);
+  
+  // 使用外部控制或內部狀態
+  const showCreateForm = externalShowCreateForm || internalShowCreateForm;
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<EngagementStatus | 'all'>('all');
   const [phaseFilter, setPhaseFilter] = useState<EngagementPhase | 'all'>('all');
@@ -61,13 +68,14 @@ export function EngagementListView({
   });
 
   const handleCreateSuccess = (engagementId: string) => {
-    setShowCreateForm(false);
+    setInternalShowCreateForm(false);
     onCreateEngagement?.(engagementId);
     refresh();
   };
 
   const handleCreateCancel = () => {
-    setShowCreateForm(false);
+    setInternalShowCreateForm(false);
+    onCancelCreate?.();
   };
 
   const handleRefresh = () => {
@@ -113,7 +121,7 @@ export function EngagementListView({
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             刷新
           </Button>
-          <Button onClick={() => setShowCreateForm(true)}>
+          <Button onClick={() => setInternalShowCreateForm(true)}>
             <Plus className="h-4 w-4 mr-2" />
             創建專案合約
           </Button>
@@ -216,7 +224,7 @@ export function EngagementListView({
                 }
               </div>
               {!searchTerm && statusFilter === 'all' && phaseFilter === 'all' && (
-                <Button onClick={() => setShowCreateForm(true)}>
+                <Button onClick={() => setInternalShowCreateForm(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   創建第一個專案合約
                 </Button>
