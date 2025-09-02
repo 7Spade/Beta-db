@@ -3,15 +3,15 @@
 
 import { saveWarehouseAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
 import { Button } from '@/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/ui/dialog';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { Input } from '@/ui/input';
 import { Switch } from '@/ui/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@root/src/shared/hooks/use-toast';
 import type { Warehouse } from '@root/src/shared/types/types';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
