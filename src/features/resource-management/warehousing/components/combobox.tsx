@@ -63,12 +63,7 @@ export function Combobox({
                   key={option.value}
                   value={option.value}
                   onSelect={(currentValue) => {
-                    // cmdk 會將 currentValue 轉為小寫，需要找到對應的原始值
-                    const selectedOption = options.find(opt =>
-                      opt.value.toLowerCase() === currentValue
-                    );
-                    const newValue = selectedOption?.value || '';
-                    onChange(newValue === value ? '' : newValue);
+                    onChange(currentValue === value ? '' : currentValue);
                     setOpen(false);
                   }}
                 >
