@@ -1,6 +1,6 @@
 /**
- * @fileoverview Inventory Items View
- * @description The main view for managing inventory items, now fetching data from Supabase.
+ * @fileoverview Inventory Items View (Server Component)
+ * @description Fetches items and categories from Supabase and passes them to the client component.
  */
 'use server';
 
@@ -36,9 +36,17 @@ async function getItemsAndCategories(): Promise<{
   const items = itemsRes.data.map(
     (item) =>
       ({
-        ...item,
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        unit: item.unit,
         safeStockLevel: item.safe_stock_level,
         createdAt: item.created_at ? new Date(item.created_at) : undefined,
+        itemType: item.item_type,
+        hasExpiryTracking: item.has_expiry_tracking,
+        requiresMaintenance: item.requires_maintenance,
+        requiresInspection: item.requires_inspection,
+        isSerialized: item.is_serialized,
       }) as InventoryItem
   );
 

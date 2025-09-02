@@ -87,6 +87,12 @@ export interface InventoryItemRow {
   unit: string | null;
   safe_stock_level: number | null;
   created_at: string | null;
+  // v3.1: 新增核心身份與管理屬性
+  item_type: 'asset' | 'consumable';
+  has_expiry_tracking: boolean;
+  requires_maintenance: boolean;
+  requires_inspection: boolean;
+  is_serialized: boolean;
 }
 
 export interface InventoryLevelRow {

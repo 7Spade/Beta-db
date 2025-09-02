@@ -88,12 +88,17 @@ export async function saveItemAction(
   const supabase = createClient(cookieStore);
 
   try {
-    const { name, category, unit, safeStockLevel } = data;
+    const { name, category, unit, safeStockLevel, itemType, hasExpiryTracking, requiresMaintenance, requiresInspection, isSerialized } = data;
     const itemData = {
       name,
-      category,
+      category: category || null,
       unit,
       safe_stock_level: safeStockLevel,
+      item_type: itemType,
+      has_expiry_tracking: hasExpiryTracking,
+      requires_maintenance: requiresMaintenance,
+      requires_inspection: requiresInspection,
+      is_serialized: isSerialized,
     };
 
     if (itemId) {

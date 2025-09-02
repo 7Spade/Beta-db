@@ -1,6 +1,6 @@
 /**
  * @fileoverview Inventory Item Form
- * @description Form for creating or editing inventory items, now with category selection.
+ * @description Form for creating or editing inventory items, now with item type and management attributes.
  */
 'use client';
 
@@ -17,6 +17,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,12 +35,26 @@ import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Combobox } from '../components/combobox';
+import { Switch } from '@/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/ui/select';
 
 const itemSchema = z.object({
   name: z.string().min(2, '物料名稱至少需要 2 個字元。'),
-  category: z.string().min(1, '請選擇一個分類。'),
+  category: z.string().nullable(),
   unit: z.string().min(1, '單位為必填項。'),
   safeStockLevel: z.coerce.number().min(0).optional(),
+  // v3.1: 新增核心身份與管理屬性
+  itemType: z.enum(['asset', 'consumable']),
+  hasExpiryTracking: z.boolean(),
+  requiresMaintenance: z.boolean(),
+  requiresInspection: z.boolean(),
+  isSerialized: z.boolean(),
 });
 
 type ItemFormValues = z.infer<typeof itemSchema>;
@@ -64,9 +79,14 @@ export function ItemFormDialog({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: '',
-      category: '',
+      category: null,
       unit: '',
       safeStockLevel: 0,
+      itemType: 'consumable',
+      hasExpiryTracking: false,
+      requiresMaintenance: false,
+      requiresInspection: false,
+      isSerialized: false,
     },
   });
 
@@ -78,13 +98,23 @@ export function ItemFormDialog({
           category: item.category,
           unit: item.unit,
           safeStockLevel: item.safeStockLevel,
+          itemType: item.itemType,
+          hasExpiryTracking: item.hasExpiryTracking,
+          requiresMaintenance: item.requiresMaintenance,
+          requiresInspection: item.requiresInspection,
+          isSerialized: item.isSerialized,
         });
       } else {
         form.reset({
           name: '',
-          category: '',
+          category: null,
           unit: '',
           safeStockLevel: 0,
+          itemType: 'consumable',
+          hasExpiryTracking: false,
+          requiresMaintenance: false,
+          requiresInspection: false,
+          isSerialized: false,
         });
       }
     }
@@ -118,7 +148,7 @@ export function ItemFormDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{item ? '編輯物料' : '新增物料'}</DialogTitle>
           <DialogDescription>
@@ -130,7 +160,7 @@ export function ItemFormDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 py-2"
+            className="space-y-4 py-2 max-h-[70vh] overflow-y-auto pr-4"
           >
             <FormField
               control={form.control}
@@ -145,16 +175,45 @@ export function ItemFormDialog({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="itemType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>核心類型</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="選擇物料的核心類型" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="consumable">消耗品 (追蹤數量)</SelectItem>
+                      <SelectItem value="asset">資產/工具 (追蹤實體)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    決定此物料的基本管理方式。
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="category"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>分類</FormLabel>
+                  <FormLabel>業務分類</FormLabel>
                   <Combobox
                     options={categoryOptions}
-                    value={field.value}
-                    onChange={field.onChange}
+                    value={field.value || ''}
+                    onChange={(value) => field.onChange(value)}
                     placeholder="選擇或搜尋分類..."
                   />
                   <FormMessage />
@@ -182,14 +241,31 @@ export function ItemFormDialog({
                   <FormItem>
                     <FormLabel>安全庫存量 (可選)</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input type="number" {...field} value={field.value ?? ''}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <DialogFooter>
+            
+            <div className="space-y-2 rounded-md border p-4">
+                <h4 className="text-sm font-medium">管理屬性</h4>
+                <FormField control={form.control} name="hasExpiryTracking" render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需效期管理</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+                )}/>
+                <FormField control={form.control} name="requiresMaintenance" render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需定期維護</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+                )}/>
+                 <FormField control={form.control} name="requiresInspection" render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需定期檢驗</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+                )}/>
+                 <FormField control={form.control} name="isSerialized" render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需序號管理</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+                )}/>
+            </div>
+
+            <DialogFooter className="pt-4">
               <Button
                 type="button"
                 variant="ghost"

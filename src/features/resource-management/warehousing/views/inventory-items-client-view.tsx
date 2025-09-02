@@ -3,7 +3,6 @@
 
 import {
   deleteItemAction,
-  getInventoryCategories,
 } from '@/features/resource-management/warehousing/actions/warehousing-actions';
 import { ItemFormDialog } from '@/features/resource-management/warehousing/forms/item-form';
 import {
@@ -17,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/ui/alert-dialog';
+import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import {
   Card,
@@ -50,9 +50,14 @@ import {
   MoreVertical,
   Package,
   PlusCircle,
+  Recycle,
+  ShieldCheck,
+  Tag,
+  Tool,
   Trash2,
+  Watch,
 } from 'lucide-react';
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 
 interface InventoryItemsClientViewProps {
   initialItems: InventoryItem[];
@@ -117,9 +122,9 @@ export function InventoryItemsClientView({
               <TableHeader>
                 <TableRow>
                   <TableHead>物料名稱</TableHead>
-                  <TableHead>分類</TableHead>
-                  <TableHead>單位</TableHead>
-                  <TableHead>安全庫存</TableHead>
+                  <TableHead>核心類型</TableHead>
+                  <TableHead>業務分類</TableHead>
+                  <TableHead>管理屬性</TableHead>
                   <TableHead>建立日期</TableHead>
                   <TableHead className="text-right">操作</TableHead>
                 </TableRow>
@@ -128,10 +133,19 @@ export function InventoryItemsClientView({
                 {initialItems.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell>{item.category}</TableCell>
-                    <TableCell>{item.unit}</TableCell>
                     <TableCell>
-                      {item.safeStockLevel ?? '未設定'}
+                      <Badge variant={item.itemType === 'asset' ? 'default' : 'secondary'}>
+                        {item.itemType === 'asset' ? '資產/工具' : '消耗品'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{item.category || '未分類'}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {item.hasExpiryTracking && <Badge variant="outline"><Watch className="mr-1 h-3 w-3" />效期</Badge>}
+                        {item.requiresMaintenance && <Badge variant="outline"><Tool className="mr-1 h-3 w-3" />保養</Badge>}
+                        {item.requiresInspection && <Badge variant="outline"><ShieldCheck className="mr-1 h-3 w-3" />檢驗</Badge>}
+                        {item.isSerialized && <Badge variant="outline"><Tag className="mr-1 h-3 w-3" />序號</Badge>}
+                      </div>
                     </TableCell>
                     <TableCell>
                       {item.createdAt ? formatDate(item.createdAt) : '-'}

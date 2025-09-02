@@ -28,16 +28,22 @@ export interface Warehouse {
 export interface InventoryCategory {
   id: string;
   name: string;
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 export interface InventoryItem {
   id: string;
   name: string;
-  category: string;
-  unit: string;
-  safeStockLevel?: number;
+  category: string | null;
+  unit: string | null;
+  safeStockLevel?: number | null;
   createdAt?: Date;
+  // v3.1: 新增核心身份與管理屬性
+  itemType: 'asset' | 'consumable';
+  hasExpiryTracking: boolean;
+  requiresMaintenance: boolean;
+  requiresInspection: boolean;
+  isSerialized: boolean;
 }
 
 export interface InventoryLevel {
@@ -50,17 +56,15 @@ export interface InventoryLevel {
 
 export interface InventoryMovement {
   id: string;
-  itemId: string;
-  type: 'inbound' | 'outbound' | 'transfer-out' | 'transfer-in' | 'adjust';
+  item_id: string;
+  warehouse_id: string;
+  type: 'inbound' | 'outbound' | 'adjust';
   quantity: number;
-  fromWarehouseId?: string;
-  toWarehouseId?: string;
-  transferId?: string;
-  unitPrice?: number;
-  timestamp: Date;
-  operatorId: string;
-  projectId?: string;
+  unit_price?: number;
+  project_id?: string;
   notes?: string;
+  operator_id?: string;
+  timestamp: Date;
 }
 
 export interface Contact {
