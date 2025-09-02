@@ -50,12 +50,11 @@ import {
   MoreVertical,
   Package,
   PlusCircle,
-  Recycle,
   ShieldCheck,
   Tag,
-  Tool,
   Trash2,
   Watch,
+  Wrench,
 } from 'lucide-react';
 import { useState, useTransition } from 'react';
 
@@ -142,7 +141,7 @@ export function InventoryItemsClientView({
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {item.hasExpiryTracking && <Badge variant="outline"><Watch className="mr-1 h-3 w-3" />效期</Badge>}
-                        {item.requiresMaintenance && <Badge variant="outline"><Tool className="mr-1 h-3 w-3" />保養</Badge>}
+                        {item.requiresMaintenance && <Badge variant="outline"><Wrench className="mr-1 h-3 w-3" />保養</Badge>}
                         {item.requiresInspection && <Badge variant="outline"><ShieldCheck className="mr-1 h-3 w-3" />檢驗</Badge>}
                         {item.isSerialized && <Badge variant="outline"><Tag className="mr-1 h-3 w-3" />序號</Badge>}
                       </div>
