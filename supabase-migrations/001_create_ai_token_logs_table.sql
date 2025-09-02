@@ -18,8 +18,9 @@ create table public.ai_token_logs (
     user_id uuid null,
     error text null,
 
-    constraint ai_token_logs_pkey primary key (id),
-    constraint ai_token_logs_user_id_fkey foreign key (user_id) references auth.users (id) on delete set null
+    constraint ai_token_logs_pkey primary key (id)
+    -- 注意：user_id 使用 Firebase UID，不與 Supabase auth.users 建立外鍵約束
+    -- constraint ai_token_logs_user_id_fkey foreign key (user_id) references auth.users (id) on delete set null
 );
 
 -- 為常用查詢欄位添加索引
