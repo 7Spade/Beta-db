@@ -65,12 +65,6 @@ export const navigationConfig: NavigationItem[] = [
     toggleable: true,
     children: [
       {
-        id: 'docu-parse',
-        label: '文件解析',
-        icon: FileText,
-        href: '/resource-management/document/docu-parse',
-      },
-      {
         id: 'kanban',
         label: '看板管理',
         icon: LayoutGrid,
@@ -114,6 +108,18 @@ export const navigationConfig: NavigationItem[] = [
     visible: true,
     toggleable: true,
     children: [
+      {
+        id: 'docu-parse',
+        label: '文件解析',
+        icon: FileText,
+        href: '/resource-management/document/docu-parse',
+      },
+      {
+        id: 'cloud-drive',
+        label: '雲端硬碟',
+        icon: Cloud,
+        href: '/resource-management/document/cloud-drive',
+      },
       {
         id: 'projects',
         label: '專案管理',
@@ -213,12 +219,6 @@ export const navigationConfig: NavigationItem[] = [
             href: '/resource-management/crm/workflows',
           },
         ],
-      },
-      {
-        id: 'cloud-drive',
-        label: '雲端硬碟',
-        icon: Cloud,
-        href: '/resource-management/document/cloud-drive',
       },
     ],
   },
@@ -375,3 +375,12 @@ export function getToggleableNavigationGroups(
 ): NavigationItem[] {
   return items.filter((item) => item.toggleable === true);
 }
+
+// 預設的導航群組顯示狀態
+export const DEFAULT_NAVIGATION_VISIBILITY: Record<string, boolean> = {
+  'automation-tools': false,
+  'business-intelligence': false,
+  'core-operations': true,
+  'resource-management': false,
+  'website-cms': false,
+};

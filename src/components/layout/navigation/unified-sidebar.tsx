@@ -5,6 +5,7 @@
 'use client';
 
 import {
+  DEFAULT_NAVIGATION_VISIBILITY,
   footerNavigationConfig,
   getToggleableNavigationGroups,
   getVisibleNavigationItems,
@@ -45,7 +46,7 @@ interface UnifiedSidebarProps extends ComponentProps<typeof Sidebar> {
 export function UnifiedSidebar({ className, ...props }: UnifiedSidebarProps) {
   const pathname = usePathname();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [groupVisibility, setGroupVisibility] = useState<Record<string, boolean>>({});
+  const [groupVisibility, setGroupVisibility] = useState<Record<string, boolean>>(DEFAULT_NAVIGATION_VISIBILITY);
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export function UnifiedSidebar({ className, ...props }: UnifiedSidebarProps) {
   };
 
   const handleResetToDefault = () => {
-    setGroupVisibility({});
+    setGroupVisibility(DEFAULT_NAVIGATION_VISIBILITY);
   };
 
   // 獲取可見的導航項目
