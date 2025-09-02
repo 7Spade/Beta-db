@@ -5,8 +5,8 @@
 'use client';
 
 import { Button } from '@/ui/button';
-import { cn } from '@root/src/shared/utils';
 import type { Warehouse } from '@root/src/shared/types/types';
+import { cn } from '@root/src/shared/utils';
 import { Warehouse as WarehouseIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 

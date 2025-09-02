@@ -1,16 +1,20 @@
 /**
  * @fileoverview Unified Stock Management View
- * @description Comprehensive stock management interface combining all warehousing functions.
+ * @description Comprehensive stock management interface with all functions integrated into one page.
  */
 'use server';
 
 import { getWarehousingData } from '@/features/resource-management/warehousing/actions/warehousing-actions';
 import { WarehouseSelector } from '@/features/resource-management/warehousing/components/warehouse-selector';
 import { StockLevelTable } from '@/features/resource-management/warehousing/tables/stock-level-table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
+import { Button } from '@/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Separator } from '@/ui/separator';
 import {
   BarChart3,
   Package,
+  Plus,
+  Settings,
   Shapes,
   Truck,
   Warehouse as WarehouseIcon
@@ -39,38 +43,38 @@ export async function StockLevelsView() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">庫存管理中心</h1>
-        <p className="text-muted-foreground">
-          統一的庫存管理界面，包含倉庫、物料、分類和移動紀錄管理。
-        </p>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">庫存管理中心</h1>
+          <p className="text-muted-foreground">
+            統一的庫存管理界面，所有功能整合在一個頁面中。
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm">
+            <Settings className="mr-2 h-4 w-4" />
+            設定
+          </Button>
+          <Button size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            新增物料
+          </Button>
+        </div>
       </div>
 
-      <Tabs defaultValue="stock-levels" className="space-y-4">
-        <TabsList className="flex-wrap h-auto">
-          <TabsTrigger value="stock-levels">
-            <BarChart3 className="mr-2 h-4 w-4" />
+      {/* Main Stock Levels Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
             庫存水平
-          </TabsTrigger>
-          <TabsTrigger value="warehouses">
-            <WarehouseIcon className="mr-2 h-4 w-4" />
-            倉庫管理
-          </TabsTrigger>
-          <TabsTrigger value="items">
-            <Package className="mr-2 h-4 w-4" />
-            物料主檔
-          </TabsTrigger>
-          <TabsTrigger value="categories">
-            <Shapes className="mr-2 h-4 w-4" />
-            物料類別
-          </TabsTrigger>
-          <TabsTrigger value="movements">
-            <Truck className="mr-2 h-4 w-4" />
-            出入庫紀錄
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="stock-levels">
+          </CardTitle>
+          <CardDescription>
+            查看和管理所有倉庫的庫存水平
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
             <div className="lg:col-span-1">
               <WarehouseSelector warehouses={warehouses} />
@@ -79,31 +83,86 @@ export async function StockLevelsView() {
               <StockLevelTable items={items} warehouses={warehouses} />
             </div>
           </div>
-        </TabsContent>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="warehouses">
-          <WarehouseListView initialWarehouses={warehouses} />
-        </TabsContent>
+      <Separator />
 
-        <TabsContent value="items">
-          <ItemListView
-            initialItems={items}
-            initialCategories={categories}
-          />
-        </TabsContent>
+      {/* Management Sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Warehouse Management */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <WarehouseIcon className="h-5 w-5" />
+              倉庫管理
+            </CardTitle>
+            <CardDescription>
+              管理倉庫基本資料和設定
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <WarehouseListView initialWarehouses={warehouses} />
+          </CardContent>
+        </Card>
 
-        <TabsContent value="categories">
-          <CategoryListView initialCategories={categories} />
-        </TabsContent>
+        {/* Item Management */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              物料主檔
+            </CardTitle>
+            <CardDescription>
+              管理物料基本資料和規格
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ItemListView
+              initialItems={items}
+              initialCategories={categories}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
-        <TabsContent value="movements">
-          <MovementListView
-            initialMovements={movements}
-            initialItems={items}
-            initialWarehouses={warehouses}
-          />
-        </TabsContent>
-      </Tabs>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Category Management */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shapes className="h-5 w-5" />
+              物料類別
+            </CardTitle>
+            <CardDescription>
+              管理物料分類和標籤
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CategoryListView initialCategories={categories} />
+          </CardContent>
+        </Card>
+
+        {/* Movement History */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Truck className="h-5 w-5" />
+              出入庫紀錄
+            </CardTitle>
+            <CardDescription>
+              查看所有庫存移動歷史
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <MovementListView
+              initialMovements={movements}
+              initialItems={items}
+              initialWarehouses={warehouses}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
