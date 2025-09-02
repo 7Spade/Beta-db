@@ -1,23 +1,14 @@
 /**
  * @fileoverview Unified Warehousing View
- * @description Clean layout container for the warehousing module that handles data fetching and component orchestration.
+ * @description Simplified warehousing view that focuses on the unified stock management interface.
  */
 'use server';
 
 import { Skeleton } from '@/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
-import {
-  Package,
-  Shapes,
-  Truck,
-  Warehouse as WarehouseIcon,
-} from 'lucide-react';
+import { BarChart3, LayoutDashboard } from 'lucide-react';
 import { Suspense } from 'react';
-import { CategoryList } from './category-list';
-import { ItemList } from './item-list';
-import { MovementList } from './movement-list';
 import { StockLevelsView } from './stock-levels-view';
-import { WarehouseList } from './warehouse-list';
 import { WarehousingDashboardView } from './warehousing-dashboard-view';
 
 const LoadingFallback = () => (
@@ -30,61 +21,27 @@ const LoadingFallback = () => (
 export async function WarehousingView() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">倉儲管理中心</h1>
-        <p className="text-muted-foreground">
-          集中管理您的倉庫、物料主檔、分類和所有庫存移動紀錄。
-        </p>
-      </div>
-      <Tabs defaultValue="stock-levels" className="space-y-4">
+      <Tabs defaultValue="stock-management" className="space-y-4">
         <TabsList className="flex-wrap h-auto">
-          <TabsTrigger value="dashboard">總覽</TabsTrigger>
-          <TabsTrigger value="stock-levels">庫存水平</TabsTrigger>
-          <TabsTrigger value="warehouses">
-            <WarehouseIcon className="mr-2 h-4 w-4" />
-            倉庫管理
+          <TabsTrigger value="dashboard">
+            <LayoutDashboard className="mr-2 h-4 w-4" />
+            總覽
           </TabsTrigger>
-          <TabsTrigger value="items">
-            <Package className="mr-2 h-4 w-4" />
-            物料主檔
-          </TabsTrigger>
-          <TabsTrigger value="categories">
-            <Shapes className="mr-2 h-4 w-4" />
-            物料類別
-          </TabsTrigger>
-          <TabsTrigger value="movements">
-            <Truck className="mr-2 h-4 w-4" />
-            出入庫紀錄
+          <TabsTrigger value="stock-management">
+            <BarChart3 className="mr-2 h-4 w-4" />
+            庫存管理
           </TabsTrigger>
         </TabsList>
+
         <TabsContent value="dashboard">
           <Suspense fallback={<LoadingFallback />}>
             <WarehousingDashboardView />
           </Suspense>
         </TabsContent>
-        <TabsContent value="stock-levels">
+
+        <TabsContent value="stock-management">
           <Suspense fallback={<LoadingFallback />}>
             <StockLevelsView />
-          </Suspense>
-        </TabsContent>
-        <TabsContent value="warehouses">
-          <Suspense fallback={<LoadingFallback />}>
-            <WarehouseList />
-          </Suspense>
-        </TabsContent>
-        <TabsContent value="items">
-          <Suspense fallback={<LoadingFallback />}>
-            <ItemList />
-          </Suspense>
-        </TabsContent>
-        <TabsContent value="categories">
-          <Suspense fallback={<LoadingFallback />}>
-            <CategoryList />
-          </Suspense>
-        </TabsContent>
-        <TabsContent value="movements">
-          <Suspense fallback={<LoadingFallback />}>
-            <MovementList />
           </Suspense>
         </TabsContent>
       </Tabs>
