@@ -24,6 +24,14 @@ import {
   FormMessage,
 } from '@/ui/form';
 import { Input } from '@/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/ui/select';
+import { Switch } from '@/ui/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@root/src/shared/hooks/use-toast';
 import type {
@@ -35,21 +43,12 @@ import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Combobox } from '../components/combobox';
-import { Switch } from '@/ui/switch';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/ui/select';
 
 const itemSchema = z.object({
   name: z.string().min(2, '物料名稱至少需要 2 個字元。'),
   category: z.string().nullable(),
   unit: z.string().min(1, '單位為必填項。'),
   safeStockLevel: z.coerce.number().min(0).optional(),
-  // v3.1: 新增核心身份與管理屬性
   itemType: z.enum(['asset', 'consumable']),
   hasExpiryTracking: z.boolean(),
   requiresMaintenance: z.boolean(),

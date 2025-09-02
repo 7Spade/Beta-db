@@ -241,7 +241,10 @@ export async function getInventoryCategories(): Promise<InventoryCategory[]> {
     console.error('Error fetching categories:', error);
     return [];
   }
-  return data as InventoryCategory[];
+  return data.map((cat) => ({
+    ...cat,
+    createdAt: cat.created_at ? new Date(cat.created_at) : undefined,
+  })) as InventoryCategory[];
 }
 
 export async function saveCategoryAction(
