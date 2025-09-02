@@ -86,25 +86,31 @@ export function NavigationToggle({
 
     if (variant === 'icon') {
         return (
-            <Button
-                variant="ghost"
-                size="sm"
+            <div
                 onClick={handleToggle}
                 className={cn(
-                    'h-8 w-8 p-0 transition-all duration-200',
+                    'h-6 w-6 p-0 flex items-center justify-center rounded-md transition-all duration-200 cursor-pointer hover:bg-accent',
                     isVisible
                         ? 'text-primary hover:text-primary/80'
                         : 'text-muted-foreground hover:text-foreground',
                     className
                 )}
                 title={`${isVisible ? '隱藏' : '顯示'} ${groupLabel}`}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleToggle();
+                    }
+                }}
             >
                 {isVisible ? (
                     <Eye className="h-4 w-4" />
                 ) : (
                     <EyeOff className="h-4 w-4" />
                 )}
-            </Button>
+            </div>
         );
     }
 
