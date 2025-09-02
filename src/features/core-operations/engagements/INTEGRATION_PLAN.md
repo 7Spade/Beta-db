@@ -214,14 +214,14 @@ src/features/core-operations/engagements/
 ```
 src/features/core-operations/engagements/
 ├── components/
-│   ├── tasks/                    # 任務管理組件 (未實現)
+│   ├── tasks/                    # 任務管理組件 (實現)
 │   │   ├── task-list.tsx
 │   │   ├── task-card.tsx
 │   │   ├── task-form.tsx
 │   │   ├── task-status-badge.tsx
 │   │   ├── task-progress-bar.tsx
 │   │   └── index.ts
-│   ├── progress/                 # 進度管理組件 (未實現)
+│   ├── progress/                 # 進度管理組件 (實現)
 │   │   ├── milestone-list.tsx
 │   │   ├── milestone-card.tsx
 │   │   ├── deliverable-list.tsx
