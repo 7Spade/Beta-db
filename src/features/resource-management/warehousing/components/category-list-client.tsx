@@ -1,4 +1,3 @@
-
 'use client';
 
 import { deleteCategoryAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
@@ -121,7 +120,7 @@ export function InventoryCategoriesClientView({
                 {initialCategories.map((cat) => (
                   <TableRow key={cat.id}>
                     <TableCell className="font-medium">{cat.name}</TableCell>
-                    <TableCell>{cat.createdAt ? formatDate(new Date(cat.createdAt)) : '-'}</TableCell>
+                    <TableCell>{cat.created_at ? formatDate(new Date(cat.created_at)) : '-'}</TableCell>
                     <TableCell className="text-right">
                       <AlertDialog>
                         <DropdownMenu>

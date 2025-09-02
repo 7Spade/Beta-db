@@ -1,72 +1,124 @@
--- 檔案: supabase-migrations/006_create_warehousing_tables.sql
--- 描述: 建立倉儲管理系統所需的所有核心資料表
-
--- 資料表 1: `warehouses` (倉庫)
--- 儲存所有實體的倉庫或庫存地點。
+-- 仓库表 (Warehouses)
+-- 定义所有实体的仓库或库位
 CREATE TABLE IF NOT EXISTS public.warehouses (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text NOT NULL UNIQUE,
-  location text,
-  is_active boolean DEFAULT true,
-  created_at timestamptz DEFAULT now()
+    id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+    name text NOT NULL,
+    location text,
+    is_active boolean DEFAULT true,
+    created_at timestamp with time zone DEFAULT now()
 );
+COMMENT ON TABLE public.warehouses IS '仓库或库位的主档资料。';
 
--- 資料表 2: `inventory_categories` (物料類別)
--- 儲存物料的分類，用於組織和篩選。
+-- 新增：租赁合约表 (Lease Agreements)
+-- 专门用于记录仓库的租赁合约历史
+CREATE TABLE IF NOT EXISTS public.lease_agreements (
+    id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+    warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE CASCADE,
+    lease_start_date timestamptz NOT NULL,
+    lease_end_date timestamptz NOT NULL,
+    monthly_rent numeric,
+    lessor_name text,
+    contract_document_url text,
+    status text NOT NULL CHECK (status IN ('Active', 'Expired', 'Upcoming')),
+    created_at timestamp with time zone DEFAULT now()
+);
+COMMENT ON TABLE public.lease_agreements IS '仓库租赁合约历史记录。';
+CREATE INDEX IF NOT EXISTS idx_lease_agreements_warehouse_id ON public.lease_agreements(warehouse_id);
+
+
+-- 物料分类表 (Inventory Categories)
 CREATE TABLE IF NOT EXISTS public.inventory_categories (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text NOT NULL UNIQUE,
-  created_at timestamptz DEFAULT now()
+    id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
 );
+COMMENT ON TABLE public.inventory_categories IS '物料的分类主档。';
 
--- 資料表 3: `inventory_items` (物料主檔)
--- 儲存所有物料的基礎資訊。
--- v3.1: 新增 item_type 和多個管理屬性欄位
+
+-- 物料主档表 (Inventory Items)
+-- 定义所有物料的基础资讯
 CREATE TABLE IF NOT EXISTS public.inventory_items (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text NOT NULL,
-  category text,
-  unit text,
-  safe_stock_level integer,
-  
-  -- 核心身份: 決定了物料最基本的库存和财务逻辑
-  item_type text NOT NULL CHECK (item_type IN ('asset', 'consumable')), -- 'asset' (資產/工具), 'consumable' (消耗品)
-  
-  -- 管理屬性: 觸發特殊的管理流程
-  has_expiry_tracking BOOLEAN DEFAULT FALSE,  -- 需要效期管理
-  requires_maintenance BOOLEAN DEFAULT FALSE, -- 需要定期維護
-  requires_inspection BOOLEAN DEFAULT FALSE, -- 需要定期檢驗
-  is_serialized BOOLEAN DEFAULT FALSE,       -- 需要序號管理
-
-  created_at timestamptz DEFAULT now(),
-  CONSTRAINT fk_category
-    FOREIGN KEY(category) 
-    REFERENCES inventory_categories(name)
-    ON DELETE SET NULL -- 如果類別被刪除，物料的類別欄位設為 NULL
+    id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+    name text NOT NULL,
+    category text REFERENCES public.inventory_categories(name) ON DELETE SET NULL,
+    unit text,
+    safe_stock_level integer,
+    created_at timestamp with time zone DEFAULT now(),
+    -- v3.1: 核心身份与管理属性
+    item_type text NOT NULL DEFAULT 'consumable'::text CHECK (item_type IN ('asset', 'consumable')),
+    has_expiry_tracking boolean DEFAULT false NOT NULL,
+    requires_maintenance boolean DEFAULT false NOT NULL,
+    requires_inspection boolean DEFAULT false NOT NULL,
+    is_serialized boolean DEFAULT false NOT NULL
 );
+COMMENT ON TABLE public.inventory_items IS '物料的规格主档目录。';
 
--- 資料表 4: `inventory_levels` (庫存水平)
--- 每一行代表「一個物料在一個倉庫的庫存量」。
+-- 库存档案表 (Inventory Levels)
+-- 记录特定物料在特定仓库的当前库存量
 CREATE TABLE IF NOT EXISTS public.inventory_levels (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  item_id uuid NOT NULL REFERENCES public.inventory_items(id) ON DELETE CASCADE,
-  warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE CASCADE,
-  quantity integer NOT NULL DEFAULT 0,
-  last_updated timestamptz DEFAULT now(),
-  UNIQUE (item_id, warehouse_id)
+    id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+    item_id uuid NOT NULL REFERENCES public.inventory_items(id) ON DELETE CASCADE,
+    warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE CASCADE,
+    quantity integer NOT NULL DEFAULT 0,
+    last_updated timestamptz DEFAULT now(),
+    UNIQUE (item_id, warehouse_id)
 );
+COMMENT ON TABLE public.inventory_levels IS '物料在各仓库的当前库存水平。';
 
--- 資料表 5: `inventory_movements` (庫存移動紀錄)
--- 作為不可變的流水帳，記錄每一次庫存的變動歷史。
+-- 库存档案移动记录表 (Inventory Movements)
+-- 记录每一次库存变动的历史流水帐
 CREATE TABLE IF NOT EXISTS public.inventory_movements (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  item_id uuid NOT NULL REFERENCES public.inventory_items(id) ON DELETE RESTRICT, -- 不允許刪除有移動紀錄的物料
-  warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE RESTRICT, -- 不允許刪除有移動紀錄的倉庫
-  type text NOT NULL CHECK (type IN ('inbound', 'outbound', 'adjust')),
-  quantity integer NOT NULL,
-  unit_price numeric,
-  project_id text, -- 關聯到 Firestore 的 projects ID
-  notes text,
-  operator_id text, -- 關聯到 Firestore 的 users ID
-  timestamp timestamptz DEFAULT now()
+    id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+    item_id uuid NOT NULL REFERENCES public.inventory_items(id) ON DELETE RESTRICT,
+    warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE RESTRICT,
+    type text NOT NULL CHECK (type IN ('inbound', 'outbound', 'adjust')),
+    quantity integer NOT NULL,
+    unit_price numeric,
+    project_id text,
+    notes text,
+    operator_id text,
+    timestamp timestamptz DEFAULT now()
 );
+COMMENT ON TABLE public.inventory_movements IS '所有库存变动的不可变流水帐记录。';
+CREATE INDEX IF NOT EXISTS idx_inventory_movements_item_id ON public.inventory_movements(item_id);
+CREATE INDEX IF NOT EXISTS idx_inventory_movements_warehouse_id ON public.inventory_movements(warehouse_id);
+
+-- 启用所有表的 RLS
+ALTER TABLE public.warehouses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.lease_agreements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inventory_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inventory_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inventory_levels ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inventory_movements ENABLE ROW LEVEL SECURITY;
+
+-- 为所有表创建允许公共读取的策略
+CREATE POLICY "Public read access" ON public.warehouses FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON public.lease_agreements FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON public.inventory_categories FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON public.inventory_items FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON public.inventory_levels FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON public.inventory_movements FOR SELECT USING (true);
+
+-- 为所有表创建允许公共写入的策略（配合 Firebase Auth 使用）
+CREATE POLICY "Public insert access" ON public.warehouses FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert access" ON public.lease_agreements FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert access" ON public.inventory_categories FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert access" ON public.inventory_items FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert access" ON public.inventory_levels FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert access" ON public.inventory_movements FOR INSERT WITH CHECK (true);
+
+-- 为所有表创建允许公共更新的策略
+CREATE POLICY "Public update access" ON public.warehouses FOR UPDATE USING (true);
+CREATE POLICY "Public update access" ON public.lease_agreements FOR UPDATE USING (true);
+CREATE POLICY "Public update access" ON public.inventory_categories FOR UPDATE USING (true);
+CREATE POLICY "Public update access" ON public.inventory_items FOR UPDATE USING (true);
+CREATE POLICY "Public update access" ON public.inventory_levels FOR UPDATE USING (true);
+CREATE POLICY "Public update access" ON public.inventory_movements FOR UPDATE USING (true);
+
+-- 为所有表创建允许公共删除的策略
+CREATE POLICY "Public delete access" ON public.warehouses FOR DELETE USING (true);
+CREATE POLICY "Public delete access" ON public.lease_agreements FOR DELETE USING (true);
+CREATE POLICY "Public delete access" ON public.inventory_categories FOR DELETE USING (true);
+CREATE POLICY "Public delete access" ON public.inventory_items FOR DELETE USING (true);
+CREATE POLICY "Public delete access" ON public.inventory_levels FOR DELETE USING (true);
+CREATE POLICY "Public delete access" ON public.inventory_movements FOR DELETE USING (true);

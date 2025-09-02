@@ -15,7 +15,7 @@ import {
 } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,15 +23,16 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown-menu';
 import { useToast } from '@root/src/shared/hooks/use-toast';
-import type { Warehouse } from '@root/src/shared/types/types';
+import type { LeaseAgreement, Warehouse } from '@root/src/shared/types/types';
 import { Edit, Loader2, MoreVertical, PlusCircle, Trash2, Warehouse as WarehouseIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 
 interface WarehousesClientViewProps {
-    initialWarehouses: Warehouse[];
+  initialWarehouses: Warehouse[];
+  initialLeases: LeaseAgreement[]; // Pass leases to find the current one
 }
 
-export function WarehousesClientView({ initialWarehouses }: WarehousesClientViewProps) {
+export function WarehousesClientView({ initialWarehouses, initialLeases }: WarehousesClientViewProps) {
   const [isFormOpen, setFormOpen] = useState(false);
   const [warehouseToEdit, setWarehouseToEdit] = useState<Warehouse | null>(null);
   const [isDeleting, startDeleteTransition] = useTransition();
@@ -56,7 +57,7 @@ export function WarehousesClientView({ initialWarehouses }: WarehousesClientView
       }
     });
   };
-  
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -88,8 +89,8 @@ export function WarehousesClientView({ initialWarehouses }: WarehousesClientView
                   <CardDescription>{wh.location || '未提供地點'}</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant={wh.isActive ? 'default' : 'outline'}>
-                    {wh.isActive ? '啟用中' : '已停用'}
+                  <Badge variant={(wh as unknown as { isActive?: boolean; is_active?: boolean }).isActive ?? (wh as unknown as { is_active?: boolean }).is_active ? 'default' : 'outline'}>
+                    {((wh as unknown as { isActive?: boolean; is_active?: boolean }).isActive ?? (wh as unknown as { is_active?: boolean }).is_active) ? '啟用中' : '已停用'}
                   </Badge>
                   <AlertDialog>
                     <DropdownMenu>

@@ -4,8 +4,6 @@
 'use client';
 
 import { CONTRACT_STATUSES } from '@/features/core-operations/contracts/constants';
-import { Button } from '@/ui/button';
-import { Calendar } from '@/ui/calendar';
 import {
   FormControl,
   FormField,
@@ -14,7 +12,6 @@ import {
   FormMessage,
 } from '@/ui/form';
 import { Input } from '@/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import {
   Select,
   SelectContent,
@@ -23,8 +20,6 @@ import {
   SelectValue,
 } from '@/ui/select';
 import { Textarea } from '@/ui/textarea';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 import type { ContractFormValues } from './form-schemas';
 
@@ -168,29 +163,12 @@ export function ContractForm() {
             <FormItem>
               <FormLabel>起始日期</FormLabel>
               <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={`w-full pl-3 text-left font-normal ${!field.value ? 'text-muted-foreground' : ''}`}
-                    >
-                      {field.value ? (
-                        format(field.value, 'PPP')
-                      ) : (
-                        <span>選擇起始日期</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Input
+                  type="date"
+                  {...field}
+                  value={field.value ? field.value.toISOString().split('T')[0] : ''}
+                  onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : undefined)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -203,29 +181,12 @@ export function ContractForm() {
             <FormItem>
               <FormLabel>結束日期</FormLabel>
               <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={`w-full pl-3 text-left font-normal ${!field.value ? 'text-muted-foreground' : ''}`}
-                    >
-                      {field.value ? (
-                        format(field.value, 'PPP')
-                      ) : (
-                        <span>選擇結束日期</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Input
+                  type="date"
+                  {...field}
+                  value={field.value ? field.value.toISOString().split('T')[0] : ''}
+                  onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : undefined)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

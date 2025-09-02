@@ -28,9 +28,9 @@ import { ArrowLeftRight, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 
 interface InventoryMovementsClientViewProps {
-    initialMovements: InventoryMovement[];
-    initialItems: InventoryItem[];
-    initialWarehouses: Warehouse[];
+  initialMovements: InventoryMovement[];
+  initialItems: InventoryItem[];
+  initialWarehouses: Warehouse[];
 }
 
 export function InventoryMovementsClientView({ initialMovements, initialItems, initialWarehouses }: InventoryMovementsClientViewProps) {
@@ -94,11 +94,10 @@ export function InventoryMovementsClientView({ initialMovements, initialItems, i
                     </TableCell>
                     <TableCell>{getWarehouseName(m.warehouse_id)}</TableCell>
                     <TableCell
-                      className={`text-right font-mono ${
-                        m.type === 'inbound' || m.type === 'adjust'
+                      className={`text-right font-mono ${m.type === 'inbound' || m.type === 'adjust'
                           ? 'text-green-600'
                           : 'text-red-600'
-                      }`}
+                        }`}
                     >
                       {m.type === 'inbound' || m.type === 'adjust' ? '+' : '-'}
                       {m.quantity}

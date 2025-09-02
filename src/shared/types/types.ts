@@ -14,7 +14,7 @@ export type {
   ContractStatus,
   ContractVersion,
   Payment,
-  Receipt,
+  Receipt
 };
 
 export interface Warehouse {
@@ -22,6 +22,18 @@ export interface Warehouse {
   name: string;
   location?: string;
   isActive: boolean;
+  createdAt?: Date;
+}
+
+export interface LeaseAgreement {
+  id: string;
+  warehouse_id: string;
+  lease_start_date: Date | string;
+  lease_end_date: Date | string;
+  monthly_rent: number;
+  lessor_name: string; // 對應數據庫字段
+  contract_document_url?: string; // 對應數據庫字段
+  status: 'Active' | 'Expired' | 'Upcoming'; // 對應數據庫字段
   createdAt?: Date;
 }
 
@@ -115,13 +127,13 @@ export interface Partner {
   name: string;
   logoUrl: string;
   category:
-    | '技術'
-    | '經銷商'
-    | '服務'
-    | '顧問'
-    | '下游承包商'
-    | '供應商'
-    | '設備';
+  | '技術'
+  | '經銷商'
+  | '服務'
+  | '顧問'
+  | '下游承包商'
+  | '供應商'
+  | '設備';
   status: '啟用中' | '停用中' | '待審核';
   overview: string;
   website: string;

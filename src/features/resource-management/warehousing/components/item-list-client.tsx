@@ -9,11 +9,10 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogTrigger
 } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
@@ -129,74 +128,82 @@ export function InventoryItemsClientView({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {initialItems.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell>
-                      <Badge variant={item.itemType === 'asset' ? 'default' : 'secondary'}>
-                        {item.itemType === 'asset' ? '資產/工具' : '消耗品'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{item.category || '未分類'}</TableCell>
-                    <TableCell>
-                      <TooltipProvider>
-                        <div className="flex flex-wrap gap-2">
-                            {item.hasExpiryTracking && <Tooltip><TooltipTrigger><Badge variant="outline"><Watch className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需效期管理</TooltipContent></Tooltip>}
-                            {item.requiresMaintenance && <Tooltip><TooltipTrigger><Badge variant="outline"><Wrench className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需定期維護</TooltipContent></Tooltip>}
-                            {item.requiresInspection && <Tooltip><TooltipTrigger><Badge variant="outline"><ShieldCheck className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需定期檢驗</TooltipContent></Tooltip>}
-                            {item.isSerialized && <Tooltip><TooltipTrigger><Badge variant="outline"><Tag className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需序號管理</TooltipContent></Tooltip>}
-                        </div>
-                      </TooltipProvider>
-                    </TableCell>
-                    <TableCell>
-                      {item.createdAt ? formatDate(item.createdAt) : '-'}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <AlertDialog>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem
-                              onClick={() => handleOpenForm(item)}
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              編輯
-                            </DropdownMenuItem>
-                            <AlertDialogTrigger asChild>
+                {initialItems.map((item) => {
+                  const itemType = item.item_type;
+                  const hasExpiryTracking = item.has_expiry_tracking;
+                  const requiresMaintenance = item.requires_maintenance;
+                  const requiresInspection = item.requires_inspection;
+                  const isSerialized = item.is_serialized;
+                  const createdAt = item.created_at;
+                  return (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">{item.name}</TableCell>
+                      <TableCell>
+                        <Badge variant={itemType === 'asset' ? 'default' : 'secondary'}>
+                          {itemType === 'asset' ? '資產/工具' : '消耗品'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{item.category || '未分類'}</TableCell>
+                      <TableCell>
+                        <TooltipProvider>
+                          <div className="flex flex-wrap gap-2">
+                            {hasExpiryTracking && <Tooltip><TooltipTrigger><Badge variant="outline"><Watch className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需效期管理</TooltipContent></Tooltip>}
+                            {requiresMaintenance && <Tooltip><TooltipTrigger><Badge variant="outline"><Wrench className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需定期維護</TooltipContent></Tooltip>}
+                            {requiresInspection && <Tooltip><TooltipTrigger><Badge variant="outline"><ShieldCheck className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需定期檢驗</TooltipContent></Tooltip>}
+                            {isSerialized && <Tooltip><TooltipTrigger><Badge variant="outline"><Tag className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需序號管理</TooltipContent></Tooltip>}
+                          </div>
+                        </TooltipProvider>
+                      </TableCell>
+                      <TableCell>
+                        {createdAt ? formatDate(createdAt) : '-'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <AlertDialog>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
                               <DropdownMenuItem
-                                className="text-destructive"
-                                onSelect={(e) => e.preventDefault()}
+                                onClick={() => handleOpenForm(item)}
                               >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                刪除
+                                <Edit className="mr-2 h-4 w-4" />
+                                編輯
                               </DropdownMenuItem>
-                            </AlertDialogTrigger>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              確定要刪除「{item.name}」嗎？
-                            </AlertDialogTitle>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>取消</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDeleteItem(item)}
-                              disabled={isDeleting}
-                            >
-                              繼續刪除
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                              <AlertDialogTrigger asChild>
+                                <DropdownMenuItem
+                                  className="text-destructive"
+                                  onSelect={(e) => e.preventDefault()}
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  刪除
+                                </DropdownMenuItem>
+                              </AlertDialogTrigger>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                確定要刪除「{item.name}」嗎？
+                              </AlertDialogTitle>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>取消</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteItem(item)}
+                                disabled={isDeleting}
+                              >
+                                繼續刪除
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           )}

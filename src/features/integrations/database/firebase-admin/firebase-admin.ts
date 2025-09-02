@@ -46,7 +46,7 @@ export const verifyAppCheckToken = async (token: string, options?: { consume?: b
     }
 
     const result = await adminAppCheck.verifyToken(token, options);
-    
+
     // 验证成功，返回解码后的token信息
     return {
       success: true,
@@ -60,10 +60,10 @@ export const verifyAppCheckToken = async (token: string, options?: { consume?: b
       // 检查token的受众
       audience: result.token.aud,
     };
-    
+
   } catch (error: unknown) {
     console.error('App Check token verification failed:', error);
-    
+
     // 根据错误类型返回相应的错误信息
     if (error && typeof error === 'object' && 'code' in error && typeof error.code === 'string') {
       if (error.code === 'app-check-token-invalid') {
@@ -74,10 +74,10 @@ export const verifyAppCheckToken = async (token: string, options?: { consume?: b
         throw new Error('App Check token has already been consumed');
       }
     }
-    
+
     // 处理其他错误
-    const errorMessage = error && typeof error === 'object' && 'message' in error 
-      ? String(error.message) 
+    const errorMessage = error && typeof error === 'object' && 'message' in error
+      ? String(error.message)
       : 'Unknown error';
     throw new Error(`App Check verification failed: ${errorMessage}`);
   }
@@ -95,8 +95,8 @@ export const createAppCheckToken = async (appId: string, options?: { ttlMillis?:
     };
   } catch (error: unknown) {
     console.error('Failed to create App Check token:', error);
-    const errorMessage = error && typeof error === 'object' && 'message' in error 
-      ? String(error.message) 
+    const errorMessage = error && typeof error === 'object' && 'message' in error
+      ? String(error.message)
       : 'Unknown error';
     throw new Error(`Failed to create App Check token: ${errorMessage}`);
   }
@@ -106,9 +106,9 @@ export const createAppCheckToken = async (appId: string, options?: { ttlMillis?:
 export const enforceAppCheck = async (req: { headers: Record<string, string | string[] | undefined>; body?: { appCheckToken?: string }; appCheck?: unknown }, res: { status: (code: number) => { json: (data: unknown) => void } }, next: () => void) => {
   try {
     const appCheckToken = req.headers['x-firebase-appcheck'] || req.body?.appCheckToken;
-    
+
     if (!appCheckToken) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'App Check token is required',
         code: 'APP_CHECK_TOKEN_MISSING'
       });
@@ -117,9 +117,9 @@ export const enforceAppCheck = async (req: { headers: Record<string, string | st
     const verificationResult = await verifyAppCheckToken(
       Array.isArray(appCheckToken) ? appCheckToken[0] : appCheckToken
     );
-    
+
     if (!verificationResult.success) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'App Check verification failed',
         code: 'APP_CHECK_VERIFICATION_FAILED'
       });
@@ -128,12 +128,12 @@ export const enforceAppCheck = async (req: { headers: Record<string, string | st
     // 将验证结果添加到请求对象中，供后续中间件使用
     req.appCheck = verificationResult;
     next();
-    
+
   } catch (error: unknown) {
-    const errorMessage = error && typeof error === 'object' && 'message' in error 
-      ? String(error.message) 
+    const errorMessage = error && typeof error === 'object' && 'message' in error
+      ? String(error.message)
       : 'Unknown error';
-    return res.status(401).json({ 
+    return res.status(401).json({
       error: errorMessage,
       code: 'APP_CHECK_ERROR'
     });
@@ -144,27 +144,30 @@ export const enforceAppCheck = async (req: { headers: Record<string, string | st
 export const validateAppCheckInServerAction = async (appCheckToken: string) => {
   try {
     const result = await verifyAppCheckToken(appCheckToken);
-    
+
     if (!result.success) {
       throw new Error('App Check validation failed');
     }
-    
+
     // 检查token是否过期
     if (result.isExpired) {
       throw new Error('App Check token has expired');
     }
-    
+
     // 检查是否已被消费（如果设置了consume选项）
     if (result.alreadyConsumed) {
       throw new Error('App Check token has already been consumed');
     }
-    
+
     return result;
-    
+
   } catch (error: unknown) {
     console.error('App Check validation in Server Action failed:', error);
     throw error;
   }
 };
 
-export { adminAuth, adminDb, adminStorage, adminAppCheck };
+export { adminAppCheck, adminAuth, adminDb, adminStorage };
+
+// 導出 getAuth 函數以保持向後兼容
+export const getAuth = () => adminAuth;
