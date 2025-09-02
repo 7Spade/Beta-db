@@ -47,13 +47,7 @@ async function getWarehouseStats() {
   };
 }
 
-interface WarehousingDashboardViewProps {
-  isEmbedded?: boolean;
-}
-
-export async function WarehousingDashboardView({
-  isEmbedded = false,
-}: WarehousingDashboardViewProps) {
+export async function WarehousingDashboardView() {
   const statsData = await getWarehouseStats();
 
   const stats: StatCardData[] = [
@@ -79,15 +73,6 @@ export async function WarehousingDashboardView({
 
   return (
     <div className="space-y-6">
-      {!isEmbedded && (
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">倉儲管理總覽</h1>
-          <p className="text-muted-foreground">
-            管理您的庫存、倉庫和物料移動。
-          </p>
-        </div>
-      )}
-
       <DashboardStats stats={stats} />
     </div>
   );
