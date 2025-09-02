@@ -207,6 +207,108 @@ src/features/core-operations/engagements/
 └── index.ts
 ```
 
+### 未實現功能的文件結構 (Unimplemented Features File Structure)
+
+基於 EXPANSION_PLAN.md 中的分析，以下是需要添加的未實現功能文件結構：
+
+```
+src/features/core-operations/engagements/
+├── components/
+│   ├── tasks/                    # 任務管理組件 (未實現)
+│   │   ├── task-list.tsx
+│   │   ├── task-card.tsx
+│   │   ├── task-form.tsx
+│   │   ├── task-status-badge.tsx
+│   │   ├── task-progress-bar.tsx
+│   │   └── index.ts
+│   ├── progress/                 # 進度管理組件 (未實現)
+│   │   ├── milestone-list.tsx
+│   │   ├── milestone-card.tsx
+│   │   ├── deliverable-list.tsx
+│   │   ├── progress-chart.tsx
+│   │   ├── progress-summary.tsx
+│   │   └── index.ts
+│   ├── financial/                # 財務管理增強組件 (未實現)
+│   │   ├── payment-list.tsx
+│   │   ├── invoice-list.tsx
+│   │   ├── financial-summary.tsx
+│   │   ├── payment-form.tsx
+│   │   ├── invoice-form.tsx
+│   │   └── index.ts
+│   ├── quality/                  # 品質管理組件 (未實現)
+│   │   ├── acceptance-record-list.tsx
+│   │   ├── quality-check-list.tsx
+│   │   ├── acceptance-form.tsx
+│   │   ├── quality-check-form.tsx
+│   │   ├── quality-dashboard.tsx
+│   │   └── index.ts
+│   ├── risk/                     # 風險管理組件 (未實現)
+│   │   ├── risk-list.tsx
+│   │   ├── issue-list.tsx
+│   │   ├── risk-matrix.tsx
+│   │   ├── risk-form.tsx
+│   │   ├── issue-form.tsx
+│   │   └── index.ts
+│   ├── communication/            # 溝通管理組件 (未實現)
+│   │   ├── communication-list.tsx
+│   │   ├── meeting-list.tsx
+│   │   ├── communication-form.tsx
+│   │   ├── meeting-form.tsx
+│   │   └── index.ts
+│   ├── documents/                # 文件管理組件 (未實現)
+│   │   ├── document-list.tsx
+│   │   ├── document-uploader.tsx
+│   │   ├── document-viewer.tsx
+│   │   ├── version-history.tsx
+│   │   └── index.ts
+│   └── reports/                  # 報表組件 (未實現)
+│       ├── engagement-report.tsx
+│       ├── financial-report.tsx
+│       ├── progress-report.tsx
+│       ├── quality-report.tsx
+│       ├── dashboard-charts.tsx
+│       └── index.ts
+├── actions/
+│   ├── progress.actions.ts       # 進度管理 Actions (未實現)
+│   ├── quality.actions.ts        # 品質管理 Actions (未實現)
+│   ├── risk.actions.ts           # 風險管理 Actions (未實現)
+│   ├── communication.actions.ts  # 溝通管理 Actions (未實現)
+│   └── document.actions.ts       # 文件管理 Actions (未實現)
+├── services/
+│   ├── progress.service.ts       # 進度管理服務 (未實現)
+│   ├── quality.service.ts        # 品質管理服務 (未實現)
+│   ├── risk.service.ts           # 風險管理服務 (未實現)
+│   ├── communication.service.ts  # 溝通管理服務 (未實現)
+│   └── document.service.ts       # 文件管理服務 (未實現)
+├── hooks/
+│   ├── use-tasks.ts              # 任務管理 Hook (未實現)
+│   ├── use-progress.ts           # 進度管理 Hook (未實現)
+│   ├── use-quality.ts            # 品質管理 Hook (未實現)
+│   ├── use-risk.ts               # 風險管理 Hook (未實現)
+│   ├── use-communication.ts      # 溝通管理 Hook (未實現)
+│   └── use-documents.ts          # 文件管理 Hook (未實現)
+└── utils/
+    ├── task.utils.ts             # 任務工具函數 (未實現)
+    ├── progress.utils.ts         # 進度工具函數 (未實現)
+    ├── quality.utils.ts          # 品質工具函數 (未實現)
+    ├── risk.utils.ts             # 風險工具函數 (未實現)
+    ├── communication.utils.ts    # 溝通工具函數 (未實現)
+    └── document.utils.ts         # 文件工具函數 (未實現)
+```
+
+**說明**:
+- 標記為 "(未實現)" 的文件和目錄都是根據 EXPANSION_PLAN.md 中的分析需要添加的
+- 這些文件將在功能擴展階段逐步實現
+- 每個功能模組都有對應的組件、Actions、服務、Hooks 和工具函數
+
+**未實現功能統計**:
+- **組件文件**: 42 個 (7 個功能模組 × 平均 6 個組件)
+- **Actions 文件**: 5 個
+- **Services 文件**: 5 個  
+- **Hooks 文件**: 6 個
+- **Utils 文件**: 6 個
+- **總計**: 64 個文件需要實現
+
 ## 📅 遷移計畫 (Migration Plan)
 
 ### 階段 1: 準備工作 (Preparation Phase) ✅ 已完成
