@@ -14,7 +14,7 @@ export type {
   ContractStatus,
   ContractVersion,
   Payment,
-  Receipt
+  Receipt,
 };
 
 export interface Warehouse {
@@ -23,6 +23,39 @@ export interface Warehouse {
   location?: string;
   managerId?: string;
   isActive: boolean;
+}
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  category: string;
+  unit: string;
+  safeStockLevel?: number;
+  supplierId?: string;
+  createdAt?: Date | Timestamp;
+}
+
+export interface InventoryLevel {
+  id: string; // Composite key: `${itemId}_${warehouseId}`
+  itemId: string;
+  warehouseId: string;
+  quantity: number;
+  lastUpdated: Date | Timestamp;
+}
+
+export interface InventoryMovement {
+  id: string;
+  itemId: string;
+  type: 'inbound' | 'outbound' | 'transfer-out' | 'transfer-in' | 'adjust';
+  quantity: number;
+  fromWarehouseId?: string;
+  toWarehouseId?: string;
+  transferId?: string;
+  unitPrice?: number;
+  timestamp: Date;
+  operatorId: string;
+  projectId?: string;
+  notes?: string;
 }
 
 export interface Contact {
@@ -73,13 +106,13 @@ export interface Partner {
   name: string;
   logoUrl: string;
   category:
-  | '技術'
-  | '經銷商'
-  | '服務'
-  | '顧問'
-  | '下游承包商'
-  | '供應商'
-  | '設備';
+    | '技術'
+    | '經銷商'
+    | '服務'
+    | '顧問'
+    | '下游承包商'
+    | '供應商'
+    | '設備';
   status: '啟用中' | '停用中' | '待審核';
   overview: string;
   website: string;

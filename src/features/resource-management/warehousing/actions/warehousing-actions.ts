@@ -4,61 +4,164 @@
  */
 'use server';
 
+import { connectDB } from '@/features/integrations/database/mongoose/mongodb';
+import InventoryMovement from '@/shared/models/inventory-movement.model';
 import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
-import type { Warehouse } from '@root/src/shared/types/types';
-import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import type { InventoryItem, Warehouse } from '@root/src/shared/types/types';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 
 const WAREHOUSES_PATH = '/resource-management/warehousing/warehouses';
+const ITEMS_PATH = '/resource-management/warehousing/items';
+const MOVEMENTS_PATH = '/resource-management/warehousing/movements';
 
 type ActionResult = {
-    success: boolean;
-    error?: string;
-}
+  success: boolean;
+  error?: string;
+};
 
-/**
- * 建立或更新一個倉庫據點。
- * @param data - 要儲存的倉庫資料。
- * @param warehouseId - (可選) 如果提供，則更新現有倉庫；否則，建立新倉庫。
- * @returns 一個包含操作結果的 Promise。
- */
+// --- Warehouse Actions ---
+
 export async function saveWarehouseAction(
-    data: Omit<Warehouse, 'id'>,
-    warehouseId?: string
+  data: Omit<Warehouse, 'id'>,
+  warehouseId?: string
 ): Promise<ActionResult> {
-    try {
-        if (warehouseId) {
-            // 更新現有倉庫
-            const warehouseRef = doc(firestore, 'warehouses', warehouseId);
-            await setDoc(warehouseRef, data, { merge: true });
-        } else {
-            // 新增倉庫
-            await addDoc(collection(firestore, 'warehouses'), data);
-        }
-        // 操作成功後，使相關頁面的快取失效以重新獲取最新資料
-        revalidatePath(WAREHOUSES_PATH);
-        return { success: true };
-    } catch (e) {
-        const error = e instanceof Error ? e.message : '發生未知錯誤';
-        console.error("儲存倉庫時發生錯誤:", error);
-        return { success: false, error: `儲存失敗: ${error}` };
+  try {
+    if (warehouseId) {
+      const warehouseRef = doc(firestore, 'warehouses', warehouseId);
+      await setDoc(warehouseRef, data, { merge: true });
+    } else {
+      await addDoc(collection(firestore, 'warehouses'), data);
     }
+    revalidatePath(WAREHOUSES_PATH);
+    return { success: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
+    console.error('儲存倉庫時發生錯誤:', error);
+    return { success: false, error: `儲存失敗: ${error}` };
+  }
 }
 
-/**
- * 刪除一個倉庫據點。
- * @param warehouseId - 要刪除的倉庫 ID。
- * @returns 一個包含操作結果的 Promise。
- */
-export async function deleteWarehouseAction(warehouseId: string): Promise<ActionResult> {
-    try {
-        // TODO: 在刪除前，應檢查倉庫是否仍有庫存。
-        await deleteDoc(doc(firestore, 'warehouses', warehouseId));
-        revalidatePath(WAREHOUSES_PATH);
-        return { success: true };
-    } catch (e) {
-        const error = e instanceof Error ? e.message : '發生未知錯誤';
-        console.error("刪除倉庫時發生錯誤:", error);
-        return { success: false, error: `刪除失敗: ${error}` };
+export async function deleteWarehouseAction(
+  warehouseId: string
+): Promise<ActionResult> {
+  try {
+    await deleteDoc(doc(firestore, 'warehouses', warehouseId));
+    revalidatePath(WAREHOUSES_PATH);
+    return { success: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
+    console.error('刪除倉庫時發生錯誤:', error);
+    return { success: false, error: `刪除失敗: ${error}` };
+  }
+}
+
+// --- Inventory Item Actions ---
+
+export async function saveItemAction(
+  data: Omit<InventoryItem, 'id'>,
+  itemId?: string
+): Promise<ActionResult> {
+  try {
+    if (itemId) {
+      const itemRef = doc(firestore, 'inventory_items', itemId);
+      await setDoc(itemRef, data, { merge: true });
+    } else {
+      await addDoc(collection(firestore, 'inventory_items'), {
+        ...data,
+        createdAt: serverTimestamp(),
+      });
     }
+    revalidatePath(ITEMS_PATH);
+    return { success: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
+    console.error('儲存物料時發生錯誤:', error);
+    return { success: false, error: `儲存失敗: ${error}` };
+  }
+}
+
+export async function deleteItemAction(itemId: string): Promise<ActionResult> {
+  try {
+    await deleteDoc(doc(firestore, 'inventory_items', itemId));
+    revalidatePath(ITEMS_PATH);
+    return { success: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
+    console.error('刪除物料時發生錯誤:', error);
+    return { success: false, error: `刪除失敗: ${error}` };
+  }
+}
+
+// --- Inventory Movement Actions ---
+
+interface RecordMovementInput {
+  itemId: string;
+  warehouseId: string;
+  type: 'inbound' | 'outbound' | 'adjust';
+  quantity: number;
+  unitPrice?: number;
+  projectId?: string;
+  notes?: string;
+  operatorId: string;
+}
+
+export async function recordMovementAction(
+  input: RecordMovementInput
+): Promise<ActionResult> {
+  try {
+    await connectDB(); // 連接 MongoDB
+
+    // 1. Firestore Transaction to update inventory_levels
+    await runTransaction(firestore, async (transaction) => {
+      const levelId = `${input.itemId}_${input.warehouseId}`;
+      const levelRef = doc(firestore, 'inventory_levels', levelId);
+      const levelDoc = await transaction.get(levelRef);
+
+      const change = input.type === 'outbound' ? -input.quantity : input.quantity;
+
+      if (levelDoc.exists()) {
+        const currentQty = levelDoc.data().quantity || 0;
+        const newQty = currentQty + change;
+        if (newQty < 0) {
+          throw new Error('庫存不足，無法出庫。');
+        }
+        transaction.update(levelRef, {
+          quantity: newQty,
+          lastUpdated: serverTimestamp(),
+        });
+      } else {
+        if (change < 0) {
+          throw new Error('庫存不足，無法出庫。');
+        }
+        transaction.set(levelRef, {
+          itemId: input.itemId,
+          warehouseId: input.warehouseId,
+          quantity: change,
+          lastUpdated: serverTimestamp(),
+        });
+      }
+    });
+
+    // 2. Create movement record in MongoDB
+    await InventoryMovement.create({
+      ...input,
+      timestamp: new Date(),
+    });
+    
+    revalidatePath(MOVEMENTS_PATH);
+    return { success: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
+    console.error('紀錄庫存移動時發生錯誤:', error);
+    return { success: false, error: `操作失敗: ${error}` };
+  }
 }
