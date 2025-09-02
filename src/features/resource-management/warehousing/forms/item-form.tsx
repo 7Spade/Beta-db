@@ -42,7 +42,6 @@ import { Loader2 } from 'lucide-react';
 import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Combobox } from '../components/combobox';
 
 const itemSchema = z.object({
   name: z.string().min(2, '物料名稱至少需要 2 個字元。'),
@@ -207,14 +206,25 @@ export function ItemFormDialog({
               control={form.control}
               name="category"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem>
                   <FormLabel>業務分類</FormLabel>
-                  <Combobox
-                    options={categoryOptions}
-                    value={field.value || ''}
-                    onChange={(value) => field.onChange(value)}
-                    placeholder="選擇或搜尋分類..."
-                  />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value || undefined}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="選擇分類..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categoryOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

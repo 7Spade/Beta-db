@@ -58,24 +58,31 @@ export function Combobox({
           <CommandList>
             <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={(currentValue) => {
-                    onChange(currentValue === value ? '' : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      'mr-2 h-4 w-4',
-                      value === option.value ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
+              {options.length === 0 ? (
+                <div className="py-6 text-center text-sm text-muted-foreground">
+                  暫無可選分類，請先建立分類
+                </div>
+              ) : (
+                options.map((option) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.value}
+                    onSelect={() => {
+                      // 直接使用 option.value，避免 cmdk 的大小寫轉換問題
+                      onChange(option.value === value ? '' : option.value);
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        'mr-2 h-4 w-4',
+                        value === option.value ? 'opacity-100' : 'opacity-0'
+                      )}
+                    />
+                    {option.label}
+                  </CommandItem>
+                ))
+              )}
             </CommandGroup>
           </CommandList>
         </Command>
