@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EngagementDashboard, EngagementListView, EngagementProvider } from '@/features/core-operations/engagements';
 import { LayoutDashboard, List, Plus } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 function EngagementsPageContent() {
   const router = useRouter();
