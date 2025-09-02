@@ -7,6 +7,7 @@
 import { createClient } from '@/features/integrations/database/supabase/server';
 import type { Warehouse } from '@root/src/shared/types/types';
 import { cookies } from 'next/headers';
+import { mapWarehouse } from '../utils/data-mappers';
 import { WarehousesClientView } from './warehouse-list-client';
 
 async function getWarehouses(): Promise<Warehouse[]> {
@@ -23,13 +24,7 @@ async function getWarehouses(): Promise<Warehouse[]> {
   }
 
   // Map from snake_case to camelCase
-  return (data || []).map((wh) => ({
-    id: wh.id,
-    name: wh.name,
-    location: wh.location || undefined,
-    isActive: wh.is_active || false,
-    createdAt: wh.created_at ? new Date(wh.created_at) : undefined,
-  }));
+  return (data || []).map(mapWarehouse);
 }
 
 export async function WarehouseList() {
