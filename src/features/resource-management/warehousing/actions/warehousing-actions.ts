@@ -1,6 +1,6 @@
 /**
  * @fileoverview 倉儲管理 Server Actions
- * @description 處理所有與倉庫、物料、庫存相關的後端業務邏輯，現在使用 Supabase。
+ * @description 處理所有與倉庫、物料、庫存相關的後端業務邏輯
  */
 'use server';
 
@@ -20,86 +20,72 @@ type ActionResult = {
   error?: string;
 };
 
-// 簡化的認證檢查 - 依賴 Supabase RLS
-async function getCurrentUser() {
-  return {
-    uid: 'current-user',
-    email: 'user@example.com',
-  };
-}
+// 通用錯誤處理函數
+const handleError = (error: unknown, operation: string): ActionResult => {
+  const message = error instanceof Error ? error.message : '發生未知錯誤';
+  console.error(`${operation}時發生錯誤:`, message, error);
+  return { success: false, error: `${operation}失敗: ${message}` };
+};
 
-// --- Warehouse & Lease Actions ---
+// 通用 Supabase 客戶端獲取
+const getSupabaseClient = async () => {
+  const cookieStore = await cookies();
+  return createClient(cookieStore);
+};
 
-
+// --- Warehouse Actions ---
 
 export async function saveWarehouseAction(
   data: Omit<Warehouse, 'id' | 'createdAt'>,
   warehouseId?: string
 ): Promise<ActionResult> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
-
   try {
+    const supabase = await getSupabaseClient();
     const { name, location, isActive } = data;
     const warehouseData = { name, location, is_active: isActive };
 
-    if (warehouseId) {
-      const { data: updateData, error } = await supabase
-        .from('warehouses')
-        .update(warehouseData)
-        .eq('id', warehouseId)
-        .select();
-      if (error) throw error;
-    } else {
-      const { error } = await supabase
-        .from('warehouses')
-        .insert(warehouseData);
-      if (error) throw error;
-    }
+    const { error } = warehouseId
+      ? await supabase.from('warehouses').update(warehouseData).eq('id', warehouseId)
+      : await supabase.from('warehouses').insert(warehouseData);
 
+    if (error) throw error;
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '發生未知錯誤';
-    console.error('儲存倉庫時發生錯誤:', error, e);
-    return { success: false, error: `儲存失敗: ${error}` };
+  } catch (error) {
+    return handleError(error, '儲存倉庫');
   }
 }
 
-export async function deleteWarehouseAction(
-  warehouseId: string
-): Promise<ActionResult> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
+export async function deleteWarehouseAction(warehouseId: string): Promise<ActionResult> {
   try {
-    // DB cascade should handle deleting leases
-    const { error } = await supabase
-      .from('warehouses')
-      .delete()
-      .eq('id', warehouseId);
+    const supabase = await getSupabaseClient();
+    const { error } = await supabase.from('warehouses').delete().eq('id', warehouseId);
     if (error) throw error;
-
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '发生未知错误';
-    console.error('刪除倉庫時發生錯誤:', error);
-    return { success: false, error: `刪除失敗: ${error}` };
+  } catch (error) {
+    return handleError(error, '刪除倉庫');
   }
 }
 
 // --- Inventory Item Actions ---
 type ItemData = Omit<InventoryItem, 'id' | 'createdAt'>;
 
-export async function saveItemAction(
-  data: ItemData,
-  itemId?: string
-): Promise<ActionResult> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
-
+export async function saveItemAction(data: ItemData, itemId?: string): Promise<ActionResult> {
   try {
-    const { name, category, unit, safeStockLevel, itemType, hasExpiryTracking, requiresMaintenance, requiresInspection, isSerialized } = data;
+    const supabase = await getSupabaseClient();
+    const {
+      name,
+      category,
+      unit,
+      safeStockLevel,
+      itemType,
+      hasExpiryTracking,
+      requiresMaintenance,
+      requiresInspection,
+      isSerialized,
+    } = data;
+
     const itemData = {
       name,
       category: category || null,
@@ -112,44 +98,27 @@ export async function saveItemAction(
       is_serialized: isSerialized,
     };
 
-    if (itemId) {
-      const { error } = await supabase
-        .from('inventory_items')
-        .update(itemData)
-        .eq('id', itemId);
-      if (error) throw error;
-    } else {
-      const { error } = await supabase
-        .from('inventory_items')
-        .insert(itemData);
-      if (error) throw error;
-    }
+    const { error } = itemId
+      ? await supabase.from('inventory_items').update(itemData).eq('id', itemId)
+      : await supabase.from('inventory_items').insert(itemData);
+
+    if (error) throw error;
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '發生未知錯誤';
-    console.error('儲存物料時發生錯誤:', error, e);
-    return { success: false, error: `儲存失敗: ${error}` };
+  } catch (error) {
+    return handleError(error, '儲存物料');
   }
 }
 
 export async function deleteItemAction(itemId: string): Promise<ActionResult> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
   try {
-    // Note: In a real-world scenario, you might want to check if the item is in use before deleting.
-    const { error } = await supabase
-      .from('inventory_items')
-      .delete()
-      .eq('id', itemId);
+    const supabase = await getSupabaseClient();
+    const { error } = await supabase.from('inventory_items').delete().eq('id', itemId);
     if (error) throw error;
-
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '发生未知错误';
-    console.error('刪除物料時發生錯誤:', error);
-    return { success: false, error: `刪除失敗: ${error}` };
+  } catch (error) {
+    return handleError(error, '刪除物料');
   }
 }
 
@@ -166,15 +135,9 @@ interface RecordMovementInput {
   operatorId: string;
 }
 
-export async function recordMovementAction(
-  input: RecordMovementInput
-): Promise<ActionResult> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
-
+export async function recordMovementAction(input: RecordMovementInput): Promise<ActionResult> {
   try {
-    // In a real application, this should be a PostgreSQL transaction (RPC function)
-    // to ensure atomicity. For now, we simulate it with sequential calls.
+    const supabase = await getSupabaseClient();
 
     // 1. Get current stock level
     const { data: level, error: levelError } = await supabase
@@ -184,16 +147,10 @@ export async function recordMovementAction(
       .eq('warehouse_id', input.warehouseId)
       .single();
 
-    if (levelError && levelError.code !== 'PGRST116') {
-      // Ignore 'no rows' error
-      throw levelError;
-    }
+    if (levelError && levelError.code !== 'PGRST116') throw levelError;
 
     const currentQty = level?.quantity || 0;
-    const change =
-      input.type === 'inbound' || input.type === 'adjust'
-        ? input.quantity
-        : -input.quantity;
+    const change = input.type === 'inbound' || input.type === 'adjust' ? input.quantity : -input.quantity;
     const newQty = input.type === 'adjust' ? input.quantity : currentQty + change;
 
     if (input.type === 'outbound' && newQty < 0) {
@@ -216,27 +173,22 @@ export async function recordMovementAction(
     if (upsertError) throw upsertError;
 
     // 3. Create movement record
-    const { error: movementError } = await supabase
-      .from('inventory_movements')
-      .insert({
-        item_id: input.itemId,
-        warehouse_id: input.warehouseId,
-        type: input.type,
-        quantity: input.quantity, // Always positive
-        unit_price: input.unitPrice,
-        project_id: input.projectId,
-        notes: input.notes,
-        operator_id: input.operatorId,
-      });
+    const { error: movementError } = await supabase.from('inventory_movements').insert({
+      item_id: input.itemId,
+      warehouse_id: input.warehouseId,
+      type: input.type,
+      quantity: input.quantity,
+      unit_price: input.unitPrice,
+      project_id: input.projectId,
+      notes: input.notes,
+      operator_id: input.operatorId,
+    });
 
     if (movementError) throw movementError;
-
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '发生未知错误';
-    console.error('紀錄庫存移動時發生錯誤:', error);
-    return { success: false, error: `操作失敗: ${error}` };
+  } catch (error) {
+    return handleError(error, '紀錄庫存移動');
   }
 }
 
@@ -246,46 +198,28 @@ export async function saveCategoryAction(
   data: Omit<InventoryCategory, 'id' | 'createdAt'>,
   categoryId?: string
 ): Promise<ActionResult> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
   try {
+    const supabase = await getSupabaseClient();
+    const { error } = categoryId
+      ? await supabase.from('inventory_categories').update(data).eq('id', categoryId)
+      : await supabase.from('inventory_categories').insert(data);
 
-    if (categoryId) {
-      const { error } = await supabase
-        .from('inventory_categories')
-        .update(data)
-        .eq('id', categoryId);
-      if (error) throw error;
-    } else {
-      const { error } = await supabase
-        .from('inventory_categories')
-        .insert(data);
-      if (error) throw error;
-    }
-    revalidatePath(WAREHOUSING_PATH);
-    return { success: true };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '發生未知錯誤';
-    console.error('儲存分類時發生錯誤:', error, e);
-    return { success: false, error: `儲存失敗: ${error}` };
-  }
-}
-
-export async function deleteCategoryAction(
-  categoryId: string
-): Promise<ActionResult> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
-  try {
-    const { error } = await supabase
-      .from('inventory_categories')
-      .delete()
-      .eq('id', categoryId);
     if (error) throw error;
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '發生未知錯誤';
-    return { success: false, error: `刪除失敗: ${error}` };
+  } catch (error) {
+    return handleError(error, '儲存分類');
+  }
+}
+
+export async function deleteCategoryAction(categoryId: string): Promise<ActionResult> {
+  try {
+    const supabase = await getSupabaseClient();
+    const { error } = await supabase.from('inventory_categories').delete().eq('id', categoryId);
+    if (error) throw error;
+    revalidatePath(WAREHOUSING_PATH);
+    return { success: true };
+  } catch (error) {
+    return handleError(error, '刪除分類');
   }
 }

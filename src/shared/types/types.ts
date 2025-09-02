@@ -64,13 +64,59 @@ export interface InventoryMovement {
   id: string;
   item_id: string;
   warehouse_id: string;
-  type: 'inbound' | 'outbound' | 'adjust';
+  type: 'inbound' | 'outbound' | 'adjust' | 'transfer';
   quantity: number;
   unit_price?: number;
   project_id?: string;
   notes?: string;
   operator_id?: string;
+  operator_name?: string;
   timestamp: Date;
+  // 新增追蹤字段
+  recipient_name?: string;
+  recipient_department?: string;
+  expected_return_date?: Date;
+  actual_return_date?: Date;
+  status?: 'active' | 'returned' | 'overdue' | 'lost';
+  serial_numbers?: string[];
+  purpose?: string;
+  approval_required?: boolean;
+  approved_by?: string;
+  approved_at?: Date;
+}
+
+export interface ItemLoan {
+  id: string;
+  movement_id: string;
+  item_id: string;
+  warehouse_id: string;
+  borrower_name: string;
+  borrower_department?: string;
+  borrower_contact?: string;
+  loan_date: Date;
+  expected_return_date?: Date;
+  actual_return_date?: Date;
+  return_condition?: string;
+  status: 'borrowed' | 'returned' | 'overdue' | 'lost' | 'damaged';
+  notes?: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface SerialNumberTracking {
+  id: string;
+  item_id: string;
+  warehouse_id: string;
+  serial_number: string;
+  status: 'in_stock' | 'out_on_loan' | 'returned' | 'lost' | 'damaged';
+  current_holder?: string;
+  current_department?: string;
+  loan_date?: Date;
+  expected_return_date?: Date;
+  actual_return_date?: Date;
+  notes?: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 
@@ -79,7 +125,8 @@ export interface InventoryMovement {
 export enum MovementType {
   INBOUND = 'inbound',
   OUTBOUND = 'outbound',
-  ADJUST = 'adjust'
+  ADJUST = 'adjust',
+  TRANSFER = 'transfer'
 }
 
 export enum ItemType {

@@ -7,6 +7,7 @@
 import { createClient } from '@/features/integrations/database/supabase/server';
 import type { InventoryCategory } from '@root/src/shared/types/types';
 import { cookies } from 'next/headers';
+import { mapInventoryCategory } from '../utils/data-mappers';
 import { InventoryCategoriesClientView } from './category-list-client';
 
 async function getCategories(): Promise<InventoryCategory[]> {
@@ -16,15 +17,13 @@ async function getCategories(): Promise<InventoryCategory[]> {
     .from('inventory_categories')
     .select('*')
     .order('name');
+
   if (error) {
     console.error('Error fetching categories:', error);
     return [];
   }
-  return (data || []).map((cat) => ({
-    id: cat.id,
-    name: cat.name,
-    createdAt: cat.created_at ? new Date(cat.created_at) : undefined,
-  }));
+
+  return (data || []).map(mapInventoryCategory);
 }
 
 export async function CategoryList() {

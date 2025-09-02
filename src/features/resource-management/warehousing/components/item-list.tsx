@@ -10,6 +10,7 @@ import type {
   InventoryItem,
 } from '@root/src/shared/types/types';
 import { cookies } from 'next/headers';
+import { mapInventoryCategory, mapInventoryItem } from '../utils/data-mappers';
 import { InventoryItemsClientView } from './item-list-client';
 
 async function getItemsAndCategories(): Promise<{
@@ -25,38 +26,14 @@ async function getItemsAndCategories(): Promise<{
   ]);
 
   if (itemsRes.error || categoriesRes.error) {
-    console.error(
-      'Error fetching items/categories:',
-      itemsRes.error,
-      categoriesRes.error
-    );
+    console.error('Error fetching items/categories:', itemsRes.error, categoriesRes.error);
     return { items: [], categories: [] };
   }
 
-  const items = (itemsRes.data || []).map(
-    (item) =>
-      ({
-        id: item.id,
-        name: item.name,
-        category: item.category,
-        unit: item.unit,
-        safeStockLevel: item.safe_stock_level,
-        createdAt: item.created_at ? new Date(item.created_at) : undefined,
-        itemType: item.item_type,
-        hasExpiryTracking: item.has_expiry_tracking,
-        requiresMaintenance: item.requires_maintenance,
-        requiresInspection: item.requires_inspection,
-        isSerialized: item.is_serialized,
-      }) as InventoryItem
-  );
-
-  const categories = (categoriesRes.data || []).map(c => ({
-    id: c.id,
-    name: c.name,
-    createdAt: c.created_at ? new Date(c.created_at) : undefined,
-  })) as InventoryCategory[];
-
-  return { items, categories };
+  return {
+    items: (itemsRes.data || []).map(mapInventoryItem),
+    categories: (categoriesRes.data || []).map(mapInventoryCategory),
+  };
 }
 
 export async function ItemList() {
