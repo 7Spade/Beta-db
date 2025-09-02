@@ -14,7 +14,6 @@
 
 import type { LucideIcon } from 'lucide-react';
 import {
-  ArrowLeftRight,
   BarChart3,
   BookOpen,
   Briefcase,
@@ -34,12 +33,10 @@ import {
   Package,
   Plus,
   Rocket,
-  Shapes,
-  Truck,
   UserCheck,
   Users,
   Warehouse,
-  Wrench,
+  Wrench
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -48,6 +45,8 @@ export interface NavigationItem {
   icon: LucideIcon;
   href: string;
   children?: NavigationItem[];
+  visible?: boolean; // 控制群組是否顯示
+  toggleable?: boolean; // 是否可切換顯示狀態
 }
 
 export const navigationConfig: NavigationItem[] = [
@@ -62,6 +61,8 @@ export const navigationConfig: NavigationItem[] = [
     label: '自動化工具',
     icon: Rocket,
     href: '/automation-tools',
+    visible: true,
+    toggleable: true,
     children: [
       {
         id: 'docu-parse',
@@ -88,6 +89,8 @@ export const navigationConfig: NavigationItem[] = [
     label: '商業智慧',
     icon: BarChart3,
     href: '/business-intelligence',
+    visible: true,
+    toggleable: true,
     children: [
       {
         id: 'analytics-dashboard',
@@ -108,6 +111,8 @@ export const navigationConfig: NavigationItem[] = [
     label: '核心操作',
     icon: Cog,
     href: '/core-operations',
+    visible: true,
+    toggleable: true,
     children: [
       {
         id: 'projects',
@@ -154,6 +159,8 @@ export const navigationConfig: NavigationItem[] = [
     label: '資源管理',
     icon: Package,
     href: '/resource-management',
+    visible: true,
+    toggleable: true,
     children: [
       {
         id: 'hr',
@@ -220,6 +227,8 @@ export const navigationConfig: NavigationItem[] = [
     label: '網站管理',
     icon: LayoutGrid,
     href: '/website-cms',
+    visible: true,
+    toggleable: true,
     children: [
       {
         id: 'cms-dashboard',
@@ -326,4 +335,43 @@ export function isPathActive(itemPath: string, currentPath: string): boolean {
 
   // 一般情況：精確匹配或子路徑匹配
   return currentPath === itemPath || currentPath.startsWith(itemPath + '/');
+}
+
+// 工具函數：獲取可見的導航項目
+export function getVisibleNavigationItems(
+  items: NavigationItem[],
+  visibilityState: Record<string, boolean> = {}
+): NavigationItem[] {
+  return items
+    .filter((item) => {
+      // 如果沒有設置 visible 屬性，默認為 true
+      const isVisible = item.visible !== false;
+      // 檢查是否有自定義的顯示狀態
+      const customVisibility = visibilityState[item.id];
+      return customVisibility !== undefined ? customVisibility : isVisible;
+    })
+    .map((item) => ({
+      ...item,
+      children: item.children
+        ? getVisibleNavigationItems(item.children, visibilityState)
+        : undefined,
+    }));
+}
+
+// 工具函數：切換導航群組的顯示狀態
+export function toggleNavigationGroupVisibility(
+  groupId: string,
+  currentVisibility: Record<string, boolean>
+): Record<string, boolean> {
+  return {
+    ...currentVisibility,
+    [groupId]: !currentVisibility[groupId],
+  };
+}
+
+// 工具函數：獲取所有可切換的導航群組
+export function getToggleableNavigationGroups(
+  items: NavigationItem[]
+): NavigationItem[] {
+  return items.filter((item) => item.toggleable === true);
 }
