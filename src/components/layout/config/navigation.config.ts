@@ -135,12 +135,18 @@ export const navigationConfig: NavigationItem[] = [
             icon: ClipboardList,
             href: '/core-operations/engagements?tab=list',
           },
-          {
-            id: 'create-engagement',
-            label: '建立專案合約',
-            icon: Plus,
-            href: '/core-operations/engagements?tab=list&create=true',
-          },
+                        {
+                id: 'create-engagement',
+                label: '建立專案合約',
+                icon: Plus,
+                href: '/core-operations/engagements?tab=list&create=true',
+              },
+              {
+                id: 'parse-document',
+                label: '文件解析創建',
+                icon: FileText,
+                href: '/core-operations/engagements/parse-document',
+              },
         ],
       },
       {
