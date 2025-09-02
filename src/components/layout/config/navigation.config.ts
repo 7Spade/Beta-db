@@ -34,11 +34,12 @@ import {
   Package,
   Plus,
   Rocket,
+  Shapes,
   Truck,
   UserCheck,
   Users,
   Warehouse,
-  Wrench
+  Wrench,
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -199,6 +200,12 @@ export const navigationConfig: NavigationItem[] = [
             href: '/resource-management/warehousing/warehouses',
           },
           {
+            id: 'categories',
+            label: '物料類別',
+            icon: Shapes,
+            href: '/resource-management/warehousing/categories',
+          },
+          {
             id: 'items',
             label: '物料主檔',
             icon: Package,
@@ -243,7 +250,7 @@ export const navigationConfig: NavigationItem[] = [
         label: '雲端硬碟',
         icon: Cloud,
         href: '/resource-management/document/cloud-drive',
-      }
+      },
     ],
   },
   {

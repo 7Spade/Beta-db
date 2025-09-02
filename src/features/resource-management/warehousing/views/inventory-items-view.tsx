@@ -5,31 +5,54 @@
 'use server';
 
 import { createClient } from '@/features/integrations/database/supabase/server';
-import { ItemFormDialog } from '@/features/resource-management/warehousing/forms/item-form';
-import type { InventoryItem } from '@root/src/shared/types/types';
+import type {
+  InventoryCategory,
+  InventoryItem,
+} from '@root/src/shared/types/types';
 import { cookies } from 'next/headers';
 import { InventoryItemsClientView } from './inventory-items-client-view';
 
-async function getItems(): Promise<InventoryItem[]> {
+async function getItemsAndCategories(): Promise<{
+  items: InventoryItem[];
+  categories: InventoryCategory[];
+}> {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data, error } = await supabase
-    .from('inventory_items')
-    .select('*')
-    .order('name');
 
-  if (error) {
-    console.error('Error fetching inventory items:', error);
-    return [];
+  const [itemsRes, categoriesRes] = await Promise.all([
+    supabase.from('inventory_items').select('*').order('name'),
+    supabase.from('inventory_categories').select('*').order('name'),
+  ]);
+
+  if (itemsRes.error || categoriesRes.error) {
+    console.error(
+      'Error fetching items/categories:',
+      itemsRes.error,
+      categoriesRes.error
+    );
+    return { items: [], categories: [] };
   }
-  return data.map(item => ({
-    ...item,
-    safeStockLevel: item.safe_stock_level,
-    createdAt: item.created_at ? new Date(item.created_at) : undefined,
-  })) as InventoryItem[];
+
+  const items = itemsRes.data.map(
+    (item) =>
+      ({
+        ...item,
+        safeStockLevel: item.safe_stock_level,
+        createdAt: item.created_at ? new Date(item.created_at) : undefined,
+      }) as InventoryItem
+  );
+
+  const categories = categoriesRes.data as InventoryCategory[];
+
+  return { items, categories };
 }
 
 export async function InventoryItemsView() {
-  const items = await getItems();
-  return <InventoryItemsClientView initialItems={items} />;
+  const { items, categories } = await getItemsAndCategories();
+  return (
+    <InventoryItemsClientView
+      initialItems={items}
+      initialCategories={categories}
+    />
+  );
 }

@@ -1,60 +1,77 @@
--- 迁移档案: 006_create_warehousing_tables.sql
--- 功能: 建立所有与仓储管理相关的资料表
+-- 檔案: supabase-migrations/006_create_warehousing_tables.sql
+-- 描述: 建立倉儲管理系統所需的核心資料表
 
--- 仓库/据点表
+-- 啟用 pgcrypto 擴充套件以使用 uuid_generate_v4()
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- 1. 倉庫資料表 (warehouses)
+-- 儲存所有實體的倉庫或庫存地點。
 CREATE TABLE IF NOT EXISTS public.warehouses (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    location TEXT,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    location text,
+    is_active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now()
 );
 
-COMMENT ON TABLE public.warehouses IS '储存所有仓库或工地的实体据点';
-COMMENT ON COLUMN public.warehouses.name IS '仓库的唯一名称';
-COMMENT ON COLUMN public.warehouses.is_active IS '标记此仓库是否仍在运作中';
+COMMENT ON TABLE public.warehouses IS 'Stores physical warehouse or stock locations.';
+COMMENT ON COLUMN public.warehouses.name IS 'The unique name of the warehouse.';
 
--- 物料主档表 (物料目录)
+-- 2. 物料類別資料表 (inventory_categories)
+-- 儲存所有物料的分類。
+CREATE TABLE IF NOT EXISTS public.inventory_categories (
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    created_at timestamp with time zone DEFAULT now()
+);
+COMMENT ON TABLE public.inventory_categories IS 'Stores categories for inventory items.';
+
+-- 3. 物料主檔資料表 (inventory_items)
+-- 物料的目錄，定義了所有物料的基礎資訊。
 CREATE TABLE IF NOT EXISTS public.inventory_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    category TEXT,
-    unit TEXT,
-    safe_stock_level NUMERIC DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name text NOT NULL,
+    category text,
+    unit text,
+    safe_stock_level integer,
+    created_at timestamp with time zone DEFAULT now()
 );
 
-COMMENT ON TABLE public.inventory_items IS '物料的主档目录，不包含库存数量信息';
-COMMENT ON COLUMN public.inventory_items.name IS '物料/工具的名称';
-COMMENT ON COLUMN public.inventory_items.safe_stock_level IS '安全库存水位';
+COMMENT ON TABLE public.inventory_items IS 'Master catalog of all inventory items.';
+COMMENT ON COLUMN public.inventory_items.category IS 'The category of the item.';
 
--- 库存水平表 (核心)
+-- 4. 庫存水平資料表 (inventory_levels)
+-- 核心庫存資料表，代表一個物料在一個倉庫的庫存量。
 CREATE TABLE IF NOT EXISTS public.inventory_levels (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    item_id UUID NOT NULL REFERENCES public.inventory_items(id) ON DELETE CASCADE,
-    warehouse_id UUID NOT NULL REFERENCES public.warehouses(id) ON DELETE CASCADE,
-    quantity NUMERIC NOT NULL DEFAULT 0,
-    last_updated TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(item_id, warehouse_id)
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    item_id uuid NOT NULL REFERENCES public.inventory_items(id) ON DELETE CASCADE,
+    warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE CASCADE,
+    quantity integer NOT NULL DEFAULT 0,
+    last_updated timestamp with time zone DEFAULT now(),
+    UNIQUE (item_id, warehouse_id)
 );
 
-COMMENT ON TABLE public.inventory_levels IS '代表一个物料在一个仓库的即时库存量';
-COMMENT ON COLUMN public.inventory_levels.quantity IS '当前的实际库存数量';
+CREATE INDEX IF NOT EXISTS idx_inventory_levels_item_id ON public.inventory_levels(item_id);
+CREATE INDEX IF NOT EXISTS idx_inventory_levels_warehouse_id ON public.inventory_levels(warehouse_id);
+COMMENT ON TABLE public.inventory_levels IS 'Tracks the quantity of each item in each warehouse.';
 
--- 库存移动纪录表 (流水帐)
+-- 5. 庫存移動紀錄資料表 (inventory_movements)
+-- 作為不可變的流水帳，記錄每一次庫存的變動歷史。
+CREATE TYPE public.movement_type AS ENUM ('inbound', 'outbound', 'adjust');
 CREATE TABLE IF NOT EXISTS public.inventory_movements (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    item_id UUID NOT NULL REFERENCES public.inventory_items(id) ON DELETE RESTRICT,
-    warehouse_id UUID NOT NULL REFERENCES public.warehouses(id) ON DELETE RESTRICT,
-    type TEXT NOT NULL CHECK (type IN ('inbound', 'outbound', 'adjust')),
-    quantity NUMERIC NOT NULL,
-    unit_price NUMERIC,
-    project_id TEXT, -- Can be linked to projects later
-    notes TEXT,
-    operator_id TEXT, -- Can be linked to users later
-    timestamp TIMESTAMPTZ DEFAULT NOW()
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    item_id uuid NOT NULL REFERENCES public.inventory_items(id) ON DELETE RESTRICT,
+    warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE RESTRICT,
+    type public.movement_type NOT NULL,
+    quantity integer NOT NULL,
+    unit_price numeric,
+    project_id text,
+    notes text,
+    operator_id text,
+    timestamp timestamp with time zone DEFAULT now()
 );
 
-COMMENT ON TABLE public.inventory_movements IS '记录每一次库存变动的流水帐';
-COMMENT ON COLUMN public.inventory_movements.type IS '变动类型: inbound, outbound, adjust';
-COMMENT ON COLUMN public.inventory_movements.quantity IS '变动的数量 (正数)';
+CREATE INDEX IF NOT EXISTS idx_inventory_movements_item_id ON public.inventory_movements(item_id);
+CREATE INDEX IF NOT EXISTS idx_inventory_movements_warehouse_id ON public.inventory_movements(warehouse_id);
+CREATE INDEX IF NOT EXISTS idx_inventory_movements_timestamp ON public.inventory_movements(timestamp);
+COMMENT ON TABLE public.inventory_movements IS 'Immutable log of all inventory transactions.';

@@ -21,8 +21,14 @@ export interface Warehouse {
   id: string;
   name: string;
   location?: string;
-  managerId?: string;
   isActive: boolean;
+  createdAt?: Date;
+}
+
+export interface InventoryCategory {
+  id: string;
+  name: string;
+  createdAt: Date;
 }
 
 export interface InventoryItem {
@@ -31,8 +37,7 @@ export interface InventoryItem {
   category: string;
   unit: string;
   safeStockLevel?: number;
-  supplierId?: string;
-  createdAt?: Date | Timestamp;
+  createdAt?: Date;
 }
 
 export interface InventoryLevel {
@@ -240,6 +245,7 @@ export interface Task {
   value: number;
   quantity: number;
   unitPrice: number;
+  discount?: number; // 新增折扣欄位
   completedQuantity: number;
 }
 

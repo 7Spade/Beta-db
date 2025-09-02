@@ -5,12 +5,17 @@
 'use server';
 
 import { createClient } from '@/features/integrations/database/supabase/server';
-import type { InventoryItem, Warehouse } from '@root/src/shared/types/types';
+import type {
+  InventoryCategory,
+  InventoryItem,
+  Warehouse,
+} from '@root/src/shared/types/types';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
 const WAREHOUSES_PATH = '/resource-management/warehousing/warehouses';
 const ITEMS_PATH = '/resource-management/warehousing/items';
+const CATEGORIES_PATH = '/resource-management/warehousing/categories';
 const MOVEMENTS_PATH = '/resource-management/warehousing/movements';
 
 type ActionResult = {
@@ -152,7 +157,7 @@ export async function recordMovementAction(
   try {
     // In a real application, this should be a PostgreSQL transaction (RPC function)
     // to ensure atomicity. For now, we simulate it with sequential calls.
-    
+
     // 1. Get current stock level
     const { data: level, error: levelError } = await supabase
       .from('inventory_levels')
@@ -161,14 +166,18 @@ export async function recordMovementAction(
       .eq('warehouse_id', input.warehouseId)
       .single();
 
-    if (levelError && levelError.code !== 'PGRST116') { // Ignore 'no rows' error
+    if (levelError && levelError.code !== 'PGRST116') {
+      // Ignore 'no rows' error
       throw levelError;
     }
 
     const currentQty = level?.quantity || 0;
-    const change = input.type === 'inbound' || input.type === 'adjust' ? input.quantity : -input.quantity;
-    const newQty = (input.type === 'adjust') ? input.quantity : currentQty + change;
-    
+    const change =
+      input.type === 'inbound' || input.type === 'adjust'
+        ? input.quantity
+        : -input.quantity;
+    const newQty = input.type === 'adjust' ? input.quantity : currentQty + change;
+
     if (input.type === 'outbound' && newQty < 0) {
       throw new Error('庫存不足，無法出庫。');
     }
@@ -176,26 +185,31 @@ export async function recordMovementAction(
     // 2. Upsert inventory level
     const { error: upsertError } = await supabase
       .from('inventory_levels')
-      .upsert({
-        item_id: input.itemId,
-        warehouse_id: input.warehouseId,
-        quantity: newQty,
-        last_updated: new Date().toISOString()
-      }, { onConflict: 'item_id, warehouse_id' });
+      .upsert(
+        {
+          item_id: input.itemId,
+          warehouse_id: input.warehouseId,
+          quantity: newQty,
+          last_updated: new Date().toISOString(),
+        },
+        { onConflict: 'item_id, warehouse_id' }
+      );
 
     if (upsertError) throw upsertError;
 
     // 3. Create movement record
-    const { error: movementError } = await supabase.from('inventory_movements').insert({
-      item_id: input.itemId,
-      warehouse_id: input.warehouseId,
-      type: input.type,
-      quantity: input.quantity, // Always positive
-      unit_price: input.unitPrice,
-      project_id: input.projectId,
-      notes: input.notes,
-      operator_id: input.operatorId
-    });
+    const { error: movementError } = await supabase
+      .from('inventory_movements')
+      .insert({
+        item_id: input.itemId,
+        warehouse_id: input.warehouseId,
+        type: input.type,
+        quantity: input.quantity, // Always positive
+        unit_price: input.unitPrice,
+        project_id: input.projectId,
+        notes: input.notes,
+        operator_id: input.operatorId,
+      });
 
     if (movementError) throw movementError;
 
@@ -206,5 +220,67 @@ export async function recordMovementAction(
     const error = e instanceof Error ? e.message : '发生未知错误';
     console.error('紀錄庫存移動時發生錯誤:', error);
     return { success: false, error: `操作失敗: ${error}` };
+  }
+}
+
+// --- Inventory Category Actions ---
+
+export async function getInventoryCategories(): Promise<InventoryCategory[]> {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data, error } = await supabase
+    .from('inventory_categories')
+    .select('*')
+    .order('name');
+  if (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+  return data as InventoryCategory[];
+}
+
+export async function saveCategoryAction(
+  data: Omit<InventoryCategory, 'id' | 'createdAt'>,
+  categoryId?: string
+): Promise<ActionResult> {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  try {
+    if (categoryId) {
+      const { error } = await supabase
+        .from('inventory_categories')
+        .update(data)
+        .eq('id', categoryId);
+      if (error) throw error;
+    } else {
+      const { error } = await supabase
+        .from('inventory_categories')
+        .insert(data);
+      if (error) throw error;
+    }
+    revalidatePath(CATEGORIES_PATH);
+    return { success: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
+    return { success: false, error: `儲存失敗: ${error}` };
+  }
+}
+
+export async function deleteCategoryAction(
+  categoryId: string
+): Promise<ActionResult> {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  try {
+    const { error } = await supabase
+      .from('inventory_categories')
+      .delete()
+      .eq('id', categoryId);
+    if (error) throw error;
+    revalidatePath(CATEGORIES_PATH);
+    return { success: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
+    return { success: false, error: `刪除失敗: ${error}` };
   }
 }

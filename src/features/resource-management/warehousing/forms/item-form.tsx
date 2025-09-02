@@ -1,6 +1,6 @@
 /**
  * @fileoverview Inventory Item Form
- * @description Form for creating or editing inventory items.
+ * @description Form for creating or editing inventory items, now with category selection.
  */
 'use client';
 
@@ -25,15 +25,19 @@ import {
 import { Input } from '@/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@root/src/shared/hooks/use-toast';
-import type { InventoryItem } from '@root/src/shared/types/types';
+import type {
+  InventoryCategory,
+  InventoryItem,
+} from '@root/src/shared/types/types';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Combobox } from '../components/combobox';
 
 const itemSchema = z.object({
   name: z.string().min(2, '物料名稱至少需要 2 個字元。'),
-  category: z.string().min(2, '分類至少需要 2 個字元。'),
+  category: z.string().min(1, '請選擇一個分類。'),
   unit: z.string().min(1, '單位為必填項。'),
   safeStockLevel: z.coerce.number().min(0).optional(),
 });
@@ -44,12 +48,14 @@ interface ItemFormDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   item: InventoryItem | null;
+  categories: InventoryCategory[];
 }
 
 export function ItemFormDialog({
   isOpen,
   onOpenChange,
   item,
+  categories,
 }: ItemFormDialogProps) {
   const [isSaving, startTransition] = useTransition();
   const { toast } = useToast();
@@ -105,6 +111,11 @@ export function ItemFormDialog({
     });
   }
 
+  const categoryOptions = categories.map((c) => ({
+    value: c.name,
+    label: c.name,
+  }));
+
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogChange}>
       <DialogContent className="sm:max-w-md">
@@ -138,11 +149,14 @@ export function ItemFormDialog({
               control={form.control}
               name="category"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>分類</FormLabel>
-                  <FormControl>
-                    <Input placeholder="例如：安全護具" {...field} />
-                  </FormControl>
+                  <Combobox
+                    options={categoryOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="選擇或搜尋分類..."
+                  />
                   <FormMessage />
                 </FormItem>
               )}

@@ -1,11 +1,8 @@
 
 'use client';
 
-import {
-  deleteItemAction,
-  getInventoryCategories,
-} from '@/features/resource-management/warehousing/actions/warehousing-actions';
-import { ItemFormDialog } from '@/features/resource-management/warehousing/forms/item-form';
+import { deleteCategoryAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
+import { CategoryFormDialog } from '@/features/resource-management/warehousing/forms/category-form';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,44 +37,43 @@ import {
   TableRow,
 } from '@/ui/table';
 import { useToast } from '@root/src/shared/hooks/use-toast';
-import type {
-  InventoryCategory,
-  InventoryItem,
-} from '@root/src/shared/types/types';
+import type { InventoryCategory } from '@root/src/shared/types/types';
 import { formatDate } from '@root/src/shared/utils';
 import {
   Edit,
   MoreVertical,
-  Package,
   PlusCircle,
+  Shapes,
   Trash2,
 } from 'lucide-react';
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 
-interface InventoryItemsClientViewProps {
-  initialItems: InventoryItem[];
+interface InventoryCategoriesClientViewProps {
   initialCategories: InventoryCategory[];
 }
 
-export function InventoryItemsClientView({
-  initialItems,
+export function InventoryCategoriesClientView({
   initialCategories,
-}: InventoryItemsClientViewProps) {
+}: InventoryCategoriesClientViewProps) {
   const [isFormOpen, setFormOpen] = useState(false);
-  const [itemToEdit, setItemToEdit] = useState<InventoryItem | null>(null);
+  const [categoryToEdit, setCategoryToEdit] =
+    useState<InventoryCategory | null>(null);
   const [isDeleting, startDeleteTransition] = useTransition();
   const { toast } = useToast();
 
-  const handleOpenForm = (item: InventoryItem | null) => {
-    setItemToEdit(item);
+  const handleOpenForm = (category: InventoryCategory | null) => {
+    setCategoryToEdit(category);
     setFormOpen(true);
   };
 
-  const handleDeleteItem = (item: InventoryItem) => {
+  const handleDeleteCategory = (category: InventoryCategory) => {
     startDeleteTransition(async () => {
-      const result = await deleteItemAction(item.id);
+      const result = await deleteCategoryAction(category.id);
       if (result.success) {
-        toast({ title: '成功', description: `物料 "${item.name}" 已刪除。` });
+        toast({
+          title: '成功',
+          description: `分類 "${category.name}" 已刪除。`,
+        });
       } else {
         toast({
           title: '錯誤',
@@ -91,51 +87,41 @@ export function InventoryItemsClientView({
   return (
     <>
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">物料主檔</h1>
+        <h1 className="text-3xl font-bold tracking-tight">物料類別</h1>
         <Button onClick={() => handleOpenForm(null)}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          新增物料
+          新增類別
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>物料列表</CardTitle>
-          <CardDescription>全公司的統一物料目錄。</CardDescription>
+          <CardTitle>類別列表</CardTitle>
+          <CardDescription>管理所有物料的分類。</CardDescription>
         </CardHeader>
         <CardContent>
-          {initialItems.length === 0 ? (
+          {initialCategories.length === 0 ? (
             <div className="text-center py-16 border-2 border-dashed rounded-lg">
-              <Package className="mx-auto h-12 w-12 text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-semibold">尚無物料</h3>
+              <Shapes className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-semibold">尚無類別</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                點擊「新增物料」以建立您的第一個品項。
+                點擊「新增類別」以建立您的第一個分類。
               </p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>物料名稱</TableHead>
-                  <TableHead>分類</TableHead>
-                  <TableHead>單位</TableHead>
-                  <TableHead>安全庫存</TableHead>
+                  <TableHead>類別名稱</TableHead>
                   <TableHead>建立日期</TableHead>
                   <TableHead className="text-right">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {initialItems.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell>{item.category}</TableCell>
-                    <TableCell>{item.unit}</TableCell>
-                    <TableCell>
-                      {item.safeStockLevel ?? '未設定'}
-                    </TableCell>
-                    <TableCell>
-                      {item.createdAt ? formatDate(item.createdAt) : '-'}
-                    </TableCell>
+                {initialCategories.map((cat) => (
+                  <TableRow key={cat.id}>
+                    <TableCell className="font-medium">{cat.name}</TableCell>
+                    <TableCell>{formatDate(cat.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <AlertDialog>
                         <DropdownMenu>
@@ -146,7 +132,7 @@ export function InventoryItemsClientView({
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
                             <DropdownMenuItem
-                              onClick={() => handleOpenForm(item)}
+                              onClick={() => handleOpenForm(cat)}
                             >
                               <Edit className="mr-2 h-4 w-4" />
                               編輯
@@ -165,13 +151,16 @@ export function InventoryItemsClientView({
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>
-                              確定要刪除「{item.name}」嗎？
+                              確定要刪除「{cat.name}」嗎？
                             </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              此操作無法復原。如果已有物料使用此分類，您可能需要先更新它們。
+                            </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>取消</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => handleDeleteItem(item)}
+                              onClick={() => handleDeleteCategory(cat)}
                               disabled={isDeleting}
                             >
                               繼續刪除
@@ -188,11 +177,10 @@ export function InventoryItemsClientView({
         </CardContent>
       </Card>
 
-      <ItemFormDialog
+      <CategoryFormDialog
         isOpen={isFormOpen}
         onOpenChange={setFormOpen}
-        item={itemToEdit}
-        categories={initialCategories}
+        category={categoryToEdit}
       />
     </>
   );
