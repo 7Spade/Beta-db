@@ -4,8 +4,7 @@
  */
 import type {
   AiTokenLogInsert,
-  AiTokenLogRow,
-  Database,
+  AiTokenLogRow
 } from '@root/src/features/integrations/database/supabase/types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
