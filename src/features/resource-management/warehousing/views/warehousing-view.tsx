@@ -1,6 +1,6 @@
 /**
  * @fileoverview Unified Warehousing View
- * @description Simplified warehousing view that focuses on the unified stock management interface.
+ * @description The sole entry point for the warehousing feature, rendering the main stock management interface.
  */
 'use server';
 

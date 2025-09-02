@@ -6,6 +6,7 @@
 
 import { createClient } from '@/features/integrations/database/supabase/client';
 import { Badge } from '@/ui/badge';
+import { Button } from '@/ui/button';
 import {
   Card,
   CardContent,
@@ -13,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/ui/card';
-// Removed Collapsible imports as we're using simple conditional rendering
 import {
   Table,
   TableBody,
@@ -24,7 +24,7 @@ import {
 } from '@/ui/table';
 import type { InventoryItem, Warehouse } from '@root/src/shared/types/types';
 import { cn } from '@root/src/shared/utils';
-import { ChevronRight, Package } from 'lucide-react';
+import { ChevronRight, Package, PlusCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -42,9 +42,16 @@ type ExpandedStockLevel = {
 interface StockLevelTableProps {
   items: InventoryItem[];
   warehouses: Warehouse[];
+  onAddItem: () => void;
+  onAddCategory: () => void;
 }
 
-export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
+export function StockLevelTable({
+  items,
+  warehouses,
+  onAddItem,
+  onAddCategory,
+}: StockLevelTableProps) {
   const searchParams = useSearchParams();
   const selectedWarehouseId = searchParams.get('warehouseId');
   const [stockLevels, setStockLevels] = useState<StockLevel[]>([]);
@@ -112,18 +119,30 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>
-          {selectedWarehouseId
-            ? warehouseMap.get(selectedWarehouseId)
-            : '所有倉庫'}{' '}
-          - 庫存水平
-        </CardTitle>
-        <CardDescription>
-          {selectedWarehouseId
-            ? '此倉庫中所有物料的當前庫存。'
-            : '所有物料在全部倉庫中的庫存總覽。'}
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>
+            {selectedWarehouseId
+              ? warehouseMap.get(selectedWarehouseId)
+              : '所有倉庫'}{' '}
+            - 庫存水平
+          </CardTitle>
+          <CardDescription>
+            {selectedWarehouseId
+              ? '此倉庫中所有物料的當前庫存。'
+              : '所有物料在全部倉庫中的庫存總覽。'}
+          </CardDescription>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onAddCategory}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            新增類別
+          </Button>
+          <Button size="sm" onClick={onAddItem}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            新增物料
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         {filteredItems.length === 0 ? (
@@ -140,7 +159,8 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
               <TableRow>
                 <TableHead className="w-12"></TableHead>
                 <TableHead>物料名稱</TableHead>
-                <TableHead>分類</TableHead>
+                <TableHead>核心類型</TableHead>
+                <TableHead>業務分類</TableHead>
                 <TableHead className="text-right">庫存數量</TableHead>
               </TableRow>
             </TableHeader>
@@ -155,7 +175,7 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
                     <TableRow className="hover:bg-muted/50">
                       <TableCell>
                         {!selectedWarehouseId && distribution.length > 0 && (
-                          <button 
+                          <button
                             className="p-1 rounded-md hover:bg-muted"
                             onClick={() => toggleRow(item.id)}
                           >
@@ -168,8 +188,15 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
                           </button>
                         )}
                       </TableCell>
-                      <TableCell className="font-medium">
-                        {item.name}
+                      <TableCell className="font-medium">{item.name}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            item.itemType === 'asset' ? 'default' : 'secondary'
+                          }
+                        >
+                          {item.itemType === 'asset' ? '資產/工具' : '消耗品'}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">
@@ -177,13 +204,12 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right font-mono">
-                        {getStockFor(item.id, selectedWarehouseId)}{' '}
-                        {item.unit}
+                        {getStockFor(item.id, selectedWarehouseId)} {item.unit}
                       </TableCell>
                     </TableRow>
                     {!selectedWarehouseId && isExpanded && (
                       <TableRow>
-                        <TableCell colSpan={4} className="p-0">
+                        <TableCell colSpan={5} className="p-0">
                           <div className="bg-muted/50 p-4 pl-16">
                             <h4 className="font-semibold mb-2">
                               各倉庫庫存分佈
