@@ -33,7 +33,7 @@ async function getItemsAndCategories(): Promise<{
     return { items: [], categories: [] };
   }
 
-  const items = itemsRes.data.map(
+  const items = (itemsRes.data || []).map(
     (item) =>
       ({
         id: item.id,
@@ -50,7 +50,11 @@ async function getItemsAndCategories(): Promise<{
       }) as InventoryItem
   );
 
-  const categories = categoriesRes.data as InventoryCategory[];
+  const categories = (categoriesRes.data || []).map(c => ({
+     id: c.id,
+     name: c.name,
+     createdAt: c.created_at ? new Date(c.created_at) : undefined,
+  })) as InventoryCategory[];
 
   return { items, categories };
 }

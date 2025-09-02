@@ -5,12 +5,10 @@
 'use server';
 
 import { createClient } from '@/features/integrations/database/supabase/server';
-import type {
-  InventoryCategory,
-  InventoryItem,
-  InventoryMovement,
-  Warehouse,
-} from '@root/src/shared/types/types';
+import { CategoryList } from '@/features/resource-management/warehousing/components/category-list';
+import { ItemList } from '@/features/resource-management/warehousing/components/item-list';
+import { MovementList } from '@/features/resource-management/warehousing/components/movement-list';
+import { WarehouseList } from '@/features/resource-management/warehousing/components/warehouse-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import {
   Package,
@@ -20,61 +18,8 @@ import {
 } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { Suspense } from 'react';
-import { WarehousesClientView } from './warehouses-client-view';
-import { InventoryItemsClientView } from './inventory-items-client-view';
-import { InventoryCategoriesClientView } from './inventory-categories-client-view';
-import { InventoryMovementsClientView } from './inventory-movements-client-view';
 import { WarehousingDashboardView } from './warehousing-dashboard-view';
 import { Skeleton } from '@/ui/skeleton';
-
-async function getWarehousingData() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  const [warehousesRes, itemsRes, categoriesRes, movementsRes] =
-    await Promise.all([
-      supabase.from('warehouses').select('*').order('name'),
-      supabase.from('inventory_items').select('*').order('name'),
-      supabase.from('inventory_categories').select('*').order('name'),
-      supabase
-        .from('inventory_movements')
-        .select('*')
-        .order('timestamp', { ascending: false }),
-    ]);
-
-  const warehouses = (warehousesRes.data || []).map((wh) => ({
-    id: wh.id,
-    name: wh.name,
-    location: wh.location || undefined,
-    isActive: wh.is_active || false,
-    createdAt: wh.created_at ? new Date(wh.created_at) : undefined,
-  })) as Warehouse[];
-
-  const items = (itemsRes.data || []).map(
-    (item) =>
-      ({
-        id: item.id,
-        name: item.name,
-        category: item.category,
-        unit: item.unit,
-        safeStockLevel: item.safe_stock_level,
-        createdAt: item.created_at ? new Date(item.created_at) : undefined,
-        itemType: item.item_type,
-        hasExpiryTracking: item.has_expiry_tracking,
-        requiresMaintenance: item.requires_maintenance,
-        requiresInspection: item.requires_inspection,
-        isSerialized: item.is_serialized,
-      }) as InventoryItem
-  );
-
-  const categories = (categoriesRes.data || []) as InventoryCategory[];
-  const movements = (movementsRes.data || []).map((m) => ({
-    ...m,
-    timestamp: new Date(m.timestamp!),
-  })) as InventoryMovement[];
-
-  return { warehouses, items, categories, movements };
-}
 
 const LoadingFallback = () => (
   <div className="space-y-4 pt-4">
@@ -84,9 +29,6 @@ const LoadingFallback = () => (
 );
 
 export async function WarehousingView() {
-  const { warehouses, items, categories, movements } =
-    await getWarehousingData();
-
   return (
     <div className="space-y-6">
       <div>
@@ -121,23 +63,24 @@ export async function WarehousingView() {
           </Suspense>
         </TabsContent>
         <TabsContent value="warehouses">
-          <WarehousesClientView initialWarehouses={warehouses} />
+          <Suspense fallback={<LoadingFallback />}>
+             <WarehouseList />
+          </Suspense>
         </TabsContent>
         <TabsContent value="items">
-          <InventoryItemsClientView
-            initialItems={items}
-            initialCategories={categories}
-          />
+          <Suspense fallback={<LoadingFallback />}>
+            <ItemList />
+          </Suspense>
         </TabsContent>
         <TabsContent value="categories">
-          <InventoryCategoriesClientView initialCategories={categories} />
+          <Suspense fallback={<LoadingFallback />}>
+             <CategoryList />
+          </Suspense>
         </TabsContent>
         <TabsContent value="movements">
-          <InventoryMovementsClientView
-            initialMovements={movements}
-            initialItems={items}
-            initialWarehouses={warehouses}
-          />
+          <Suspense fallback={<LoadingFallback />}>
+             <MovementList />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>

@@ -1,6 +1,6 @@
 /**
- * @fileoverview 统一仓储管理页面
- * @description 仓储管理功能的唯一进入点，渲染包含标签页的主视图。
+ * @fileoverview Unified Warehousing Management Page
+ * @description The sole entry point for the warehousing feature, rendering the main tabbed view.
  */
 'use server';
 

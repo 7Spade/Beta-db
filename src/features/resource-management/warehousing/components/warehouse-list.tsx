@@ -23,7 +23,7 @@ async function getWarehouses(): Promise<Warehouse[]> {
   }
 
   // Map from snake_case to camelCase
-  return data.map((wh) => ({
+  return (data || []).map((wh) => ({
     id: wh.id,
     name: wh.name,
     location: wh.location || undefined,

@@ -20,7 +20,7 @@ async function getCategories(): Promise<InventoryCategory[]> {
     console.error('Error fetching categories:', error);
     return [];
   }
-  return data.map((cat) => ({
+  return (data || []).map((cat) => ({
     id: cat.id,
     name: cat.name,
     createdAt: cat.created_at ? new Date(cat.created_at) : undefined,
