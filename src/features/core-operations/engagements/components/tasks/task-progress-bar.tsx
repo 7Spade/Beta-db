@@ -4,7 +4,7 @@
 'use client';
 
 import { Progress } from '@/components/ui/progress';
-import { cn } from "@root/src/shared/utils"
+import { cn } from "@root/src/shared/utils";
 
 interface TaskProgressBarProps {
     completed: number;
