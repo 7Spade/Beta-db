@@ -305,7 +305,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
                 <CheckCircle className="h-4 w-4" />
               </Button>
             )}
-            {deliverable.status === '已完成' && deliverable.status !== '已驗收' && (
+            {deliverable.status === '已完成' && (
               <Button
                 variant="outline"
                 size="sm"
