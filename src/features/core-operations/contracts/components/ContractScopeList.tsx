@@ -1,8 +1,8 @@
 
 'use client';
 
+import type { Task } from '@/features/core-operations/projects/types';
 import { Card, CardContent } from '@/ui/card';
-import type { Task } from '../types';
 import { ContractScopeItem } from './ContractScopeItem';
 
 interface ContractScopeListProps {

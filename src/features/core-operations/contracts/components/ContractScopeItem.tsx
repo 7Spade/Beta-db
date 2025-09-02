@@ -1,6 +1,7 @@
 
 'use client';
 
+import type { Task } from '@/features/core-operations/projects/types';
 import { Badge } from '@/ui/badge';
 import {
   Collapsible,
@@ -11,7 +12,6 @@ import { Progress } from '@/ui/progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/ui/tooltip';
 import { cn } from '@root/src/shared/utils';
 import { CheckCircle2, ChevronRight, Circle, Clock } from 'lucide-react';
-import type { Contract, Task } from '../types';
 
 interface ContractScopeItemProps {
   task: Task;
@@ -115,7 +115,7 @@ export function ContractScopeItem({
       </div>
 
       <CollapsibleContent className="pl-6 space-y-2 relative before:absolute before:left-[1.3rem] before:top-0 before:bottom-0 before:w-px before:bg-border">
-        {task.subTasks.map((subTask) => (
+        {task.subTasks.map((subTask: Task) => (
           <div key={subTask.id} className="relative before:absolute before:left-[-1.1rem] before:top-1/2 before:h-px before:w-4 before:border-b before:border-border">
             <ContractScopeItem
               task={subTask}

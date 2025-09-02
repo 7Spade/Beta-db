@@ -15,13 +15,14 @@ import {
 
 export const contractService = {
   createContract: async (
-    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'>
+    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts' | 'tasks'>
   ): Promise<string> => {
     try {
       const newContractData = {
         ...data,
         startDate: Timestamp.fromDate(data.startDate as Date),
         endDate: Timestamp.fromDate(data.endDate as Date),
+        tasks: [],
         payments: [],
         changeOrders: [],
         versions: [

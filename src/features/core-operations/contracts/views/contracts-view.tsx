@@ -33,7 +33,7 @@ export function ContractsView() {
   };
 
   const handleAddContract = async (
-    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'>
+    data: Omit<Contract, 'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts' | 'tasks'>
   ) => {
     try {
       await contractService.createContract(data);
@@ -84,8 +84,8 @@ export function ContractsView() {
           </CardContent>
         </Card>
       ) : (
-        <ContractsTable 
-          contracts={contracts} 
+        <ContractsTable
+          contracts={contracts}
           onSort={handleSort}
           sortDescriptor={{ field: sortBy, direction: sortDirection }}
         />

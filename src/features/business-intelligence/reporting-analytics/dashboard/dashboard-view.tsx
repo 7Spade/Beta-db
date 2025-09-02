@@ -12,14 +12,14 @@
  * 整合了專案管理數據，提供全面的分析視圖和關鍵績效指標 (KPI) 展示。
  */
 
+import { AiTokenStats } from '@/features/business-intelligence/reporting-analytics/ai/ai-token-stats';
+import { AiTokenLogTable } from '@/features/business-intelligence/reporting-analytics/components/ai-token-log-table';
 import { ContractDashboard } from '@/features/core-operations/contracts/dashboard/contract-dashboard';
 import { ProjectDashboard } from '@/features/core-operations/projects/dashboard/project-dashboard';
 import { Dashboard as PartnerDashboard } from '@/features/resource-management/crm/dashboard/dashboard';
-import { AiTokenStats } from '@/features/business-intelligence/reporting-analytics/ai/ai-token-stats';
-import { AiTokenLogTable } from '@/features/business-intelligence/reporting-analytics/components/ai-token-log-table';
+import { WarehousingDashboardView } from '@/features/resource-management/warehousing/views/warehousing-dashboard-view';
 import { UserDashboard } from '@/features/website-cms/admin/dashboard/user-dashboard';
 import { Separator } from '@/ui/separator';
-import { WarehousingDashboardView } from '@/features/resource-management/warehousing/views/warehousing-dashboard-view';
 
 export function DashboardView() {
   return (
@@ -42,12 +42,12 @@ export function DashboardView() {
         <h2 className="text-2xl font-semibold tracking-tight mb-4">夥伴總覽</h2>
         <PartnerDashboard />
       </section>
-      
+
       <Separator />
 
       <section>
         <h2 className="text-2xl font-semibold tracking-tight mb-4">倉儲總覽</h2>
-        <WarehousingDashboardView isEmbedded={true} />
+        <WarehousingDashboardView />
       </section>
 
       <Separator />

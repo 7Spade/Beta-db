@@ -4,6 +4,7 @@
  */
 'use client';
 
+import { createClient } from '@/features/integrations/database/supabase/client';
 import { Badge } from '@/ui/badge';
 import {
   Card,
@@ -25,9 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
-import { cn } from '@root/src/shared/utils';
 import type { InventoryItem, Warehouse } from '@root/src/shared/types/types';
-import { createClient } from '@/features/integrations/database/supabase/client';
+import { cn } from '@root/src/shared/utils';
 import { ChevronRight, Package } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -156,67 +156,64 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
                   : [];
                 return (
                   <Collapsible
-                    asChild
                     key={item.id}
                     open={isExpanded}
                     onOpenChange={() => toggleRow(item.id)}
                   >
-                    <>
-                      <TableRow className="hover:bg-muted/50">
-                        <TableCell>
-                          {!selectedWarehouseId && distribution.length > 0 && (
-                            <CollapsibleTrigger asChild>
-                              <button className="p-1 rounded-md hover:bg-muted">
-                                <ChevronRight
-                                  className={cn(
-                                    'h-4 w-4 transition-transform',
-                                    isExpanded && 'rotate-90'
-                                  )}
-                                />
-                              </button>
-                            </CollapsibleTrigger>
-                          )}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {item.name}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">
-                            {item.category || '未分類'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right font-mono">
-                          {getStockFor(item.id, selectedWarehouseId)}{' '}
-                          {item.unit}
-                        </TableCell>
-                      </TableRow>
-                      {!selectedWarehouseId && (
-                        <CollapsibleContent asChild>
-                          <TableRow>
-                            <TableCell colSpan={4} className="p-0">
-                              <div className="bg-muted/50 p-4 pl-16">
-                                <h4 className="font-semibold mb-2">
-                                  各倉庫庫存分佈
-                                </h4>
-                                <ul className="space-y-1 text-sm">
-                                  {distribution.map((dist) => (
-                                    <li
-                                      key={dist.warehouseName}
-                                      className="flex justify-between"
-                                    >
-                                      <span>{dist.warehouseName}</span>
-                                      <span className="font-mono">
-                                        {dist.quantity} {item.unit}
-                                      </span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        </CollapsibleContent>
-                      )}
-                    </>
+                    <TableRow className="hover:bg-muted/50">
+                      <TableCell>
+                        {!selectedWarehouseId && distribution.length > 0 && (
+                          <CollapsibleTrigger asChild>
+                            <button className="p-1 rounded-md hover:bg-muted">
+                              <ChevronRight
+                                className={cn(
+                                  'h-4 w-4 transition-transform',
+                                  isExpanded && 'rotate-90'
+                                )}
+                              />
+                            </button>
+                          </CollapsibleTrigger>
+                        )}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {item.name}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {item.category || '未分類'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        {getStockFor(item.id, selectedWarehouseId)}{' '}
+                        {item.unit}
+                      </TableCell>
+                    </TableRow>
+                    {!selectedWarehouseId && (
+                      <CollapsibleContent asChild>
+                        <TableRow>
+                          <TableCell colSpan={4} className="p-0">
+                            <div className="bg-muted/50 p-4 pl-16">
+                              <h4 className="font-semibold mb-2">
+                                各倉庫庫存分佈
+                              </h4>
+                              <ul className="space-y-1 text-sm">
+                                {distribution.map((dist) => (
+                                  <li
+                                    key={dist.warehouseName}
+                                    className="flex justify-between"
+                                  >
+                                    <span>{dist.warehouseName}</span>
+                                    <span className="font-mono">
+                                      {dist.quantity} {item.unit}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      </CollapsibleContent>
+                    )}
                   </Collapsible>
                 );
               })}

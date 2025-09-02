@@ -25,7 +25,7 @@ interface CreateContractDialogProps {
   onSave: (
     data: Omit<
       Contract,
-      'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts'
+      'id' | 'payments' | 'changeOrders' | 'versions' | 'receipts' | 'tasks'
     >
   ) => Promise<boolean>;
 }

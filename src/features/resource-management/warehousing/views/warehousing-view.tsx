@@ -4,10 +4,6 @@
  */
 'use server';
 
-import { CategoryList } from '@/features/resource-management/warehousing/components/category-list';
-import { ItemList } from '@/features/resource-management/warehousing/components/item-list';
-import { MovementList } from '@/features/resource-management/warehousing/components/movement-list';
-import { WarehouseList } from '@/features/resource-management/warehousing/components/warehouse-list';
 import { Skeleton } from '@/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import {
@@ -17,7 +13,11 @@ import {
   Warehouse as WarehouseIcon,
 } from 'lucide-react';
 import { Suspense } from 'react';
+import { CategoryList } from './category-list';
+import { ItemList } from './item-list';
+import { MovementList } from './movement-list';
 import { StockLevelsView } from './stock-levels-view';
+import { WarehouseList } from './warehouse-list';
 import { WarehousingDashboardView } from './warehousing-dashboard-view';
 
 const LoadingFallback = () => (
