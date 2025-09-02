@@ -1,0 +1,71 @@
+# 倉儲管理模組 v2.0 - 設計藍圖
+
+本文件詳細闡述了 Beta-db 整合平台中「倉儲管理」功能的系統設計與架構。此模組已升級為一個以「庫存水平」為核心的**統一作業中心**，旨在提供一站式、高效率的管理體驗。
+
+## 1. 核心設計理念 (Core Philosophy)
+
+取代傳統的多頁面切換模式，新的倉儲管理模組遵循「情境式操作」和「資訊聚合」的原則：
+
+- **單一作業中心**: 所有核心的倉儲操作——從查看庫存、管理倉庫、新增物料到追蹤歷史紀錄——都在同一個介面中完成，無需頁面跳轉。
+- **庫存為核心**: 系統以「庫存水平」作為核心視圖，所有其他功能都圍繞著「庫存」這個中心概念展開。
+- **智慧化流程**: 系統會根據使用者當前所在的視圖（例如：正在查看「台北倉」），自動調整操作的預設行為（例如：新增的物料會自動歸屬到「台北倉」），簡化了操作流程。
+
+## 2. 功能與工作流程 (Features & Workflow)
+
+1.  **整合儀表板 (`WarehousingDashboardView`)**:
+    - 提供關鍵數據的快速總覽，例如啟用中的倉庫數量、物料品項總數等。
+
+2.  **庫存水平視圖 (`StockLevelsView`)**:
+    - **核心介面**: 這是整個模組的主要操作區域。
+    - **倉庫選擇器**: 左側的倉庫列表允許使用者快速篩選特定倉庫的庫存，或選擇「所有倉庫」來查看全局庫存。倉庫的狀態（如啟用中、租約狀態）會直接顯示在選擇器上。
+    - **庫存表格**:
+      - 清晰地展示物料的名稱、分類、管理屬性以及在當前選定倉庫（或所有倉庫）的庫存數量。
+      - 對於「所有倉庫」視圖，提供可展開的行，以顯示單一物料在各個倉庫的具體分佈。
+    - **情境式操作**:
+      - **新增物料/分類**: 按鈕直接位於庫存表格的標頭，方便快速新增。
+      - **出入庫操作**: 直接在每一行物料旁提供操作按鈕，點擊後彈出表單，並已預填好物料資訊。
+      - **查看歷史紀錄**: 每一行物料都提供「查看紀錄」按鈕，點擊後會彈出一個對話方塊，**只顯示該物料相關**的出入庫歷史，極大提高了追溯效率。
+
+## 3. 檔案結構 (v2.0)
+
+為了支持上述功能，模組的檔案結構已被重構為更清晰的、以職責劃分的模式：
+
+```
+src/features/resource-management/warehousing/
+├── README.md               # (本文件) 模組概述
+├── actions/                # Server Actions，處理所有後端邏輯
+│   └── warehousing-actions.ts
+├── components/             # 小型的、可在模組內多處重用的元件
+│   └── warehouse-selector.tsx
+├── forms/                  # 用於新增/編輯的獨立表單對話方塊
+│   ├── category-form.tsx
+│   ├── item-form.tsx
+│   └── warehouse-form.tsx
+├── tables/                 # 核心的庫存水平表格元件
+│   └── stock-level-table.tsx
+├── utils/                  # 工具函數，如資料庫與前端類型的映射
+│   └── data-mappers.ts
+└── views/                  # 構成主要 UI 區塊的大型視圖元件
+    ├── category-list-view.tsx      # (已整合) 物料分類管理視圖
+    ├── item-list-view.tsx          # (已整合) 物料主檔管理視圖
+    ├── movement-list-view.tsx      # (彈出式) 出入庫歷史紀錄視圖
+    ├── stock-levels-view.tsx       # 核心：庫存水平與操作視圖
+    ├── warehouse-list-view.tsx     # (已整合) 倉庫管理視圖
+    ├── warehousing-dashboard-view.tsx # 儀表板總覽視圖
+    └── warehousing-view.tsx        # 組合所有視圖的根元件
+```
+
+## 4. 頁面入口 (Page Entry)
+
+```
+src/app/(dashboard)/resource-management/warehousing/
+└── page.tsx      # 倉儲儀表板頁面，是整個功能的唯一入口點。
+```
+
+此頁面現在是一個伺服器元件，負責在伺服器端一次性獲取所有必要的初始數據，並將其傳遞給 `WarehousingView`，以實現最佳的載入性能。
+
+## 5. 相關文件
+
+- [倉儲管理系統資料庫藍圖](../../04_project_management/inventory.md)
+- [導航配置](../../../components/layout/config/navigation.config.ts) (`resource-management` -> `warehousing`)
+- [模組結構標準](../../03_development/module-structure-standards.md)
