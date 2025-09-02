@@ -14,7 +14,7 @@ import {
   Calendar,
   Users
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@root/src/shared/utils';
 import type { ProgressSummary } from '../../types';
 
 interface ProgressSummaryProps {
