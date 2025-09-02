@@ -1,4 +1,3 @@
-
 /**
  * @project Beta-db Integrated Platform - 統一整合平台儀表板頁面
  * @framework Next.js 15+ (App Router)
@@ -20,6 +19,7 @@ import { AiTokenStats } from '@/features/business-intelligence/reporting-analyti
 import { AiTokenLogTable } from '@/features/business-intelligence/reporting-analytics/components/ai-token-log-table';
 import { UserDashboard } from '@/features/website-cms/admin/dashboard/user-dashboard';
 import { Separator } from '@/ui/separator';
+import { WarehousingDashboardView } from '@/features/resource-management/warehousing/views/warehousing-dashboard-view';
 
 export function DashboardView() {
   return (
@@ -41,6 +41,13 @@ export function DashboardView() {
       <section>
         <h2 className="text-2xl font-semibold tracking-tight mb-4">夥伴總覽</h2>
         <PartnerDashboard />
+      </section>
+      
+      <Separator />
+
+      <section>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">倉儲總覽</h2>
+        <WarehousingDashboardView isEmbedded={true} />
       </section>
 
       <Separator />
