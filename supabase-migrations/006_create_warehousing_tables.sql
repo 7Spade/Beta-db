@@ -1,29 +1,20 @@
--- 仓库表 (Warehouses)
--- 定义所有实体的仓库或库位
+-- 仓库表 (Warehouses) - 極簡租約管理
+-- 定义所有实体的仓库或库位，直接在表中存储租约信息
 CREATE TABLE IF NOT EXISTS public.warehouses (
     id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
     name text NOT NULL,
     location text,
     is_active boolean DEFAULT true,
-    created_at timestamp with time zone DEFAULT now()
-);
-COMMENT ON TABLE public.warehouses IS '仓库或库位的主档资料。';
-
--- 新增：租赁合约表 (Lease Agreements)
--- 专门用于记录仓库的租赁合约历史
-CREATE TABLE IF NOT EXISTS public.lease_agreements (
-    id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
-    warehouse_id uuid NOT NULL REFERENCES public.warehouses(id) ON DELETE CASCADE,
-    lease_start_date timestamptz NOT NULL,
-    lease_end_date timestamptz NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    -- 極簡租約信息
+    lease_end_date timestamptz,
     monthly_rent numeric,
-    lessor_name text,
-    contract_document_url text,
-    status text NOT NULL CHECK (status IN ('Active', 'Expired', 'Upcoming')),
-    created_at timestamp with time zone DEFAULT now()
+    lessor_name text
 );
-COMMENT ON TABLE public.lease_agreements IS '仓库租赁合约历史记录。';
-CREATE INDEX IF NOT EXISTS idx_lease_agreements_warehouse_id ON public.lease_agreements(warehouse_id);
+COMMENT ON TABLE public.warehouses IS '仓库或库位的主档资料，包含极简租约信息。';
+COMMENT ON COLUMN public.warehouses.lease_end_date IS '租约到期日期';
+COMMENT ON COLUMN public.warehouses.monthly_rent IS '月租金';
+COMMENT ON COLUMN public.warehouses.lessor_name IS '出租方名称';
 
 
 -- 物料分类表 (Inventory Categories)
@@ -85,7 +76,6 @@ CREATE INDEX IF NOT EXISTS idx_inventory_movements_warehouse_id ON public.invent
 
 -- 启用所有表的 RLS
 ALTER TABLE public.warehouses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.lease_agreements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.inventory_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.inventory_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.inventory_levels ENABLE ROW LEVEL SECURITY;
@@ -93,7 +83,6 @@ ALTER TABLE public.inventory_movements ENABLE ROW LEVEL SECURITY;
 
 -- 为所有表创建允许公共读取的策略
 CREATE POLICY "Public read access" ON public.warehouses FOR SELECT USING (true);
-CREATE POLICY "Public read access" ON public.lease_agreements FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON public.inventory_categories FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON public.inventory_items FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON public.inventory_levels FOR SELECT USING (true);
@@ -101,7 +90,6 @@ CREATE POLICY "Public read access" ON public.inventory_movements FOR SELECT USIN
 
 -- 为所有表创建允许公共写入的策略（配合 Firebase Auth 使用）
 CREATE POLICY "Public insert access" ON public.warehouses FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public insert access" ON public.lease_agreements FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public insert access" ON public.inventory_categories FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public insert access" ON public.inventory_items FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public insert access" ON public.inventory_levels FOR INSERT WITH CHECK (true);
@@ -109,7 +97,6 @@ CREATE POLICY "Public insert access" ON public.inventory_movements FOR INSERT WI
 
 -- 为所有表创建允许公共更新的策略
 CREATE POLICY "Public update access" ON public.warehouses FOR UPDATE USING (true);
-CREATE POLICY "Public update access" ON public.lease_agreements FOR UPDATE USING (true);
 CREATE POLICY "Public update access" ON public.inventory_categories FOR UPDATE USING (true);
 CREATE POLICY "Public update access" ON public.inventory_items FOR UPDATE USING (true);
 CREATE POLICY "Public update access" ON public.inventory_levels FOR UPDATE USING (true);
@@ -117,7 +104,6 @@ CREATE POLICY "Public update access" ON public.inventory_movements FOR UPDATE US
 
 -- 为所有表创建允许公共删除的策略
 CREATE POLICY "Public delete access" ON public.warehouses FOR DELETE USING (true);
-CREATE POLICY "Public delete access" ON public.lease_agreements FOR DELETE USING (true);
 CREATE POLICY "Public delete access" ON public.inventory_categories FOR DELETE USING (true);
 CREATE POLICY "Public delete access" ON public.inventory_items FOR DELETE USING (true);
 CREATE POLICY "Public delete access" ON public.inventory_levels FOR DELETE USING (true);

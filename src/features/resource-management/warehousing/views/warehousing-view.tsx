@@ -13,7 +13,6 @@ import {
   mapInventoryCategory,
   mapInventoryItem,
   mapInventoryMovement,
-  mapLeaseAgreement,
   mapWarehouse
 } from '@/features/resource-management/warehousing/utils/data-mappers';
 
@@ -33,7 +32,7 @@ async function getData() {
   const cookieStore = await cookies();
   const supabase = await createClient(cookieStore);
 
-  const [warehousesRes, itemsRes, categoriesRes, movementsRes, leasesRes] =
+  const [warehousesRes, itemsRes, categoriesRes, movementsRes] =
     await Promise.all([
       supabase.from('warehouses').select('*').order('name'),
       supabase.from('inventory_items').select('*').order('name'),
@@ -42,7 +41,6 @@ async function getData() {
         .from('inventory_movements')
         .select('*')
         .order('timestamp', { ascending: false }),
-      supabase.from('lease_agreements').select('*').order('lease_end_date', { ascending: false }),
     ]);
 
   // 檢查是否有錯誤
@@ -58,23 +56,18 @@ async function getData() {
   if (movementsRes.error) {
     console.error('獲取移動記錄錯誤:', movementsRes.error);
   }
-  if (leasesRes.error) {
-    console.error('獲取租約數據錯誤:', leasesRes.error);
-  }
 
   // 使用統一的數據映射
   const warehouses = (warehousesRes.data || []).map(mapWarehouse);
   const items = (itemsRes.data || []).map(mapInventoryItem);
   const categories = (categoriesRes.data || []).map(mapInventoryCategory);
   const movements = (movementsRes.data || []).map(mapInventoryMovement);
-  const leases = (leasesRes.data || []).map(mapLeaseAgreement);
 
   return {
     warehouses,
     items,
     categories,
     movements,
-    leases,
   };
 }
 
@@ -86,7 +79,7 @@ const LoadingFallback = () => (
 );
 
 export async function WarehousingView() {
-  const { warehouses, items, categories, movements, leases } = await getData();
+  const { warehouses, items, categories, movements } = await getData();
 
   return (
     <div className="space-y-6">
@@ -122,7 +115,7 @@ export async function WarehousingView() {
           </Suspense>
         </TabsContent>
         <TabsContent value="warehouses">
-          <WarehousesClientView initialWarehouses={warehouses} initialLeases={leases} />
+          <WarehousesClientView initialWarehouses={warehouses} />
         </TabsContent>
         <TabsContent value="items">
           <InventoryItemsClientView

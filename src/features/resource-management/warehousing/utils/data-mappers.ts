@@ -11,6 +11,10 @@ export const mapWarehouse = (db: any): Warehouse => ({
     location: db.location || undefined,
     isActive: db.is_active || false,
     createdAt: db.created_at ? new Date(db.created_at) : undefined,
+    // 極簡租約信息
+    leaseEndDate: db.lease_end_date ? new Date(db.lease_end_date) : undefined,
+    monthlyRent: db.monthly_rent,
+    lessorName: db.lessor_name,
 });
 
 export const mapInventoryItem = (db: any): InventoryItem => ({
@@ -50,19 +54,14 @@ export const mapLeaseAgreement = (db: any): LeaseAgreement => ({
     createdAt: db.created_at ? new Date(db.created_at) : undefined,
 });
 
-// 租約狀態檢查工具
-export const getLeaseStatus = (lease: LeaseAgreement | null) => {
-    if (!lease) return { status: '無租約', variant: 'secondary' as const };
+// 極簡租約狀態檢查
+export const getLeaseStatus = (leaseEndDate: Date | undefined) => {
+    if (!leaseEndDate) return { status: '無租約', variant: 'secondary' as const };
 
     const now = new Date();
-    const endDate = new Date(lease.lease_end_date);
-    const daysUntilExpiry = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    const isExpired = leaseEndDate < now;
 
-    if (daysUntilExpiry < 0) {
-        return { status: '已過期', variant: 'destructive' as const };
-    } else if (daysUntilExpiry <= 30) {
-        return { status: `即將過期 (${daysUntilExpiry}天)`, variant: 'destructive' as const };
-    } else {
-        return { status: '正常', variant: 'default' as const };
-    }
+    return isExpired
+        ? { status: '已過期', variant: 'destructive' as const }
+        : { status: '正常', variant: 'default' as const };
 };

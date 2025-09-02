@@ -33,6 +33,10 @@ const warehouseSchema = z.object({
   name: z.string().min(2, { message: '倉庫名稱至少需要 2 個字元。' }),
   location: z.string().optional(),
   isActive: z.boolean(),
+  // 極簡租約信息
+  leaseEndDate: z.date().optional(),
+  monthlyRent: z.number().optional(),
+  lessorName: z.string().optional(),
 });
 
 type WarehouseFormValues = z.infer<typeof warehouseSchema>;
@@ -53,7 +57,14 @@ export function WarehouseFormDialog({
 
   const form = useForm<WarehouseFormValues>({
     resolver: zodResolver(warehouseSchema),
-    defaultValues: { name: '', location: '', isActive: true },
+    defaultValues: {
+      name: '',
+      location: '',
+      isActive: true,
+      leaseEndDate: undefined,
+      monthlyRent: undefined,
+      lessorName: '',
+    },
   });
 
   useEffect(() => {
@@ -61,7 +72,14 @@ export function WarehouseFormDialog({
       if (warehouse) {
         form.reset(warehouse);
       } else {
-        form.reset({ name: '', location: '', isActive: true });
+        form.reset({
+          name: '',
+          location: '',
+          isActive: true,
+          leaseEndDate: undefined,
+          monthlyRent: undefined,
+          lessorName: '',
+        });
       }
     }
   }, [warehouse, isOpen, form]);

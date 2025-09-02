@@ -23,6 +23,10 @@ export interface Warehouse {
   location?: string;
   isActive: boolean;
   createdAt?: Date;
+  // 極簡租約信息
+  leaseEndDate?: Date;
+  monthlyRent?: number;
+  lessorName?: string;
 }
 
 export interface LeaseAgreement {

@@ -23,17 +23,16 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown-menu';
 import { useToast } from '@root/src/shared/hooks/use-toast';
-import type { LeaseAgreement, Warehouse } from '@root/src/shared/types/types';
+import type { Warehouse } from '@root/src/shared/types/types';
 import { Edit, Loader2, MoreVertical, PlusCircle, Trash2, Warehouse as WarehouseIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { getLeaseStatus } from '../utils/data-mappers';
 
 interface WarehousesClientViewProps {
   initialWarehouses: Warehouse[];
-  initialLeases: LeaseAgreement[]; // Pass leases to find the current one
 }
 
-export function WarehousesClientView({ initialWarehouses, initialLeases }: WarehousesClientViewProps) {
+export function WarehousesClientView({ initialWarehouses }: WarehousesClientViewProps) {
   const [isFormOpen, setFormOpen] = useState(false);
   const [warehouseToEdit, setWarehouseToEdit] = useState<Warehouse | null>(null);
   const [isDeleting, startDeleteTransition] = useTransition();
@@ -94,8 +93,7 @@ export function WarehousesClientView({ initialWarehouses, initialLeases }: Wareh
                     {wh.isActive ? '啟用中' : '已停用'}
                   </Badge>
                   {(() => {
-                    const currentLease = initialLeases.find(l => l.warehouse_id === wh.id) || null;
-                    const leaseStatus = getLeaseStatus(currentLease);
+                    const leaseStatus = getLeaseStatus(wh.leaseEndDate);
                     return (
                       <Badge variant={leaseStatus.variant}>
                         {leaseStatus.status}
