@@ -8,9 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EngagementDashboard, EngagementListView, EngagementProvider } from '@/features/core-operations/engagements';
 import { LayoutDashboard, List, Plus } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 
-export default function EngagementsPage() {
+function EngagementsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -108,5 +108,13 @@ export default function EngagementsPage() {
         </Tabs>
       </div>
     </EngagementProvider>
+  );
+}
+
+export default function EngagementsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EngagementsPageContent />
+    </Suspense>
   );
 }

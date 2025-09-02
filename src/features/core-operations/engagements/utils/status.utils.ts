@@ -90,9 +90,9 @@ export function getPaymentStatusText(status: PaymentStatus): string {
 }
 
 /**
- * 獲取付款狀態的顏色
+ * 獲取付款狀態的顏色 (狀態專用)
  */
-export function getPaymentStatusColor(status: PaymentStatus): string {
+export function getStatusPaymentStatusColor(status: PaymentStatus): string {
   switch (status) {
     case '已付款': return 'bg-green-100 text-green-800';
     case '待處理': return 'bg-yellow-100 text-yellow-800';
@@ -110,9 +110,9 @@ export function getReceiptStatusText(status: ReceiptStatus): string {
 }
 
 /**
- * 獲取收款狀態的顏色
+ * 獲取收款狀態的顏色 (狀態專用)
  */
-export function getReceiptStatusColor(status: ReceiptStatus): string {
+export function getStatusReceiptStatusColor(status: ReceiptStatus): string {
   switch (status) {
     case '已收款': return 'bg-green-100 text-green-800';
     case '待處理': return 'bg-yellow-100 text-yellow-800';
@@ -130,9 +130,9 @@ export function getInvoiceStatusText(status: InvoiceStatus): string {
 }
 
 /**
- * 獲取發票狀態的顏色
+ * 獲取發票狀態的顏色 (狀態專用)
  */
-export function getInvoiceStatusColor(status: InvoiceStatus): string {
+export function getStatusInvoiceStatusColor(status: InvoiceStatus): string {
   switch (status) {
     case '草稿': return 'bg-gray-100 text-gray-800';
     case '已發送': return 'bg-blue-100 text-blue-800';

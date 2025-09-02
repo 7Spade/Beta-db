@@ -11,9 +11,9 @@ import type {
 } from '../types';
 
 /**
- * 格式化貨幣
+ * 格式化貨幣 (財務專用)
  */
-export function formatCurrency(amount: number, currency: string = 'TWD'): string {
+export function formatFinancialCurrency(amount: number, currency: string = 'TWD'): string {
   return new Intl.NumberFormat('zh-TW', {
     style: 'currency',
     currency: currency,
@@ -108,9 +108,9 @@ export function calculateInvoiceSummary(invoices: Invoice[]) {
 }
 
 /**
- * 獲取付款狀態顏色
+ * 獲取付款狀態顏色 (財務專用)
  */
-export function getPaymentStatusColor(status: PaymentStatus): string {
+export function getFinancialPaymentStatusColor(status: PaymentStatus): string {
   switch (status) {
     case '已付款': return 'bg-green-100 text-green-800';
     case '待處理': return 'bg-yellow-100 text-yellow-800';
@@ -121,9 +121,9 @@ export function getPaymentStatusColor(status: PaymentStatus): string {
 }
 
 /**
- * 獲取收款狀態顏色
+ * 獲取收款狀態顏色 (財務專用)
  */
-export function getReceiptStatusColor(status: ReceiptStatus): string {
+export function getFinancialReceiptStatusColor(status: ReceiptStatus): string {
   switch (status) {
     case '已收款': return 'bg-green-100 text-green-800';
     case '待處理': return 'bg-yellow-100 text-yellow-800';
@@ -134,9 +134,9 @@ export function getReceiptStatusColor(status: ReceiptStatus): string {
 }
 
 /**
- * 獲取發票狀態顏色
+ * 獲取發票狀態顏色 (財務專用)
  */
-export function getInvoiceStatusColor(status: InvoiceStatus): string {
+export function getFinancialInvoiceStatusColor(status: InvoiceStatus): string {
   switch (status) {
     case '草稿': return 'bg-gray-100 text-gray-800';
     case '已發送': return 'bg-blue-100 text-blue-800';
