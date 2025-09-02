@@ -1,107 +1,67 @@
-# 倉儲管理模組 (Warehousing Module)
+# 倉儲管理模組 v2.0 - 設計藍圖
 
-## 概述
+本文件詳細闡述了 Beta-db 整合平台中「倉儲管理」功能的系統設計與架構。此模組已升級為一個以「庫存水平」為核心的**統一作業中心**，旨在提供一站式、高效率的管理體驗。
 
-此模組負責所有與「倉儲管理」相關的前端元件和業務邏輯。它將涵蓋多倉庫管理、物料主檔、庫存水平追蹤以及物料的出入庫與調撥。
+## 1. 核心設計理念 (Core Philosophy)
 
-**此模組的資料儲存已全面遷移至 Supabase (PostgreSQL)。**
+取代傳統的多頁面切換模式，新的倉儲管理模組遵循「情境式操作」和「資訊聚合」的原則：
 
----
+- **單一作業中心**: 所有核心的倉儲操作——從查看庫存、管理倉庫、新增物料到追蹤歷史紀錄——都在同一個介面中完成，無需頁面跳轉。
+- **庫存為核心**: 系統以「庫存水平」作為核心視圖，所有其他功能都圍繞著「庫存」這個中心概念展開。
+- **智慧化流程**: 系統會根據使用者當前所在的視圖（例如：正在查看「台北倉」），自動調整操作的預設行為（例如：新增的物料會自動歸屬到「台北倉」），簡化了操作流程。
 
-### **倉儲管理模組重構計畫書 (v2)**
+## 2. 功能與工作流程 (Features & Workflow)
 
-#### **1. 核心目標**
+1.  **整合儀表板 (`WarehousingDashboardView`)**:
+    - 提供關鍵數據的快速總覽，例如啟用中的倉庫數量、物料品項總數等。
 
-本次重構旨在將 `warehousing` 模組的檔案結構與專案的官方標準（`module-structure-standards.md` 和 `file-naming-conventions.md`）完全對齊。這將涉及移動、重命名和組織現有檔案至標準化的子目錄結構中，以提升模組的內聚性、可維護性和開發者體驗。
+2.  **庫存水平視圖 (`StockLevelsView`)**:
+    - **核心介面**: 這是整個模組的主要操作區域。
+    - **倉庫選擇器**: 左側的倉庫列表允許使用者快速篩選特定倉庫的庫存，或選擇「所有倉庫」來查看全局庫存。倉庫的狀態（如啟用中、租約狀態）會直接顯示在選擇器上。
+    - **庫存表格**:
+      - 清晰地展示物料的名稱、分類、管理屬性以及在當前選定倉庫（或所有倉庫）的庫存數量。
+      - 對於「所有倉庫」視圖，提供可展開的行，以顯示單一物料在各個倉庫的具體分佈。
+    - **情境式操作**:
+      - **新增物料/分類**: 按鈕直接位於庫存表格的標頭，方便快速新增。
+      - **出入庫操作**: 直接在每一行物料旁提供操作按鈕，點擊後彈出表單，並已預填好物料資訊。
+      - **查看歷史紀錄**: 每一行物料都提供「查看紀錄」按鈕，點擊後會彈出一個對話方塊，**只顯示該物料相關**的出入庫歷史，極大提高了追溯效率。
 
-#### **2. 目標結構 (根據專案規範)**
+## 3. 檔案結構 (v2.0)
 
-重構後，`warehousing` 模組將嚴格遵循以下標準化的目錄結構：
+為了支持上述功能，模組的檔案結構已被重構為更清晰的、以職責劃分的模式：
 
 ```
 warehousing/
-├── README.md               # (本文件) 模組概述與開發藍圖
-├── actions/                # Server Actions
+├── README.md               # (本文件) 模組概述
+├── actions/                # Server Actions，處理所有後端邏輯
 │   └── warehousing-actions.ts
-├── components/             # 小型、可重用的 UI 元件
+├── components/             # 小型的、可在模組內多處重用的元件
 │   └── warehouse-selector.tsx
-├── forms/                  # 獨立的表單對話框
+├── forms/                  # 用於新增/編輯的獨立表單對話方塊
 │   ├── category-form.tsx
 │   ├── item-form.tsx
 │   └── warehouse-form.tsx
-├── tables/                 # 複雜的表格元件
+├── tables/                 # 核心的庫存水平表格元件
 │   └── stock-level-table.tsx
-├── utils/                  # 工具函數
+├── utils/                  # 工具函數，如資料庫與前端類型的映射
 │   └── data-mappers.ts
 └── views/                  # 構成主要 UI 區塊的大型視圖元件
-    ├── warehousing-dashboard-view.tsx
-    ├── category-list-view.tsx
-    ├── item-list-view.tsx
-    ├── movement-list-view.tsx
-    ├── stock-levels-view.tsx
-    └── warehouse-list-view.tsx
+    ├── movement-list-view.tsx      # (彈出式) 出入庫歷史紀錄視圖
+    ├── stock-levels-view.tsx       # 核心：庫存水平與操作視圖
+    └── warehousing-dashboard-view.tsx # 儀表板總覽視圖
 ```
 
-#### **3. 檔案遷移與重構詳解**
+## 4. 頁面入口 (Page Entry)
 
-- **`actions/`**:
-  - `warehousing-actions.ts`: **保留**。職責清晰，符合 `kebab-case.ts` 命名規範。
+```
+src/app/(dashboard)/resource-management/warehousing/
+└── page.tsx      # 倉儲儀表板頁面，是整個功能的唯一入口點。
+```
 
-- **`components/`**:
-  - `warehouse-selector.tsx`: **保留**。它是一個可以在模組內多處重用的小型元件，符合 `kebab-case.tsx` 規範。
+此頁面現在是一個伺服器元件，負責在伺服器端一次性獲取所有必要的初始數據，並將其傳遞給 `WarehousingView`，以實現最佳的載入性能。
 
-- **`forms/`**:
-  - `category-form.tsx`, `item-form.tsx`, `warehouse-form.tsx`: **保留**。這些對話框表單職責明確，且命名符合規範。
-  - `movement-form.tsx`, `transfer-form.tsx`: **移除**。根據我們的討論，這些將被更智慧的「情境化表單」取代，其邏輯會直接在對應的 `view` 中觸發，不再需要獨立檔案。
+## 5. 相關文件
 
-- **`views/` (核心重構區域)**:
-  - `warehousing-dashboard-view.tsx`: **保留**。職責清晰，命名符合規範。
-  - `warehousing-view.tsx`: **徹底重構**。移除所有舊的邏輯，只作為一個乾淨的容器，負責匯入和佈局 `views/` 目錄下的各個視圖元件（如 `WarehousingDashboardView`, `StockLevelsView` 等），成為一個純粹的頁面級別的視圖元件。
-  - **`category-list-view.tsx` (新檔案)**: 將 `category-list-client.tsx` 和 `category-list.tsx` 的邏輯合併並重命名為此，使其成為一個完整的「分類列表視圖」。
-  - **`item-list-view.tsx` (新檔案)**: 將 `item-list-client.tsx` 和 `item-list.tsx` 的邏輯合併並重命名，成為「物料主檔視圖」。
-  - **`movement-list-view.tsx` (新檔案)**: 將 `movement-list-client.tsx` 和 `movement-list.tsx` 合併重命名，成為「出入庫歷史視圖」。
-  - **`warehouse-list-view.tsx` (新檔案)**: 將 `warehouse-list-client.tsx` 和 `warehouse-list.tsx` 合併重命名，成為「倉庫管理視圖」。
-  - **`stock-levels-view.tsx` (從 `components/` 目錄移動至此)**: `stock-levels-view.tsx` 作為一個大型、核心的功能區塊，其職責更符合「視圖 (View)」的定義，而非一個可重用的小型「元件 (Component)」。將其移至 `views/` 目錄能更好地反映其在架構中的層次。
-
-- **`tables/`**:
-  - `stock-level-table.tsx`: **保留**。這是一個複雜的表格元件，職責明確，命名符合規範。
-
-- **`utils/`**:
-  - `data-mappers.ts`: **保留**。職責清晰，命名符合規範。
-
-#### **4. 待刪除檔案清單**
-
-重構完成後，以下檔案將被安全刪除，以保持結構的整潔：
-
-- `src/features/resource-management/warehousing/components/category-list-client.tsx`
-- `src/features/resource-management/warehousing/components/category-list.tsx`
-- `src/features/resource-management/warehousing/components/item-list-client.tsx`
-- `src/features/resource-management/warehousing/components/item-list.tsx`
-- `src/features/resource-management/warehousing/components/movement-list-client.tsx`
-- `src/features/resource-management/warehousing/components/movement-list.tsx`
-- `src/features/resource-management/warehousing/components/warehouse-list-client.tsx`
-- `src/features/resource-management/warehousing/components/warehouse-list.tsx`
-- `src/features/resource-management/warehousing/forms/movement-form.tsx`
-- `src/features/resource-management/warehousing/forms/transfer-form.tsx`
-
----
-
-### **後續開發藍圖 (基於新架構)**
-
-在完成上述結構重構後，我們將在此清晰的架構上，實施「作業指揮中心」的功能。
-
-1.  **情境化操作**:
-    - 在 `stock-levels-view.tsx` 和 `item-list-view.tsx` 中，為每一行數據增加操作按鈕（例如 "出庫"、"盤點"）。
-    - 點擊按鈕時，觸發對應的表單對話框 (`movement-form` 等)，並**預先填入**物料和倉庫資訊，簡化使用者操作。
-
-2.  **借還追蹤儀表板**:
-    - 新增一個 `loan-tracking-view.tsx` 視圖。
-    - 此視圖將專門查詢並展示所有**尚未歸還**的資產借出紀錄。
-    - 使用顏色標示（正常、即將到期、已逾期）來提供視覺警示。
-    - 提供「一鍵歸還」功能，以簡化歸還流程。
-
-3.  **資產完整履歷**:
-    - 新增一個 `item-details-view.tsx` 視圖。
-    - 當使用者點擊任何物料時，此視圖將聚合 `inventory_items`, `inventory_levels`, `inventory_movements` 和 `serial_number_tracking` 的所有相關數據，提供一個 360 度的資產全生命週期視圖。
-
-這份經過更新的計畫書，為我們接下來的工作提供了清晰、標準化的指導。
+- [倉儲管理系統資料庫藍圖](../../04_project_management/inventory.md)
+- [導航配置](../../../components/layout/config/navigation.config.ts) (`resource-management` -> `warehousing`)
+- [模組結構標準](../../03_development/module-structure-standards.md)
