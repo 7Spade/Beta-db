@@ -40,9 +40,11 @@ export async function getSupabaseAdmin() {
   }
   const { createClient } = await import('@/features/integrations/database/supabase/server');
   const { cookies } = await import('next/headers');
-  return createClient(cookies());
+  const cookieStore = await cookies();
+  return createClient(cookieStore);
 }
 
 
 // 默认导出浏览器客户端
 export { createClient as default } from '@root/src/features/integrations/database/supabase/client';
+

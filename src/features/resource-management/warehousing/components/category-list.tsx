@@ -10,8 +10,8 @@ import { cookies } from 'next/headers';
 import { InventoryCategoriesClientView } from './category-list-client';
 
 async function getCategories(): Promise<InventoryCategory[]> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
   const { data, error } = await supabase
     .from('inventory_categories')
     .select('*')

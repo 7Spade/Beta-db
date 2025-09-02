@@ -21,8 +21,8 @@ interface AiTokenLog {
 // 极简配置：自动显示 AI Token 消耗记录
 export async function AiTokenLogTable() {
   try {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const cookieStore = await cookies();
+    const supabase = await createClient(cookieStore);
 
     // 自动获取最近的日志记录
     const { data: logs } = await supabase
@@ -85,7 +85,7 @@ export async function AiTokenLogTable() {
         </CardContent>
       </Card>
     )
-  } catch(e) {
+  } catch (e) {
     const error = e as Error;
     return (
       <Card>

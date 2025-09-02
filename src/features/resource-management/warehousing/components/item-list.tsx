@@ -16,8 +16,8 @@ async function getItemsAndCategories(): Promise<{
   items: InventoryItem[];
   categories: InventoryCategory[];
 }> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
 
   const [itemsRes, categoriesRes] = await Promise.all([
     supabase.from('inventory_items').select('*').order('name'),
@@ -51,9 +51,9 @@ async function getItemsAndCategories(): Promise<{
   );
 
   const categories = (categoriesRes.data || []).map(c => ({
-     id: c.id,
-     name: c.name,
-     createdAt: c.created_at ? new Date(c.created_at) : undefined,
+    id: c.id,
+    name: c.name,
+    createdAt: c.created_at ? new Date(c.created_at) : undefined,
   })) as InventoryCategory[];
 
   return { items, categories };

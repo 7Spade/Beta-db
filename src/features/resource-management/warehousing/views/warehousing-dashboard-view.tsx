@@ -9,12 +9,12 @@ import {
   type StatCardData,
 } from '@/features/business-intelligence/reporting-analytics/dashboard/dashboard-stats';
 import { createClient } from '@/features/integrations/database/supabase/server';
-import { Package, Wrench, Warehouse as WarehouseIcon } from 'lucide-react';
+import { Package, Warehouse as WarehouseIcon, Wrench } from 'lucide-react';
 import { cookies } from 'next/headers';
 
 async function getWarehouseStats() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
 
   const [warehousesRes, itemsRes, assetsRes] = await Promise.all([
     supabase

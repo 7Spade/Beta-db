@@ -86,8 +86,8 @@ const extractWorkItemsFlow = ai.defineFlow(
   async (input) => {
     const startTime = Date.now();
     let result;
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const cookieStore = await cookies();
+    const supabase = await createClient(cookieStore);
 
     const modelName = 'googleai/gemini-1.5-flash'; // 默认模型
 
@@ -124,7 +124,7 @@ const extractWorkItemsFlow = ai.defineFlow(
         output_tokens: result.usage?.outputTokens || 0,
         total_tokens: result.usage?.totalTokens || 0,
         duration_ms: durationMs,
-        user_id: 'system' // Placeholder for user ID
+        user_id: null // 系統操作，無需用戶 ID
       });
 
       // Return only the business data
@@ -141,7 +141,7 @@ const extractWorkItemsFlow = ai.defineFlow(
         total_tokens: result?.usage?.totalTokens || 0,
         duration_ms: durationMs,
         error: error instanceof Error ? error.message : 'Unknown error',
-        user_id: 'system' // Placeholder for user ID
+        user_id: null // 系統操作，無需用戶 ID
       });
       // 向上拋出錯誤
       throw error;

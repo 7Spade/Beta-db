@@ -10,8 +10,8 @@ import type {
   InventoryItem,
   Warehouse,
 } from '@root/src/shared/types/types';
-import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
 const WAREHOUSING_PATH = '/resource-management/warehousing';
 
@@ -26,8 +26,8 @@ export async function saveWarehouseAction(
   data: Omit<Warehouse, 'id' | 'createdAt'>,
   warehouseId?: string
 ): Promise<ActionResult> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
 
   try {
     const { name, location, isActive } = data;
@@ -56,8 +56,8 @@ export async function saveWarehouseAction(
 export async function deleteWarehouseAction(
   warehouseId: string
 ): Promise<ActionResult> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
   try {
     const { error } = await supabase
       .from('warehouses')
@@ -81,8 +81,8 @@ export async function saveItemAction(
   data: ItemData,
   itemId?: string
 ): Promise<ActionResult> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
 
   try {
     const { name, category, unit, safeStockLevel, itemType, hasExpiryTracking, requiresMaintenance, requiresInspection, isSerialized } = data;
@@ -118,8 +118,8 @@ export async function saveItemAction(
 }
 
 export async function deleteItemAction(itemId: string): Promise<ActionResult> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
   try {
     // Note: In a real-world scenario, you might want to check if the item is in use before deleting.
     const { error } = await supabase
@@ -153,8 +153,8 @@ interface RecordMovementInput {
 export async function recordMovementAction(
   input: RecordMovementInput
 ): Promise<ActionResult> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
 
   try {
     // In a real application, this should be a PostgreSQL transaction (RPC function)
@@ -230,8 +230,8 @@ export async function saveCategoryAction(
   data: Omit<InventoryCategory, 'id' | 'createdAt'>,
   categoryId?: string
 ): Promise<ActionResult> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
   try {
     if (categoryId) {
       const { error } = await supabase
@@ -256,8 +256,8 @@ export async function saveCategoryAction(
 export async function deleteCategoryAction(
   categoryId: string
 ): Promise<ActionResult> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
   try {
     const { error } = await supabase
       .from('inventory_categories')

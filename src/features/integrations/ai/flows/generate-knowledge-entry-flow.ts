@@ -9,8 +9,8 @@
  * @exports GenerateKnowledgeEntryOutput - generateKnowledgeEntry 函數的返回類型。
  */
 
-import { ai } from '@/features/integrations/ai/genkit';
 import { logAiTokenUsage } from '@/api/services/ai-token-log.service';
+import { ai } from '@/features/integrations/ai/genkit';
 import { createClient } from '@root/src/features/integrations/database/supabase/server';
 import { z } from 'genkit';
 import { cookies } from 'next/headers';
@@ -60,8 +60,8 @@ const generateKnowledgeEntryFlow = ai.defineFlow(
   async (input) => {
     const startTime = Date.now();
     let result;
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const cookieStore = await cookies();
+    const supabase = await createClient(cookieStore);
 
     try {
       result = await prompt(input);

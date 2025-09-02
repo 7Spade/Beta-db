@@ -10,8 +10,8 @@ import { cookies } from 'next/headers';
 import { WarehousesClientView } from './warehouse-list-client';
 
 async function getWarehouses(): Promise<Warehouse[]> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
   const { data, error } = await supabase
     .from('warehouses')
     .select('*')

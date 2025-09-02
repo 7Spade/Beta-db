@@ -21,45 +21,45 @@ export type Json =
 // AI Token 日志表类型
 // ============================================================================
 export interface AiTokenLogRow {
-  id: string;
+  id: string; // UUID as string
   flow_name: string;
   model: string | null;
-  status: 'succeeded' | 'failed';
+  status: string; // text in DB, not enum
   input_tokens: number | null;
   output_tokens: number | null;
   total_tokens: number | null;
   duration_ms: number | null;
-  user_id: string | null;
+  user_id: string | null; // UUID as string
   error: string | null;
-  timestamp: string;
+  timestamp: string; // timestamptz as string
 }
 
 export interface AiTokenLogInsert {
-  id?: string;
+  id?: string; // UUID as string, optional (auto-generated)
   flow_name: string;
   model?: string | null;
-  status: 'succeeded' | 'failed';
+  status: string; // text in DB, not enum
   input_tokens?: number | null;
   output_tokens?: number | null;
   total_tokens?: number | null;
   duration_ms?: number | null;
-  user_id?: string | null;
+  user_id?: string | null; // UUID as string
   error?: string | null;
-  timestamp?: string;
+  timestamp?: string; // timestamptz as string, optional (auto-generated)
 }
 
 export interface AiTokenLogUpdate {
-  id?: string;
+  id?: string; // UUID as string
   flow_name?: string;
   model?: string | null;
-  status?: 'succeeded' | 'failed';
+  status?: string; // text in DB, not enum
   input_tokens?: number | null;
   output_tokens?: number | null;
   total_tokens?: number | null;
   duration_ms?: number | null;
-  user_id?: string | null;
+  user_id?: string | null; // UUID as string
   error?: string | null;
-  timestamp?: string;
+  timestamp?: string; // timestamptz as string
 }
 
 // ============================================================================

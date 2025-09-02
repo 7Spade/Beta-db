@@ -14,8 +14,8 @@ import { cookies } from 'next/headers';
 import { InventoryMovementsClientView } from './movement-list-client';
 
 async function getWarehousingData() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore = await cookies();
+  const supabase = await createClient(cookieStore);
 
   const [movementsRes, itemsRes, warehousesRes] = await Promise.all([
     supabase
@@ -54,7 +54,7 @@ async function getWarehousingData() {
     requiresInspection: item.requires_inspection,
     isSerialized: item.is_serialized,
   })) as InventoryItem[];
-  
+
   const warehouses = (warehousesRes.data || []).map((wh) => ({
     id: wh.id,
     name: wh.name,
