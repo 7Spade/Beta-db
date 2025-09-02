@@ -4,9 +4,6 @@
  */
 'use client';
 
-import * as React from 'react';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import { cn } from '@root/src/shared/utils';
 import { Button } from '@/ui/button';
 import {
   Command,
@@ -17,6 +14,9 @@ import {
   CommandList,
 } from '@/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
+import { cn } from '@root/src/shared/utils';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import * as React from 'react';
 
 interface ComboboxProps {
   options: { value: string; label: string }[];
@@ -63,7 +63,12 @@ export function Combobox({
                   key={option.value}
                   value={option.value}
                   onSelect={(currentValue) => {
-                    onChange(currentValue === value ? '' : currentValue);
+                    // cmdk 會將 currentValue 轉為小寫，需要找到對應的原始值
+                    const selectedOption = options.find(opt =>
+                      opt.value.toLowerCase() === currentValue
+                    );
+                    const newValue = selectedOption?.value || '';
+                    onChange(newValue === value ? '' : newValue);
                     setOpen(false);
                   }}
                 >
