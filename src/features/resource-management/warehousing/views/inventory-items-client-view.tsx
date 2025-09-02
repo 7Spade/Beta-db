@@ -39,6 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/ui/tooltip';
 import { useToast } from '@root/src/shared/hooks/use-toast';
 import type {
   InventoryCategory,
@@ -139,12 +140,14 @@ export function InventoryItemsClientView({
                     </TableCell>
                     <TableCell>{item.category || '未分類'}</TableCell>
                     <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {item.hasExpiryTracking && <Badge variant="outline"><Watch className="mr-1 h-3 w-3" />效期</Badge>}
-                        {item.requiresMaintenance && <Badge variant="outline"><Wrench className="mr-1 h-3 w-3" />保養</Badge>}
-                        {item.requiresInspection && <Badge variant="outline"><ShieldCheck className="mr-1 h-3 w-3" />檢驗</Badge>}
-                        {item.isSerialized && <Badge variant="outline"><Tag className="mr-1 h-3 w-3" />序號</Badge>}
-                      </div>
+                      <TooltipProvider>
+                        <div className="flex flex-wrap gap-2">
+                            {item.hasExpiryTracking && <Tooltip><TooltipTrigger><Badge variant="outline"><Watch className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需效期管理</TooltipContent></Tooltip>}
+                            {item.requiresMaintenance && <Tooltip><TooltipTrigger><Badge variant="outline"><Wrench className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需定期維護</TooltipContent></Tooltip>}
+                            {item.requiresInspection && <Tooltip><TooltipTrigger><Badge variant="outline"><ShieldCheck className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需定期檢驗</TooltipContent></Tooltip>}
+                            {item.isSerialized && <Tooltip><TooltipTrigger><Badge variant="outline"><Tag className="h-4 w-4" /></Badge></TooltipTrigger><TooltipContent>需序號管理</TooltipContent></Tooltip>}
+                        </div>
+                      </TooltipProvider>
                     </TableCell>
                     <TableCell>
                       {item.createdAt ? formatDate(item.createdAt) : '-'}

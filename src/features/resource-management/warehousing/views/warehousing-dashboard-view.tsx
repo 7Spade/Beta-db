@@ -8,7 +8,7 @@ import { DashboardStats, type StatCardData } from '@/features/business-intellige
 import { createClient } from '@/features/integrations/database/supabase/server';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { ArrowRight, Package, Shapes, Truck, Warehouse as WarehouseIcon } from 'lucide-react';
+import { ArrowRight, Package, Shapes, Truck, Warehouse as WarehouseIcon, Wrench } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
@@ -43,26 +43,31 @@ async function getWarehouseStats() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    const [warehousesRes, itemsRes] = await Promise.all([
+    const [warehousesRes, itemsRes, assetsRes] = await Promise.all([
         supabase
             .from('warehouses')
             .select('*', { count: 'exact', head: true })
             .eq('is_active', true),
         supabase
             .from('inventory_items')
+            .select('*', { count: 'exact', head: true }),
+        supabase
+            .from('inventory_items')
             .select('*', { count: 'exact', head: true })
+            .eq('item_type', 'asset')
     ]);
         
     const { count: activeCount, error: activeError } = warehousesRes;
     const { count: itemsCount, error: itemsError } = itemsRes;
+    const { count: assetsCount, error: assetsError } = assetsRes;
 
 
-    if (activeError || itemsError) {
-        console.error("Error fetching warehouse stats:", activeError || itemsError);
-        return { activeWarehouses: 0, totalItems: 0 };
+    if (activeError || itemsError || assetsError) {
+        console.error("Error fetching warehouse stats:", activeError || itemsError || assetsError);
+        return { activeWarehouses: 0, totalItems: 0, totalAssets: 0 };
     }
     
-    return { activeWarehouses: activeCount ?? 0, totalItems: itemsCount ?? 0 };
+    return { activeWarehouses: activeCount ?? 0, totalItems: itemsCount ?? 0, totalAssets: assetsCount ?? 0 };
 }
 
 interface WarehousingDashboardViewProps {
@@ -84,6 +89,12 @@ export async function WarehousingDashboardView({ isEmbedded = false }: Warehousi
         value: statsData.totalItems.toString(),
         description: '所有已建立的物料主檔',
         icon: Package,
+    },
+    {
+        title: '資產/工具總數',
+        value: statsData.totalAssets.toString(),
+        description: '需追蹤管理的資產型物料',
+        icon: Wrench,
     }
   ];
 
