@@ -4,11 +4,11 @@
  */
 'use server';
 
-import { createClient } from '@/features/integrations/database/supabase/server';
 import { CategoryList } from '@/features/resource-management/warehousing/components/category-list';
 import { ItemList } from '@/features/resource-management/warehousing/components/item-list';
 import { MovementList } from '@/features/resource-management/warehousing/components/movement-list';
 import { WarehouseList } from '@/features/resource-management/warehousing/components/warehouse-list';
+import { Skeleton } from '@/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
 import {
   Package,
@@ -16,10 +16,8 @@ import {
   Truck,
   Warehouse as WarehouseIcon,
 } from 'lucide-react';
-import { cookies } from 'next/headers';
 import { Suspense } from 'react';
 import { WarehousingDashboardView } from './warehousing-dashboard-view';
-import { Skeleton } from '@/ui/skeleton';
 
 const LoadingFallback = () => (
   <div className="space-y-4 pt-4">
