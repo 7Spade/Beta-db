@@ -1,6 +1,6 @@
 /**
- * @fileoverview Warehouses View
- * @description The main view for managing warehouses, fetching data from Supabase.
+ * @fileoverview Warehouses View (Server Component)
+ * @description Fetches warehouses from Supabase and passes them to the client component.
  */
 'use server';
 

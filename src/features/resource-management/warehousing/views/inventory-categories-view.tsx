@@ -24,7 +24,7 @@ async function getCategories(): Promise<InventoryCategory[]> {
   return data.map((cat) => ({
     id: cat.id,
     name: cat.name,
-    createdAt: new Date(cat.created_at),
+    createdAt: cat.created_at ? new Date(cat.created_at) : undefined,
   }));
 }
 

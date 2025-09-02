@@ -186,44 +186,6 @@ export const navigationConfig: NavigationItem[] = [
         label: '倉儲管理',
         icon: Warehouse,
         href: '/resource-management/warehousing',
-        children: [
-          {
-            id: 'warehousing-dashboard',
-            label: '倉儲總覽',
-            icon: LayoutGrid,
-            href: '/resource-management/warehousing',
-          },
-          {
-            id: 'warehouses',
-            label: '倉庫管理',
-            icon: Warehouse,
-            href: '/resource-management/warehousing/warehouses',
-          },
-          {
-            id: 'categories',
-            label: '物料類別',
-            icon: Shapes,
-            href: '/resource-management/warehousing/categories',
-          },
-          {
-            id: 'items',
-            label: '物料主檔',
-            icon: Package,
-            href: '/resource-management/warehousing/items',
-          },
-          {
-            id: 'movements',
-            label: '出入庫紀錄',
-            icon: ArrowLeftRight,
-            href: '/resource-management/warehousing/movements',
-          },
-          {
-            id: 'transfers',
-            label: '跨倉調撥',
-            icon: Truck,
-            href: '/resource-management/warehousing/transfers',
-          },
-        ],
       },
       {
         id: 'crm',
