@@ -3,28 +3,27 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { 
-  ArrowLeft, 
-  Edit, 
-  Trash2, 
-  Calendar, 
-  DollarSign, 
-  Users, 
-  FileText,
+import {
   AlertTriangle,
-  CheckCircle,
-  Clock
+  ArrowLeft,
+  Clock,
+  DollarSign,
+  Edit,
+  FileText,
+  Trash2
 } from 'lucide-react';
+import { useState } from 'react';
+import { addTaskAction, deleteTaskAction, updateTaskAction } from '../actions/task.actions';
 import { EngagementSummaryCard } from '../components/cards';
 import { EditEngagementForm } from '../components/forms';
+import { TaskList } from '../components/tasks';
 import { useEngagement } from '../hooks';
-import { formatDate, formatCurrency, getStatusColor, getPhaseColor } from '../utils';
-import type { EngagementStatus, EngagementPhase } from '../types';
+import type { Task } from '../types';
+import { getPhaseColor, getStatusColor } from '../utils';
 
 interface EngagementDetailViewProps {
   engagementId: string;
@@ -49,6 +48,57 @@ export function EngagementDetailView({
 
   const handleEditCancel = () => {
     setShowEditForm(false);
+  };
+
+  // 任務管理處理函數
+  const handleTaskCreate = async (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>) => {
+    try {
+      // 轉換日期類型以符合 CreateTaskInput
+      const createData = {
+        ...taskData,
+        dueDate: taskData.dueDate instanceof Date ? taskData.dueDate : undefined,
+      };
+      const result = await addTaskAction(engagementId, createData);
+      if (result.success) {
+        refresh(); // 重新載入 Engagement 數據
+      } else {
+        console.error('創建任務失敗:', result.error);
+      }
+    } catch (error) {
+      console.error('創建任務失敗:', error);
+    }
+  };
+
+  const handleTaskUpdate = async (taskId: string, updates: Partial<Task>) => {
+    try {
+      // 轉換日期類型以符合 UpdateTaskInput
+      const updateData = {
+        ...updates,
+        dueDate: updates.dueDate instanceof Date ? updates.dueDate : undefined,
+        completedDate: updates.completedDate instanceof Date ? updates.completedDate : undefined,
+      };
+      const result = await updateTaskAction(engagementId, taskId, updateData);
+      if (result.success) {
+        refresh(); // 重新載入 Engagement 數據
+      } else {
+        console.error('更新任務失敗:', result.error);
+      }
+    } catch (error) {
+      console.error('更新任務失敗:', error);
+    }
+  };
+
+  const handleTaskDelete = async (taskId: string) => {
+    try {
+      const result = await deleteTaskAction(engagementId, taskId);
+      if (result.success) {
+        refresh(); // 重新載入 Engagement 數據
+      } else {
+        console.error('刪除任務失敗:', result.error);
+      }
+    } catch (error) {
+      console.error('刪除任務失敗:', error);
+    }
   };
 
   if (isLoading) {
@@ -172,22 +222,13 @@ export function EngagementDetailView({
         </TabsContent>
 
         <TabsContent value="tasks" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <CheckCircle className="h-5 w-5 mr-2" />
-                任務管理
-              </CardTitle>
-              <CardDescription>
-                管理專案的所有任務和子任務
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                任務管理功能開發中...
-              </div>
-            </CardContent>
-          </Card>
+          <TaskList
+            tasks={engagement.tasks}
+            onTaskCreate={handleTaskCreate}
+            onTaskUpdate={handleTaskUpdate}
+            onTaskDelete={handleTaskDelete}
+            isLoading={isLoading}
+          />
         </TabsContent>
 
         <TabsContent value="financial" className="space-y-4">
