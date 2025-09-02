@@ -10,3 +10,6 @@ export * from './cards';
 
 // 任務管理組件
 export * from './tasks';
+
+// 進度管理組件
+export * from './progress';

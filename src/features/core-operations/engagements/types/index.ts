@@ -56,6 +56,7 @@ export type {
   Deliverable,
   MilestoneStatus,
   DeliverableStatus,
+  DeliverableType,
   ProgressSummary,
   CreateMilestoneInput,
   CreateDeliverableInput,
