@@ -3,13 +3,12 @@
  */
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { EngagementProvider } from '@/features/core-operations/engagements';
-import { EngagementListView, EngagementDashboard } from '@/features/core-operations/engagements';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { EngagementDashboard, EngagementListView, EngagementProvider } from '@/features/core-operations/engagements';
 import { LayoutDashboard, List, Plus } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function EngagementsPage() {
   const router = useRouter();
@@ -21,11 +20,11 @@ export default function EngagementsPage() {
   useEffect(() => {
     const tab = searchParams.get('tab');
     const create = searchParams.get('create');
-    
+
     if (tab === 'list') {
       setActiveTab('list');
     }
-    
+
     if (create === 'true') {
       setShowCreateForm(true);
     }
