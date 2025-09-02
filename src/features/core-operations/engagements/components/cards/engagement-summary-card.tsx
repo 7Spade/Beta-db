@@ -3,18 +3,18 @@
  */
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { 
-  CalendarDays, 
-  DollarSign, 
-  Users, 
-  Clock, 
-  CheckCircle, 
+import {
   AlertCircle,
+  CalendarDays,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  FileText,
   TrendingUp,
-  FileText
+  Users
 } from 'lucide-react';
 import type { Engagement } from '../../types';
 
@@ -124,7 +124,7 @@ export function EngagementSummaryCard({ engagement }: EngagementSummaryCardProps
               <DollarSign className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">總價值</p>
-                <p className="font-medium">{formatCurrency(engagement.totalValue, engagement.currency)}</p>
+                <p className="font-medium">{formatCurrency(engagement.totalValue, engagement.currency || 'TWD')}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">

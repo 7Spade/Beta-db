@@ -3,21 +3,22 @@
  */
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { EngagementProvider } from '@/features/core-operations/engagements';
-import { EngagementDetailView, EditEngagementForm } from '@/features/core-operations/engagements';
 import { Button } from '@/components/ui/button';
+import { EditEngagementForm, EngagementDetailView, EngagementProvider } from '@/features/core-operations/engagements';
 import { ArrowLeft } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { use } from 'react';
 
 interface EngagementDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function EngagementDetailPage({ params }: EngagementDetailPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const resolvedParams = use(params);
   const isEditMode = searchParams.get('edit') === 'true';
 
   const handleBack = () => {
@@ -37,12 +38,12 @@ export default function EngagementDetailPage({ params }: EngagementDetailPagePro
 
   const handleEditSuccess = () => {
     // 編輯成功後返回詳細頁面
-    router.push(`/core-operations/engagements/${params.id}`);
+    router.push(`/core-operations/engagements/${resolvedParams.id}`);
   };
 
   const handleEditCancel = () => {
     // 取消編輯返回詳細頁面
-    router.push(`/core-operations/engagements/${params.id}`);
+    router.push(`/core-operations/engagements/${resolvedParams.id}`);
   };
 
   return (
@@ -61,14 +62,14 @@ export default function EngagementDetailPage({ params }: EngagementDetailPagePro
               </div>
             </div>
             <EditEngagementForm
-              engagementId={params.id}
+              engagementId={resolvedParams.id}
               onSuccess={handleEditSuccess}
               onCancel={handleEditCancel}
             />
           </div>
         ) : (
           <EngagementDetailView
-            engagementId={params.id}
+            engagementId={resolvedParams.id}
             onBack={handleBack}
             onEdit={handleEdit}
             onDelete={handleDelete}

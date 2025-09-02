@@ -88,7 +88,7 @@ export async function createEngagementFromDocument(
       (sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0) - (Number(item.discount) || 0),
       0
     );
-    
+
     const tasks = workItemsToTasks(workItems);
     const now = new Date();
     const endDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30天後
@@ -107,6 +107,9 @@ export async function createEngagementFromDocument(
       startDate: Timestamp.fromDate(now),
       endDate: Timestamp.fromDate(endDate),
       totalValue: totalValue,
+      paidAmount: 0,
+      pendingAmount: totalValue,
+      currency: 'TWD',
       status: '已簽約',
       phase: '規劃',
       scope: workItemsToScope(workItems, docDetails.name),

@@ -3,25 +3,20 @@
  */
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Calendar, 
-  Users, 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
   AlertTriangle,
-  CheckCircle,
   Clock,
+  DollarSign,
   FileText,
-  Plus
+  Plus,
+  TrendingUp
 } from 'lucide-react';
+import { ENGAGEMENT_PHASES, ENGAGEMENT_STATUSES } from '../constants';
 import { useEngagements } from '../hooks';
-import { formatCurrency, getStatusColor, getPhaseColor } from '../utils';
-import { ENGAGEMENT_STATUSES, ENGAGEMENT_PHASES } from '../constants';
-import type { EngagementStatus, EngagementPhase } from '../types';
+import { formatCurrency, getPhaseColor, getStatusColor } from '../utils';
 
 interface EngagementDashboardProps {
   onCreateEngagement?: () => void;
@@ -48,7 +43,7 @@ export function EngagementDashboard({
       return endDate < new Date() && s.status !== '已完成' && s.status !== '已終止' && s.status !== '已取消';
     }).length,
     totalValue: summaries.reduce((sum, s) => sum + s.totalValue, 0),
-    averageProgress: summaries.length > 0 
+    averageProgress: summaries.length > 0
       ? Math.round(summaries.reduce((sum, s) => sum + s.progressPercentage, 0) / summaries.length)
       : 0,
   };
@@ -57,7 +52,7 @@ export function EngagementDashboard({
   const statusGroups = ENGAGEMENT_STATUSES.map(status => ({
     status,
     count: summaries.filter(s => s.status === status).length,
-    percentage: summaries.length > 0 
+    percentage: summaries.length > 0
       ? Math.round((summaries.filter(s => s.status === status).length / summaries.length) * 100)
       : 0,
   }));
@@ -66,7 +61,7 @@ export function EngagementDashboard({
   const phaseGroups = ENGAGEMENT_PHASES.map(phase => ({
     phase,
     count: summaries.filter(s => s.phase === phase).length,
-    percentage: summaries.length > 0 
+    percentage: summaries.length > 0
       ? Math.round((summaries.filter(s => s.phase === phase).length / summaries.length) * 100)
       : 0,
   }));
@@ -255,7 +250,7 @@ export function EngagementDashboard({
             ) : (
               <div className="space-y-3">
                 {highRiskEngagements.map((engagement) => (
-                  <div 
+                  <div
                     key={engagement.id}
                     className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
                     onClick={() => onViewEngagement?.(engagement.id)}
@@ -271,7 +266,7 @@ export function EngagementDashboard({
                         {engagement.progressPercentage}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {formatCurrency(engagement.totalValue)}
+                        {formatCurrency(engagement.totalValue, engagement.currency || 'TWD')}
                       </div>
                     </div>
                   </div>
@@ -297,7 +292,7 @@ export function EngagementDashboard({
             ) : (
               <div className="space-y-3">
                 {recentEngagements.map((engagement) => (
-                  <div 
+                  <div
                     key={engagement.id}
                     className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
                     onClick={() => onViewEngagement?.(engagement.id)}
