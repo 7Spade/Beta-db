@@ -1,7 +1,7 @@
 /**
  * @fileoverview 財務管理服務
  */
-import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import { firestore } from '@/features/integrations/database/firebase-client/firebase-client';
 import {
   doc,
   updateDoc,
@@ -128,6 +128,10 @@ export class FinancialService {
         issueDate: Timestamp.now(),
         dueDate: Timestamp.fromDate(input.dueDate),
         totalAmount: input.amount + (input.taxAmount || 0),
+        items: input.items.map(item => ({
+          ...item,
+          id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        })),
         createdBy: 'system', // TODO: 從認證上下文獲取
         createdAt: Timestamp.now(),
         updatedBy: 'system', // TODO: 從認證上下文獲取

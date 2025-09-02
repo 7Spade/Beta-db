@@ -1,7 +1,7 @@
 /**
  * @fileoverview 文件管理服務
  */
-import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import { firestore } from '@/features/integrations/database/firebase-client/firebase-client';
 import {
   doc,
   updateDoc,
@@ -96,7 +96,11 @@ export class DocumentService {
     const totalSize = [...documents, ...attachments].reduce((sum, item) => sum + item.fileSize, 0);
 
     const recentDocuments = documents
-      .sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis())
+      .sort((a, b) => {
+        const aTime = a.createdAt instanceof Date ? a.createdAt.getTime() : a.createdAt.toMillis();
+        const bTime = b.createdAt instanceof Date ? b.createdAt.getTime() : b.createdAt.toMillis();
+        return bTime - aTime;
+      })
       .slice(0, 5);
 
     return {

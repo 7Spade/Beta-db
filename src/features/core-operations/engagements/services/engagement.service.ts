@@ -1,7 +1,7 @@
 /**
  * @fileoverview Engagement 核心服務
  */
-import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
+import { firestore } from '@/features/integrations/database/firebase-client/firebase-client';
 import {
   collection,
   doc,
@@ -171,16 +171,16 @@ export class EngagementService {
 
       // 處理日期轉換
       if (input.startDate) {
-        updateData.startDate = Timestamp.fromDate(input.startDate);
+        (updateData as any).startDate = Timestamp.fromDate(input.startDate);
       }
       if (input.endDate) {
-        updateData.endDate = Timestamp.fromDate(input.endDate);
+        (updateData as any).endDate = Timestamp.fromDate(input.endDate);
       }
       if (input.actualStartDate) {
-        updateData.actualStartDate = Timestamp.fromDate(input.actualStartDate);
+        (updateData as any).actualStartDate = Timestamp.fromDate(input.actualStartDate);
       }
       if (input.actualEndDate) {
-        updateData.actualEndDate = Timestamp.fromDate(input.actualEndDate);
+        (updateData as any).actualEndDate = Timestamp.fromDate(input.actualEndDate);
       }
 
       await updateDoc(docRef, updateData);
@@ -265,16 +265,16 @@ export class EngagementService {
 
         // 處理日期轉換
         if (data.startDate) {
-          updateData.startDate = Timestamp.fromDate(data.startDate);
+          (updateData as any).startDate = Timestamp.fromDate(data.startDate);
         }
         if (data.endDate) {
-          updateData.endDate = Timestamp.fromDate(data.endDate);
+          (updateData as any).endDate = Timestamp.fromDate(data.endDate);
         }
         if (data.actualStartDate) {
-          updateData.actualStartDate = Timestamp.fromDate(data.actualStartDate);
+          (updateData as any).actualStartDate = Timestamp.fromDate(data.actualStartDate);
         }
         if (data.actualEndDate) {
-          updateData.actualEndDate = Timestamp.fromDate(data.actualEndDate);
+          (updateData as any).actualEndDate = Timestamp.fromDate(data.actualEndDate);
         }
 
         batch.update(docRef, updateData);
