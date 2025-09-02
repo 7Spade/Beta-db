@@ -129,12 +129,12 @@ export function InventoryItemsClientView({
               </TableHeader>
               <TableBody>
                 {initialItems.map((item) => {
-                  const itemType = item.item_type;
-                  const hasExpiryTracking = item.has_expiry_tracking;
-                  const requiresMaintenance = item.requires_maintenance;
-                  const requiresInspection = item.requires_inspection;
-                  const isSerialized = item.is_serialized;
-                  const createdAt = item.created_at;
+                  const itemType = item.itemType;
+                  const hasExpiryTracking = item.hasExpiryTracking;
+                  const requiresMaintenance = item.requiresMaintenance;
+                  const requiresInspection = item.requiresInspection;
+                  const isSerialized = item.isSerialized;
+                  const createdAt = item.createdAt;
                   return (
                     <TableRow key={item.id}>
                       <TableCell className="font-medium">{item.name}</TableCell>

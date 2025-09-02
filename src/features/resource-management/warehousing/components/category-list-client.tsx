@@ -120,7 +120,7 @@ export function InventoryCategoriesClientView({
                 {initialCategories.map((cat) => (
                   <TableRow key={cat.id}>
                     <TableCell className="font-medium">{cat.name}</TableCell>
-                    <TableCell>{cat.created_at ? formatDate(new Date(cat.created_at)) : '-'}</TableCell>
+                    <TableCell>{cat.createdAt ? formatDate(cat.createdAt) : '-'}</TableCell>
                     <TableCell className="text-right">
                       <AlertDialog>
                         <DropdownMenu>

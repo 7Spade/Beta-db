@@ -95,8 +95,8 @@ export function ItemFormDialog({
         form.reset({
           name: item.name,
           category: item.category,
-          unit: item.unit,
-          safeStockLevel: item.safeStockLevel,
+          unit: item.unit || '',
+          safeStockLevel: item.safeStockLevel || undefined,
           itemType: item.itemType,
           hasExpiryTracking: item.hasExpiryTracking,
           requiresMaintenance: item.requiresMaintenance,
@@ -240,28 +240,28 @@ export function ItemFormDialog({
                   <FormItem>
                     <FormLabel>安全庫存量 (可選)</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} value={field.value ?? ''}/>
+                      <Input type="number" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            
+
             <div className="space-y-2 rounded-md border p-4">
-                <h4 className="text-sm font-medium">管理屬性</h4>
-                <FormField control={form.control} name="hasExpiryTracking" render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需效期管理</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
-                )}/>
-                <FormField control={form.control} name="requiresMaintenance" render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需定期維護</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
-                )}/>
-                 <FormField control={form.control} name="requiresInspection" render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需定期檢驗</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
-                )}/>
-                 <FormField control={form.control} name="isSerialized" render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between"><FormLabel>需序號管理</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
-                )}/>
+              <h4 className="text-sm font-medium">管理屬性</h4>
+              <FormField control={form.control} name="hasExpiryTracking" render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between"><FormLabel>需效期管理</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+              )} />
+              <FormField control={form.control} name="requiresMaintenance" render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between"><FormLabel>需定期維護</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+              )} />
+              <FormField control={form.control} name="requiresInspection" render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between"><FormLabel>需定期檢驗</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+              )} />
+              <FormField control={form.control} name="isSerialized" render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between"><FormLabel>需序號管理</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
+              )} />
             </div>
 
             <DialogFooter className="pt-4">
