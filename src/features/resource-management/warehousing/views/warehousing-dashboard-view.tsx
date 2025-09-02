@@ -8,7 +8,7 @@ import { DashboardStats, type StatCardData } from '@/features/business-intellige
 import { createClient } from '@/features/integrations/database/supabase/server';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { ArrowRight, Package, Truck, Warehouse as WarehouseIcon } from 'lucide-react';
+import { ArrowRight, Package, Shapes, Truck, Warehouse as WarehouseIcon } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
@@ -18,6 +18,12 @@ const warehousingModules = [
     description: '管理您的所有倉庫、廠房或工地庫房據點。',
     icon: WarehouseIcon,
     href: '/resource-management/warehousing/warehouses',
+  },
+  {
+    title: '物料類別',
+    description: '管理物料的分類，以利於組織和篩選。',
+    icon: Shapes,
+    href: '/resource-management/warehousing/categories',
   },
   {
     title: '物料主檔',
@@ -37,21 +43,26 @@ async function getWarehouseStats() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    const { count, error } = await supabase
-        .from('warehouses')
-        .select('*', { count: 'exact', head: true });
+    const [warehousesRes, itemsRes] = await Promise.all([
+        supabase
+            .from('warehouses')
+            .select('*', { count: 'exact', head: true })
+            .eq('is_active', true),
+        supabase
+            .from('inventory_items')
+            .select('*', { count: 'exact', head: true })
+    ]);
         
-    const { count: activeCount, error: activeError } = await supabase
-        .from('warehouses')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
+    const { count: activeCount, error: activeError } = warehousesRes;
+    const { count: itemsCount, error: itemsError } = itemsRes;
 
-    if (error || activeError) {
-        console.error("Error fetching warehouse stats:", error || activeError);
-        return { total: 0, active: 0 };
+
+    if (activeError || itemsError) {
+        console.error("Error fetching warehouse stats:", activeError || itemsError);
+        return { activeWarehouses: 0, totalItems: 0 };
     }
     
-    return { total: count ?? 0, active: activeCount ?? 0 };
+    return { activeWarehouses: activeCount ?? 0, totalItems: itemsCount ?? 0 };
 }
 
 
@@ -60,16 +71,16 @@ export async function WarehousingDashboardView() {
 
   const stats: StatCardData[] = [
     {
-        title: '倉庫總數',
-        value: statsData.total.toString(),
-        description: '所有已建立的倉庫據點',
+        title: '啟用中倉庫',
+        value: statsData.activeWarehouses.toString(),
+        description: '目前正在運作的倉庫據點',
         icon: WarehouseIcon,
     },
     {
-        title: '啟用中據點',
-        value: statsData.active.toString(),
-        description: '目前正在運作的倉庫',
-        icon: WarehouseIcon,
+        title: '物料品項總數',
+        value: statsData.totalItems.toString(),
+        description: '所有已建立的物料主檔',
+        icon: Package,
     }
   ];
 
@@ -82,7 +93,7 @@ export async function WarehousingDashboardView() {
         
         <DashboardStats stats={stats} />
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {warehousingModules.map((module) => (
                 <Card key={module.title} className="flex flex-col">
                     <CardHeader>
