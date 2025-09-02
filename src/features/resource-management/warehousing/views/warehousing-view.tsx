@@ -1,6 +1,6 @@
 /**
  * @fileoverview Unified Warehousing View
- * @description The sole entry point for the warehousing feature, rendering the main stock management interface.
+ * @description The sole entry point for the warehousing feature, now simplified and more integrated.
  */
 'use server';
 
@@ -16,7 +16,7 @@ const LoadingFallback = () => (
   </div>
 );
 
-export async function WarehousingView() {
+export default async function WarehousingView() {
   const data = await getWarehousingData();
 
   return (

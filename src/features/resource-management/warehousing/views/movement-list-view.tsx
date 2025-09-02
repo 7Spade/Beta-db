@@ -1,20 +1,17 @@
 /**
- * @fileoverview Movement List View
- * @description Unified view component for managing inventory movements with data fetching and client interactions.
+ * @fileoverview Movement List View in a Dialog
+ * @description Displays inventory movements in a dialog for better user experience.
  */
 'use client';
 
-// TODO: Implement contextual movement form dialog
-// import { MovementFormDialog } from '@/features/resource-management/warehousing/forms/movement-form';
 import { Badge } from '@/ui/badge';
-import { Button } from '@/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/ui/card';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/ui/dialog';
 import {
   Table,
   TableBody,
@@ -29,54 +26,94 @@ import type {
   Warehouse,
 } from '@root/src/shared/types/types';
 import { formatDate } from '@root/src/shared/utils';
-import { ArrowLeftRight, PlusCircle } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeftRight } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Input } from '@/ui/input';
 
 interface MovementListViewProps {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
   initialMovements: InventoryMovement[];
   initialItems: InventoryItem[];
   initialWarehouses: Warehouse[];
+  filterByItemId?: string; // Optional filter
 }
 
 export function MovementListView({
+  isOpen,
+  onOpenChange,
   initialMovements,
   initialItems,
   initialWarehouses,
+  filterByItemId,
 }: MovementListViewProps) {
-  const [isFormOpen, setFormOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const getItemName = (id: string) =>
-    initialItems.find((i) => i.id === id)?.name || '未知物料';
-  const getWarehouseName = (id: string) =>
-    initialWarehouses.find((w) => w.id === id)?.name || '未知倉庫';
+  const itemMap = useMemo(
+    () => new Map(initialItems.map((i) => [i.id, i.name])),
+    [initialItems]
+  );
+  const warehouseMap = useMemo(
+    () => new Map(initialWarehouses.map((w) => [w.id, w.name])),
+    [initialWarehouses]
+  );
+
+  const filteredMovements = useMemo(() => {
+    let movements = filterByItemId
+      ? initialMovements.filter((m) => m.item_id === filterByItemId)
+      : initialMovements;
+
+    if (searchTerm) {
+      const lowercasedFilter = searchTerm.toLowerCase();
+      movements = movements.filter(
+        (m) =>
+          itemMap.get(m.item_id)?.toLowerCase().includes(lowercasedFilter) ||
+          warehouseMap
+            .get(m.warehouse_id)
+            ?.toLowerCase()
+            .includes(lowercasedFilter) ||
+          m.notes?.toLowerCase().includes(lowercasedFilter) ||
+          m.operator_id?.toLowerCase().includes(lowercasedFilter)
+      );
+    }
+    return movements;
+  }, [initialMovements, filterByItemId, searchTerm, itemMap, warehouseMap]);
 
   return (
-    <>
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">出入庫紀錄</h1>
-        <Button onClick={() => setFormOpen(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          新增紀錄
-        </Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>所有庫存移動歷史</CardTitle>
-          <CardDescription>不可變的庫存移動流水帳。</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {initialMovements.length === 0 ? (
-            <div className="text-center py-16 border-2 border-dashed rounded-lg">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle>
+            {filterByItemId
+              ? `${itemMap.get(filterByItemId) || '物料'} `
+              : '所有'}
+            出入庫紀錄
+          </DialogTitle>
+          <DialogDescription>
+            {filterByItemId
+              ? '此物料的所有庫存移動歷史。'
+              : '所有物料的庫存移動流水帳。'}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex-shrink-0">
+          <Input
+            placeholder="搜尋物料、倉庫、備註..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="flex-grow overflow-y-auto">
+          {filteredMovements.length === 0 ? (
+            <div className="text-center py-16 flex flex-col items-center justify-center h-full">
               <ArrowLeftRight className="mx-auto h-12 w-12 text-muted-foreground" />
               <h3 className="mt-4 text-lg font-semibold">尚無庫存紀錄</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                點擊「新增紀錄」以開始追蹤您的庫存。
+                沒有符合條件的庫存移動歷史。
               </p>
             </div>
           ) : (
             <Table>
-              <TableHeader>
+              <TableHeader className="sticky top-0 bg-background">
                 <TableRow>
                   <TableHead>類型</TableHead>
                   <TableHead>物料</TableHead>
@@ -87,7 +124,7 @@ export function MovementListView({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {initialMovements.map((m) => (
+                {filteredMovements.map((m) => (
                   <TableRow key={m.id}>
                     <TableCell>
                       <Badge
@@ -105,9 +142,11 @@ export function MovementListView({
                       </Badge>
                     </TableCell>
                     <TableCell className="font-medium">
-                      {getItemName(m.item_id)}
+                      {itemMap.get(m.item_id) || '未知物料'}
                     </TableCell>
-                    <TableCell>{getWarehouseName(m.warehouse_id)}</TableCell>
+                    <TableCell>
+                      {warehouseMap.get(m.warehouse_id) || '未知倉庫'}
+                    </TableCell>
                     <TableCell
                       className={`text-right font-mono ${
                         m.type === 'inbound' || m.type === 'adjust'
@@ -127,16 +166,8 @@ export function MovementListView({
               </TableBody>
             </Table>
           )}
-        </CardContent>
-      </Card>
-
-      {/* TODO: Implement contextual movement form dialog */}
-      {/* <MovementFormDialog
-        isOpen={isFormOpen}
-        onOpenChange={setFormOpen}
-        items={initialItems}
-        warehouses={initialWarehouses}
-      /> */}
-    </>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

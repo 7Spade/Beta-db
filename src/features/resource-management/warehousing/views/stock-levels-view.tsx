@@ -16,6 +16,9 @@ import { CategoryFormDialog } from '../forms/category-form';
 import { ItemFormDialog } from '../forms/item-form';
 import { WarehouseFormDialog } from '../forms/warehouse-form';
 import { StockLevelTable } from '../tables/stock-level-table';
+import { MovementListView } from './movement-list-view';
+import { Button } from '@/ui/button';
+import { History } from 'lucide-react';
 
 interface StockLevelsViewProps {
   initialData: {
@@ -36,6 +39,7 @@ export function StockLevelsView({ initialData }: StockLevelsViewProps) {
   const [isItemFormOpen, setItemFormOpen] = useState(false);
   const [itemToEdit, setItemToEdit] = useState<InventoryItem | null>(null);
   const [isCategoryFormOpen, setCategoryFormOpen] = useState(false);
+  const [isMovementHistoryOpen, setMovementHistoryOpen] = useState(false);
 
   const handleAddWarehouse = () => {
     setWarehouseToEdit(null);
@@ -53,6 +57,14 @@ export function StockLevelsView({ initialData }: StockLevelsViewProps) {
 
   return (
     <>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">庫存作業中心</h1>
+        <Button onClick={() => setMovementHistoryOpen(true)} variant="outline">
+          <History className="mr-2 h-4 w-4" />
+          查看所有歷史紀錄
+        </Button>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
         <div className="lg:col-span-1">
           <WarehouseSelector
@@ -85,6 +97,13 @@ export function StockLevelsView({ initialData }: StockLevelsViewProps) {
         isOpen={isCategoryFormOpen}
         onOpenChange={setCategoryFormOpen}
         category={null}
+      />
+      <MovementListView
+        isOpen={isMovementHistoryOpen}
+        onOpenChange={setMovementHistoryOpen}
+        initialMovements={movements}
+        initialItems={items}
+        initialWarehouses={warehouses}
       />
     </>
   );
