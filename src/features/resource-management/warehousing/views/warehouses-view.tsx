@@ -1,7 +1,7 @@
 
 'use client';
 
-import { saveWarehouseAction, deleteWarehouseAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
+import { deleteWarehouseAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
 import { WarehouseFormDialog } from '@/features/resource-management/warehousing/forms/warehouse-form';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/ui/alert-dialog';
 import { Badge } from '@/ui/badge';
@@ -14,13 +14,14 @@ import { useToast } from '@root/src/shared/hooks/use-toast';
 import type { Warehouse } from '@root/src/shared/types/types';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { Edit, MoreVertical, PlusCircle, Trash2, Warehouse as WarehouseIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 export function WarehousesView() {
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
     const [loading, setLoading] = useState(true);
     const [isFormOpen, setFormOpen] = useState(false);
     const [warehouseToEdit, setWarehouseToEdit] = useState<Warehouse | null>(null);
+    const [isDeleting, startDeleteTransition] = useTransition();
     const { toast } = useToast();
 
     useEffect(() => {
@@ -43,26 +44,15 @@ export function WarehousesView() {
         setFormOpen(true);
     };
 
-    const handleSaveWarehouse = async (data: Omit<Warehouse, 'id'>, warehouseId?: string) => {
-        const result = await saveWarehouseAction(data, warehouseId);
-        if (result.success) {
-            toast({ title: '成功', description: `倉庫 "${data.name}" 已儲存。` });
-            return true;
-        } else {
-            toast({ title: '錯誤', description: result.error, variant: 'destructive' });
-            return false;
-        }
-    };
-
     const handleDeleteWarehouse = async (warehouse: Warehouse) => {
-        // Here you might want to add a check if the warehouse has inventory
-        // For now, we directly delete.
-        const result = await deleteWarehouseAction(warehouse.id);
-        if (result.success) {
-            toast({ title: '成功', description: `倉庫 "${warehouse.name}" 已刪除。` });
-        } else {
-            toast({ title: '錯誤', description: result.error, variant: 'destructive' });
-        }
+        startDeleteTransition(async () => {
+            const result = await deleteWarehouseAction(warehouse.id);
+            if (result.success) {
+                toast({ title: '成功', description: `倉庫 "${warehouse.name}" 已刪除。` });
+            } else {
+                toast({ title: '錯誤', description: result.error, variant: 'destructive' });
+            }
+        });
     };
 
     const LoadingSkeleton = () => (
@@ -133,7 +123,10 @@ export function WarehousesView() {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>取消</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDeleteWarehouse(wh)}>繼續刪除</AlertDialogAction>
+                                                    <AlertDialogAction onClick={() => handleDeleteWarehouse(wh)} disabled={isDeleting}>
+                                                        {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                                        繼續刪除
+                                                    </AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
@@ -148,7 +141,6 @@ export function WarehousesView() {
             <WarehouseFormDialog
                 isOpen={isFormOpen}
                 onOpenChange={setFormOpen}
-                onSave={handleSaveWarehouse}
                 warehouse={warehouseToEdit}
             />
         </>

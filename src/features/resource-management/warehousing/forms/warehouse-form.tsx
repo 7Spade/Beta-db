@@ -1,14 +1,17 @@
 
 'use client';
 
+import { saveWarehouseAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
 import { Button } from '@/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
 import { Input } from '@/ui/input';
 import { Switch } from '@/ui/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useToast } from '@root/src/shared/hooks/use-toast';
 import type { Warehouse } from '@root/src/shared/types/types';
-import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -23,12 +26,12 @@ type WarehouseFormValues = z.infer<typeof warehouseSchema>;
 interface WarehouseFormDialogProps {
     isOpen: boolean;
     onOpenChange: (isOpen: boolean) => void;
-    onSave: (data: Omit<Warehouse, 'id'>, warehouseId?: string) => Promise<boolean>;
     warehouse: Warehouse | null;
 }
 
-export function WarehouseFormDialog({ isOpen, onOpenChange, onSave, warehouse }: WarehouseFormDialogProps) {
-    const [isSaving, setIsSaving] = useState(false);
+export function WarehouseFormDialog({ isOpen, onOpenChange, warehouse }: WarehouseFormDialogProps) {
+    const [isSaving, startTransition] = useTransition();
+    const { toast } = useToast();
 
     const form = useForm<WarehouseFormValues>({
         resolver: zodResolver(warehouseSchema),
@@ -46,16 +49,20 @@ export function WarehouseFormDialog({ isOpen, onOpenChange, onSave, warehouse }:
     }, [warehouse, isOpen, form]);
 
     const handleDialogChange = (open: boolean) => {
-        if (!isSaving) onOpenChange(open);
+        if (isSaving) return;
+        onOpenChange(open);
     };
 
     async function onSubmit(values: WarehouseFormValues) {
-        setIsSaving(true);
-        const success = await onSave(values, warehouse?.id);
-        setIsSaving(false);
-        if (success) {
-            onOpenChange(false);
-        }
+        startTransition(async () => {
+            const result = await saveWarehouseAction(values, warehouse?.id);
+            if (result.success) {
+                toast({ title: '成功', description: `倉庫 "${values.name}" 已儲存。` });
+                onOpenChange(false);
+            } else {
+                toast({ title: '錯誤', description: result.error, variant: 'destructive' });
+            }
+        });
     }
 
     return (
@@ -106,6 +113,7 @@ export function WarehouseFormDialog({ isOpen, onOpenChange, onSave, warehouse }:
                                         <Switch
                                             checked={field.value}
                                             onCheckedChange={field.onChange}
+                                            disabled={isSaving}
                                         />
                                     </FormControl>
                                 </FormItem>
@@ -114,6 +122,7 @@ export function WarehouseFormDialog({ isOpen, onOpenChange, onSave, warehouse }:
                          <DialogFooter>
                             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={isSaving}>取消</Button>
                             <Button type="submit" disabled={isSaving}>
+                                {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 {isSaving ? '儲存中...' : '儲存'}
                             </Button>
                         </DialogFooter>
