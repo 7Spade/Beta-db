@@ -1,11 +1,11 @@
 /**
- * @fileoverview 仓储管理 Server Actions
- * @description 处理所有与仓库、物料、库存相关的后端业务逻辑，现在使用 Supabase。
+ * @fileoverview 倉儲管理 Server Actions
+ * @description 處理所有與倉庫、物料、庫存相關的後端業務邏輯，現在使用 Supabase。
  */
 'use server';
 
 import { createClient } from '@/features/integrations/database/supabase/server';
-import type { Warehouse } from '@root/src/shared/types/types';
+import type { InventoryItem, Warehouse } from '@root/src/shared/types/types';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
@@ -21,7 +21,7 @@ type ActionResult = {
 // --- Warehouse Actions ---
 
 export async function saveWarehouseAction(
-  data: Omit<Warehouse, 'id'>,
+  data: Omit<Warehouse, 'id' | 'createdAt'>,
   warehouseId?: string
 ): Promise<ActionResult> {
   const cookieStore = cookies();
@@ -45,7 +45,7 @@ export async function saveWarehouseAction(
     revalidatePath(WAREHOUSES_PATH);
     return { success: true };
   } catch (e) {
-    const error = e instanceof Error ? e.message : '发生未知错误';
+    const error = e instanceof Error ? e.message : '發生未知錯誤';
     console.error('儲存倉庫時發生錯誤:', error);
     return { success: false, error: `儲存失敗: ${error}` };
   }
@@ -73,12 +73,8 @@ export async function deleteWarehouseAction(
 }
 
 // --- Inventory Item Actions ---
-type ItemData = {
-  name: string;
-  category?: string;
-  unit?: string;
-  safeStockLevel?: number;
-};
+type ItemData = Omit<InventoryItem, 'id' | 'createdAt'>;
+
 export async function saveItemAction(
   data: ItemData,
   itemId?: string
@@ -118,6 +114,7 @@ export async function deleteItemAction(itemId: string): Promise<ActionResult> {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   try {
+    // Note: In a real-world scenario, you might want to check if the item is in use before deleting.
     const { error } = await supabase
       .from('inventory_items')
       .delete()
@@ -150,12 +147,11 @@ export async function recordMovementAction(
   input: RecordMovementInput
 ): Promise<ActionResult> {
   const cookieStore = cookies();
-  // For transactions, we should use the service role key to bypass RLS
   const supabase = createClient(cookieStore);
 
   try {
-    // In a real application, this should be a PostgreSQL transaction (RPC function).
-    // For now, we simulate it with sequential calls.
+    // In a real application, this should be a PostgreSQL transaction (RPC function)
+    // to ensure atomicity. For now, we simulate it with sequential calls.
     
     // 1. Get current stock level
     const { data: level, error: levelError } = await supabase
@@ -170,10 +166,10 @@ export async function recordMovementAction(
     }
 
     const currentQty = level?.quantity || 0;
-    const change = input.type === 'outbound' ? -input.quantity : input.quantity;
-    const newQty = currentQty + change;
-
-    if (newQty < 0) {
+    const change = input.type === 'inbound' || input.type === 'adjust' ? input.quantity : -input.quantity;
+    const newQty = (input.type === 'adjust') ? input.quantity : currentQty + change;
+    
+    if (input.type === 'outbound' && newQty < 0) {
       throw new Error('庫存不足，無法出庫。');
     }
 
@@ -181,7 +177,6 @@ export async function recordMovementAction(
     const { error: upsertError } = await supabase
       .from('inventory_levels')
       .upsert({
-        id: level?.id, // Pass id for update, null for insert
         item_id: input.itemId,
         warehouse_id: input.warehouseId,
         quantity: newQty,
@@ -205,6 +200,7 @@ export async function recordMovementAction(
     if (movementError) throw movementError;
 
     revalidatePath(MOVEMENTS_PATH);
+    revalidatePath(WAREHOUSES_PATH);
     return { success: true };
   } catch (e) {
     const error = e instanceof Error ? e.message : '发生未知错误';

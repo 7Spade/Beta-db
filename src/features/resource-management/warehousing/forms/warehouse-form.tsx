@@ -1,4 +1,3 @@
-
 'use client';
 
 import { saveWarehouseAction } from '@/features/resource-management/warehousing/actions/warehousing-actions';
@@ -100,7 +99,10 @@ export function WarehouseFormDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 py-2"
+          >
             <FormField
               control={form.control}
               name="name"

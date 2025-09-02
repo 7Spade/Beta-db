@@ -67,7 +67,12 @@ export function ItemFormDialog({
   useEffect(() => {
     if (isOpen) {
       if (item) {
-        form.reset(item);
+        form.reset({
+          name: item.name,
+          category: item.category,
+          unit: item.unit,
+          safeStockLevel: item.safeStockLevel,
+        });
       } else {
         form.reset({
           name: '',

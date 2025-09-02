@@ -2,19 +2,15 @@
  * @fileoverview Warehousing Dashboard View
  * @description The main view for the warehousing dashboard, acting as a hub for the module.
  */
-'use client';
+'use server';
 
 import { DashboardStats, type StatCardData } from '@/features/business-intelligence/reporting-analytics/dashboard/dashboard-stats';
+import { createClient } from '@/features/integrations/database/supabase/server';
 import { Button } from '@/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/card';
-import { Skeleton } from '@/ui/skeleton';
-import { firestore } from '@root/src/features/integrations/database/firebase-client/firebase-client';
-import { useToast } from '@root/src/shared/hooks/use-toast';
-import type { Warehouse } from '@root/src/shared/types/types';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { ArrowRight, Package, Truck, Warehouse as WarehouseIcon } from 'lucide-react';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 const warehousingModules = [
   {
@@ -37,57 +33,45 @@ const warehousingModules = [
   },
 ];
 
-export function WarehousingDashboardView() {
-    const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
-    const [loading, setLoading] = useState(true);
-    const { toast } = useToast();
+async function getWarehouseStats() {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
 
-    useEffect(() => {
-        const q = query(collection(firestore, 'warehouses'), orderBy('name'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const warehousesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Warehouse[];
-            setWarehouses(warehousesData);
-            setLoading(false);
-        }, (error) => {
-            console.error("獲取倉庫時發生錯誤：", error);
-            toast({ title: "錯誤", description: "無法載入倉庫列表。", variant: "destructive" });
-            setLoading(false);
-        });
+    const { count, error } = await supabase
+        .from('warehouses')
+        .select('*', { count: 'exact', head: true });
+        
+    const { count: activeCount, error: activeError } = await supabase
+        .from('warehouses')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
 
-        return () => unsubscribe();
-    }, [toast]);
-    
-    if (loading) {
-        return (
-            <div className="space-y-6">
-                <Skeleton className="h-8 w-48" />
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <Skeleton className="h-28" />
-                    <Skeleton className="h-28" />
-                </div>
-                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <Skeleton className="h-40" />
-                    <Skeleton className="h-40" />
-                    <Skeleton className="h-40" />
-                </div>
-            </div>
-        );
+    if (error || activeError) {
+        console.error("Error fetching warehouse stats:", error || activeError);
+        return { total: 0, active: 0 };
     }
     
-    const stats: StatCardData[] = [
-        {
-            title: '倉庫總數',
-            value: warehouses.length.toString(),
-            description: '所有已建立的倉庫據點',
-            icon: WarehouseIcon,
-        },
-        {
-            title: '啟用中據點',
-            value: warehouses.filter(w => w.isActive).length.toString(),
-            description: '目前正在運作的倉庫',
-            icon: WarehouseIcon,
-        }
-    ];
+    return { total: count ?? 0, active: activeCount ?? 0 };
+}
+
+
+export async function WarehousingDashboardView() {
+  const statsData = await getWarehouseStats();
+
+  const stats: StatCardData[] = [
+    {
+        title: '倉庫總數',
+        value: statsData.total.toString(),
+        description: '所有已建立的倉庫據點',
+        icon: WarehouseIcon,
+    },
+    {
+        title: '啟用中據點',
+        value: statsData.active.toString(),
+        description: '目前正在運作的倉庫',
+        icon: WarehouseIcon,
+    }
+  ];
 
   return (
     <div className="space-y-6">

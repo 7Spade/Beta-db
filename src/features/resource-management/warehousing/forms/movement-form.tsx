@@ -175,6 +175,7 @@ export function MovementFormDialog({
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -201,6 +202,7 @@ export function MovementFormDialog({
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -214,6 +216,7 @@ export function MovementFormDialog({
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
+                   <FormMessage />
                 </FormItem>
               )}
             />
@@ -234,6 +237,7 @@ export function MovementFormDialog({
                 type="button"
                 variant="ghost"
                 onClick={() => onOpenChange(false)}
+                disabled={isSaving}
               >
                 取消
               </Button>
