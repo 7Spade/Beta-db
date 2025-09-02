@@ -13,11 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/ui/card';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/ui/collapsible';
+// Removed Collapsible imports as we're using simple conditional rendering
 import {
   Table,
   TableBody,
@@ -30,7 +26,7 @@ import type { InventoryItem, Warehouse } from '@root/src/shared/types/types';
 import { cn } from '@root/src/shared/utils';
 import { ChevronRight, Package } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 type StockLevel = {
   item_id: string;
@@ -155,24 +151,21 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
                   ? getStockDistribution(item.id)
                   : [];
                 return (
-                  <Collapsible
-                    key={item.id}
-                    open={isExpanded}
-                    onOpenChange={() => toggleRow(item.id)}
-                  >
+                  <React.Fragment key={item.id}>
                     <TableRow className="hover:bg-muted/50">
                       <TableCell>
                         {!selectedWarehouseId && distribution.length > 0 && (
-                          <CollapsibleTrigger asChild>
-                            <button className="p-1 rounded-md hover:bg-muted">
-                              <ChevronRight
-                                className={cn(
-                                  'h-4 w-4 transition-transform',
-                                  isExpanded && 'rotate-90'
-                                )}
-                              />
-                            </button>
-                          </CollapsibleTrigger>
+                          <button 
+                            className="p-1 rounded-md hover:bg-muted"
+                            onClick={() => toggleRow(item.id)}
+                          >
+                            <ChevronRight
+                              className={cn(
+                                'h-4 w-4 transition-transform',
+                                isExpanded && 'rotate-90'
+                              )}
+                            />
+                          </button>
                         )}
                       </TableCell>
                       <TableCell className="font-medium">
@@ -188,33 +181,31 @@ export function StockLevelTable({ items, warehouses }: StockLevelTableProps) {
                         {item.unit}
                       </TableCell>
                     </TableRow>
-                    {!selectedWarehouseId && (
-                      <CollapsibleContent asChild>
-                        <TableRow>
-                          <TableCell colSpan={4} className="p-0">
-                            <div className="bg-muted/50 p-4 pl-16">
-                              <h4 className="font-semibold mb-2">
-                                各倉庫庫存分佈
-                              </h4>
-                              <ul className="space-y-1 text-sm">
-                                {distribution.map((dist) => (
-                                  <li
-                                    key={dist.warehouseName}
-                                    className="flex justify-between"
-                                  >
-                                    <span>{dist.warehouseName}</span>
-                                    <span className="font-mono">
-                                      {dist.quantity} {item.unit}
-                                    </span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      </CollapsibleContent>
+                    {!selectedWarehouseId && isExpanded && (
+                      <TableRow>
+                        <TableCell colSpan={4} className="p-0">
+                          <div className="bg-muted/50 p-4 pl-16">
+                            <h4 className="font-semibold mb-2">
+                              各倉庫庫存分佈
+                            </h4>
+                            <ul className="space-y-1 text-sm">
+                              {distribution.map((dist) => (
+                                <li
+                                  key={dist.warehouseName}
+                                  className="flex justify-between"
+                                >
+                                  <span>{dist.warehouseName}</span>
+                                  <span className="font-mono">
+                                    {dist.quantity} {item.unit}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </TableCell>
+                      </TableRow>
                     )}
-                  </Collapsible>
+                  </React.Fragment>
                 );
               })}
             </TableBody>
