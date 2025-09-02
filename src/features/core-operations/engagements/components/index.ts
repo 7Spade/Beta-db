@@ -13,3 +13,6 @@ export * from './tasks';
 
 // 進度管理組件
 export * from './progress';
+
+// 財務管理組件
+export * from './financial';
