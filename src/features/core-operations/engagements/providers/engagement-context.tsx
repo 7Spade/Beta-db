@@ -3,15 +3,15 @@
  */
 'use client';
 
-import React, { createContext, useContext, useReducer, useCallback, ReactNode } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useReducer } from 'react';
 import { engagementService } from '../services';
-import type { 
-  Engagement, 
-  EngagementSummary, 
-  EngagementStatus, 
-  EngagementPhase,
+import type {
   CreateEngagementInput,
-  UpdateEngagementInput 
+  Engagement,
+  EngagementPhase,
+  EngagementStatus,
+  EngagementSummary,
+  UpdateEngagementInput
 } from '../types';
 
 // Context 狀態類型
@@ -76,60 +76,60 @@ function engagementReducer(state: EngagementState, action: EngagementAction): En
   switch (action.type) {
     case 'SET_LOADING':
       return { ...state, isLoading: action.payload };
-    
+
     case 'SET_CREATING':
       return { ...state, isCreating: action.payload };
-    
+
     case 'SET_UPDATING':
       return { ...state, isUpdating: action.payload };
-    
+
     case 'SET_DELETING':
       return { ...state, isDeleting: action.payload };
-    
+
     case 'SET_ERROR':
       return { ...state, error: action.payload };
-    
+
     case 'SET_ENGAGEMENTS':
       return { ...state, engagements: action.payload };
-    
+
     case 'SET_SUMMARIES':
       return { ...state, summaries: action.payload };
-    
+
     case 'SET_CURRENT_ENGAGEMENT':
       return { ...state, currentEngagement: action.payload };
-    
+
     case 'ADD_ENGAGEMENT':
       return { ...state, engagements: [action.payload, ...state.engagements] };
-    
+
     case 'UPDATE_ENGAGEMENT':
       return {
         ...state,
         engagements: state.engagements.map(engagement =>
           engagement.id === action.payload.id ? action.payload : engagement
         ),
-        currentEngagement: state.currentEngagement?.id === action.payload.id 
-          ? action.payload 
+        currentEngagement: state.currentEngagement?.id === action.payload.id
+          ? action.payload
           : state.currentEngagement,
       };
-    
+
     case 'REMOVE_ENGAGEMENT':
       return {
         ...state,
         engagements: state.engagements.filter(engagement => engagement.id !== action.payload),
-        currentEngagement: state.currentEngagement?.id === action.payload 
-          ? null 
+        currentEngagement: state.currentEngagement?.id === action.payload
+          ? null
           : state.currentEngagement,
       };
-    
+
     case 'SET_FILTERS':
       return { ...state, filters: { ...state.filters, ...action.payload } };
-    
+
     case 'SET_PAGINATION':
       return { ...state, pagination: { ...state.pagination, ...action.payload } };
-    
+
     case 'RESET_STATE':
       return initialState;
-    
+
     default:
       return state;
   }
@@ -138,18 +138,18 @@ function engagementReducer(state: EngagementState, action: EngagementAction): En
 // Context 類型
 interface EngagementContextType {
   state: EngagementState;
-  
+
   // 數據操作
   loadEngagements: () => Promise<void>;
   loadEngagement: (id: string) => Promise<void>;
   createEngagement: (input: CreateEngagementInput) => Promise<{ success: boolean; engagementId?: string }>;
   updateEngagement: (id: string, input: UpdateEngagementInput) => Promise<{ success: boolean }>;
   deleteEngagement: (id: string) => Promise<{ success: boolean }>;
-  
+
   // 篩選和分頁
   setFilters: (filters: Partial<EngagementState['filters']>) => void;
   setPagination: (pagination: Partial<EngagementState['pagination']>) => void;
-  
+
   // 狀態管理
   clearError: () => void;
   resetState: () => void;
@@ -190,7 +190,7 @@ export function EngagementProvider({ children }: EngagementProviderProps) {
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
-  }, [state.filters, state.pagination.limit]);
+  }, [state.filters.status, state.filters.phase, state.pagination.limit]);
 
   // 載入單個 Engagement
   const loadEngagement = useCallback(async (id: string) => {

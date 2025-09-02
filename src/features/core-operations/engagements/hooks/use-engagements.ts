@@ -3,13 +3,13 @@
  */
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { engagementService } from '../services';
-import type { 
-  Engagement, 
-  EngagementSummary, 
-  EngagementStatus, 
-  EngagementPhase 
+import type {
+  Engagement,
+  EngagementPhase,
+  EngagementStatus,
+  EngagementSummary
 } from '../types';
 
 interface UseEngagementsOptions {
@@ -66,7 +66,7 @@ export function useEngagements(options: UseEngagementsOptions = {}): UseEngageme
         } else {
           setEngagements(result.engagements);
         }
-        
+
         setHasMore(result.engagements.length === limit);
         if (result.engagements.length > 0) {
           setLastDoc(result.engagements[result.engagements.length - 1]);
@@ -80,7 +80,7 @@ export function useEngagements(options: UseEngagementsOptions = {}): UseEngageme
     } finally {
       setIsLoading(false);
     }
-  }, [status, phase, limit, lastDoc]);
+  }, [status, phase, limit]);
 
   const loadSummaries = useCallback(async () => {
     try {
@@ -104,14 +104,65 @@ export function useEngagements(options: UseEngagementsOptions = {}): UseEngageme
   const refresh = useCallback(async () => {
     setLastDoc(null);
     setHasMore(true);
-    await Promise.all([loadEngagements(false), loadSummaries()]);
-  }, [loadEngagements, loadSummaries]);
+
+    // 直接調用服務，避免依賴項循環
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const [engagementsResult, summariesResult] = await Promise.all([
+        engagementService.getEngagements({ status, phase, limit }),
+        engagementService.getEngagementSummaries({ status, phase, limit })
+      ]);
+
+      if (engagementsResult.success && engagementsResult.engagements) {
+        setEngagements(engagementsResult.engagements);
+        setHasMore(engagementsResult.engagements.length === limit);
+        if (engagementsResult.engagements.length > 0) {
+          setLastDoc(engagementsResult.engagements[engagementsResult.engagements.length - 1]);
+        }
+      } else {
+        setError(engagementsResult.error || '載入失敗');
+      }
+
+      if (summariesResult.success && summariesResult.summaries) {
+        setSummaries(summariesResult.summaries);
+      } else {
+        setError(summariesResult.error || '載入摘要失敗');
+      }
+    } catch (err) {
+      setError('載入數據時發生錯誤');
+      console.error('載入 Engagements 失敗:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [status, phase, limit]);
 
   const loadMore = useCallback(async () => {
     if (!isLoading && hasMore) {
-      await loadEngagements(true);
+      try {
+        const result = await engagementService.getEngagements({
+          status,
+          phase,
+          limit,
+          startAfter: lastDoc,
+        });
+
+        if (result.success && result.engagements) {
+          setEngagements(prev => [...prev, ...result.engagements!]);
+          setHasMore(result.engagements.length === limit);
+          if (result.engagements.length > 0) {
+            setLastDoc(result.engagements[result.engagements.length - 1]);
+          }
+        } else {
+          setError(result.error || '載入更多失敗');
+        }
+      } catch (err) {
+        setError('載入更多數據時發生錯誤');
+        console.error('載入更多 Engagements 失敗:', err);
+      }
     }
-  }, [isLoading, hasMore, loadEngagements]);
+  }, [isLoading, hasMore, status, phase, limit, lastDoc]);
 
   // 初始載入
   useEffect(() => {
@@ -154,7 +205,7 @@ interface UseEngagementReturn {
 }
 
 export function useEngagement(
-  id: string, 
+  id: string,
   options: UseEngagementOptions = {}
 ): UseEngagementReturn {
   const {

@@ -29,7 +29,7 @@ export function EngagementDashboard({
 }: EngagementDashboardProps) {
   const { summaries, isLoading, error } = useEngagements({
     limit: 50,
-    autoRefresh: true,
+    autoRefresh: false, // 暫時禁用自動刷新以避免閃爍
     refreshInterval: 30000,
   });
 
