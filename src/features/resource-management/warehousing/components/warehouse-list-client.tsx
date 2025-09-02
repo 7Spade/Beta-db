@@ -26,6 +26,7 @@ import { useToast } from '@root/src/shared/hooks/use-toast';
 import type { LeaseAgreement, Warehouse } from '@root/src/shared/types/types';
 import { Edit, Loader2, MoreVertical, PlusCircle, Trash2, Warehouse as WarehouseIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
+import { getLeaseStatus } from '../utils/data-mappers';
 
 interface WarehousesClientViewProps {
   initialWarehouses: Warehouse[];
@@ -89,9 +90,18 @@ export function WarehousesClientView({ initialWarehouses, initialLeases }: Wareh
                   <CardDescription>{wh.location || '未提供地點'}</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant={(wh as unknown as { isActive?: boolean; is_active?: boolean }).isActive ?? (wh as unknown as { is_active?: boolean }).is_active ? 'default' : 'outline'}>
-                    {((wh as unknown as { isActive?: boolean; is_active?: boolean }).isActive ?? (wh as unknown as { is_active?: boolean }).is_active) ? '啟用中' : '已停用'}
+                  <Badge variant={wh.isActive ? 'default' : 'outline'}>
+                    {wh.isActive ? '啟用中' : '已停用'}
                   </Badge>
+                  {(() => {
+                    const currentLease = initialLeases.find(l => l.warehouse_id === wh.id) || null;
+                    const leaseStatus = getLeaseStatus(currentLease);
+                    return (
+                      <Badge variant={leaseStatus.variant}>
+                        {leaseStatus.status}
+                      </Badge>
+                    );
+                  })()}
                   <AlertDialog>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

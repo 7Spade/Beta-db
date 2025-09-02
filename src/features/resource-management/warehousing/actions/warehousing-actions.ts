@@ -21,45 +21,12 @@ type ActionResult = {
   error?: string;
 };
 
-// 簡化的認證檢查函數 - 暫時跳過詳細驗證
-async function verifyFirebaseAuth(cookieStore: Awaited<ReturnType<typeof cookies>>) {
-  try {
-    // 檢查是否有 Firebase 相關的 cookies
-    const firebaseCookies = [
-      'firebase-auth-token',
-      'firebase:authUser',
-      'firebase:host:elite-chiller-455712-c4.firebaseapp.com',
-    ];
-
-    const hasFirebaseAuth = firebaseCookies.some(cookieName =>
-      cookieStore.get(cookieName)?.value
-    );
-
-    if (!hasFirebaseAuth) {
-      // 暫時允許通過，但記錄警告
-      console.warn('未找到 Firebase 認證 cookies，但允許操作繼續');
-      return {
-        uid: 'anonymous',
-        email: 'unknown@example.com',
-        emailVerified: false,
-      };
-    }
-
-    return {
-      uid: 'authenticated-user',
-      email: 'user@example.com',
-      emailVerified: true,
-    };
-  } catch (error) {
-    console.error('認證檢查失敗:', error);
-    // 暫時允許通過，但記錄錯誤
-    console.warn('認證檢查失敗，但允許操作繼續');
-    return {
-      uid: 'fallback-user',
-      email: 'fallback@example.com',
-      emailVerified: false,
-    };
-  }
+// 簡化的認證檢查 - 依賴 Supabase RLS
+async function getCurrentUser() {
+  return {
+    uid: 'current-user',
+    email: 'user@example.com',
+  };
 }
 
 // --- Warehouse & Lease Actions ---
@@ -138,14 +105,8 @@ export async function saveWarehouseAction(
   const supabase = await createClient(cookieStore);
 
   try {
-    // 檢查 Firebase 認證狀態
-    const firebaseUser = await verifyFirebaseAuth(cookieStore);
-    console.log('Firebase 認證成功:', { uid: firebaseUser.uid, email: firebaseUser.email });
-
     const { name, location, isActive } = data;
     const warehouseData = { name, location, is_active: isActive };
-
-    console.log('準備儲存倉庫數據:', { warehouseData, warehouseId, userId: firebaseUser.uid });
 
     if (warehouseId) {
       const { data: updateData, error } = await supabase
@@ -153,21 +114,12 @@ export async function saveWarehouseAction(
         .update(warehouseData)
         .eq('id', warehouseId)
         .select();
-      if (error) {
-        console.error('更新倉庫錯誤:', error);
-        throw new Error(`更新失敗: ${error.message}`);
-      }
-      console.log('倉庫更新成功:', updateData);
+      if (error) throw error;
     } else {
-      const { data: insertData, error } = await supabase
+      const { error } = await supabase
         .from('warehouses')
-        .insert(warehouseData)
-        .select();
-      if (error) {
-        console.error('插入倉庫錯誤:', error);
-        throw new Error(`插入失敗: ${error.message}`);
-      }
-      console.log('倉庫插入成功:', insertData);
+        .insert(warehouseData);
+      if (error) throw error;
     }
 
     revalidatePath(WAREHOUSING_PATH);
@@ -212,10 +164,6 @@ export async function saveItemAction(
   const supabase = await createClient(cookieStore);
 
   try {
-    // 檢查 Firebase 認證狀態
-    const firebaseUser = await verifyFirebaseAuth(cookieStore);
-    console.log('Firebase 認證成功:', { uid: firebaseUser.uid, email: firebaseUser.email });
-
     const { name, category, unit, safeStockLevel, itemType, hasExpiryTracking, requiresMaintenance, requiresInspection, isSerialized } = data;
     const itemData = {
       name,
@@ -229,29 +177,17 @@ export async function saveItemAction(
       is_serialized: isSerialized,
     };
 
-    console.log('準備儲存物料數據:', { itemData, itemId, userId: firebaseUser.uid });
-
     if (itemId) {
-      const { data: updateData, error } = await supabase
+      const { error } = await supabase
         .from('inventory_items')
         .update(itemData)
-        .eq('id', itemId)
-        .select();
-      if (error) {
-        console.error('更新物料錯誤:', error);
-        throw new Error(`更新失敗: ${error.message}`);
-      }
-      console.log('物料更新成功:', updateData);
+        .eq('id', itemId);
+      if (error) throw error;
     } else {
-      const { data: insertData, error } = await supabase
+      const { error } = await supabase
         .from('inventory_items')
-        .insert(itemData)
-        .select();
-      if (error) {
-        console.error('插入物料錯誤:', error);
-        throw new Error(`插入失敗: ${error.message}`);
-      }
-      console.log('物料插入成功:', insertData);
+        .insert(itemData);
+      if (error) throw error;
     }
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };
@@ -378,33 +314,18 @@ export async function saveCategoryAction(
   const cookieStore = await cookies();
   const supabase = await createClient(cookieStore);
   try {
-    // 檢查 Firebase 認證狀態
-    const firebaseUser = await verifyFirebaseAuth(cookieStore);
-    console.log('Firebase 認證成功:', { uid: firebaseUser.uid, email: firebaseUser.email });
-
-    console.log('準備儲存分類數據:', { data, categoryId, userId: firebaseUser.uid });
 
     if (categoryId) {
-      const { data: updateData, error } = await supabase
+      const { error } = await supabase
         .from('inventory_categories')
         .update(data)
-        .eq('id', categoryId)
-        .select();
-      if (error) {
-        console.error('更新分類錯誤:', error);
-        throw new Error(`更新失敗: ${error.message}`);
-      }
-      console.log('分類更新成功:', updateData);
+        .eq('id', categoryId);
+      if (error) throw error;
     } else {
-      const { data: insertData, error } = await supabase
+      const { error } = await supabase
         .from('inventory_categories')
-        .insert(data)
-        .select();
-      if (error) {
-        console.error('插入分類錯誤:', error);
-        throw new Error(`插入失敗: ${error.message}`);
-      }
-      console.log('分類插入成功:', insertData);
+        .insert(data);
+      if (error) throw error;
     }
     revalidatePath(WAREHOUSING_PATH);
     return { success: true };

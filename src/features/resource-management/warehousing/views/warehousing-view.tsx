@@ -9,6 +9,13 @@ import { InventoryCategoriesClientView } from '@/features/resource-management/wa
 import { InventoryItemsClientView } from '@/features/resource-management/warehousing/components/item-list-client';
 import { InventoryMovementsClientView } from '@/features/resource-management/warehousing/components/movement-list-client';
 import { WarehousesClientView } from '@/features/resource-management/warehousing/components/warehouse-list-client';
+import {
+  mapInventoryCategory,
+  mapInventoryItem,
+  mapInventoryMovement,
+  mapLeaseAgreement,
+  mapWarehouse
+} from '@/features/resource-management/warehousing/utils/data-mappers';
 
 import { Skeleton } from '@/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
@@ -55,51 +62,12 @@ async function getData() {
     console.error('獲取租約數據錯誤:', leasesRes.error);
   }
 
-  // 映射數據庫字段到 TypeScript 類型
-  const warehouses = (warehousesRes.data || []).map((wh) => ({
-    id: wh.id,
-    name: wh.name,
-    location: wh.location || undefined,
-    isActive: wh.is_active || false,
-    createdAt: wh.created_at ? new Date(wh.created_at) : undefined,
-  }));
-
-  const items = (itemsRes.data || []).map((item) => ({
-    id: item.id,
-    name: item.name,
-    category: item.category,
-    unit: item.unit,
-    safeStockLevel: item.safe_stock_level,
-    createdAt: item.created_at ? new Date(item.created_at) : undefined,
-    itemType: item.item_type,
-    hasExpiryTracking: item.has_expiry_tracking,
-    requiresMaintenance: item.requires_maintenance,
-    requiresInspection: item.requires_inspection,
-    isSerialized: item.is_serialized,
-  }));
-
-  const categories = (categoriesRes.data || []).map((c) => ({
-    id: c.id,
-    name: c.name,
-    createdAt: c.created_at ? new Date(c.created_at) : undefined,
-  }));
-
-  const movements = (movementsRes.data || []).map((m) => ({
-    ...m,
-    timestamp: new Date(m.timestamp!),
-  }));
-
-  const leases = (leasesRes.data || []).map((l) => ({
-    id: l.id,
-    warehouse_id: l.warehouse_id,
-    lease_start_date: l.lease_start_date,
-    lease_end_date: l.lease_end_date,
-    monthly_rent: l.monthly_rent,
-    lessor_name: l.lessor_name,
-    contract_document_url: l.contract_document_url,
-    status: l.status,
-    createdAt: l.created_at ? new Date(l.created_at) : undefined,
-  }));
+  // 使用統一的數據映射
+  const warehouses = (warehousesRes.data || []).map(mapWarehouse);
+  const items = (itemsRes.data || []).map(mapInventoryItem);
+  const categories = (categoriesRes.data || []).map(mapInventoryCategory);
+  const movements = (movementsRes.data || []).map(mapInventoryMovement);
+  const leases = (leasesRes.data || []).map(mapLeaseAgreement);
 
   return {
     warehouses,
