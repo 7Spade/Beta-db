@@ -29,17 +29,7 @@ export interface Warehouse {
   lessorName?: string;
 }
 
-export interface LeaseAgreement {
-  id: string;
-  warehouse_id: string;
-  lease_start_date: Date | string;
-  lease_end_date: Date | string;
-  monthly_rent: number;
-  lessor_name: string; // 對應數據庫字段
-  contract_document_url?: string; // 對應數據庫字段
-  status: 'Active' | 'Expired' | 'Upcoming'; // 對應數據庫字段
-  createdAt?: Date;
-}
+
 
 export interface InventoryCategory {
   id: string;
@@ -81,6 +71,20 @@ export interface InventoryMovement {
   notes?: string;
   operator_id?: string;
   timestamp: Date;
+}
+
+
+
+// 倉儲管理輔助枚舉
+export enum MovementType {
+  INBOUND = 'inbound',
+  OUTBOUND = 'outbound',
+  ADJUST = 'adjust'
+}
+
+export enum ItemType {
+  ASSET = 'asset',
+  CONSUMABLE = 'consumable'
 }
 
 export interface Contact {

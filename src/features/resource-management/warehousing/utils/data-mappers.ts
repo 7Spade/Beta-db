@@ -3,7 +3,7 @@
  * @description 統一的數據庫字段到 TypeScript 類型的轉換
  */
 
-import type { InventoryCategory, InventoryItem, InventoryMovement, LeaseAgreement, Warehouse } from '@root/src/shared/types/types';
+import type { InventoryCategory, InventoryItem, InventoryLevel, InventoryMovement, Warehouse } from '@root/src/shared/types/types';
 
 export const mapWarehouse = (db: any): Warehouse => ({
     id: db.id,
@@ -42,16 +42,12 @@ export const mapInventoryMovement = (db: any): InventoryMovement => ({
     timestamp: new Date(db.timestamp),
 });
 
-export const mapLeaseAgreement = (db: any): LeaseAgreement => ({
+export const mapInventoryLevel = (db: any): InventoryLevel => ({
     id: db.id,
-    warehouse_id: db.warehouse_id,
-    lease_start_date: db.lease_start_date,
-    lease_end_date: db.lease_end_date,
-    monthly_rent: db.monthly_rent,
-    lessor_name: db.lessor_name,
-    contract_document_url: db.contract_document_url,
-    status: db.status,
-    createdAt: db.created_at ? new Date(db.created_at) : undefined,
+    itemId: db.item_id,
+    warehouseId: db.warehouse_id,
+    quantity: db.quantity,
+    lastUpdated: new Date(db.last_updated),
 });
 
 // 極簡租約狀態檢查

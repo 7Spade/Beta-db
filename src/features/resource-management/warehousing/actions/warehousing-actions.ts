@@ -8,7 +8,6 @@ import { createClient } from '@/features/integrations/database/supabase/server';
 import type {
   InventoryCategory,
   InventoryItem,
-  LeaseAgreement,
   Warehouse,
 } from '@root/src/shared/types/types';
 import { revalidatePath } from 'next/cache';
@@ -31,71 +30,7 @@ async function getCurrentUser() {
 
 // --- Warehouse & Lease Actions ---
 
-export async function saveWarehouseWithLeaseAction(
-  warehouseData: Omit<Warehouse, 'id' | 'createdAt' | 'is_active'> & { isActive: boolean },
-  leaseData: Omit<LeaseAgreement, 'id' | 'warehouse_id' | 'createdAt'> | null,
-  warehouseId?: string
-): Promise<ActionResult & { warehouseId?: string }> {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
 
-  try {
-    let finalWarehouseId = warehouseId;
-
-    if (warehouseId) {
-      // 更新倉庫
-      const { error: warehouseError } = await supabase
-        .from('warehouses')
-        .update({
-          name: warehouseData.name,
-          location: warehouseData.location,
-          is_active: warehouseData.isActive,
-        })
-        .eq('id', warehouseId);
-      if (warehouseError) throw warehouseError;
-    } else {
-      // 新增倉庫
-      const { data, error: warehouseError } = await supabase
-        .from('warehouses')
-        .insert({
-          name: warehouseData.name,
-          location: warehouseData.location,
-          is_active: warehouseData.isActive,
-        })
-        .select('id')
-        .single();
-      if (warehouseError) throw warehouseError;
-      finalWarehouseId = data.id;
-    }
-
-    if (!finalWarehouseId) {
-      throw new Error("未能取得倉庫ID");
-    }
-
-    // 如果有租約資訊，新增第一筆租約
-    if (leaseData) {
-      const { error: leaseError } = await supabase
-        .from('lease_agreements')
-        .insert({
-          warehouse_id: finalWarehouseId,
-          lease_start_date: leaseData.lease_start_date,
-          lease_end_date: leaseData.lease_end_date,
-          monthly_rent: leaseData.monthly_rent,
-          lessor_name: leaseData.lessor_name,
-          contract_document_url: leaseData.contract_document_url,
-          status: leaseData.status || 'Active'
-        });
-      if (leaseError) throw leaseError;
-    }
-
-    revalidatePath(WAREHOUSING_PATH);
-    return { success: true, warehouseId: finalWarehouseId };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : '發生未知錯誤';
-    console.error('儲存倉庫與租約時發生錯誤:', error);
-    return { success: false, error: `儲存失敗: ${error}` };
-  }
-}
 
 export async function saveWarehouseAction(
   data: Omit<Warehouse, 'id' | 'createdAt'>,
