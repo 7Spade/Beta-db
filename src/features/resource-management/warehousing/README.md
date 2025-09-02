@@ -62,6 +62,6 @@ src/app/(dashboard)/resource-management/warehousing/
 
 ## 5. 相關文件
 
-- [倉儲管理系統資料庫藍圖](../../04_project_management/inventory.md)
-- [導航配置](../../../components/layout/config/navigation.config.ts) (`resource-management` -> `warehousing`)
-- [模組結構標準](../../03_development/module-structure-standards.md)
+- [倉儲管理系統資料庫藍圖](../../../docs/04_project_management/inventory.md)
+- [導航配置](../../layout/config/navigation.config.ts) (`resource-management` -> `warehousing`)
+- [模組結構標準](../../../docs/03_development/module-structure-standards.md)
