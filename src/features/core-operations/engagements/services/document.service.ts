@@ -3,17 +3,16 @@
  */
 import { firestore } from '@/features/integrations/database/firebase-client/firebase-client';
 import {
-  doc,
-  updateDoc,
   arrayUnion,
-  arrayRemove,
+  doc,
   Timestamp,
+  updateDoc
 } from 'firebase/firestore';
 import type {
-  Document,
   Attachment,
-  CreateDocumentInput,
   CreateAttachmentInput,
+  CreateDocumentInput,
+  Document,
   DocumentSummary,
 } from '../types';
 
