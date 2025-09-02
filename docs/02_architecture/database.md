@@ -56,6 +56,30 @@
 | `details`    | `Map`       | (可選) 操作的詳細內容。                             |
 | `timestamp`  | `Timestamp` | 操作發生的時間。                                    |
 
+### 1.4. `logs`
+
+此集合用於儲存各類型的日誌紀錄。
+
+- **文件 ID**: 根據日誌類型定義，例如 `ai_token_usage`
+- **範例文件結構 (`ai_token_usage`):**
+
+| 欄位      | 類型         | 描述                                   |
+| --------- | ------------ | -------------------------------------- |
+| `entries` | `Array<Map>` | 一個包含所有 AI Token 消耗紀錄的陣列。 |
+
+#### 巢狀 `entries` 物件結構
+
+| 欄位          | 類型        | 描述                            |
+| ------------- | ----------- | ------------------------------- |
+| `flowName`    | `string`    | Genkit 流程的名稱。             |
+| `model`       | `string`    | 使用的 AI 模型。                |
+| `status`      | `string`    | 'succeeded' 或 'failed'。       |
+| `totalTokens` | `number`    | 此次呼叫消耗的總 Token 數。     |
+| `durationMs`  | `number`    | 此次呼叫的總耗時（毫秒）。      |
+| `timestamp`   | `Timestamp` | 紀錄的時間戳。                  |
+| `userId`      | `string`    | (可選) 觸發此流程的使用者 ID。  |
+| `error`       | `string`    | (可選) 如果失敗，紀錄錯誤訊息。 |
+
 ---
 
 ## 2. 核心業務模組

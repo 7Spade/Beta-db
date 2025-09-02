@@ -4,6 +4,7 @@
 
 ## 目錄結構
 
+- **[編碼風格指南 (Coding Style Guide)](./coding-style-guide.md)**: 專案的統一編碼風格與命名慣例，所有開發者必讀。
 - **`core-modules/`**: 存放對每個核心業務功能模組的詳細介紹和檔案清單。
 - **`ai-features/`**: 存放所有與 AI 功能相關的介紹和檔案清單。
 

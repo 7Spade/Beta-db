@@ -5,10 +5,16 @@
 'use server';
 
 import { createClient } from '@/features/integrations/database/supabase/server';
+import {
+  mapInventoryCategory,
+  mapInventoryItem,
+  mapInventoryMovement,
+  mapWarehouse
+} from '@/features/resource-management/warehousing/utils/data-mappers';
 import type {
   InventoryCategory,
   InventoryItem,
-  Warehouse,
+  Warehouse
 } from '@root/src/shared/types/types';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -32,6 +38,60 @@ const getSupabaseClient = async () => {
   const cookieStore = await cookies();
   return createClient(cookieStore);
 };
+
+// --- Data Fetching Actions ---
+
+export async function getWarehousingData() {
+  try {
+    const supabase = await getSupabaseClient();
+
+    const [warehousesRes, itemsRes, categoriesRes, movementsRes] =
+      await Promise.all([
+        supabase.from('warehouses').select('*').order('name'),
+        supabase.from('inventory_items').select('*').order('name'),
+        supabase.from('inventory_categories').select('*').order('name'),
+        supabase
+          .from('inventory_movements')
+          .select('*')
+          .order('timestamp', { ascending: false }),
+      ]);
+
+    // 檢查是否有錯誤
+    if (warehousesRes.error) {
+      console.error('獲取倉庫數據錯誤:', warehousesRes.error);
+    }
+    if (itemsRes.error) {
+      console.error('獲取物料數據錯誤:', itemsRes.error);
+    }
+    if (categoriesRes.error) {
+      console.error('獲取分類數據錯誤:', categoriesRes.error);
+    }
+    if (movementsRes.error) {
+      console.error('獲取移動記錄錯誤:', movementsRes.error);
+    }
+
+    // 使用統一的數據映射
+    const warehouses = (warehousesRes.data || []).map(mapWarehouse);
+    const items = (itemsRes.data || []).map(mapInventoryItem);
+    const categories = (categoriesRes.data || []).map(mapInventoryCategory);
+    const movements = (movementsRes.data || []).map(mapInventoryMovement);
+
+    return {
+      warehouses,
+      items,
+      categories,
+      movements,
+    };
+  } catch (error) {
+    console.error('獲取倉儲數據時發生錯誤:', error);
+    return {
+      warehouses: [],
+      items: [],
+      categories: [],
+      movements: [],
+    };
+  }
+}
 
 // --- Warehouse Actions ---
 

@@ -1,20 +1,14 @@
 /**
  * @fileoverview Unified Warehousing View
- * @description The single main view for the entire warehousing module, using tabs to organize functionality.
+ * @description Clean layout container for the warehousing module that handles data fetching and component orchestration.
  */
 'use server';
 
-import { createClient } from '@/features/integrations/database/supabase/server';
+import { getWarehousingData } from '@/features/resource-management/warehousing/actions/warehousing-actions';
 import { InventoryCategoriesClientView } from '@/features/resource-management/warehousing/components/category-list-client';
 import { InventoryItemsClientView } from '@/features/resource-management/warehousing/components/item-list-client';
 import { InventoryMovementsClientView } from '@/features/resource-management/warehousing/components/movement-list-client';
 import { WarehousesClientView } from '@/features/resource-management/warehousing/components/warehouse-list-client';
-import {
-  mapInventoryCategory,
-  mapInventoryItem,
-  mapInventoryMovement,
-  mapWarehouse
-} from '@/features/resource-management/warehousing/utils/data-mappers';
 
 import { Skeleton } from '@/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/ui/tabs';
@@ -24,52 +18,8 @@ import {
   Truck,
   Warehouse as WarehouseIcon,
 } from 'lucide-react';
-import { cookies } from 'next/headers';
 import { Suspense } from 'react';
 import { WarehousingDashboardView } from './warehousing-dashboard-view';
-
-async function getData() {
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
-
-  const [warehousesRes, itemsRes, categoriesRes, movementsRes] =
-    await Promise.all([
-      supabase.from('warehouses').select('*').order('name'),
-      supabase.from('inventory_items').select('*').order('name'),
-      supabase.from('inventory_categories').select('*').order('name'),
-      supabase
-        .from('inventory_movements')
-        .select('*')
-        .order('timestamp', { ascending: false }),
-    ]);
-
-  // 檢查是否有錯誤
-  if (warehousesRes.error) {
-    console.error('獲取倉庫數據錯誤:', warehousesRes.error);
-  }
-  if (itemsRes.error) {
-    console.error('獲取物料數據錯誤:', itemsRes.error);
-  }
-  if (categoriesRes.error) {
-    console.error('獲取分類數據錯誤:', categoriesRes.error);
-  }
-  if (movementsRes.error) {
-    console.error('獲取移動記錄錯誤:', movementsRes.error);
-  }
-
-  // 使用統一的數據映射
-  const warehouses = (warehousesRes.data || []).map(mapWarehouse);
-  const items = (itemsRes.data || []).map(mapInventoryItem);
-  const categories = (categoriesRes.data || []).map(mapInventoryCategory);
-  const movements = (movementsRes.data || []).map(mapInventoryMovement);
-
-  return {
-    warehouses,
-    items,
-    categories,
-    movements,
-  };
-}
 
 const LoadingFallback = () => (
   <div className="space-y-4 pt-4">
@@ -79,7 +29,7 @@ const LoadingFallback = () => (
 );
 
 export async function WarehousingView() {
-  const { warehouses, items, categories, movements } = await getData();
+  const { warehouses, items, categories, movements } = await getWarehousingData();
 
   return (
     <div className="space-y-6">

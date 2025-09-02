@@ -25,6 +25,9 @@
 │  │  └─validators
 │  │          README.md
 │  │
+│  ├─services
+│  │      ai-token-log.service.ts
+│  │
 │  └─types
 │      │  README.md
 │      │
@@ -53,10 +56,7 @@
 │  │  │  ├─kanban
 │  │  │  │      page.tsx
 │  │  │  │
-│  │  │  ├─knowledge-base
-│  │  │  │      page.tsx
-│  │  │  │
-│  │  │  └─project-progress
+│  │  │  └─knowledge-base
 │  │  │          page.tsx
 │  │  │
 │  │  ├─business-intelligence
@@ -103,6 +103,7 @@
 │  │  │
 │  │  ├─resource-management
 │  │  │  ├─crm
+│  │  │  │  │  page.tsx
 │  │  │  │  │  README.md
 │  │  │  │  │
 │  │  │  │  ├─partners
@@ -124,6 +125,7 @@
 │  │  │  │      README.md
 │  │  │  │
 │  │  │  ├─hr
+│  │  │  │  │  page.tsx
 │  │  │  │  │  README.md
 │  │  │  │  │
 │  │  │  │  ├─attendance
@@ -135,72 +137,54 @@
 │  │  │  │  └─skills
 │  │  │  │          page.tsx
 │  │  │  │
-│  │  │  └─inventory
-│  │  │      │  README.md
-│  │  │      │
-│  │  │      ├─items
-│  │  │      │      page.tsx
-│  │  │      │
-│  │  │      ├─movements
-│  │  │      │      page.tsx
-│  │  │      │
-│  │  │      ├─transfers
-│  │  │      │      page.tsx
-│  │  │      │
-│  │  │      └─warehouses
-│  │  │              page.tsx
+│  │  │  └─warehousing
+│  │  │          page.tsx
 │  │  │
-│  │  └─system-administration
+│  │  └─website-cms
 │  │      │  README.md
 │  │      │
-│  │      ├─settings
+│  │      ├─blog
+│  │      │  └─posts
+│  │      │      │  page.tsx
+│  │      │      │
+│  │      │      ├─create
+│  │      │      │      page.tsx
+│  │      │      │
+│  │      │      └─[id]
+│  │      │          │  page.tsx
+│  │      │          │
+│  │      │          └─edit
+│  │      │                  page.tsx
+│  │      │
+│  │      ├─career
+│  │      │  │  page.tsx
+│  │      │  │
+│  │      │  ├─applications
+│  │      │  │      page.tsx
+│  │      │  │
+│  │      │  └─jobs
+│  │      │          page.tsx
+│  │      │
+│  │      ├─contact
 │  │      │      page.tsx
 │  │      │
-│  │      └─website-cms
-│  │          │  layout.tsx
-│  │          │
-│  │          ├─blog
-│  │          │  └─posts
-│  │          │      │  page.tsx
-│  │          │      │
-│  │          │      ├─create
-│  │          │      │      page.tsx
-│  │          │      │
-│  │          │      └─[id]
-│  │          │          │  page.tsx
-│  │          │          │
-│  │          │          └─edit
-│  │          │                  page.tsx
-│  │          │
-│  │          ├─career
-│  │          │  │  page.tsx
-│  │          │  │
-│  │          │  ├─applications
-│  │          │  │      page.tsx
-│  │          │  │
-│  │          │  └─jobs
-│  │          │          page.tsx
-│  │          │
-│  │          ├─contact
-│  │          │      page.tsx
-│  │          │
-│  │          ├─content
-│  │          │  │  page.tsx
-│  │          │  │
-│  │          │  ├─media
-│  │          │  │      page.tsx
-│  │          │  │
-│  │          │  └─pages
-│  │          │          page.tsx
-│  │          │
-│  │          ├─dashboard
-│  │          │      page.tsx
-│  │          │
-│  │          ├─system
-│  │          │      page.tsx
-│  │          │
-│  │          └─user
-│  │                  page.tsx
+│  │      ├─content
+│  │      │  │  page.tsx
+│  │      │  │
+│  │      │  ├─media
+│  │      │  │      page.tsx
+│  │      │  │
+│  │      │  └─pages
+│  │      │          page.tsx
+│  │      │
+│  │      ├─dashboard
+│  │      │      page.tsx
+│  │      │
+│  │      ├─system
+│  │      │      page.tsx
+│  │      │
+│  │      └─user
+│  │              page.tsx
 │  │
 │  ├─(auth)
 │  │  │  layout.tsx
@@ -266,14 +250,11 @@
 │  │  │      app-header.tsx
 │  │  │      app-provider.tsx
 │  │  │      app-shell.tsx
-│  │  │      layout-wrapper.tsx
 │  │  │      theme-provider.tsx
 │  │  │
 │  │  ├─navigation
 │  │  │      breadcrumb.tsx
 │  │  │      context-menu.tsx
-│  │  │      navigation-menu-item.tsx
-│  │  │      navigation-menu.tsx
 │  │  │      notification-center.tsx
 │  │  │      quick-actions.tsx
 │  │  │      search-command.tsx
@@ -283,12 +264,8 @@
 │  │  ├─overlays
 │  │  │      drawer-container.tsx
 │  │  │      modal-container.tsx
+│  │  │      overlay-manager.tsx
 │  │  │      popover-container.tsx
-│  │  │      tooltip-provider.tsx
-│  │  │
-│  │  ├─responsive
-│  │  │      mobile-menu.tsx
-│  │  │      responsive-wrapper.tsx
 │  │  │
 │  │  └─shared
 │  │          document-preview.tsx
@@ -316,6 +293,7 @@
 │          collapsible.tsx
 │          command.tsx
 │          context-menu.tsx
+│          date-picker.tsx
 │          dialog.tsx
 │          drawer.tsx
 │          dropdown-menu.tsx
@@ -457,15 +435,24 @@
 │  │  └─reporting-analytics
 │  │      │  README.md
 │  │      │
+│  │      ├─ai
+│  │      │      ai-token-stats.tsx
+│  │      │
+│  │      ├─components
+│  │      │      ai-token-log-table.tsx
+│  │      │
 │  │      ├─daily-report
 │  │      │      daily-report-view.tsx
 │  │      │
-│  │      └─dashboard
-│  │              ai-usage-log.tsx
-│  │              dashboard-stats.tsx
-│  │              dashboard-view.tsx
-│  │              dashboard.tsx
-│  │              README.md
+│  │      ├─dashboard
+│  │      │      ai-usage-log.tsx
+│  │      │      dashboard-stats.tsx
+│  │      │      dashboard-view.tsx
+│  │      │      dashboard.tsx
+│  │      │      README.md
+│  │      │
+│  │      └─hooks
+│  │              use-ai-token-stats.ts
 │  │
 │  ├─core-operations
 │  │  │  README.md
@@ -485,6 +472,8 @@
 │  │  │  │      change-order-item.tsx
 │  │  │  │      contract-status-badge.tsx
 │  │  │  │      contract-summary-card.tsx
+│  │  │  │      ContractScopeItem.tsx
+│  │  │  │      ContractScopeList.tsx
 │  │  │  │      index.ts
 │  │  │  │      payment-progress.tsx
 │  │  │  │      README.md
@@ -621,8 +610,11 @@
 │  │  │  │      TaskItem.tsx
 │  │  │  │      TaskList.tsx
 │  │  │  │
-│  │  │  ├─project-progress
-│  │  │  │      project-progress-view.tsx
+│  │  │  ├─dashboard
+│  │  │  │      project-dashboard.tsx
+│  │  │  │
+│  │  │  ├─hooks
+│  │  │  │      use-projects.ts
 │  │  │  │
 │  │  │  ├─types
 │  │  │  │      index.ts
@@ -800,129 +792,147 @@
 │  │  │          skill-form-dialog.tsx
 │  │  │          skills-list.tsx
 │  │  │
-│  │  └─inventory
+│  │  └─warehousing
 │  │      │  README.md
 │  │      │
-│  │      ├─items
-│  │      │      README.md
+│  │      ├─actions
+│  │      │      warehousing-actions.ts
 │  │      │
-│  │      ├─movements
-│  │      │      README.md
+│  │      ├─components
+│  │      │      category-list-client.tsx
+│  │      │      combobox.tsx
+│  │      │      item-list-client.tsx
+│  │      │      movement-list-client.tsx
+│  │      │      warehouse-list-client.tsx
+│  │      │      warehouse-selector.tsx
 │  │      │
-│  │      ├─transfers
-│  │      │      README.md
+│  │      ├─forms
+│  │      │      category-form.tsx
+│  │      │      item-form.tsx
+│  │      │      movement-form.tsx
+│  │      │      transfer-form.tsx
+│  │      │      warehouse-form.tsx
 │  │      │
-│  │      └─warehouses
-│  │              README.md
+│  │      ├─tables
+│  │      │      stock-level-table.tsx
+│  │      │
+│  │      └─views
+│  │              warehousing-dashboard-view.tsx
+│  │              warehousing-view.tsx
 │  │
-│  └─system-administration
+│  └─website-cms
 │      ├─admin
 │      │  │  README.md
 │      │  │
 │      │  ├─actions
 │      │  │      user-actions.ts
 │      │  │
+│      │  ├─dashboard
+│      │  │      user-dashboard.tsx
+│      │  │
+│      │  ├─hooks
+│      │  │      use-users.ts
+│      │  │
 │      │  └─views
 │      │          admin-dashboard-view.tsx
 │      │          user-management-view.tsx
 │      │
-│      ├─settings
-│      │      README.md
-│      │      settings-view.tsx
+│      ├─blog
+│      │  │  README.md
+│      │  │
+│      │  ├─actions
+│      │  │      blog.actions.ts
+│      │  │      cache.actions.ts
+│      │  │      media.actions.ts
+│      │  │
+│      │  ├─components
+│      │  │  ├─BlogCard
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  ├─BlogEditor
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  ├─BlogList
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  └─MediaUploader
+│      │  │          index.tsx
+│      │  │
+│      │  ├─hooks
+│      │  │      use-blog-form.ts
+│      │  │      use-blog-list.ts
+│      │  │
+│      │  ├─types
+│      │  │      blog.types.ts
+│      │  │      media.types.ts
+│      │  │
+│      │  ├─utils
+│      │  │      content.utils.ts
+│      │  │      seo.utils.ts
+│      │  │      slug.utils.ts
+│      │  │
+│      │  └─views
+│      │          BlogDetailView.tsx
+│      │          BlogFormView.tsx
+│      │          BlogListView.tsx
+│      │          PublicBlogView.tsx
 │      │
-│      └─website-cms
-│          ├─blog
-│          │  │  README.md
-│          │  │
-│          │  ├─actions
-│          │  │      blog.actions.ts
-│          │  │      cache.actions.ts
-│          │  │      media.actions.ts
-│          │  │
-│          │  ├─components
-│          │  │  ├─BlogCard
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  ├─BlogEditor
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  ├─BlogList
-│          │  │  │      index.tsx
-│          │  │  │
-│          │  │  └─MediaUploader
-│          │  │          index.tsx
-│          │  │
-│          │  ├─hooks
-│          │  │      use-blog-form.ts
-│          │  │      use-blog-list.ts
-│          │  │
-│          │  ├─types
-│          │  │      blog.types.ts
-│          │  │      media.types.ts
-│          │  │
-│          │  ├─utils
-│          │  │      content.utils.ts
-│          │  │      seo.utils.ts
-│          │  │      slug.utils.ts
-│          │  │
-│          │  └─views
-│          │          BlogDetailView.tsx
-│          │          BlogFormView.tsx
-│          │          BlogListView.tsx
-│          │          PublicBlogView.tsx
-│          │
-│          └─career
-│              │  README.md
-│              │
-│              ├─actions
-│              │      application.actions.ts
-│              │      email.actions.ts
-│              │      interview.actions.ts
-│              │      job.actions.ts
-│              │
-│              ├─components
-│              │  ├─ApplicationCard
-│              │  │      index.tsx
-│              │  │
-│              │  ├─ApplicationList
-│              │  │      index.tsx
-│              │  │
-│              │  ├─ApplyForm
-│              │  │      index.tsx
-│              │  │
-│              │  ├─InterviewScheduler
-│              │  │      index.tsx
-│              │  │
-│              │  ├─JobCard
-│              │  │      index.tsx
-│              │  │
-│              │  ├─JobEditor
-│              │  │      index.tsx
-│              │  │
-│              │  └─JobList
-│              │          index.tsx
-│              │
-│              ├─hooks
-│              │      use-applications.ts
-│              │      use-job-form.ts
-│              │      use-job-list.ts
-│              │
-│              ├─types
-│              │      application.types.ts
-│              │      interview.types.ts
-│              │      job.types.ts
-│              │
-│              ├─utils
-│              │      notification.utils.ts
-│              │      slug.utils.ts
-│              │      status.utils.ts
-│              │
-│              └─views
-│                      ApplicationDetailView.tsx
-│                      ApplicationListView.tsx
-│                      JobFormView.tsx
-│                      JobListView.tsx
-│                      PublicCareerView.tsx
+│      ├─career
+│      │  │  README.md
+│      │  │
+│      │  ├─actions
+│      │  │      application.actions.ts
+│      │  │      email.actions.ts
+│      │  │      interview.actions.ts
+│      │  │      job.actions.ts
+│      │  │
+│      │  ├─components
+│      │  │  ├─ApplicationCard
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  ├─ApplicationList
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  ├─ApplyForm
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  ├─InterviewScheduler
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  ├─JobCard
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  ├─JobEditor
+│      │  │  │      index.tsx
+│      │  │  │
+│      │  │  └─JobList
+│      │  │          index.tsx
+│      │  │
+│      │  ├─hooks
+│      │  │      use-applications.ts
+│      │  │      use-job-form.ts
+│      │  │      use-job-list.ts
+│      │  │
+│      │  ├─types
+│      │  │      application.types.ts
+│      │  │      interview.types.ts
+│      │  │      job.types.ts
+│      │  │
+│      │  ├─utils
+│      │  │      notification.utils.ts
+│      │  │      slug.utils.ts
+│      │  │      status.utils.ts
+│      │  │
+│      │  └─views
+│      │          ApplicationDetailView.tsx
+│      │          ApplicationListView.tsx
+│      │          JobFormView.tsx
+│      │          JobListView.tsx
+│      │          PublicCareerView.tsx
+│      │
+│      └─system
+│              README.md
+│              settings-view.tsx
 │
 └─shared
     │  index.ts
@@ -931,7 +941,6 @@
     ├─constants
     │      roles.ts
     │
-    ├─enums
     ├─events
     │      app-events.ts
     │      event-dispatcher.ts
@@ -945,14 +954,10 @@
     ├─models
     │      ai-token-log.model.ts
     │
-    ├─schemas
     ├─services
     │  ├─activity-log
     │  │      activity-log.listeners.ts
     │  │      activity-log.service.ts
-    │  │
-    │  ├─ai-token-log
-    │  │      logging.service.ts
     │  │
     │  ├─blog
     │  │      blog.service.ts

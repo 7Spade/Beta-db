@@ -25,18 +25,17 @@
   - **Firebase Authentication**: 用於使用者身份驗證 (Email/密碼、Google 登入)。
   - **Firestore (NoSQL)**: 作為核心業務數據的主資料庫（專案、合約、使用者等）。
   - **Firebase Storage**: 用於儲存使用者上傳的檔案（雲端硬碟功能）。
-  
+
   > **重要開發規範：Client SDK vs. Admin SDK**
   >
   > - **Client SDK (`firebase`)**:
   >   - **使用時機**: **所有客戶端元件 (`'use client'`)** 中。
   >   - **運作方式**: 在使用者的瀏覽器中執行，**會嚴格遵守** 您在 `firestore.rules` 和 `storage.rules` 中定義的安全規則。這是確保資料安全的主要防線。
   >   - **初始化檔案**: `src/lib/db/firebase-client/firebase-client.ts`
-  >
   - **Admin SDK (`firebase-admin`)**:
-  >   - **使用時機**: **僅限於安全的伺服器環境**（如 Server Actions、API Routes、Genkit Flows）。
-  >   - **運作方式**: 以**超級管理員權限**執行，**會繞過所有安全規則**。因此，絕不能在客戶端程式碼中洩漏或使用。
-  >   - **初始化檔案**: `src/lib/db/firebase-admin/firebase-admin.ts`
+    > - **使用時機**: **僅限於安全的伺服器環境**（如 Server Actions、API Routes、Genkit Flows）。
+    > - **運作方式**: 以**超級管理員權限**執行，**會繞過所有安全規則**。因此，絕不能在客戶端程式碼中洩漏或使用。
+    > - **初始化檔案**: `src/lib/db/firebase-admin/firebase-admin.ts`
 
 - **日誌與流水帳資料庫**: [MongoDB](https://www.mongodb.com/) (透過 Mongoose)
   - **核心優勢**: 處理高頻寫入的數據（如庫存移動、AI Token 消耗紀錄），成本效益更高。
