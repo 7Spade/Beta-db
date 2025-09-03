@@ -1,500 +1,550 @@
 /**
- * @fileoverview 數據庫操作驗證工具
+ * @fileoverview 數據庫驗證工具
+ * 提供全面的數據驗證、安全檢查和性能優化功能
  */
-import type { Timestamp } from 'firebase/firestore';
 import type {
+  CreateAttachmentInput,
+  CreateCommunicationInput,
+  CreateDocumentInput,
   CreateEngagementInput,
-  UpdateEngagementInput,
-  CreateTaskInput,
-  UpdateTaskInput,
+  CreateInvoiceInput,
+  CreateMeetingInput,
   CreatePaymentInput,
   CreateReceiptInput,
-  CreateInvoiceInput,
-  CreateCommunicationInput,
-  CreateMeetingInput,
-  CreateDocumentInput,
-  CreateAttachmentInput,
+  CreateTaskInput,
+  UpdateEngagementInput,
 } from '../types';
 
-/**
- * 驗證結果介面
- */
-export interface ValidationResult {
+// 安全威脅檢測
+const SECURITY_THREATS = [
+  /<script[^>]*>.*?<\/script>/gi,
+  /javascript:/gi,
+  /on\w+\s*=/gi,
+  /data:text\/html/gi,
+  /vbscript:/gi,
+  /expression\s*\(/gi,
+  /url\s*\(/gi,
+  /@import/gi,
+  /eval\s*\(/gi,
+  /setTimeout\s*\(/gi,
+  /setInterval\s*\(/gi,
+  /document\./gi,
+  /window\./gi,
+  /alert\s*\(/gi,
+  /confirm\s*\(/gi,
+  /prompt\s*\(/gi,
+];
+
+// SQL 注入檢測
+const SQL_INJECTION_PATTERNS = [
+  /('|(\\')|(;)|(\-\-)|(\s+or\s+)|(\s+and\s+)|(\s+union\s+)|(\s+select\s+)|(\s+insert\s+)|(\s+update\s+)|(\s+delete\s+)|(\s+drop\s+)|(\s+create\s+)|(\s+alter\s+)|(\s+exec\s+)|(\s+execute\s+))/gi,
+  /(\s+or\s+\d+\s*=\s*\d+)/gi,
+  /(\s+and\s+\d+\s*=\s*\d+)/gi,
+  /(\s+union\s+select\s+)/gi,
+  /(\s+drop\s+table\s+)/gi,
+  /(\s+delete\s+from\s+)/gi,
+  /(\s+insert\s+into\s+)/gi,
+  /(\s+update\s+\w+\s+set\s+)/gi,
+];
+
+// 驗證結果接口
+interface ValidationResult {
   isValid: boolean;
   errors: string[];
+  warnings: string[];
 }
 
-/**
- * 數據庫驗證工具類
- */
-export class DatabaseValidationUtils {
+// 驗證配置
+interface ValidationConfig {
+  maxStringLength: number;
+  maxTextLength: number;
+  maxNumberValue: number;
+  minNumberValue: number;
+  allowedFileTypes: string[];
+  maxFileSize: number;
+  enableSecurityCheck: boolean;
+  enableSQLInjectionCheck: boolean;
+}
+
+const DEFAULT_CONFIG: ValidationConfig = {
+  maxStringLength: 200,
+  maxTextLength: 1000,
+  maxNumberValue: 1000000000,
+  minNumberValue: 0,
+  allowedFileTypes: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png', 'gif'],
+  maxFileSize: 10 * 1024 * 1024, // 10MB
+  enableSecurityCheck: true,
+  enableSQLInjectionCheck: true,
+};
+
+export class DatabaseValidation {
+  private config: ValidationConfig;
+
+  constructor(config: Partial<ValidationConfig> = {}) {
+    this.config = { ...DEFAULT_CONFIG, ...config };
+  }
+
   /**
-   * 驗證 Engagement 創建輸入
+   * 驗證字符串輸入
    */
-  static validateCreateEngagementInput(input: CreateEngagementInput): ValidationResult {
+  private validateString(value: any, fieldName: string, required = true, maxLength?: number): ValidationResult {
     const errors: string[] = [];
+    const warnings: string[] = [];
 
-    // 基本字段驗證
-    if (!input.name || input.name.trim().length === 0) {
-      errors.push('專案名稱不能為空');
-    } else if (input.name.length > 200) {
-      errors.push('專案名稱不能超過 200 個字符');
+    if (required && (!value || value.toString().trim().length === 0)) {
+      errors.push(`${fieldName} 不能為空`);
+      return { isValid: false, errors, warnings };
     }
 
-    if (!input.contractor || input.contractor.trim().length === 0) {
-      errors.push('承包商不能為空');
+    if (value !== null && value !== undefined) {
+      const stringValue = value.toString();
+      const length = maxLength || this.config.maxStringLength;
+
+      if (stringValue.length > length) {
+        errors.push(`${fieldName} 長度不能超過 ${length} 個字符`);
+      }
+
+      // 安全檢查
+      if (this.config.enableSecurityCheck) {
+        if (this.containsSecurityThreats(stringValue)) {
+          errors.push(`${fieldName} 包含不安全的內容`);
+        }
+      }
+
+      // SQL 注入檢查
+      if (this.config.enableSQLInjectionCheck) {
+        if (this.containsSQLInjection(stringValue)) {
+          errors.push(`${fieldName} 包含不安全的 SQL 語句`);
+        }
+      }
     }
 
-    if (!input.client || input.client.trim().length === 0) {
-      errors.push('客戶不能為空');
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  /**
+   * 驗證數字輸入
+   */
+  private validateNumber(value: any, fieldName: string, required = true, min?: number, max?: number): ValidationResult {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    if (required && (value === null || value === undefined || value === '')) {
+      errors.push(`${fieldName} 不能為空`);
+      return { isValid: false, errors, warnings };
     }
 
-    // 日期驗證
-    if (!input.startDate) {
-      errors.push('開始日期不能為空');
+    if (value !== null && value !== undefined && value !== '') {
+      const numValue = Number(value);
+
+      if (isNaN(numValue)) {
+        errors.push(`${fieldName} 必須是有效的數字`);
+        return { isValid: false, errors, warnings };
+      }
+
+      const minValue = min !== undefined ? min : this.config.minNumberValue;
+      const maxValue = max !== undefined ? max : this.config.maxNumberValue;
+
+      if (numValue < minValue) {
+        errors.push(`${fieldName} 不能小於 ${minValue}`);
+      }
+
+      if (numValue > maxValue) {
+        errors.push(`${fieldName} 不能大於 ${maxValue}`);
+      }
     }
 
-    if (!input.endDate) {
-      errors.push('結束日期不能為空');
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  /**
+   * 驗證日期輸入
+   */
+  private validateDate(value: any, fieldName: string, required = true): ValidationResult {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    if (required && (!value || value === '')) {
+      errors.push(`${fieldName} 不能為空`);
+      return { isValid: false, errors, warnings };
     }
 
-    if (input.startDate && input.endDate && input.startDate >= input.endDate) {
-      errors.push('開始日期必須早於結束日期');
+    if (value) {
+      const date = new Date(value);
+      if (isNaN(date.getTime())) {
+        errors.push(`${fieldName} 必須是有效的日期`);
+      }
     }
 
-    // 財務驗證
-    if (input.totalValue <= 0) {
-      errors.push('總價值必須大於 0');
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  /**
+   * 驗證文件輸入
+   */
+  private validateFile(file: any, fieldName: string, required = true): ValidationResult {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    if (required && !file) {
+      errors.push(`${fieldName} 不能為空`);
+      return { isValid: false, errors, warnings };
     }
 
-    if (input.totalValue > 1000000000) {
-      errors.push('總價值不能超過 10 億');
+    if (file) {
+      // 檢查文件大小
+      if (file.size > this.config.maxFileSize) {
+        errors.push(`${fieldName} 文件大小不能超過 ${this.config.maxFileSize / (1024 * 1024)}MB`);
+      }
+
+      // 檢查文件類型
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      if (fileExtension && !this.config.allowedFileTypes.includes(fileExtension)) {
+        errors.push(`${fieldName} 文件類型不允許，支持的類型: ${this.config.allowedFileTypes.join(', ')}`);
+      }
     }
 
-    if (!input.currency || input.currency.trim().length === 0) {
-      errors.push('貨幣不能為空');
-    }
+    return { isValid: errors.length === 0, errors, warnings };
+  }
 
-    // 描述長度驗證
-    if (input.description && input.description.length > 2000) {
-      errors.push('描述不能超過 2000 個字符');
-    }
+  /**
+   * 檢測安全威脅
+   */
+  private containsSecurityThreats(value: string): boolean {
+    return SECURITY_THREATS.some(pattern => pattern.test(value));
+  }
+
+  /**
+   * 檢測 SQL 注入
+   */
+  private containsSQLInjection(value: string): boolean {
+    return SQL_INJECTION_PATTERNS.some(pattern => pattern.test(value));
+  }
+
+  /**
+   * 合併驗證結果
+   */
+  private mergeResults(...results: ValidationResult[]): ValidationResult {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    results.forEach(result => {
+      errors.push(...result.errors);
+      warnings.push(...result.warnings);
+    });
 
     return {
       isValid: errors.length === 0,
       errors,
+      warnings,
     };
   }
 
   /**
-   * 驗證 Engagement 更新輸入
+   * 驗證創建 Engagement 輸入
    */
-  static validateUpdateEngagementInput(input: UpdateEngagementInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreateEngagementInput(input: CreateEngagementInput): ValidationResult {
+    const results = [
+      this.validateString(input.name, '專案名稱', true),
+      this.validateString(input.description, '專案描述', true, this.config.maxTextLength),
+      this.validateString(input.contractor, '承包商', true),
+      this.validateString(input.client, '客戶', true),
+      this.validateString(input.clientRepresentative, '客戶代表', false),
+      this.validateDate(input.startDate, '開始日期', true),
+      this.validateDate(input.endDate, '結束日期', true),
+      this.validateNumber(input.totalValue, '總價值', true, 0),
+      this.validateString(input.currency, '貨幣', true),
+      this.validateString(input.scope, '工作範疇', true, this.config.maxTextLength),
+    ];
 
-    // 名稱驗證
+    // 檢查日期邏輯
+    if (input.startDate && input.endDate) {
+      const startDate = new Date(input.startDate);
+      const endDate = new Date(input.endDate);
+      if (startDate >= endDate) {
+        results.push({
+          isValid: false,
+          errors: ['開始日期必須早於結束日期'],
+          warnings: [],
+        });
+      }
+    }
+
+    return this.mergeResults(...results);
+  }
+
+  /**
+   * 驗證更新 Engagement 輸入
+   */
+  validateUpdateEngagementInput(input: UpdateEngagementInput): ValidationResult {
+    const results: ValidationResult[] = [];
+
     if (input.name !== undefined) {
-      if (!input.name || input.name.trim().length === 0) {
-        errors.push('專案名稱不能為空');
-      } else if (input.name.length > 200) {
-        errors.push('專案名稱不能超過 200 個字符');
-      }
+      results.push(this.validateString(input.name, '專案名稱', true));
     }
-
-    // 日期驗證
-    if (input.startDate && input.endDate && input.startDate >= input.endDate) {
-      errors.push('開始日期必須早於結束日期');
+    if (input.description !== undefined) {
+      results.push(this.validateString(input.description, '專案描述', true, this.config.maxTextLength));
     }
-
-    // 財務驗證
+    if (input.contractor !== undefined) {
+      results.push(this.validateString(input.contractor, '承包商', true));
+    }
+    if (input.client !== undefined) {
+      results.push(this.validateString(input.client, '客戶', true));
+    }
+    if (input.clientRepresentative !== undefined) {
+      results.push(this.validateString(input.clientRepresentative, '客戶代表', false));
+    }
+    if (input.startDate !== undefined) {
+      results.push(this.validateDate(input.startDate, '開始日期', true));
+    }
+    if (input.endDate !== undefined) {
+      results.push(this.validateDate(input.endDate, '結束日期', true));
+    }
+    if (input.actualStartDate !== undefined) {
+      results.push(this.validateDate(input.actualStartDate, '實際開始日期', false));
+    }
+    if (input.actualEndDate !== undefined) {
+      results.push(this.validateDate(input.actualEndDate, '實際結束日期', false));
+    }
     if (input.totalValue !== undefined) {
-      if (input.totalValue <= 0) {
-        errors.push('總價值必須大於 0');
-      }
-      if (input.totalValue > 1000000000) {
-        errors.push('總價值不能超過 10 億');
-      }
+      results.push(this.validateNumber(input.totalValue, '總價值', true, 0));
+    }
+    if (input.currency !== undefined) {
+      results.push(this.validateString(input.currency, '貨幣', true));
+    }
+    if (input.scope !== undefined) {
+      results.push(this.validateString(input.scope, '工作範疇', true, this.config.maxTextLength));
     }
 
-    // 描述長度驗證
-    if (input.description && input.description.length > 2000) {
-      errors.push('描述不能超過 2000 個字符');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
-  }
-
-  /**
-   * 驗證任務創建輸入
-   */
-  static validateCreateTaskInput(input: CreateTaskInput): ValidationResult {
-    const errors: string[] = [];
-
-    if (!input.title || input.title.trim().length === 0) {
-      errors.push('任務標題不能為空');
-    } else if (input.title.length > 200) {
-      errors.push('任務標題不能超過 200 個字符');
-    }
-
-    if (input.quantity <= 0) {
-      errors.push('任務數量必須大於 0');
-    }
-
-    if (input.unitPrice < 0) {
-      errors.push('單價不能為負數');
-    }
-
-    if (input.discount !== undefined && input.discount < 0) {
-      errors.push('折扣不能為負數');
-    }
-
-    if (input.dueDate && input.dueDate instanceof Date && input.dueDate < new Date()) {
-      errors.push('截止日期不能早於今天');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
-  }
-
-  /**
-   * 驗證任務更新輸入
-   */
-  static validateUpdateTaskInput(input: UpdateTaskInput): ValidationResult {
-    const errors: string[] = [];
-
-    if (input.title !== undefined) {
-      if (!input.title || input.title.trim().length === 0) {
-        errors.push('任務標題不能為空');
-      } else if (input.title.length > 200) {
-        errors.push('任務標題不能超過 200 個字符');
+    // 檢查日期邏輯
+    if (input.startDate && input.endDate) {
+      const startDate = new Date(input.startDate);
+      const endDate = new Date(input.endDate);
+      if (startDate >= endDate) {
+        results.push({
+          isValid: false,
+          errors: ['開始日期必須早於結束日期'],
+          warnings: [],
+        });
       }
     }
 
-    if (input.quantity !== undefined && input.quantity <= 0) {
-      errors.push('任務數量必須大於 0');
-    }
-
-    if (input.unitPrice !== undefined && input.unitPrice < 0) {
-      errors.push('單價不能為負數');
-    }
-
-    if (input.discount !== undefined && input.discount < 0) {
-      errors.push('折扣不能為負數');
-    }
-
-    if (input.completedQuantity !== undefined && input.completedQuantity < 0) {
-      errors.push('已完成數量不能為負數');
-    }
-
-    if (input.dueDate && input.dueDate instanceof Date && input.dueDate < new Date()) {
-      errors.push('截止日期不能早於今天');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
-   * 驗證付款創建輸入
+   * 驗證創建任務輸入
    */
-  static validateCreatePaymentInput(input: CreatePaymentInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreateTaskInput(input: CreateTaskInput): ValidationResult {
+    const results = [
+      this.validateString(input.title, '任務標題', true),
+      this.validateString(input.description, '任務描述', false, this.config.maxTextLength),
+      this.validateString(input.priority, '優先級', true),
+      this.validateNumber(input.quantity, '數量', true, 0),
+      this.validateNumber(input.unitPrice, '單價', true, 0),
+      this.validateNumber(input.discount, '折扣', false, 0),
+      this.validateDate(input.dueDate, '截止日期', false),
+    ];
 
-    if (!input.description || input.description.trim().length === 0) {
-      errors.push('付款描述不能為空');
-    }
-
-    if (input.amount <= 0) {
-      errors.push('付款金額必須大於 0');
-    }
-
-    if (input.amount > 1000000000) {
-      errors.push('付款金額不能超過 10 億');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
-   * 驗證收款創建輸入
+   * 驗證創建付款輸入
    */
-  static validateCreateReceiptInput(input: CreateReceiptInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreatePaymentInput(input: CreatePaymentInput): ValidationResult {
+    const results = [
+      this.validateString(input.description, '付款描述', false),
+      this.validateNumber(input.amount, '付款金額', true, 0),
+      this.validateString(input.paymentMethod, '付款方式', false),
+      this.validateString(input.referenceNumber, '參考號碼', false),
+    ];
 
-    if (!input.description || input.description.trim().length === 0) {
-      errors.push('收款描述不能為空');
-    }
-
-    if (input.amount <= 0) {
-      errors.push('收款金額必須大於 0');
-    }
-
-    if (input.amount > 1000000000) {
-      errors.push('收款金額不能超過 10 億');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
-   * 驗證發票創建輸入
+   * 驗證創建收款輸入
    */
-  static validateCreateInvoiceInput(input: CreateInvoiceInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreateReceiptInput(input: CreateReceiptInput): ValidationResult {
+    const results = [
+      this.validateString(input.description, '收款描述', false),
+      this.validateNumber(input.amount, '收款金額', true, 0),
+      this.validateString(input.invoiceNumber, '發票號碼', false),
+      this.validateString(input.paymentMethod, '付款方式', false),
+      this.validateString(input.referenceNumber, '參考號碼', false),
+    ];
 
-    if (!input.invoiceNumber || input.invoiceNumber.trim().length === 0) {
-      errors.push('發票號碼不能為空');
-    }
-
-    if (input.amount <= 0) {
-      errors.push('發票金額必須大於 0');
-    }
-
-    if (input.amount > 1000000000) {
-      errors.push('發票金額不能超過 10 億');
-    }
-
-    if (input.taxAmount !== undefined && input.taxAmount < 0) {
-      errors.push('稅額不能為負數');
-    }
-
-    if (!input.dueDate) {
-      errors.push('到期日期不能為空');
-    }
-
-    if (input.items && input.items.length === 0) {
-      errors.push('發票項目不能為空');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
-   * 驗證溝通記錄創建輸入
+   * 驗證創建發票輸入
    */
-  static validateCreateCommunicationInput(input: CreateCommunicationInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreateInvoiceInput(input: CreateInvoiceInput): ValidationResult {
+    const results = [
+      this.validateString(input.invoiceNumber, '發票號碼', true),
+      this.validateNumber(input.amount, '發票金額', true, 0),
+      this.validateNumber(input.taxAmount || 0, '稅額', false, 0),
+      this.validateDate(input.dueDate, '到期日期', true),
+    ];
 
-    if (!input.type || input.type.trim().length === 0) {
-      errors.push('溝通類型不能為空');
-    }
-
-    if (!input.content || input.content.trim().length === 0) {
-      errors.push('溝通內容不能為空');
-    } else if (input.content.length > 5000) {
-      errors.push('溝通內容不能超過 5000 個字符');
-    }
-
-    if (!input.participants || input.participants.length === 0) {
-      errors.push('參與者不能為空');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
-   * 驗證會議創建輸入
+   * 驗證創建文件輸入
    */
-  static validateCreateMeetingInput(input: CreateMeetingInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreateDocumentInput(input: CreateDocumentInput): ValidationResult {
+    const results = [
+      this.validateString(input.title, '文件標題', true),
+      this.validateString(input.type, '文件類型', true),
+      this.validateString(input.fileName, '文件名稱', true),
+      this.validateString(input.mimeType, 'MIME 類型', true),
+      this.validateNumber(input.fileSize, '文件大小', true, 0),
+      this.validateString(input.fileUrl, '文件 URL', true),
+      this.validateString(input.accessLevel, '訪問級別', true),
+    ];
 
-    if (!input.title || input.title.trim().length === 0) {
-      errors.push('會議標題不能為空');
-    }
-
-    if (!input.scheduledDate) {
-      errors.push('會議日期不能為空');
-    }
-
-    if (!input.participants || input.participants.length === 0) {
-      errors.push('參與者不能為空');
-    }
-
-    if (input.duration && input.duration <= 0) {
-      errors.push('會議時長必須大於 0');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
-   * 驗證文件創建輸入
+   * 驗證創建附件輸入
    */
-  static validateCreateDocumentInput(input: CreateDocumentInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreateAttachmentInput(input: CreateAttachmentInput): ValidationResult {
+    const results = [
+      this.validateString(input.fileName, '文件名稱', true),
+      this.validateString(input.mimeType, 'MIME 類型', true),
+      this.validateNumber(input.fileSize, '文件大小', true, 0),
+      this.validateString(input.fileUrl, '文件 URL', true),
+    ];
 
-    if (!input.title || input.title.trim().length === 0) {
-      errors.push('文件標題不能為空');
-    }
-
-    if (!input.type || input.type.trim().length === 0) {
-      errors.push('文件類型不能為空');
-    }
-
-    if (input.fileSize && input.fileSize <= 0) {
-      errors.push('文件大小必須大於 0');
-    }
-
-    if (input.fileSize && input.fileSize > 100 * 1024 * 1024) { // 100MB
-      errors.push('文件大小不能超過 100MB');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
-   * 驗證附件創建輸入
+   * 驗證創建溝通記錄輸入
    */
-  static validateCreateAttachmentInput(input: CreateAttachmentInput): ValidationResult {
-    const errors: string[] = [];
+  validateCreateCommunicationInput(input: CreateCommunicationInput): ValidationResult {
+    const results = [
+      this.validateString(input.type, '溝通類型', true),
+      this.validateString(input.subject, '主題', true),
+      this.validateString(input.content, '內容', true, this.config.maxTextLength),
+      this.validateString(input.participants?.join(', ') || '', '參與者', false),
+    ];
 
-    if (!input.fileName || input.fileName.trim().length === 0) {
-      errors.push('文件名不能為空');
-    }
+    return this.mergeResults(...results);
+  }
 
-    if (!input.mimeType || input.mimeType.trim().length === 0) {
-      errors.push('文件類型不能為空');
-    }
+  /**
+   * 驗證創建會議輸入
+   */
+  validateCreateMeetingInput(input: CreateMeetingInput): ValidationResult {
+    const results = [
+      this.validateString(input.title, '會議標題', true),
+      this.validateString(input.description, '會議描述', false, this.config.maxTextLength),
+      this.validateDate(input.scheduledDate, '預定日期', true),
+      this.validateString(input.location, '會議地點', false),
+      this.validateString(input.participants?.join(', ') || '', '參與者', false),
+    ];
 
-    if (input.fileSize <= 0) {
-      errors.push('文件大小必須大於 0');
-    }
-
-    if (input.fileSize > 100 * 1024 * 1024) { // 100MB
-      errors.push('文件大小不能超過 100MB');
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return this.mergeResults(...results);
   }
 
   /**
    * 驗證 ID 格式
    */
-  static validateId(id: string, fieldName: string = 'ID'): ValidationResult {
+  validateId(id: string, fieldName: string = 'ID'): ValidationResult {
     const errors: string[] = [];
+    const warnings: string[] = [];
 
     if (!id || id.trim().length === 0) {
       errors.push(`${fieldName} 不能為空`);
-    } else if (id.length > 100) {
-      errors.push(`${fieldName} 不能超過 100 個字符`);
     } else if (!/^[a-zA-Z0-9_-]+$/.test(id)) {
       errors.push(`${fieldName} 只能包含字母、數字、下劃線和連字符`);
+    } else if (id.length > 100) {
+      errors.push(`${fieldName} 長度不能超過 100 個字符`);
     }
 
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return { isValid: errors.length === 0, errors, warnings };
   }
 
   /**
-   * 驗證日期範圍
+   * 驗證批量操作輸入
    */
-  static validateDateRange(startDate: Date | Timestamp, endDate: Date | Timestamp): ValidationResult {
+  validateBatchInput<T>(items: T[], validator: (item: T) => ValidationResult, maxItems = 100): ValidationResult {
     const errors: string[] = [];
+    const warnings: string[] = [];
 
-    if (!startDate) {
-      errors.push('開始日期不能為空');
+    if (!items || items.length === 0) {
+      errors.push('批量操作項目不能為空');
+      return { isValid: false, errors, warnings };
     }
 
-    if (!endDate) {
-      errors.push('結束日期不能為空');
+    if (items.length > maxItems) {
+      errors.push(`批量操作項目數量不能超過 ${maxItems} 個`);
+      return { isValid: false, errors, warnings };
     }
 
-    if (startDate && endDate) {
-      const start = startDate instanceof Date ? startDate : startDate.toDate();
-      const end = endDate instanceof Date ? endDate : endDate.toDate();
-      
-      if (start >= end) {
-        errors.push('開始日期必須早於結束日期');
+    items.forEach((item, index) => {
+      const result = validator(item);
+      if (!result.isValid) {
+        errors.push(`項目 ${index + 1}: ${result.errors.join(', ')}`);
       }
-    }
+      warnings.push(...result.warnings.map(w => `項目 ${index + 1}: ${w}`));
+    });
 
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return { isValid: errors.length === 0, errors, warnings };
   }
 
   /**
-   * 驗證金額
+   * 清理和標準化輸入
    */
-  static validateAmount(amount: number, fieldName: string = '金額'): ValidationResult {
-    const errors: string[] = [];
-
-    if (amount < 0) {
-      errors.push(`${fieldName} 不能為負數`);
+  sanitizeInput(input: any): any {
+    if (typeof input === 'string') {
+      return input.trim();
     }
-
-    if (amount > 1000000000) {
-      errors.push(`${fieldName} 不能超過 10 億`);
+    if (Array.isArray(input)) {
+      return input.map(item => this.sanitizeInput(item));
     }
-
-    if (!Number.isFinite(amount)) {
-      errors.push(`${fieldName} 必須是有效數字`);
+    if (typeof input === 'object' && input !== null) {
+      const sanitized: any = {};
+      for (const [key, value] of Object.entries(input)) {
+        sanitized[key] = this.sanitizeInput(value);
+      }
+      return sanitized;
     }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return input;
   }
 
   /**
-   * 驗證字符串長度
+   * 檢查數據庫操作權限
    */
-  static validateStringLength(
-    value: string | undefined,
-    fieldName: string,
-    maxLength: number,
-    required: boolean = false
-  ): ValidationResult {
+  validateDatabaseOperation(operation: string, userId?: string, resourceId?: string): ValidationResult {
     const errors: string[] = [];
+    const warnings: string[] = [];
 
-    if (required && (!value || value.trim().length === 0)) {
-      errors.push(`${fieldName} 不能為空`);
+    if (!userId) {
+      errors.push('用戶 ID 不能為空');
     }
 
-    if (value && value.length > maxLength) {
-      errors.push(`${fieldName} 不能超過 ${maxLength} 個字符`);
+    if (!operation) {
+      errors.push('操作類型不能為空');
     }
 
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    const allowedOperations = ['create', 'read', 'update', 'delete', 'batch'];
+    if (!allowedOperations.includes(operation.toLowerCase())) {
+      errors.push(`不支持的操作類型: ${operation}`);
+    }
+
+    return { isValid: errors.length === 0, errors, warnings };
   }
 }
 
-/**
- * 導出驗證工具實例
- */
-export const databaseValidation = DatabaseValidationUtils;
+// 導出單例實例
+export const databaseValidation = new DatabaseValidation();
+
+// 導出配置
+export type { ValidationConfig, ValidationResult };
+

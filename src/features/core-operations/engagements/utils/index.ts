@@ -30,3 +30,15 @@ export * from './subtask.utils';
 // 數據庫驗證工具
 export * from './database-validation.utils';
 
+// 錯誤處理工具
+export * from './error-handling.utils';
+
+// 性能優化工具
+export * from './performance.utils';
+
+// 數據庫修復工具
+export * from './database-repair.utils';
+
+// 並發控制工具
+export * from './concurrency-control.utils';
+

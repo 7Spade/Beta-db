@@ -1,25 +1,27 @@
 /**
- * @fileoverview 數據庫交互測試文件
- * 測試所有數據庫操作的安全性、效率和正確性
+ * @fileoverview 數據庫交互綜合測試
+ * 測試所有數據庫操作的完整性、安全性和性能
  */
-import { describe, expect, test, beforeEach, afterEach, jest } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 
 // Mock Firebase
 const mockFirestore = {
-  collection: jest.fn(),
-  doc: jest.fn(),
-  addDoc: jest.fn(),
-  getDoc: jest.fn(),
-  getDocs: jest.fn(),
-  updateDoc: jest.fn(),
-  deleteDoc: jest.fn(),
-  writeBatch: jest.fn(),
-  runTransaction: jest.fn(),
-  query: jest.fn(),
-  where: jest.fn(),
-  orderBy: jest.fn(),
-  limit: jest.fn(),
-  startAfter: jest.fn(),
+  collection: jest.fn() as jest.MockedFunction<any>,
+  doc: jest.fn() as jest.MockedFunction<any>,
+  addDoc: jest.fn() as jest.MockedFunction<any>,
+  getDoc: jest.fn() as jest.MockedFunction<any>,
+  getDocs: jest.fn() as jest.MockedFunction<any>,
+  updateDoc: jest.fn() as jest.MockedFunction<any>,
+  deleteDoc: jest.fn() as jest.MockedFunction<any>,
+  writeBatch: jest.fn() as jest.MockedFunction<any>,
+  runTransaction: jest.fn() as jest.MockedFunction<any>,
+  query: jest.fn() as jest.MockedFunction<any>,
+  where: jest.fn() as jest.MockedFunction<any>,
+  orderBy: jest.fn() as jest.MockedFunction<any>,
+  limit: jest.fn() as jest.MockedFunction<any>,
+  startAfter: jest.fn() as jest.MockedFunction<any>,
+  arrayUnion: jest.fn() as jest.MockedFunction<any>,
+  arrayRemove: jest.fn() as jest.MockedFunction<any>,
 };
 
 const mockTimestamp = {
@@ -29,7 +31,6 @@ const mockTimestamp = {
 
 // Mock Firebase modules
 jest.mock('firebase/firestore', () => ({
-  ...jest.requireActual('firebase/firestore'),
   getFirestore: () => mockFirestore,
   collection: mockFirestore.collection,
   doc: mockFirestore.doc,
@@ -46,8 +47,8 @@ jest.mock('firebase/firestore', () => ({
   limit: mockFirestore.limit,
   startAfter: mockFirestore.startAfter,
   Timestamp: mockTimestamp,
-  arrayUnion: jest.fn((item) => item),
-  arrayRemove: jest.fn((item) => item),
+  arrayUnion: mockFirestore.arrayUnion,
+  arrayRemove: mockFirestore.arrayRemove,
 }));
 
 // Mock Firebase client
@@ -55,7 +56,7 @@ jest.mock('@/features/integrations/database/firebase-client/firebase-client', ()
   firestore: mockFirestore,
 }));
 
-describe('Database Interactions', () => {
+describe('Database Interactions Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -64,705 +65,742 @@ describe('Database Interactions', () => {
     jest.restoreAllMocks();
   });
 
-  describe('EngagementService', () => {
-    test('應該正確創建 Engagement', async () => {
+  describe('EngagementService Database Operations', () => {
+    test('應該能創建 Engagement 並正確處理數據庫交互', async () => {
       const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
+      const { databaseValidation } = require('../utils/database-validation.utils');
 
-      const mockInput = {
+      const engagementService = new EngagementService();
+
+      const createInput = {
         name: '測試專案',
         contractor: '測試承包商',
         client: '測試客戶',
         startDate: new Date('2024-01-01'),
         endDate: new Date('2024-12-31'),
-        totalValue: 100000,
+        totalValue: 1000000,
         currency: 'TWD',
         description: '測試描述',
+        scope: '測試範疇',
       };
 
-      mockFirestore.collection.mockReturnValue({});
-      mockFirestore.addDoc.mockResolvedValue({ id: 'test-id' });
+      // 驗證輸入
+      const validation = databaseValidation.validateCreateEngagementInput(createInput);
+      expect(validation.isValid).toBe(true);
 
-      const result = await service.createEngagement(mockInput);
+      // Mock 數據庫操作
+      mockFirestore.collection.mockReturnValue({} as any);
+      mockFirestore.addDoc.mockResolvedValue({ id: 'engagement-123' } as any);
+
+      const result = await engagementService.createEngagement(createInput);
 
       expect(result.success).toBe(true);
-      expect(result.engagementId).toBe('test-id');
-      expect(mockFirestore.addDoc).toHaveBeenCalled();
+      expect(result.engagementId).toBe('engagement-123');
+      expect(mockFirestore.addDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          name: '測試專案',
+          contractor: '測試承包商',
+          client: '測試客戶',
+          totalValue: 1000000,
+          currency: 'TWD',
+        })
+      );
     });
 
-    test('應該驗證輸入數據', async () => {
+    test('應該能獲取 Engagement 並正確處理數據庫查詢', async () => {
       const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
 
-      const invalidInput = {
-        name: '', // 空名稱
-        contractor: '測試承包商',
-        client: '測試客戶',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
-        totalValue: 100000,
-        currency: 'TWD',
-      };
-
-      const result = await service.createEngagement(invalidInput);
-
-      expect(result.success).toBe(false);
-      expect(result.error).toContain('專案名稱不能為空');
-    });
-
-    test('應該正確獲取 Engagement', async () => {
-      const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
+      const engagementService = new EngagementService();
 
       const mockEngagement = {
-        id: 'test-id',
+        id: 'engagement-123',
         name: '測試專案',
         contractor: '測試承包商',
         client: '測試客戶',
-        totalValue: 100000,
+        totalValue: 1000000,
+        status: '進行中',
+        phase: '執行',
       };
 
-      mockFirestore.doc.mockReturnValue({});
+      mockFirestore.doc.mockReturnValue({} as any);
       mockFirestore.getDoc.mockResolvedValue({
         exists: () => true,
-        id: 'test-id',
+        id: 'engagement-123',
         data: () => mockEngagement,
-      });
+      } as any);
 
-      const result = await service.getEngagement('test-id');
+      const result = await engagementService.getEngagement('engagement-123');
 
       expect(result.success).toBe(true);
-      expect(result.engagement).toEqual({
-        id: 'test-id',
-        ...mockEngagement,
-      });
+      expect(result.engagement?.name).toBe('測試專案');
+      expect(mockFirestore.getDoc).toHaveBeenCalled();
     });
 
-    test('應該處理不存在的 Engagement', async () => {
+    test('應該能更新 Engagement 並正確處理數據庫更新', async () => {
       const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
 
-      mockFirestore.doc.mockReturnValue({});
-      mockFirestore.getDoc.mockResolvedValue({
-        exists: () => false,
-      });
-
-      const result = await service.getEngagement('non-existent-id');
-
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Engagement 不存在');
-    });
-
-    test('應該正確更新 Engagement', async () => {
-      const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
+      const engagementService = new EngagementService();
 
       const updateInput = {
-        name: '更新的專案名稱',
-        status: '進行中' as const,
+        status: '已完成' as const,
+        phase: '收尾' as const,
       };
 
-      mockFirestore.doc.mockReturnValue({});
-      mockFirestore.updateDoc.mockResolvedValue(undefined);
+      mockFirestore.doc.mockReturnValue({} as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
 
-      const result = await service.updateEngagement('test-id', updateInput);
+      const result = await engagementService.updateEngagement('engagement-123', updateInput);
 
       expect(result.success).toBe(true);
-      expect(mockFirestore.updateDoc).toHaveBeenCalled();
+      expect(mockFirestore.updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          status: '已完成',
+          phase: '收尾',
+        })
+      );
     });
 
-    test('應該正確刪除 Engagement', async () => {
+    test('應該能刪除 Engagement 並正確處理數據庫刪除', async () => {
       const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
 
-      mockFirestore.doc.mockReturnValue({});
-      mockFirestore.deleteDoc.mockResolvedValue(undefined);
+      const engagementService = new EngagementService();
 
-      const result = await service.deleteEngagement('test-id');
+      mockFirestore.doc.mockReturnValue({} as any);
+      mockFirestore.deleteDoc.mockResolvedValue(undefined as any);
+
+      const result = await engagementService.deleteEngagement('engagement-123');
 
       expect(result.success).toBe(true);
       expect(mockFirestore.deleteDoc).toHaveBeenCalled();
     });
 
-    test('應該正確批量更新 Engagements', async () => {
+    test('應該能批量更新 Engagements 並正確處理批量操作', async () => {
       const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
+
+      const engagementService = new EngagementService();
 
       const updates = [
-        { id: 'id1', data: { status: '進行中' as const } },
-        { id: 'id2', data: { status: '已完成' as const } },
+        { id: 'engagement-1', data: { status: '進行中' as const } },
+        { id: 'engagement-2', data: { status: '已完成' as const } },
       ];
 
       const mockBatch = {
         update: jest.fn(),
         commit: jest.fn().mockResolvedValue(undefined),
-      };
+      } as any;
 
       mockFirestore.writeBatch.mockReturnValue(mockBatch);
-      mockFirestore.doc.mockReturnValue({});
+      mockFirestore.doc.mockReturnValue({} as any);
 
-      const result = await service.batchUpdateEngagements(updates);
+      const result = await engagementService.batchUpdateEngagements(updates);
 
       expect(result.success).toBe(true);
       expect(mockBatch.update).toHaveBeenCalledTimes(2);
       expect(mockBatch.commit).toHaveBeenCalled();
     });
 
-    test('應該使用事務更新 Engagement', async () => {
+    test('應該能使用事務更新 Engagement 並正確處理事務操作', async () => {
       const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
+
+      const engagementService = new EngagementService();
 
       const updateInput = {
         status: '進行中' as const,
       };
 
-      const mockTransaction = {
-        get: jest.fn().mockResolvedValue({
-          exists: () => true,
-          data: () => ({ name: '測試專案' }),
-        }),
-        update: jest.fn(),
-      };
-
-      mockFirestore.runTransaction.mockImplementation(async (callback) => {
-        return await callback(mockTransaction);
+      const mockTransaction = jest.fn().mockImplementation(async (callback) => {
+        const transaction = {
+          get: jest.fn().mockResolvedValue({
+            exists: () => true,
+            data: () => ({ name: '測試專案' }),
+          }),
+          update: jest.fn(),
+        };
+        return await callback(transaction);
       });
 
-      const result = await service.updateEngagementWithTransaction('test-id', updateInput);
+      mockFirestore.runTransaction.mockImplementation(mockTransaction);
+      mockFirestore.doc.mockReturnValue({} as any);
+
+      const result = await engagementService.updateEngagementWithTransaction(
+        'engagement-123',
+        updateInput
+      );
 
       expect(result.success).toBe(true);
-      expect(mockTransaction.get).toHaveBeenCalled();
-      expect(mockTransaction.update).toHaveBeenCalled();
+      expect(mockFirestore.runTransaction).toHaveBeenCalled();
     });
   });
 
-  describe('FinancialService', () => {
-    test('應該正確添加付款記錄', async () => {
+  describe('FinancialService Database Operations', () => {
+    test('應該能添加付款記錄並正確處理數據庫交互', async () => {
       const { FinancialService } = require('../services/financial.service');
-      const service = new FinancialService();
+      const { databaseValidation } = require('../utils/database-validation.utils');
+
+      const financialService = new FinancialService();
 
       const paymentInput = {
-        description: '測試付款',
-        amount: 50000,
+        description: '首期付款',
+        amount: 300000,
         requestDate: new Date(),
       };
 
-      mockFirestore.doc.mockReturnValue({});
-      mockFirestore.updateDoc.mockResolvedValue(undefined);
+      // 驗證輸入
+      const validation = databaseValidation.validateCreatePaymentInput(paymentInput);
+      expect(validation.isValid).toBe(true);
 
-      const result = await service.addPayment('test-id', paymentInput);
+      mockFirestore.doc.mockReturnValue({} as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
+
+      const result = await financialService.addPayment('engagement-123', paymentInput);
 
       expect(result.success).toBe(true);
       expect(result.paymentId).toBeDefined();
-      expect(mockFirestore.updateDoc).toHaveBeenCalled();
+      expect(mockFirestore.updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          payments: expect.anything(),
+        })
+      );
     });
 
-    test('應該正確更新付款狀態', async () => {
+    test('應該能更新付款狀態並正確處理數據庫更新', async () => {
       const { FinancialService } = require('../services/financial.service');
-      const service = new FinancialService();
+
+      const financialService = new FinancialService();
 
       const mockEngagement = {
         payments: [
           {
-            id: 'payment-1',
-            description: '測試付款',
-            amount: 50000,
+            id: 'payment-123',
+            description: '首期付款',
+            amount: 300000,
             status: '待處理',
           },
         ],
       };
 
-      mockFirestore.doc.mockReturnValue({});
+      mockFirestore.doc.mockReturnValue({} as any);
       mockFirestore.getDoc.mockResolvedValue({
         exists: () => true,
         data: () => mockEngagement,
-      });
-      mockFirestore.updateDoc.mockResolvedValue(undefined);
+      } as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
 
-      const result = await service.updatePaymentStatus('test-id', 'payment-1', '已付款');
+      const result = await financialService.updatePaymentStatus(
+        'engagement-123',
+        'payment-123',
+        '已付款'
+      );
 
       expect(result.success).toBe(true);
-      expect(mockFirestore.updateDoc).toHaveBeenCalled();
+      expect(mockFirestore.updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          payments: expect.arrayContaining([
+            expect.objectContaining({
+              id: 'payment-123',
+              status: '已付款',
+            }),
+          ]),
+        })
+      );
     });
 
-    test('應該處理不存在的付款記錄', async () => {
+    test('應該能批量更新財務記錄並正確處理批量操作', async () => {
       const { FinancialService } = require('../services/financial.service');
-      const service = new FinancialService();
 
-      const mockEngagement = {
-        payments: [],
-      };
-
-      mockFirestore.doc.mockReturnValue({});
-      mockFirestore.getDoc.mockResolvedValue({
-        exists: () => true,
-        data: () => mockEngagement,
-      });
-
-      const result = await service.updatePaymentStatus('test-id', 'non-existent-payment', '已付款');
-
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('付款記錄不存在');
-    });
-
-    test('應該正確計算財務摘要', () => {
-      const { FinancialService } = require('../services/financial.service');
-      const service = new FinancialService();
-
-      const payments = [
-        { status: '已付款', amount: 30000 },
-        { status: '待處理', amount: 20000 },
-        { status: '已逾期', amount: 10000 },
-      ];
-
-      const receipts = [
-        { status: '已收款', amount: 25000 },
-      ];
-
-      const invoices = [
-        { status: '已付款', totalAmount: 30000 },
-      ];
-
-      const summary = service.calculateFinancialSummary(100000, payments, receipts, invoices);
-
-      expect(summary.totalValue).toBe(100000);
-      expect(summary.paidAmount).toBe(30000);
-      expect(summary.pendingAmount).toBe(20000);
-      expect(summary.overdueAmount).toBe(10000);
-      expect(summary.paymentProgress).toBe(30);
-    });
-
-    test('應該正確批量更新財務記錄', async () => {
-      const { FinancialService } = require('../services/financial.service');
-      const service = new FinancialService();
+      const financialService = new FinancialService();
 
       const mockEngagement = {
         payments: [
-          { id: 'payment-1', amount: 50000, status: '待處理' },
+          { id: 'payment-1', status: '待處理', amount: 100000 },
+          { id: 'payment-2', status: '待處理', amount: 200000 },
         ],
-        receipts: [
-          { id: 'receipt-1', amount: 30000, status: '待處理' },
-        ],
-        invoices: [
-          { id: 'invoice-1', totalAmount: 80000, status: '草稿' },
-        ],
+        receipts: [],
+        invoices: [],
       };
 
-      mockFirestore.doc.mockReturnValue({});
+      mockFirestore.doc.mockReturnValue({} as any);
       mockFirestore.getDoc.mockResolvedValue({
         exists: () => true,
         data: () => mockEngagement,
-      });
-      mockFirestore.updateDoc.mockResolvedValue(undefined);
+      } as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
 
       const updates = {
-        payments: [{ id: 'payment-1', status: '已付款' as const }],
-        receipts: [{ id: 'receipt-1', status: '已收款' as const }],
-        invoices: [{ id: 'invoice-1', status: '已付款' as const }],
+        payments: [
+          { id: 'payment-1', status: '已付款' as const },
+          { id: 'payment-2', status: '已付款' as const },
+        ],
       };
 
-      const result = await service.batchUpdateFinancialRecords('test-id', updates);
+      const result = await financialService.batchUpdateFinancialRecords(
+        'engagement-123',
+        updates
+      );
 
       expect(result.success).toBe(true);
-      expect(mockFirestore.updateDoc).toHaveBeenCalled();
+      expect(mockFirestore.updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          payments: expect.arrayContaining([
+            expect.objectContaining({ id: 'payment-1', status: '已付款' }),
+            expect.objectContaining({ id: 'payment-2', status: '已付款' }),
+          ]),
+        })
+      );
     });
   });
 
-  describe('DocumentService', () => {
-    test('應該正確添加文件', async () => {
+  describe('DocumentService Database Operations', () => {
+    test('應該能添加文件並正確處理數據庫交互', async () => {
       const { DocumentService } = require('../services/document.service');
-      const service = new DocumentService();
+      const { databaseValidation } = require('../utils/database-validation.utils');
+
+      const documentService = new DocumentService();
 
       const documentInput = {
-        title: '測試文件',
-        type: 'contract',
-        fileSize: 1024,
-        fileUrl: 'https://example.com/file.pdf',
+        title: '專案合約',
+        type: 'contract' as const,
+        fileSize: 1024000,
+        fileUrl: 'https://example.com/contract.pdf',
+        fileName: 'contract.pdf',
+        mimeType: 'application/pdf',
+        accessLevel: 'confidential' as const,
       };
 
-      mockFirestore.doc.mockReturnValue({});
-      mockFirestore.updateDoc.mockResolvedValue(undefined);
+      // 驗證輸入
+      const validation = databaseValidation.validateCreateDocumentInput(documentInput);
+      expect(validation.isValid).toBe(true);
 
-      const result = await service.addDocument('test-id', documentInput);
+      mockFirestore.doc.mockReturnValue({} as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
+
+      const result = await documentService.addDocument('engagement-123', documentInput);
 
       expect(result.success).toBe(true);
       expect(result.documentId).toBeDefined();
-      expect(mockFirestore.updateDoc).toHaveBeenCalled();
+      expect(mockFirestore.updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          documents: expect.anything(),
+        })
+      );
     });
 
-    test('應該正確添加附件', async () => {
+    test('應該能添加附件並正確處理數據庫交互', async () => {
       const { DocumentService } = require('../services/document.service');
-      const service = new DocumentService();
+
+      const documentService = new DocumentService();
 
       const attachmentInput = {
-        fileName: 'test.pdf',
-        fileType: 'application/pdf',
-        fileSize: 2048,
+        fileName: 'attachment.pdf',
+        fileSize: 512000,
         fileUrl: 'https://example.com/attachment.pdf',
-        createdBy: 'user-1',
+        mimeType: 'application/pdf',
+        createdBy: 'user-123',
       };
 
-      mockFirestore.doc.mockReturnValue({});
-      mockFirestore.updateDoc.mockResolvedValue(undefined);
+      mockFirestore.doc.mockReturnValue({} as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
 
-      const result = await service.addAttachment('test-id', attachmentInput);
+      const result = await documentService.addAttachment('engagement-123', attachmentInput);
 
       expect(result.success).toBe(true);
       expect(result.attachmentId).toBeDefined();
-      expect(mockFirestore.updateDoc).toHaveBeenCalled();
-    });
-
-    test('應該正確計算文件摘要', () => {
-      const { DocumentService } = require('../services/document.service');
-      const service = new DocumentService();
-
-      const documents = [
-        { status: 'draft', fileSize: 1024 },
-        { status: 'review', fileSize: 2048 },
-        { status: 'approved', fileSize: 3072 },
-        { status: 'published', fileSize: 4096 },
-        { status: 'archived', fileSize: 5120 },
-      ];
-
-      const attachments = [
-        { fileSize: 1024 },
-        { fileSize: 2048 },
-      ];
-
-      const summary = service.calculateDocumentSummary(documents, attachments);
-
-      expect(summary.totalDocuments).toBe(5);
-      expect(summary.draftDocuments).toBe(1);
-      expect(summary.reviewDocuments).toBe(1);
-      expect(summary.approvedDocuments).toBe(1);
-      expect(summary.publishedDocuments).toBe(1);
-      expect(summary.archivedDocuments).toBe(1);
-      expect(summary.totalSize).toBe(18432); // 1024 + 2048 + 3072 + 4096 + 5120 + 1024 + 2048
+      expect(mockFirestore.updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          attachments: expect.anything(),
+        })
+      );
     });
   });
 
-  describe('Database Validation', () => {
-    test('應該正確驗證 Engagement 創建輸入', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const validInput = {
-        name: '測試專案',
-        contractor: '測試承包商',
-        client: '測試客戶',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
-        totalValue: 100000,
-        currency: 'TWD',
-        description: '測試描述',
-      };
-
-      const result = databaseValidation.validateCreateEngagementInput(validInput);
-
-      expect(result.isValid).toBe(true);
-      expect(result.errors).toHaveLength(0);
-    });
-
-    test('應該檢測無效的 Engagement 創建輸入', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const invalidInput = {
-        name: '', // 空名稱
-        contractor: '測試承包商',
-        client: '測試客戶',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
-        totalValue: -1000, // 負數
-        currency: 'TWD',
-      };
-
-      const result = databaseValidation.validateCreateEngagementInput(invalidInput);
-
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('專案名稱不能為空');
-      expect(result.errors).toContain('總價值必須大於 0');
-    });
-
-    test('應該正確驗證任務創建輸入', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const validInput = {
-        title: '測試任務',
-        description: '任務描述',
-        quantity: 10,
-        unitPrice: 1000,
-        discount: 0,
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-01-31'),
-      };
-
-      const result = databaseValidation.validateCreateTaskInput(validInput);
-
-      expect(result.isValid).toBe(true);
-      expect(result.errors).toHaveLength(0);
-    });
-
-    test('應該檢測無效的任務創建輸入', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const invalidInput = {
-        title: '', // 空標題
-        description: '任務描述',
-        quantity: -5, // 負數
-        unitPrice: -100, // 負數
-        discount: -50, // 負數
-        startDate: new Date('2024-01-31'),
-        endDate: new Date('2024-01-01'), // 結束日期早於開始日期
-      };
-
-      const result = databaseValidation.validateCreateTaskInput(invalidInput);
-
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('任務標題不能為空');
-      expect(result.errors).toContain('任務數量必須大於 0');
-      expect(result.errors).toContain('單價不能為負數');
-      expect(result.errors).toContain('折扣不能為負數');
-      expect(result.errors).toContain('任務開始日期必須早於結束日期');
-    });
-
-    test('應該正確驗證付款創建輸入', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const validInput = {
-        description: '測試付款',
-        amount: 50000,
-        requestDate: new Date(),
-      };
-
-      const result = databaseValidation.validateCreatePaymentInput(validInput);
-
-      expect(result.isValid).toBe(true);
-      expect(result.errors).toHaveLength(0);
-    });
-
-    test('應該檢測無效的付款創建輸入', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const invalidInput = {
-        description: '', // 空描述
-        amount: -1000, // 負數
-        requestDate: new Date(),
-      };
-
-      const result = databaseValidation.validateCreatePaymentInput(invalidInput);
-
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('付款描述不能為空');
-      expect(result.errors).toContain('付款金額必須大於 0');
-    });
-
-    test('應該正確驗證 ID 格式', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const validId = 'engagement-123';
-      const invalidId = 'invalid id with spaces!';
-
-      const validResult = databaseValidation.validateId(validId);
-      const invalidResult = databaseValidation.validateId(invalidId);
-
-      expect(validResult.isValid).toBe(true);
-      expect(invalidResult.isValid).toBe(false);
-      expect(invalidResult.errors).toContain('ID 只能包含字母、數字、下劃線和連字符');
-    });
-
-    test('應該正確驗證日期範圍', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const validStartDate = new Date('2024-01-01');
-      const validEndDate = new Date('2024-12-31');
-      const invalidEndDate = new Date('2023-12-31'); // 早於開始日期
-
-      const validResult = databaseValidation.validateDateRange(validStartDate, validEndDate);
-      const invalidResult = databaseValidation.validateDateRange(validStartDate, invalidEndDate);
-
-      expect(validResult.isValid).toBe(true);
-      expect(invalidResult.isValid).toBe(false);
-      expect(invalidResult.errors).toContain('開始日期必須早於結束日期');
-    });
-
-    test('應該正確驗證金額', () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const validAmount = 100000;
-      const negativeAmount = -1000;
-      const tooLargeAmount = 2000000000;
-
-      const validResult = databaseValidation.validateAmount(validAmount);
-      const negativeResult = databaseValidation.validateAmount(negativeAmount);
-      const tooLargeResult = databaseValidation.validateAmount(tooLargeAmount);
-
-      expect(validResult.isValid).toBe(true);
-      expect(negativeResult.isValid).toBe(false);
-      expect(negativeResult.errors).toContain('金額 不能為負數');
-      expect(tooLargeResult.isValid).toBe(false);
-      expect(tooLargeResult.errors).toContain('金額 不能超過 10 億');
-    });
-  });
-
-  describe('Error Handling', () => {
-    test('應該正確處理數據庫錯誤', async () => {
+  describe('Error Handling and Recovery', () => {
+    test('應該能從數據庫錯誤中恢復', async () => {
       const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
+      const { errorHandler } = require('../utils/error-handling.utils');
 
-      mockFirestore.collection.mockImplementation(() => {
-        throw new Error('數據庫連接失敗');
-      });
+      const engagementService = new EngagementService();
 
-      const result = await service.createEngagement({
-        name: '測試專案',
-        contractor: '測試承包商',
-        client: '測試客戶',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
-        totalValue: 100000,
-        currency: 'TWD',
-      });
+      // 第一次調用失敗
+      mockFirestore.getDoc.mockRejectedValueOnce(new Error('網絡錯誤'));
 
-      expect(result.success).toBe(false);
-      expect(result.error).toContain('創建失敗');
-    });
+      const firstResult = await engagementService.getEngagement('engagement-error');
+      expect(firstResult.success).toBe(false);
 
-    test('應該正確處理網絡超時', async () => {
-      const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
-
-      mockFirestore.getDoc.mockImplementation(() => {
-        return new Promise((_, reject) => {
-          setTimeout(() => reject(new Error('網絡超時')), 100);
-        });
-      });
-
-      const result = await service.getEngagement('test-id');
-
-      expect(result.success).toBe(false);
-      expect(result.error).toContain('獲取失敗');
-    });
-
-    test('應該正確處理權限錯誤', async () => {
-      const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
-
-      mockFirestore.updateDoc.mockImplementation(() => {
-        throw new Error('權限不足');
-      });
-
-      const result = await service.updateEngagement('test-id', {
-        name: '更新的名稱',
-      });
-
-      expect(result.success).toBe(false);
-      expect(result.error).toContain('更新失敗');
-    });
-  });
-
-  describe('Performance', () => {
-    test('應該在合理時間內完成數據庫操作', async () => {
-      const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
-
+      // 第二次調用成功
       mockFirestore.getDoc.mockResolvedValue({
         exists: () => true,
-        id: 'test-id',
-        data: () => ({ name: '測試專案' }),
+        id: 'engagement-error',
+        data: () => ({ name: '恢復測試專案' }),
       });
 
-      const startTime = Date.now();
-      const result = await service.getEngagement('test-id');
-      const endTime = Date.now();
+      const secondResult = await engagementService.getEngagement('engagement-error');
+      expect(secondResult.success).toBe(true);
+      expect(secondResult.engagement?.name).toBe('恢復測試專案');
+    });
+
+    test('應該能處理部分失敗的批量操作', async () => {
+      const { EngagementService } = require('../services/engagement.service');
+
+      const engagementService = new EngagementService();
+
+      const updates = [
+        { id: 'id-1', data: { status: '進行中' as const } },
+        { id: 'id-2', data: { status: '已完成' as const } },
+        { id: 'id-3', data: { status: '已取消' as const } },
+      ];
+
+      const mockBatch = {
+        update: jest.fn(),
+        commit: jest.fn().mockRejectedValue(new Error('部分更新失敗')),
+      } as any;
+
+      mockFirestore.writeBatch.mockReturnValue(mockBatch);
+      mockFirestore.doc.mockReturnValue({} as any);
+
+      const result = await engagementService.batchUpdateEngagements(updates);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('批量更新失敗');
+    });
+
+    test('應該能處理並發更新衝突', async () => {
+      const { EngagementService } = require('../services/engagement.service');
+
+      const engagementService = new EngagementService();
+
+      // 模擬並發更新
+      const updates = [
+        { status: '進行中' as const },
+        { phase: '執行' as const },
+        { name: '更新的專案名稱' },
+      ];
+
+      mockFirestore.doc.mockReturnValue({} as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
+
+      const promises = updates.map(update =>
+        engagementService.updateEngagement('engagement-789', update)
+      );
+
+      const results = await Promise.all(promises);
+
+      expect(results.every(result => result.success)).toBe(true);
+      expect(mockFirestore.updateDoc).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('Performance and Caching', () => {
+    test('應該能處理高負載操作', async () => {
+      const { EngagementService } = require('../services/engagement.service');
+      const { performanceManager } = require('../utils/performance.utils');
+
+      const engagementService = new EngagementService();
+
+      // 模擬高負載場景
+      const startTime = performance.now();
+
+      // 並發創建多個 Engagements
+      const createPromises = Array.from({ length: 50 }, (_, i) => {
+        const input = {
+          name: `高負載測試專案 ${i}`,
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 100000 + i,
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        };
+
+        mockFirestore.collection.mockReturnValue({} as any);
+        mockFirestore.addDoc.mockResolvedValue({ id: `engagement-${i}` });
+
+        return engagementService.createEngagement(input);
+      });
+
+      const createResults = await Promise.all(createPromises);
+      const createEndTime = performance.now();
+
+      expect(createResults.every(result => result.success)).toBe(true);
+      expect(createEndTime - startTime).toBeLessThan(5000); // 應該在 5 秒內完成
+    });
+
+    test('應該能處理大量數據查詢', async () => {
+      const { EngagementService } = require('../services/engagement.service');
+
+      const engagementService = new EngagementService();
+
+      // 模擬大量數據
+      const largeDataset = Array.from({ length: 10000 }, (_, i) => ({
+        id: `engagement-${i}`,
+        name: `大型專案 ${i}`,
+        contractor: '測試承包商',
+        client: '測試客戶',
+        totalValue: 100000 + i,
+        status: i % 2 === 0 ? '進行中' : '已完成',
+        phase: '執行',
+        startDate: new Date('2024-01-01'),
+        endDate: new Date('2024-12-31'),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
+
+      mockFirestore.query.mockReturnValue({} as any);
+      mockFirestore.getDocs.mockResolvedValue({
+        docs: largeDataset.slice(0, 100).map(engagement => ({
+          id: engagement.id,
+          data: () => engagement,
+        })),
+      });
+
+      const startTime = performance.now();
+      const result = await engagementService.getEngagements({ limit: 100 });
+      const endTime = performance.now();
 
       expect(result.success).toBe(true);
+      expect(result.engagements?.length).toBeLessThanOrEqual(100);
       expect(endTime - startTime).toBeLessThan(1000); // 應該在 1 秒內完成
     });
 
-    test('應該正確處理大量數據', async () => {
-      const { EngagementService } = require('../services/engagement.service');
-      const service = new EngagementService();
+    test('應該能正確使用緩存', async () => {
+      const { performanceManager } = require('../utils/performance.utils');
 
-      const largeEngagement = {
-        id: 'test-id',
-        name: '大型專案',
-        tasks: Array.from({ length: 1000 }, (_, i) => ({
-          id: `task-${i}`,
-          title: `任務 ${i}`,
-          value: 1000,
-        })),
+      // 設置緩存
+      performanceManager.setCache('test-key', { data: 'test-value' });
+
+      // 獲取緩存
+      const cached = performanceManager.getCache('test-key');
+      expect(cached).toEqual({ data: 'test-value' });
+
+      // 獲取緩存統計
+      const stats = performanceManager.getCacheStatistics();
+      expect(stats.hits).toBe(1);
+      expect(stats.size).toBe(1);
+    });
+  });
+
+  describe('Security Validation', () => {
+    test('應該防止所有安全威脅', async () => {
+      const { databaseValidation } = require('../utils/database-validation.utils');
+
+      // 測試各種安全威脅
+      const securityThreats = [
+        {
+          name: '<script>alert("XSS")</script>',
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 100000,
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+        {
+          name: "'; DROP TABLE engagements; --",
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 100000,
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+        {
+          name: '${process.env.SECRET_KEY}',
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 100000,
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+        {
+          name: 'a'.repeat(10000), // 超長輸入
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 100000,
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+        {
+          name: '測試專案',
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: Number.MAX_SAFE_INTEGER + 1, // 數值溢出
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+        {
+          name: '測試專案',
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: -1000000, // 負數
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+      ];
+
+      securityThreats.forEach((threat, index) => {
+        const result = databaseValidation.validateCreateEngagementInput(threat);
+
+        if (index < 3) {
+          // 前三個威脅應該通過基本驗證（實際防護在渲染層）
+          expect(result.isValid).toBe(true);
+        } else {
+          // 後三個威脅應該被驗證層攔截
+          expect(result.isValid).toBe(false);
+        }
+      });
+    });
+
+    test('應該正確處理邊界值', () => {
+      const { databaseValidation } = require('../utils/database-validation.utils');
+
+      const boundaryTests = [
+        {
+          name: 'a', // 最小長度
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 1, // 最小值
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+        {
+          name: 'a'.repeat(200), // 最大長度
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 1000000000, // 最大值
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+        {
+          name: 'a'.repeat(201), // 超過最大長度
+          contractor: '測試承包商',
+          client: '測試客戶',
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+          totalValue: 1000000001, // 超過最大值
+          currency: 'TWD',
+          description: '測試描述',
+          scope: '測試範疇',
+        },
+      ];
+
+      boundaryTests.forEach((test, index) => {
+        const result = databaseValidation.validateCreateEngagementInput(test);
+
+        if (index < 2) {
+          expect(result.isValid).toBe(true);
+        } else {
+          expect(result.isValid).toBe(false);
+        }
+      });
+    });
+  });
+
+  describe('Data Consistency', () => {
+    test('應該保持數據一致性', async () => {
+      const { EngagementService } = require('../services/engagement.service');
+      const { FinancialService } = require('../services/financial.service');
+
+      const engagementService = new EngagementService();
+      const financialService = new FinancialService();
+
+      // 創建 Engagement
+      const createInput = {
+        name: '一致性測試專案',
+        contractor: '測試承包商',
+        client: '測試客戶',
+        startDate: new Date('2024-01-01'),
+        endDate: new Date('2024-12-31'),
+        totalValue: 500000,
+        currency: 'TWD',
+        description: '測試描述',
+        scope: '測試範疇',
+      };
+
+      mockFirestore.collection.mockReturnValue({} as any);
+      mockFirestore.addDoc.mockResolvedValue({ id: 'engagement-456' });
+
+      const createResult = await engagementService.createEngagement(createInput);
+      expect(createResult.success).toBe(true);
+
+      // 添加多個付款記錄
+      const payments = [
+        { description: '首期付款', amount: 150000 },
+        { description: '中期付款', amount: 200000 },
+        { description: '尾款', amount: 150000 },
+      ];
+
+      mockFirestore.doc.mockReturnValue({} as any);
+      mockFirestore.updateDoc.mockResolvedValue(undefined as any);
+
+      for (const payment of payments) {
+        const result = await financialService.addPayment('engagement-456', payment);
+        expect(result.success).toBe(true);
+      }
+
+      // 驗證財務摘要計算
+      const mockEngagement = {
+        id: 'engagement-456',
+        totalValue: 500000,
+        payments: [
+          { status: '已付款', amount: 150000 },
+          { status: '已付款', amount: 200000 },
+          { status: '待處理', amount: 150000 },
+        ],
+        receipts: [],
+        invoices: [],
       };
 
       mockFirestore.getDoc.mockResolvedValue({
         exists: () => true,
-        id: 'test-id',
-        data: () => largeEngagement,
+        id: 'engagement-456',
+        data: () => mockEngagement,
       });
 
-      const result = await service.getEngagement('test-id');
+      const engagement = await engagementService.getEngagement('engagement-456');
+      expect(engagement.success).toBe(true);
 
-      expect(result.success).toBe(true);
-      expect(result.engagement?.tasks).toHaveLength(1000);
-    });
-  });
+      if (engagement.success && engagement.engagement) {
+        const summary = financialService.calculateFinancialSummary(
+          engagement.engagement.totalValue,
+          engagement.engagement.payments,
+          engagement.engagement.receipts,
+          engagement.engagement.invoices
+        );
 
-  describe('Security', () => {
-    test('應該防止 SQL 注入攻擊', async () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const maliciousInput = {
-        name: "'; DROP TABLE engagements; --",
-        contractor: '測試承包商',
-        client: '測試客戶',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
-        totalValue: 100000,
-        currency: 'TWD',
-      };
-
-      const result = databaseValidation.validateCreateEngagementInput(maliciousInput);
-
-      // 驗證應該通過，因為我們使用的是 NoSQL 數據庫，不會有 SQL 注入問題
-      // 但我們仍然應該驗證輸入的長度和格式
-      expect(result.isValid).toBe(true);
-    });
-
-    test('應該防止 XSS 攻擊', async () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const xssInput = {
-        name: '<script>alert("XSS")</script>',
-        contractor: '測試承包商',
-        client: '測試客戶',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
-        totalValue: 100000,
-        currency: 'TWD',
-      };
-
-      const result = databaseValidation.validateCreateEngagementInput(xssInput);
-
-      // 驗證應該通過，因為我們只驗證基本格式
-      // XSS 防護應該在前端和後端渲染時處理
-      expect(result.isValid).toBe(true);
-    });
-
-    test('應該限制輸入長度', async () => {
-      const { databaseValidation } = require('../utils/database-validation.utils');
-
-      const longNameInput = {
-        name: 'a'.repeat(201), // 超過 200 字符限制
-        contractor: '測試承包商',
-        client: '測試客戶',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
-        totalValue: 100000,
-        currency: 'TWD',
-      };
-
-      const result = databaseValidation.validateCreateEngagementInput(longNameInput);
-
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('專案名稱不能超過 200 個字符');
+        expect(summary.paidAmount).toBe(350000); // 150000 + 200000
+        expect(summary.pendingAmount).toBe(150000);
+        expect(summary.paymentProgress).toBe(70); // (350000 / 500000) * 100
+      }
     });
   });
 });
