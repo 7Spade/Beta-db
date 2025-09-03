@@ -287,13 +287,13 @@ export function EngagementDetailView({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-blue-600">
-                    {engagement.milestones.length}
+                    {engagement.milestones?.length || 0}
                   </div>
                   <div className="text-sm text-muted-foreground">里程碑</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-green-600">
-                    {engagement.deliverables.length}
+                    {engagement.deliverables?.length || 0}
                   </div>
                   <div className="text-sm text-muted-foreground">交付物</div>
                 </div>
@@ -337,13 +337,13 @@ export function EngagementDetailView({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-blue-600">
-                    {engagement.documents.length}
+                    {engagement.documents?.length || 0}
                   </div>
                   <div className="text-sm text-muted-foreground">文件</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-green-600">
-                    {engagement.attachments.length}
+                    {engagement.attachments?.length || 0}
                   </div>
                   <div className="text-sm text-muted-foreground">附件</div>
                 </div>

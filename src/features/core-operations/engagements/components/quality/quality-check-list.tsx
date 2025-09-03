@@ -3,26 +3,24 @@
  */
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Timestamp } from 'firebase/firestore';
-import { 
-    CheckCircle, 
-    Clock, 
-    FileText, 
-    Plus, 
-    Search, 
-    SortAsc, 
-    SortDesc, 
-    XCircle,
-    AlertTriangle
+import {
+    AlertTriangle,
+    CheckCircle,
+    Clock,
+    FileText,
+    Plus,
+    Search,
+    SortAsc,
+    SortDesc,
+    XCircle
 } from 'lucide-react';
 import { useState } from 'react';
 import type { QualityCheck, QualityCheckStatus } from '../../types';
-import { formatDate } from '../../utils';
 import { QualityCheckCard } from './quality-check-card';
 import { QualityCheckForm } from './quality-check-form';
 
@@ -49,25 +47,25 @@ export function QualityCheckList({
     const [showCreateForm, setShowCreateForm] = useState(false);
 
     // 過濾和排序檢查
-    const filteredChecks = qualityChecks
+    const filteredChecks = (qualityChecks || [])
         .filter(check => {
             const matchesSearch = check.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                check.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                check.assignedToName?.toLowerCase().includes(searchTerm.toLowerCase());
+                check.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                check.assignedToName?.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesStatus = statusFilter === 'all' || check.status === statusFilter;
             const matchesType = typeFilter === 'all' || check.type === typeFilter;
             return matchesSearch && matchesStatus && matchesType;
         })
         .sort((a, b) => {
             let aValue: any, bValue: any;
-            
+
             switch (sortBy) {
                 case 'plannedDate':
-                    aValue = a.plannedDate instanceof Date ? a.plannedDate.getTime() : 
-                            a.plannedDate instanceof Timestamp ? a.plannedDate.toMillis() : 
+                    aValue = a.plannedDate instanceof Date ? a.plannedDate.getTime() :
+                        a.plannedDate instanceof Timestamp ? a.plannedDate.toMillis() :
                             new Date(a.plannedDate).getTime();
-                    bValue = b.plannedDate instanceof Date ? b.plannedDate.getTime() : 
-                            b.plannedDate instanceof Timestamp ? b.plannedDate.toMillis() : 
+                    bValue = b.plannedDate instanceof Date ? b.plannedDate.getTime() :
+                        b.plannedDate instanceof Timestamp ? b.plannedDate.toMillis() :
                             new Date(b.plannedDate).getTime();
                     break;
                 case 'status':
@@ -82,7 +80,7 @@ export function QualityCheckList({
                 default:
                     return 0;
             }
-            
+
             if (sortOrder === 'asc') {
                 return aValue > bValue ? 1 : -1;
             } else {
@@ -266,7 +264,7 @@ export function QualityCheckList({
                         <h3 className="text-lg font-semibold mb-2">沒有品質檢查</h3>
                         <p className="text-muted-foreground mb-4">
                             {searchTerm || statusFilter !== 'all' || typeFilter !== 'all'
-                                ? '沒有找到符合條件的品質檢查' 
+                                ? '沒有找到符合條件的品質檢查'
                                 : '還沒有創建任何品質檢查'}
                         </p>
                         {!searchTerm && statusFilter === 'all' && typeFilter === 'all' && (

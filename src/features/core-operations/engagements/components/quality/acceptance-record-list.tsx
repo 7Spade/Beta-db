@@ -3,7 +3,6 @@
  */
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,7 +11,6 @@ import { Timestamp } from 'firebase/firestore';
 import { CheckCircle, Clock, FileText, Plus, Search, SortAsc, SortDesc, XCircle } from 'lucide-react';
 import { useState } from 'react';
 import type { AcceptanceRecord, AcceptanceStatus } from '../../types';
-import { formatDate } from '../../utils';
 import { AcceptanceRecordCard } from './acceptance-record-card';
 import { AcceptanceRecordForm } from './acceptance-record-form';
 
@@ -38,24 +36,24 @@ export function AcceptanceRecordList({
     const [showCreateForm, setShowCreateForm] = useState(false);
 
     // 過濾和排序記錄
-    const filteredRecords = acceptanceRecords
+    const filteredRecords = (acceptanceRecords || [])
         .filter(record => {
             const matchesSearch = record.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                record.engagementName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                record.applicantName.toLowerCase().includes(searchTerm.toLowerCase());
+                record.engagementName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                record.applicantName.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesStatus = statusFilter === 'all' || record.status === statusFilter;
             return matchesSearch && matchesStatus;
         })
         .sort((a, b) => {
             let aValue: any, bValue: any;
-            
+
             switch (sortBy) {
                 case 'submittedAt':
-                    aValue = a.submittedAt instanceof Date ? a.submittedAt.getTime() : 
-                            a.submittedAt instanceof Timestamp ? a.submittedAt.toMillis() : 
+                    aValue = a.submittedAt instanceof Date ? a.submittedAt.getTime() :
+                        a.submittedAt instanceof Timestamp ? a.submittedAt.toMillis() :
                             new Date(a.submittedAt).getTime();
-                    bValue = b.submittedAt instanceof Date ? b.submittedAt.getTime() : 
-                            b.submittedAt instanceof Timestamp ? b.submittedAt.toMillis() : 
+                    bValue = b.submittedAt instanceof Date ? b.submittedAt.getTime() :
+                        b.submittedAt instanceof Timestamp ? b.submittedAt.toMillis() :
                             new Date(b.submittedAt).getTime();
                     break;
                 case 'status':
@@ -70,7 +68,7 @@ export function AcceptanceRecordList({
                 default:
                     return 0;
             }
-            
+
             if (sortOrder === 'asc') {
                 return aValue > bValue ? 1 : -1;
             } else {
@@ -218,8 +216,8 @@ export function AcceptanceRecordList({
                         <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                         <h3 className="text-lg font-semibold mb-2">沒有驗收記錄</h3>
                         <p className="text-muted-foreground mb-4">
-                            {searchTerm || statusFilter !== 'all' 
-                                ? '沒有找到符合條件的驗收記錄' 
+                            {searchTerm || statusFilter !== 'all'
+                                ? '沒有找到符合條件的驗收記錄'
                                 : '還沒有創建任何驗收記錄'}
                         </p>
                         {!searchTerm && statusFilter === 'all' && (

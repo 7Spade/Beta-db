@@ -3,17 +3,17 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Filter, SortAsc, SortDesc } from 'lucide-react';
+import { Timestamp } from 'firebase/firestore';
+import { Plus, Search, SortAsc, SortDesc } from 'lucide-react';
+import { useState } from 'react';
+import type { Task, TaskPriority, TaskStatus } from '../../types';
 import { TaskCard } from './task-card';
 import { TaskForm } from './task-form';
-import { Timestamp } from 'firebase/firestore';
-import type { Task, TaskStatus, TaskPriority } from '../../types';
 
 interface TaskListProps {
   tasks: Task[];
@@ -38,18 +38,18 @@ export function TaskList({
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   // 篩選和排序任務
-  const filteredAndSortedTasks = tasks
+  const filteredAndSortedTasks = (tasks || [])
     .filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           task.description?.toLowerCase().includes(searchTerm.toLowerCase());
+        task.description?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || task.status === statusFilter;
       const matchesPriority = priorityFilter === 'all' || task.priority === priorityFilter;
-      
+
       return matchesSearch && matchesStatus && matchesPriority;
     })
     .sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (sortBy) {
         case 'title':
           aValue = a.title;
@@ -74,7 +74,7 @@ export function TaskList({
           bValue = b.createdAt instanceof Date ? b.createdAt.getTime() : b.createdAt instanceof Timestamp ? b.createdAt.toMillis() : new Date(b.createdAt).getTime();
           break;
       }
-      
+
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {

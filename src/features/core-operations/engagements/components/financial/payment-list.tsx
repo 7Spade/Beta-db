@@ -40,7 +40,7 @@ export function PaymentList({
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
     // 篩選和排序付款
-    const filteredAndSortedPayments = payments
+    const filteredAndSortedPayments = (payments || [])
         .filter(payment => {
             const matchesSearch = payment.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 payment.referenceNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -46,7 +46,7 @@ export function RiskList({
     const [showCreateForm, setShowCreateForm] = useState(false);
 
     // 過濾和排序風險
-    const filteredRisks = risks
+    const filteredRisks = (risks || [])
         .filter(risk => {
             const matchesSearch = risk.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 risk.description.toLowerCase().includes(searchTerm.toLowerCase()) ||

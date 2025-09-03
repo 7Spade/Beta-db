@@ -40,7 +40,7 @@ export function InvoiceList({
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
     // 篩選和排序發票
-    const filteredAndSortedInvoices = invoices
+    const filteredAndSortedInvoices = (invoices || [])
         .filter(invoice => {
             const matchesSearch = invoice.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 invoice.description?.toLowerCase().includes(searchTerm.toLowerCase());

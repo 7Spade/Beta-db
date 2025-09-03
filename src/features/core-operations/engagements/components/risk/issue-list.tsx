@@ -46,7 +46,7 @@ export function IssueList({
     const [showCreateForm, setShowCreateForm] = useState(false);
 
     // 過濾和排序問題
-    const filteredIssues = issues
+    const filteredIssues = (issues || [])
         .filter(issue => {
             const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 issue.description.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -21,7 +21,7 @@ export function RiskMatrix({ risks }: RiskMatrixProps) {
             const probabilityValue = (probability + 1) * 20;
             const riskScore = (impactValue * probabilityValue) / 100;
 
-            const risksInCell = risks.filter(risk => {
+            const risksInCell = (risks || []).filter(risk => {
                 const riskImpact = Math.ceil(risk.impact / 20) - 1;
                 const riskProbability = Math.ceil(risk.probability / 20) - 1;
                 return riskImpact === impact && riskProbability === probability;
@@ -164,25 +164,25 @@ export function RiskMatrix({ risks }: RiskMatrixProps) {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
                         <div className="text-center">
                             <div className="text-2xl font-bold text-red-600">
-                                {risks.filter(r => r.riskScore >= 80).length}
+                                {(risks || []).filter(r => r.riskScore >= 80).length}
                             </div>
                             <div className="text-sm text-muted-foreground">極高風險</div>
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold text-orange-600">
-                                {risks.filter(r => r.riskScore >= 60 && r.riskScore < 80).length}
+                                {(risks || []).filter(r => r.riskScore >= 60 && r.riskScore < 80).length}
                             </div>
                             <div className="text-sm text-muted-foreground">高風險</div>
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold text-yellow-600">
-                                {risks.filter(r => r.riskScore >= 40 && r.riskScore < 60).length}
+                                {(risks || []).filter(r => r.riskScore >= 40 && r.riskScore < 60).length}
                             </div>
                             <div className="text-sm text-muted-foreground">中風險</div>
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold text-green-600">
-                                {risks.filter(r => r.riskScore < 40).length}
+                                {(risks || []).filter(r => r.riskScore < 40).length}
                             </div>
                             <div className="text-sm text-muted-foreground">低風險</div>
                         </div>
