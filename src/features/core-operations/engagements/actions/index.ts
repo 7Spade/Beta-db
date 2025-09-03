@@ -10,4 +10,5 @@ export * from './engagement.actions';
 export * from './financial.actions';
 export * from './subtask.actions';
 export * from './task.actions';
+export * from './quality.actions';
 
