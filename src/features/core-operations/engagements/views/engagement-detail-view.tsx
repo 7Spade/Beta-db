@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  AlertTriangle,
   ArrowLeft,
   Clock,
   Edit,
@@ -21,6 +20,7 @@ import { EngagementSummaryCard } from '../components/cards';
 import { FinancialSummary, InvoiceList, PaymentList } from '../components/financial';
 import { EditEngagementForm } from '../components/forms';
 import { AcceptanceRecordList, QualityCheckList } from '../components/quality';
+import { IssueList, RiskList, RiskMatrix } from '../components/risk';
 import { TaskList } from '../components/tasks';
 import { useEngagement } from '../hooks';
 import type { Task } from '../types';
@@ -353,33 +353,26 @@ export function EngagementDetailView({
         </TabsContent>
 
         <TabsContent value="risks" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <AlertTriangle className="h-5 w-5 mr-2" />
-                風險管理
-              </CardTitle>
-              <CardDescription>
-                識別和管理專案風險與問題
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-orange-600">
-                    {engagement.risks.length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">風險</div>
-                </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-red-600">
-                    {engagement.issues.length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">問題</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* 風險矩陣 */}
+          <RiskMatrix risks={engagement.risks} />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <RiskList
+              risks={engagement.risks}
+              onRiskCreate={() => refresh()}
+              onRiskUpdate={() => refresh()}
+              onRiskDelete={() => refresh()}
+              isLoading={isLoading}
+            />
+
+            <IssueList
+              issues={engagement.issues}
+              onIssueCreate={() => refresh()}
+              onIssueUpdate={() => refresh()}
+              onIssueDelete={() => refresh()}
+              isLoading={isLoading}
+            />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

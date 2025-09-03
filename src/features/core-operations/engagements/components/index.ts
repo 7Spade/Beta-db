@@ -19,3 +19,5 @@ export * from './financial';
 
 // 品質管理組件
 export * from './quality';
+export * from './risk';
+
