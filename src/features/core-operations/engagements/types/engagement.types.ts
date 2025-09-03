@@ -4,16 +4,6 @@
  */
 import type { Timestamp } from 'firebase/firestore';
 
-// 導入其他類型
-import type { ChangeOrder } from './change.types';
-import type { Communication, Meeting } from './communication.types';
-import type { Attachment, AuditLogEntry, Document } from './document.types';
-import type { Invoice, Payment, Receipt } from './financial.types';
-import type { Deliverable, EngagementVersion, Milestone } from './progress.types';
-import type { AcceptanceRecord, QualityCheck } from './quality.types';
-import type { Issue, Risk } from './risk.types';
-import type { Task } from './task.types';
-
 // 統一的狀態類型
 export type EngagementStatus =
   | '草稿'
@@ -158,4 +148,3 @@ export type { Deliverable, Milestone } from './progress.types';
 export type { AcceptanceRecord, QualityCheck } from './quality.types';
 export type { Issue, Risk } from './risk.types';
 export type { Task } from './task.types';
-

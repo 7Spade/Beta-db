@@ -33,7 +33,8 @@ export type {
 } from './change.types';
 
 export type {
-  CreateDeliverableInput, CreateMilestoneInput, Deliverable, Deliverable, DeliverableStatus, Milestone, MilestoneStatus, ProgressSummary
+  CreateDeliverableInput, CreateMilestoneInput, Deliverable, DeliverableStatus,
+  DeliverableType, Milestone, MilestoneStatus, ProgressSummary
 } from './progress.types';
 
 export type {
@@ -60,4 +61,3 @@ export type {
   AuditAction,
   AuditEntity, AuditLogEntry, AuditQuery, AuditSummary
 } from './audit.types';
-

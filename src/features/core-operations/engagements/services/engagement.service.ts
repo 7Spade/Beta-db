@@ -3,28 +3,28 @@
  */
 import { firestore } from '@/features/integrations/database/firebase-client/firebase-client';
 import {
-  collection,
-  doc,
-  getDocs,
-  getDoc,
   addDoc,
-  updateDoc,
+  collection,
   deleteDoc,
-  query,
-  where,
-  orderBy,
+  doc,
+  getDoc,
+  getDocs,
   limit,
+  orderBy,
+  query,
   startAfter,
   Timestamp,
+  updateDoc,
+  where,
   writeBatch,
 } from 'firebase/firestore';
 import type {
-  Engagement,
-  EngagementSummary,
   CreateEngagementInput,
-  UpdateEngagementInput,
-  EngagementStatus,
+  Engagement,
   EngagementPhase,
+  EngagementStatus,
+  EngagementSummary,
+  UpdateEngagementInput,
 } from '../types';
 
 export class EngagementService {
@@ -75,7 +75,7 @@ export class EngagementService {
       };
 
       const docRef = await addDoc(collection(firestore, this.collectionName), engagementData);
-      
+
       return { success: true, engagementId: docRef.id };
     } catch (error) {
       console.error('創建 Engagement 失敗:', error);
@@ -162,7 +162,7 @@ export class EngagementService {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const docRef = doc(firestore, this.collectionName, id);
-      
+
       const updateData = {
         ...input,
         updatedBy: 'system', // TODO: 從認證上下文獲取
@@ -219,7 +219,7 @@ export class EngagementService {
   }): Promise<{ success: boolean; summaries?: EngagementSummary[]; error?: string }> {
     try {
       const result = await this.getEngagements(options);
-      
+
       if (!result.success || !result.engagements) {
         return result;
       }

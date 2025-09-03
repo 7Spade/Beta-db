@@ -11,19 +11,6 @@ import type {
 } from '../types';
 
 /**
- * 安全地將 Date | Timestamp 轉換為 Date
- */
-function toDate(date: Date | any): Date {
-  if (date instanceof Date) {
-    return date;
-  }
-  if (date && typeof date.toDate === 'function') {
-    return date.toDate();
-  }
-  return new Date(date);
-}
-
-/**
  * 格式化貨幣 (財務專用)
  */
 export function formatFinancialCurrency(amount: number, currency: string = 'TWD'): string {
@@ -168,7 +155,7 @@ export function isPaymentOverdue(payment: Payment): boolean {
     return false;
   }
 
-  const requestDate = toDate(payment.requestDate);
+  const requestDate = payment.requestDate.toDate ? payment.requestDate.toDate() : new Date(payment.requestDate);
   const today = new Date();
   const daysDiff = Math.ceil((today.getTime() - requestDate.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -183,7 +170,7 @@ export function isReceiptOverdue(receipt: Receipt): boolean {
     return false;
   }
 
-  const requestDate = toDate(receipt.requestDate);
+  const requestDate = receipt.requestDate.toDate ? receipt.requestDate.toDate() : new Date(receipt.requestDate);
   const today = new Date();
   const daysDiff = Math.ceil((today.getTime() - requestDate.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -198,7 +185,7 @@ export function isInvoiceOverdue(invoice: Invoice): boolean {
     return false;
   }
 
-  const dueDate = toDate(invoice.dueDate);
+  const dueDate = invoice.dueDate.toDate ? invoice.dueDate.toDate() : new Date(invoice.dueDate);
   const today = new Date();
 
   return dueDate < today;

@@ -325,7 +325,7 @@ export function EngagementDetailView({
             onTaskCreate={handleTaskCreate}
             onTaskUpdate={handleTaskUpdate}
             onTaskDelete={handleTaskDelete}
-            onTasksRefresh={() => window.location.reload()}
+            onTasksRefresh={handleRefresh}
             isLoading={isLoading}
           />
         </TabsContent>
