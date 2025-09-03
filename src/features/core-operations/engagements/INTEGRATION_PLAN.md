@@ -397,6 +397,11 @@ src/features/core-operations/engagements/
    - 會議管理
    - 後續行動追蹤
 
+6. **文件管理系統** ✅
+   - 文件上傳和管理
+   - 附件管理
+   - 版本控制
+
 詳細的功能擴展計畫請參考 [EXPANSION_PLAN.md](./EXPANSION_PLAN.md)
 
 ### 階段 5: 數據遷移和部署 (Migration & Deployment Phase)
