@@ -1,18 +1,11 @@
 /**
  * @fileoverview Engagement 相關的工具函數
  */
-import type { 
-  Engagement, 
-  EngagementSummary, 
-  EngagementStatus, 
+import type {
+  Engagement,
   EngagementPhase,
-  Task,
-  Payment,
-  Receipt,
-  Invoice,
-  ChangeOrder,
-  Risk,
-  Issue
+  EngagementStatus,
+  EngagementSummary
 } from '../types';
 
 /**
@@ -33,9 +26,9 @@ function toDate(date: Date | any): Date {
  */
 export function formatDate(date: Date | any, format: 'short' | 'long' | 'iso' = 'short'): string {
   if (!date) return '未設定';
-  
+
   const d = date.toDate ? date.toDate() : new Date(date);
-  
+
   switch (format) {
     case 'short':
       return d.toLocaleDateString('zh-TW');
@@ -325,12 +318,12 @@ export function filterEngagements(
 
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
-      const matchesSearch = 
+      const matchesSearch =
         engagement.name.toLowerCase().includes(searchLower) ||
         engagement.description.toLowerCase().includes(searchLower) ||
         engagement.contractor.toLowerCase().includes(searchLower) ||
         engagement.client.toLowerCase().includes(searchLower);
-      
+
       if (!matchesSearch) {
         return false;
       }
