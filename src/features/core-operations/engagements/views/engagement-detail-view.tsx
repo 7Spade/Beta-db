@@ -11,7 +11,6 @@ import {
   AlertTriangle,
   ArrowLeft,
   Clock,
-  DollarSign,
   Edit,
   FileText,
   Trash2
@@ -19,10 +18,10 @@ import {
 import { useState } from 'react';
 import { addTaskAction, deleteTaskAction, updateTaskAction } from '../actions/task.actions';
 import { EngagementSummaryCard } from '../components/cards';
+import { FinancialSummary, InvoiceList, PaymentList } from '../components/financial';
 import { EditEngagementForm } from '../components/forms';
-import { TaskList } from '../components/tasks';
-import { PaymentList, InvoiceList, FinancialSummary } from '../components/financial';
 import { AcceptanceRecordList, QualityCheckList } from '../components/quality';
+import { TaskList } from '../components/tasks';
 import { useEngagement } from '../hooks';
 import type { Task } from '../types';
 import { getPhaseColor, getStatusColor } from '../utils';
@@ -235,7 +234,7 @@ export function EngagementDetailView({
         </TabsContent>
 
         <TabsContent value="financial" className="space-y-4">
-          <FinancialSummary 
+          <FinancialSummary
             summary={{
               totalValue: engagement.totalValue,
               paidAmount: engagement.paidAmount,
@@ -253,7 +252,7 @@ export function EngagementDetailView({
               },
             }}
           />
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <PaymentList
               payments={engagement.payments}
@@ -262,7 +261,7 @@ export function EngagementDetailView({
               onPaymentDelete={() => refresh()}
               isLoading={isLoading}
             />
-            
+
             <InvoiceList
               invoices={engagement.invoices}
               onInvoiceCreate={() => refresh()}
@@ -312,7 +311,7 @@ export function EngagementDetailView({
               onAcceptanceRecordDelete={() => refresh()}
               isLoading={isLoading}
             />
-            
+
             <QualityCheckList
               qualityChecks={engagement.qualityChecks}
               onQualityCheckCreate={() => refresh()}

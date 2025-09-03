@@ -228,14 +228,14 @@ src/features/core-operations/engagements/
 │   │   ├── progress-chart.tsx
 │   │   ├── progress-summary.tsx
 │   │   └── index.ts
-│   ├── financial/                # 財務管理增強組件 (未實現)
+│   ├── financial/                # 財務管理增強組件 (實現)
 │   │   ├── payment-list.tsx
 │   │   ├── invoice-list.tsx
 │   │   ├── financial-summary.tsx
 │   │   ├── payment-form.tsx
 │   │   ├── invoice-form.tsx
 │   │   └── index.ts
-│   ├── quality/                  # 品質管理組件 (未實現)
+│   ├── quality/                  # 品質管理組件 (實現)
 │   │   ├── acceptance-record-list.tsx
 │   │   ├── quality-check-list.tsx
 │   │   ├── acceptance-form.tsx
