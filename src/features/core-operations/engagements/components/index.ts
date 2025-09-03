@@ -30,3 +30,12 @@ export * from './documents';
 // 報表和儀表板組件
 export * from './reports';
 
+// 圖表組件
+export * from './charts';
+
+// 彈窗組件
+export * from './dialogs';
+
+// 表格組件
+export * from './tables';
+
