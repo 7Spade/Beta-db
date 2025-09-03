@@ -27,3 +27,6 @@ export * from './communication';
 // 文件管理組件
 export * from './documents';
 
+// 報表和儀表板組件
+export * from './reports';
+

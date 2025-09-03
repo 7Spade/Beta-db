@@ -21,6 +21,7 @@ import { AttachmentList, DocumentList } from '../components/documents';
 import { FinancialSummary, InvoiceList, PaymentList } from '../components/financial';
 import { EditEngagementForm } from '../components/forms';
 import { AcceptanceRecordList, QualityCheckList } from '../components/quality';
+import { DashboardCharts, EngagementReport, FinancialReport, ProgressReport, QualityReport } from '../components/reports';
 import { IssueList, RiskList, RiskMatrix } from '../components/risk';
 import { TaskList } from '../components/tasks';
 import { useEngagement } from '../hooks';
@@ -310,6 +311,7 @@ export function EngagementDetailView({
           <TabsTrigger value="communication">溝通</TabsTrigger>
           <TabsTrigger value="documents">文件</TabsTrigger>
           <TabsTrigger value="risks">風險</TabsTrigger>
+          <TabsTrigger value="reports">報表</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -476,6 +478,24 @@ export function EngagementDetailView({
               onIssueDelete={() => refresh()}
               isLoading={isLoading}
             />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="reports" className="space-y-6">
+          <div className="space-y-6">
+            {/* 儀表板圖表 */}
+            <DashboardCharts engagement={engagement} />
+
+            {/* 詳細報告 */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <EngagementReport engagement={engagement} />
+              <FinancialReport engagement={engagement} />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ProgressReport engagement={engagement} />
+              <QualityReport engagement={engagement} />
+            </div>
           </div>
         </TabsContent>
       </Tabs>
