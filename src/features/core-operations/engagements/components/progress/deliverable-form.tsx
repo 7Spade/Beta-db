@@ -3,19 +3,19 @@
  */
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, X, Plus, Trash2 } from 'lucide-react';
-import { format } from 'date-fns';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@root/src/shared/utils';
-import type { Deliverable, DeliverableStatus, DeliverableType } from '../../types';
+import { format } from 'date-fns';
+import { CalendarIcon, Plus, Trash2, X } from 'lucide-react';
+import { useState } from 'react';
+import type { Deliverable, DeliverableStatus } from '../../types';
 
 interface DeliverableFormProps {
   deliverable?: Deliverable;
@@ -29,8 +29,8 @@ export function DeliverableForm({ deliverable, onSubmit, onCancel }: Deliverable
     description: deliverable?.description || '',
     status: (deliverable?.status || '未開始') as DeliverableStatus,
     type: (deliverable?.type || 'document') as DeliverableType,
-    plannedDate: deliverable?.plannedDate ? 
-      (deliverable.plannedDate instanceof Date ? deliverable.plannedDate : deliverable.plannedDate.toDate()) : 
+    plannedDate: deliverable?.plannedDate ?
+      (deliverable.plannedDate instanceof Date ? deliverable.plannedDate : deliverable.plannedDate.toDate()) :
       new Date(),
     progress: deliverable?.progress || 0,
     assignedTo: deliverable?.assignedTo || '',
@@ -59,7 +59,7 @@ export function DeliverableForm({ deliverable, onSubmit, onCancel }: Deliverable
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -68,6 +68,7 @@ export function DeliverableForm({ deliverable, onSubmit, onCancel }: Deliverable
     try {
       const deliverableData = {
         title: formData.title.trim(),
+        name: formData.title.trim(),
         description: formData.description.trim() || undefined,
         status: formData.status,
         type: formData.type,

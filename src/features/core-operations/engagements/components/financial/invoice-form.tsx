@@ -16,6 +16,7 @@ import { format } from 'date-fns';
 import { CalendarIcon, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import type { Invoice, InvoiceItem, InvoiceStatus } from '../../types';
+import { formatCurrency } from '../../utils';
 
 interface InvoiceFormProps {
     invoice?: Invoice;
@@ -69,9 +70,9 @@ export function InvoiceForm({ invoice, onSubmit, onCancel }: InvoiceFormProps) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const calculateItemTotal = (item: Omit<InvoiceItem, 'id'>) => {
+    const calculateItemTotal = (item: { quantity: number; unitPrice: number; taxRate?: number }) => {
         const subtotal = item.quantity * item.unitPrice;
-        const tax = subtotal * (item.taxRate / 100);
+        const tax = subtotal * ((item.taxRate || 0) / 100);
         return subtotal + tax;
     };
 

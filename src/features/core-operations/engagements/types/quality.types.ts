@@ -13,12 +13,14 @@ export interface AcceptanceRecord {
   engagementName: string;
   taskId?: string;
   deliverableId?: string;
+  deliverableName?: string;
   submittedQuantity: number;
   applicantId: string;
   applicantName: string;
   reviewerId?: string;
   reviewerName?: string;
   status: AcceptanceStatus;
+  description?: string;
   notes?: string;
   attachments?: Array<{ name: string; url: string }>;
   history?: Array<{
@@ -29,6 +31,8 @@ export interface AcceptanceRecord {
     notes?: string;
   }>;
   submittedAt: Date | string | Timestamp;
+  acceptanceDate?: Date | string | Timestamp;
+  acceptedBy?: string;
   reviewedAt?: Date | string | Timestamp;
   createdBy: string;
   createdAt: Date | Timestamp;
@@ -42,14 +46,17 @@ export type QualityCheckStatus = '待檢查' | '檢查中' | '已通過' | '未�
 export interface QualityCheck {
   id: string;
   title: string;
+  name: string;
   description?: string;
   status: QualityCheckStatus;
   type: 'inspection' | 'review' | 'test' | 'audit' | 'other';
   plannedDate: Date | Timestamp;
+  checkDate?: Date | Timestamp;
   actualDate?: Date | Timestamp;
   completedDate?: Date | Timestamp;
   assignedTo?: string;
   assignedToName?: string;
+  checkedBy?: string;
   criteria: QualityCriteria[];
   findings?: QualityFinding[];
   recommendations?: string[];

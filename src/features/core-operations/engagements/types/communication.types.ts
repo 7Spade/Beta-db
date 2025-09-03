@@ -125,6 +125,8 @@ export interface CreateMeetingInput {
   agenda?: string[];
   participants: string[];
   scheduledDate: Date;
+  actualStartDate?: Date;
+  actualEndDate?: Date;
   duration: number;
   location?: string;
   meetingLink?: string;

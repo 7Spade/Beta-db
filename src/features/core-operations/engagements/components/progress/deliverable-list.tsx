@@ -3,18 +3,17 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Search, SortAsc, SortDesc, Package, FileText, User } from 'lucide-react';
+import { Timestamp } from 'firebase/firestore';
+import { FileText, Package, Plus, Search, SortAsc, SortDesc, User } from 'lucide-react';
+import { useState } from 'react';
+import type { Deliverable, DeliverableStatus } from '../../types';
 import { DeliverableCard } from './deliverable-card';
 import { DeliverableForm } from './deliverable-form';
-import { formatDate } from '../../utils';
-import { Timestamp } from 'firebase/firestore';
-import type { Deliverable, DeliverableStatus, DeliverableType } from '../../types';
 
 interface DeliverableListProps {
   deliverables: Deliverable[];
@@ -42,15 +41,15 @@ export function DeliverableList({
   const filteredAndSortedDeliverables = deliverables
     .filter(deliverable => {
       const matchesSearch = deliverable.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           deliverable.description?.toLowerCase().includes(searchTerm.toLowerCase());
+        deliverable.description?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || deliverable.status === statusFilter;
       const matchesType = typeFilter === 'all' || deliverable.type === typeFilter;
-      
+
       return matchesSearch && matchesStatus && matchesType;
     })
     .sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (sortBy) {
         case 'title':
           aValue = a.title;
@@ -80,7 +79,7 @@ export function DeliverableList({
           bValue = b.createdAt instanceof Date ? b.createdAt.getTime() : b.createdAt instanceof Timestamp ? b.createdAt.toMillis() : new Date(b.createdAt).getTime();
           break;
       }
-      
+
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {

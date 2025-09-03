@@ -9,9 +9,11 @@ export type MilestoneStatus = '未開始' | '進行中' | '已完成' | '已延�
 export interface Milestone {
   id: string;
   title: string;
+  name: string;
   description?: string;
   status: MilestoneStatus;
   plannedDate: Date | Timestamp;
+  dueDate: Date | Timestamp;
   actualDate?: Date | Timestamp;
   progress: number; // 0-100
   dependencies?: string[]; // Milestone IDs
@@ -28,6 +30,7 @@ export type DeliverableStatus = '未開始' | '進行中' | '已完成' | '已�
 export interface Deliverable {
   id: string;
   title: string;
+  name: string;
   description?: string;
   status: DeliverableStatus;
   type: 'document' | 'product' | 'service' | 'report' | 'other';

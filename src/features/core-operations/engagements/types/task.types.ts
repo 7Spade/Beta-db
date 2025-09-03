@@ -13,7 +13,7 @@ export interface Task {
   description?: string;
   status: TaskStatus;
   priority: TaskPriority;
-  lastUpdated: string; // ISO 8601 string
+  lastUpdated: Date | Timestamp;
   subTasks: Task[];
   value: number;
   quantity: number;

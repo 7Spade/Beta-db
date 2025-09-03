@@ -18,13 +18,14 @@ function workItemsToTasks(items: WorkItem[]): Task[] {
     return {
       id: `task-${Date.now()}-${index}`,
       title: item.name,
-      description: item.description || '',
+      description: (item as any).description || '',
       quantity: quantity,
       unitPrice: unitPrice,
       discount: discount,
       value: quantity * unitPrice - discount,
       status: '待處理',
       priority: '中',
+      lastUpdated: new Date(),
       startDate: new Date(),
       endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30天後
       completedQuantity: 0,
@@ -33,7 +34,9 @@ function workItemsToTasks(items: WorkItem[]): Task[] {
       tags: [],
       attachments: [],
       comments: [],
+      createdBy: 'system',
       createdAt: new Date(),
+      updatedBy: 'system',
       updatedAt: new Date(),
     };
   });
@@ -124,6 +127,7 @@ export async function createEngagementFromDocument(
           date: Timestamp.fromDate(now),
           changeSummary: '從文件提取的初始版本',
           changes: [],
+          createdBy: 'system',
           approvedBy: '',
           approvedDate: Timestamp.fromDate(now),
         },
@@ -146,7 +150,7 @@ export async function createEngagementFromDocument(
       auditLog: [
         {
           id: `audit-${Date.now()}`,
-          action: 'created',
+          action: 'create',
           description: '從文件解析創建 Engagement',
           userId: 'system',
           userName: '系統',

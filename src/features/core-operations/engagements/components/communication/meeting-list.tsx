@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar, Plus, Search } from 'lucide-react';
 import { useState } from 'react';
 import type { Meeting, MeetingStatus, MeetingType } from '../../types/communication.types';
+import { convertTimestamp } from '../../utils';
 import { MeetingCard } from './meeting-card';
 import { MeetingForm } from './meeting-form';
 
@@ -60,10 +61,10 @@ export function MeetingList({
                 case 'date':
                     aValue = a.scheduledDate instanceof Date ? a.scheduledDate.getTime() :
                         a.scheduledDate && a.scheduledDate.toMillis ? a.scheduledDate.toMillis() :
-                            new Date(a.scheduledDate).getTime();
+                            convertTimestamp(a.scheduledDate).getTime();
                     bValue = b.scheduledDate instanceof Date ? b.scheduledDate.getTime() :
                         b.scheduledDate && b.scheduledDate.toMillis ? b.scheduledDate.toMillis() :
-                            new Date(b.scheduledDate).getTime();
+                            convertTimestamp(b.scheduledDate).getTime();
                     break;
                 case 'type':
                     aValue = a.type;

@@ -66,7 +66,7 @@ export function MeetingForm({ meeting, onSave, onCancel }: MeetingFormProps) {
         if (agendaInput.trim()) {
             setFormData(prev => ({
                 ...prev,
-                agenda: [...prev.agenda, agendaInput.trim()]
+                agenda: [...(prev.agenda || []), agendaInput.trim()]
             }));
             setAgendaInput('');
         }
@@ -75,7 +75,7 @@ export function MeetingForm({ meeting, onSave, onCancel }: MeetingFormProps) {
     const handleRemoveAgendaItem = (index: number) => {
         setFormData(prev => ({
             ...prev,
-            agenda: prev.agenda.filter((_, i) => i !== index)
+            agenda: (prev.agenda || []).filter((_, i) => i !== index)
         }));
     };
 
@@ -268,9 +268,9 @@ export function MeetingForm({ meeting, onSave, onCancel }: MeetingFormProps) {
                                 <Plus className="h-4 w-4" />
                             </Button>
                         </div>
-                        {formData.agenda.length > 0 && (
+                        {(formData.agenda || []).length > 0 && (
                             <div className="space-y-1">
-                                {formData.agenda.map((item, index) => (
+                                {(formData.agenda || []).map((item, index) => (
                                     <div key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded text-sm">
                                         <span className="flex-1">{item}</span>
                                         <Button

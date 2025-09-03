@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FileText, Plus, Search } from 'lucide-react';
 import { useState } from 'react';
 import type { Communication, CommunicationDirection, CommunicationType } from '../../types/communication.types';
+import { convertTimestamp } from '../../utils';
 import { CommunicationCard } from './communication-card';
 import { CommunicationForm } from './communication-form';
 
@@ -60,10 +61,10 @@ export function CommunicationList({
                 case 'date':
                     aValue = a.date instanceof Date ? a.date.getTime() :
                         a.date && a.date.toMillis ? a.date.toMillis() :
-                            new Date(a.date).getTime();
+                            convertTimestamp(a.date).getTime();
                     bValue = b.date instanceof Date ? b.date.getTime() :
                         b.date && b.date.toMillis ? b.date.toMillis() :
-                            new Date(b.date).getTime();
+                            convertTimestamp(b.date).getTime();
                     break;
                 case 'type':
                     aValue = a.type;

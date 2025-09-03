@@ -40,6 +40,7 @@ export interface Attachment {
   mimeType: string;
   category?: string;
   uploadedBy: string;
+  createdBy: string;
   uploadedAt: Date | Timestamp;
 }
 

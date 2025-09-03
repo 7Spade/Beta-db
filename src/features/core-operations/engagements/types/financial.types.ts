@@ -11,6 +11,8 @@ export interface Payment {
   amount: number;
   status: PaymentStatus;
   requestDate: Date | Timestamp;
+  paymentDate?: Date | Timestamp;
+  dueDate?: Date | Timestamp;
   paidDate?: Date | Timestamp;
   description?: string;
   paymentMethod?: string;

@@ -12,9 +12,6 @@ export * from './services';
 // Actions
 export * from './actions';
 
-// 組件
-export * from './components';
-
 // 視圖
 export * from './views';
 
@@ -29,3 +26,12 @@ export * from './utils';
 
 // 常數
 export * from './constants';
+
+// 組件（明確導出以避免衝突）
+export {
+  AddSubtaskForm, AttachmentList, CommunicationList, CreateEngagementForm, DashboardCharts, DocumentList, EditEngagementForm,
+  EngagementCard, EngagementReport, EngagementSummaryCard, FinancialReport, FinancialSummary, InvoiceList, MeetingList, PaymentList, ProgressReport,
+  QualityReport, SubtaskActions, SubtaskList, TaskCard,
+  TaskForm, TaskList
+} from './components';
+

@@ -149,6 +149,10 @@ export async function updateMeetingAction(
             scheduledDate: data.scheduledDate instanceof Date ? Timestamp.fromDate(data.scheduledDate) : data.scheduledDate,
             actualStartDate: data.actualStartDate instanceof Date ? Timestamp.fromDate(data.actualStartDate) : data.actualStartDate,
             actualEndDate: data.actualEndDate instanceof Date ? Timestamp.fromDate(data.actualEndDate) : data.actualEndDate,
+            actionItems: data.actionItems?.map(item => ({
+                ...item,
+                id: item.id || `action-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+            })),
             updatedBy: 'current-user',
             updatedAt: Timestamp.now(),
         };

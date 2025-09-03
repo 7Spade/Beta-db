@@ -3,27 +3,26 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Edit, 
-  Trash2, 
-  Calendar, 
-  User, 
-  Clock,
-  CheckCircle,
-  AlertTriangle,
-  X,
-  Package,
-  FileText,
-  Download
-} from 'lucide-react';
-import { formatDate } from '../../utils';
 import { Timestamp } from 'firebase/firestore';
-import type { Deliverable, DeliverableStatus, DeliverableType } from '../../types';
+import {
+  Calendar,
+  CheckCircle,
+  Clock,
+  Download,
+  Edit,
+  FileText,
+  Package,
+  Trash2,
+  User,
+  X
+} from 'lucide-react';
+import { useState } from 'react';
+import type { Deliverable, DeliverableStatus } from '../../types';
+import { formatDate } from '../../utils';
 
 interface DeliverableCardProps {
   deliverable: Deliverable;
@@ -37,7 +36,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
 
   const handleStatusChange = async (newStatus: DeliverableStatus) => {
     try {
-      await onUpdate(deliverable.id, { 
+      await onUpdate(deliverable.id, {
         status: newStatus,
         updatedAt: new Date(),
         ...(newStatus === '已完成' && { actualDate: new Date() }),
@@ -131,9 +130,9 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
 
   const isOverdue = () => {
     const now = new Date();
-    const plannedDate = deliverable.plannedDate instanceof Date ? deliverable.plannedDate : 
-                       deliverable.plannedDate instanceof Timestamp ? deliverable.plannedDate.toDate() : 
-                       new Date(deliverable.plannedDate);
+    const plannedDate = deliverable.plannedDate instanceof Date ? deliverable.plannedDate :
+      deliverable.plannedDate instanceof Timestamp ? deliverable.plannedDate.toDate() :
+        new Date(deliverable.plannedDate);
     return now > plannedDate && deliverable.status !== '已驗收' && deliverable.status !== '已完成';
   };
 
@@ -167,7 +166,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* 進度條 */}
         <div className="space-y-2">
@@ -177,7 +176,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
           </div>
           <div className="relative">
             <Progress value={deliverable.progress} className="h-3" />
-            <div 
+            <div
               className={`absolute top-0 left-0 h-full transition-all duration-300 ease-in-out ${getProgressColor(deliverable.progress)}`}
               style={{ width: `${Math.min(deliverable.progress, 100)}%` }}
             />
@@ -193,7 +192,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
               <div className="font-medium">{formatDate(deliverable.plannedDate)}</div>
             </div>
           </div>
-          
+
           {deliverable.actualDate && (
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-muted-foreground" />
@@ -213,7 +212,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
               </div>
             </div>
           )}
-          
+
           {deliverable.assignedTo && (
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-muted-foreground" />
@@ -223,7 +222,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
               </div>
             </div>
           )}
-          
+
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
             <div>
@@ -292,7 +291,7 @@ export function DeliverableCard({ deliverable, onUpdate, onDelete }: Deliverable
               {isDeleting ? '刪除中...' : '刪除'}
             </Button>
           </div>
-          
+
           {/* 快速狀態切換 */}
           <div className="flex gap-1">
             {deliverable.status !== '已完成' && deliverable.status !== '已驗收' && (

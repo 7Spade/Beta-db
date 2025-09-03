@@ -3,18 +3,18 @@
  */
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, X } from 'lucide-react';
-import { format } from 'date-fns';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@root/src/shared/utils';
+import { format } from 'date-fns';
+import { CalendarIcon, X } from 'lucide-react';
+import { useState } from 'react';
 import type { Milestone, MilestoneStatus } from '../../types';
 
 interface MilestoneFormProps {
@@ -28,8 +28,8 @@ export function MilestoneForm({ milestone, onSubmit, onCancel }: MilestoneFormPr
     title: milestone?.title || '',
     description: milestone?.description || '',
     status: (milestone?.status || '未開始') as MilestoneStatus,
-    plannedDate: milestone?.plannedDate ? 
-      (milestone.plannedDate instanceof Date ? milestone.plannedDate : milestone.plannedDate.toDate()) : 
+    plannedDate: milestone?.plannedDate ?
+      (milestone.plannedDate instanceof Date ? milestone.plannedDate : milestone.plannedDate.toDate()) :
       new Date(),
     progress: milestone?.progress || 0,
     dependencies: milestone?.dependencies?.join(', ') || '',
@@ -56,7 +56,7 @@ export function MilestoneForm({ milestone, onSubmit, onCancel }: MilestoneFormPr
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -65,9 +65,11 @@ export function MilestoneForm({ milestone, onSubmit, onCancel }: MilestoneFormPr
     try {
       const milestoneData = {
         title: formData.title.trim(),
+        name: formData.title.trim(),
         description: formData.description.trim() || undefined,
         status: formData.status,
         plannedDate: formData.plannedDate,
+        dueDate: formData.plannedDate,
         actualDate: milestone?.actualDate,
         progress: formData.progress,
         dependencies: formData.dependencies ? formData.dependencies.split(',').map(id => id.trim()).filter(Boolean) : [],
