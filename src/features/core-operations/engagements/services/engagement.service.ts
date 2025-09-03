@@ -19,9 +19,11 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import type {
+  AcceptanceRecord,
   Attachment,
   Communication,
   CreateEngagementInput,
+  Deliverable,
   Document,
   Engagement,
   EngagementPhase,
@@ -41,31 +43,31 @@ export class EngagementService {
     if (!input.name || input.name.trim().length === 0) {
       return { isValid: false, error: '專案名稱不能為空' };
     }
-    
+
     if (!input.contractor || input.contractor.trim().length === 0) {
       return { isValid: false, error: '承包商不能為空' };
     }
-    
+
     if (!input.client || input.client.trim().length === 0) {
       return { isValid: false, error: '客戶不能為空' };
     }
-    
+
     if (!input.startDate || !input.endDate) {
       return { isValid: false, error: '開始日期和結束日期不能為空' };
     }
-    
+
     if (input.startDate >= input.endDate) {
       return { isValid: false, error: '開始日期必須早於結束日期' };
     }
-    
+
     if (input.totalValue <= 0) {
       return { isValid: false, error: '總價值必須大於 0' };
     }
-    
+
     if (!input.currency || input.currency.trim().length === 0) {
       return { isValid: false, error: '貨幣不能為空' };
     }
-    
+
     return { isValid: true };
   }
 
@@ -354,15 +356,15 @@ export class EngagementService {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const { runTransaction } = await import('firebase/firestore');
-      
+
       const result = await runTransaction(firestore, async (transaction) => {
         const docRef = doc(firestore, this.collectionName, id);
         const docSnap = await transaction.get(docRef);
-        
+
         if (!docSnap.exists()) {
           throw new Error('Engagement 不存在');
         }
-        
+
         const currentData = docSnap.data();
         const updateData = {
           ...input,
@@ -370,7 +372,7 @@ export class EngagementService {
           updatedBy: 'system', // TODO: 從認證上下文獲取
           updatedAt: Timestamp.now(),
         };
-        
+
         // 處理日期轉換
         if (input.startDate) {
           (updateData as any).startDate = Timestamp.fromDate(input.startDate);
@@ -384,12 +386,12 @@ export class EngagementService {
         if (input.actualEndDate) {
           (updateData as any).actualEndDate = Timestamp.fromDate(input.actualEndDate);
         }
-        
+
         transaction.update(docRef, updateData);
-        
+
         return { success: true };
       });
-      
+
       return result;
     } catch (error) {
       console.error('事務更新 Engagement 失敗:', error);
@@ -764,6 +766,170 @@ export class EngagementService {
       console.error('刪除附件失敗:', error);
       return { success: false, error: '刪除附件失敗' };
     }
+  }
+
+  // ==================== 驗收記錄 (Acceptance) 方法 ====================
+
+  /**
+   * 添加驗收記錄
+   */
+  async addAcceptanceRecord(
+    engagementId: string,
+    record: Omit<AcceptanceRecord, 'id'>
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const newRecord: AcceptanceRecord = {
+        ...record,
+        id: `accept_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        engagementId,
+        engagementName: engagement.engagement.name,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        createdBy: (record as any).createdBy || 'system',
+        updatedBy: (record as any).updatedBy || 'system',
+      } as AcceptanceRecord;
+
+      const updatedRecords = [...(engagement.engagement.acceptanceRecords || []), newRecord];
+
+      await updateDoc(docRef, {
+        acceptanceRecords: updatedRecords,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('添加驗收記錄失敗:', error);
+      return { success: false, error: '添加驗收記錄失敗' };
+    }
+  }
+
+  /**
+   * 更新驗收記錄（當狀態為已批准時，更新對應任務/子任務或交付物）
+   */
+  async updateAcceptanceRecord(
+    engagementId: string,
+    recordId: string,
+    updates: Partial<AcceptanceRecord>
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagementResult = await this.getEngagement(engagementId);
+
+      if (!engagementResult.success || !engagementResult.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const engagement = engagementResult.engagement;
+      const now = Timestamp.now();
+
+      const updatedRecords = (engagement.acceptanceRecords || []).map((r) =>
+        r.id === recordId
+          ? { ...r, ...updates, updatedAt: now, updatedBy: 'system' }
+          : r
+      );
+
+      const latest = updatedRecords.find((r) => r.id === recordId);
+      const approved = (updates.status || latest?.status) === '已批准';
+
+      const additional: Record<string, any> = { acceptanceRecords: updatedRecords };
+
+      if (approved && latest) {
+        // 標記任務/子任務完成
+        if ((latest as any).taskId) {
+          const { updatedTasks } = this.completeTaskById(engagement.tasks || [], (latest as any).taskId);
+          additional.tasks = updatedTasks;
+        }
+        // 標記交付物已驗收
+        if ((latest as any).deliverableId) {
+          const updatedDeliverables: Deliverable[] = (engagement.deliverables || []).map((d) =>
+            d.id === (latest as any).deliverableId
+              ? { ...d, status: '已驗收', acceptedDate: now, updatedAt: now, updatedBy: 'system' }
+              : d
+          );
+          additional.deliverables = updatedDeliverables;
+        }
+      }
+
+      await updateDoc(docRef, {
+        ...additional,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('更新驗收記錄失敗:', error);
+      return { success: false, error: '更新驗收記錄失敗' };
+    }
+  }
+
+  /**
+   * 刪除驗收記錄
+   */
+  async deleteAcceptanceRecord(
+    engagementId: string,
+    recordId: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedRecords = (engagement.engagement.acceptanceRecords || []).filter((r) => r.id !== recordId);
+
+      await updateDoc(docRef, {
+        acceptanceRecords: updatedRecords,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('刪除驗收記錄失敗:', error);
+      return { success: false, error: '刪除驗收記錄失敗' };
+    }
+  }
+
+  /**
+   * 遞迴完成任務/子任務
+   */
+  private completeTaskById(tasks: Engagement['tasks'], taskId: string): { updatedTasks: Engagement['tasks']; found: boolean } {
+    let found = false;
+    const now = Timestamp.now();
+    const updatedTasks = (tasks || []).map((t) => {
+      if (t.id === taskId) {
+        found = true;
+        return {
+          ...t,
+          status: '已完成' as const,
+          completedQuantity: t.quantity,
+          completedDate: now,
+          lastUpdated: now,
+          updatedAt: now,
+          updatedBy: 'system',
+        };
+      }
+      if (t.subTasks && t.subTasks.length > 0) {
+        const { updatedTasks: newSubs, found: subFound } = this.completeTaskById(t.subTasks, taskId);
+        if (subFound) {
+          found = true;
+          return { ...t, subTasks: newSubs, lastUpdated: now, updatedAt: now, updatedBy: 'system' };
+        }
+      }
+      return t;
+    });
+    return { updatedTasks, found };
   }
 }
 
