@@ -24,3 +24,6 @@ export * from './risk';
 // 溝通管理組件
 export * from './communication';
 
+// 文件管理組件
+export * from './documents';
+

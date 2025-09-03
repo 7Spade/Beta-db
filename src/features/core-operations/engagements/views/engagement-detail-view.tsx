@@ -16,8 +16,17 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { addTaskAction, deleteTaskAction, updateTaskAction } from '../actions/task.actions';
+import { 
+  addDocumentAction, 
+  updateDocumentAction, 
+  deleteDocumentAction,
+  addAttachmentAction,
+  deleteAttachmentAction
+} from '../actions/document.actions';
 import { EngagementSummaryCard } from '../components/cards';
 import { CommunicationList, MeetingList } from '../components/communication';
+import { DocumentList, AttachmentList } from '../components/documents';
+import type { Document as EngagementDocument, Attachment as EngagementAttachment } from '../types/document.types';
 import { FinancialSummary, InvoiceList, PaymentList } from '../components/financial';
 import { EditEngagementForm } from '../components/forms';
 import { AcceptanceRecordList, QualityCheckList } from '../components/quality';
@@ -149,6 +158,47 @@ export function EngagementDetailView({
       await refresh();
     } catch (error) {
       console.error('刪除會議失敗:', error);
+    }
+  };
+
+  // 文件管理處理函數
+  const handleDocumentCreate = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('創建文件失敗:', error);
+    }
+  };
+
+  const handleDocumentUpdate = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('更新文件失敗:', error);
+    }
+  };
+
+  const handleDocumentDelete = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('刪除文件失敗:', error);
+    }
+  };
+
+  const handleAttachmentCreate = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('創建附件失敗:', error);
+    }
+  };
+
+  const handleAttachmentDelete = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('刪除附件失敗:', error);
     }
   };
 
@@ -394,34 +444,25 @@ export function EngagementDetailView({
         </TabsContent>
 
         <TabsContent value="documents" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <FileText className="h-5 w-5 mr-2" />
-                文件管理
-              </CardTitle>
-              <CardDescription>
-                管理專案相關的文件和附件
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {engagement.documents?.length || 0}
-                  </div>
-                  <div className="text-sm text-muted-foreground">文件</div>
-                </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">
-                    {engagement.attachments?.length || 0}
-                  </div>
-                  <div className="text-sm text-muted-foreground">附件</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <DocumentList
+              documents={engagement.documents as unknown as EngagementDocument[]}
+              onDocumentCreate={handleDocumentCreate}
+              onDocumentUpdate={handleDocumentUpdate}
+              onDocumentDelete={handleDocumentDelete}
+              isLoading={isLoading}
+            />
+
+            <AttachmentList
+              attachments={engagement.attachments as unknown as EngagementAttachment[]}
+              onAttachmentCreate={handleAttachmentCreate}
+              onAttachmentDelete={handleAttachmentDelete}
+              isLoading={isLoading}
+            />
+          </div>
         </TabsContent>
+
+
 
         <TabsContent value="risks" className="space-y-4">
           {/* 風險矩陣 */}
