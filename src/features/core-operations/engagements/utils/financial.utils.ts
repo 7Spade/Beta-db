@@ -1,14 +1,27 @@
 /**
  * @fileoverview 財務相關的工具函數
  */
-import type { 
-  Payment, 
-  Receipt, 
-  Invoice, 
-  PaymentStatus, 
-  ReceiptStatus, 
-  InvoiceStatus 
+import type {
+  Invoice,
+  InvoiceStatus,
+  Payment,
+  PaymentStatus,
+  Receipt,
+  ReceiptStatus
 } from '../types';
+
+/**
+ * 安全地將 Date | Timestamp 轉換為 Date
+ */
+function toDate(date: Date | any): Date {
+  if (date instanceof Date) {
+    return date;
+  }
+  if (date && typeof date.toDate === 'function') {
+    return date.toDate();
+  }
+  return new Date(date);
+}
 
 /**
  * 格式化貨幣 (財務專用)
@@ -155,10 +168,10 @@ export function isPaymentOverdue(payment: Payment): boolean {
     return false;
   }
 
-  const requestDate = payment.requestDate.toDate ? payment.requestDate.toDate() : new Date(payment.requestDate);
+  const requestDate = toDate(payment.requestDate);
   const today = new Date();
   const daysDiff = Math.ceil((today.getTime() - requestDate.getTime()) / (1000 * 60 * 60 * 24));
-  
+
   return daysDiff > 30; // 假設30天為逾期標準
 }
 
@@ -170,10 +183,10 @@ export function isReceiptOverdue(receipt: Receipt): boolean {
     return false;
   }
 
-  const requestDate = receipt.requestDate.toDate ? receipt.requestDate.toDate() : new Date(receipt.requestDate);
+  const requestDate = toDate(receipt.requestDate);
   const today = new Date();
   const daysDiff = Math.ceil((today.getTime() - requestDate.getTime()) / (1000 * 60 * 60 * 24));
-  
+
   return daysDiff > 30; // 假設30天為逾期標準
 }
 
@@ -185,9 +198,9 @@ export function isInvoiceOverdue(invoice: Invoice): boolean {
     return false;
   }
 
-  const dueDate = invoice.dueDate.toDate ? invoice.dueDate.toDate() : new Date(invoice.dueDate);
+  const dueDate = toDate(invoice.dueDate);
   const today = new Date();
-  
+
   return dueDate < today;
 }
 
@@ -217,7 +230,7 @@ export function calculateFinancialHealthScore(
 
   // 綜合分數
   const overallScore = (paymentScore + receiptScore + invoiceScore) / 3 - overduePenalty;
-  
+
   return Math.max(0, Math.min(100, Math.round(overallScore)));
 }
 

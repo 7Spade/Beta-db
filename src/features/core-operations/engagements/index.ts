@@ -12,8 +12,13 @@ export * from './services';
 // Actions
 export * from './actions';
 
-// 組件
-export * from './components';
+// 組件 (避免重複導出)
+export {
+  AddSubtaskForm, AttachmentList, CommunicationList, CreateEngagementForm, DashboardCharts, DocumentList, EditEngagementForm,
+  EngagementCard, EngagementReport, EngagementSummaryCard, FinancialReport, FinancialSummary, InvoiceList, MeetingList, PaymentList, ProgressReport,
+  QualityReport, SubtaskActions, SubtaskList, TaskCard,
+  TaskForm, TaskList
+} from './components';
 
 // 視圖
 export * from './views';
@@ -32,20 +37,13 @@ export * from './constants';
 
 // 主要類型重新導出
 export type {
-  Engagement,
-  EngagementSummary,
-  EngagementStatus,
-  EngagementPhase,
-  CreateEngagementInput,
-  UpdateEngagementInput,
+  CreateEngagementInput, Engagement, EngagementPhase, EngagementStatus, EngagementSummary, UpdateEngagementInput
 } from './types';
 
 // 主要服務重新導出
 export {
-  engagementService,
-  financialService,
-  documentService,
-  notificationService,
+  documentService, engagementService,
+  financialService, notificationService
 } from './services';
 
 // 主要組件重新導出
@@ -53,27 +51,22 @@ export {
   CreateEngagementForm,
   EditEngagementForm,
   EngagementCard,
-  EngagementSummaryCard,
+  EngagementSummaryCard
 } from './components';
 
 // 主要視圖重新導出
 export {
-  EngagementListView,
-  EngagementDetailView,
-  EngagementDashboard,
+  EngagementDashboard, EngagementDetailView, EngagementListView
 } from './views';
 
 // 主要 Hooks 重新導出
 export {
-  useEngagements,
-  useEngagement,
   useCreateEngagementForm,
-  useEditEngagementForm,
-  useEngagementActions,
+  useEditEngagementForm, useEngagement, useEngagementActions, useEngagements
 } from './hooks';
 
 // 主要 Providers 重新導出
 export {
   EngagementProvider,
-  useEngagementContext,
+  useEngagementContext
 } from './providers';

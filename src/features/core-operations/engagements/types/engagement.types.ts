@@ -4,21 +4,31 @@
  */
 import type { Timestamp } from 'firebase/firestore';
 
+// 導入其他類型
+import type { ChangeOrder } from './change.types';
+import type { Communication, Meeting } from './communication.types';
+import type { Attachment, AuditLogEntry, Document } from './document.types';
+import type { Invoice, Payment, Receipt } from './financial.types';
+import type { Deliverable, EngagementVersion, Milestone } from './progress.types';
+import type { AcceptanceRecord, QualityCheck } from './quality.types';
+import type { Issue, Risk } from './risk.types';
+import type { Task } from './task.types';
+
 // 統一的狀態類型
-export type EngagementStatus = 
-  | '草稿' 
-  | '已簽約' 
-  | '進行中' 
-  | '暫停' 
-  | '已完成' 
-  | '已終止' 
+export type EngagementStatus =
+  | '草稿'
+  | '已簽約'
+  | '進行中'
+  | '暫停'
+  | '已完成'
+  | '已終止'
   | '已取消';
 
-export type EngagementPhase = 
-  | '規劃' 
-  | '執行' 
-  | '監控' 
-  | '收尾' 
+export type EngagementPhase =
+  | '規劃'
+  | '執行'
+  | '監控'
+  | '收尾'
   | '維護';
 
 // 主要的 Engagement 介面
@@ -28,61 +38,61 @@ export interface Engagement {
   customId?: string;
   name: string;
   description: string;
-  
+
   // 參與方資訊
   contractor: string;
   client: string;
   clientRepresentative?: string;
-  
+
   // 時間管理
   startDate: Date | Timestamp;
   endDate: Date | Timestamp;
   actualStartDate?: Date | Timestamp;
   actualEndDate?: Date | Timestamp;
-  
+
   // 財務資訊
   totalValue: number;
   paidAmount: number;
   pendingAmount: number;
   currency: string;
-  
+
   // 狀態管理
   status: EngagementStatus;
   phase: EngagementPhase;
-  
+
   // 工作範疇
   scope: string;
   tasks: Task[];
-  
+
   // 財務管理
   payments: Payment[];
   receipts: Receipt[];
   invoices: Invoice[];
-  
+
   // 變更管理
   changeOrders: ChangeOrder[];
   versions: EngagementVersion[];
-  
+
   // 進度管理
   milestones: Milestone[];
   deliverables: Deliverable[];
-  
+
   // 品質管理
   acceptanceRecords: AcceptanceRecord[];
   qualityChecks: QualityCheck[];
-  
+
   // 風險管理
   risks: Risk[];
   issues: Issue[];
-  
+
   // 溝通管理
   communications: Communication[];
   meetings: Meeting[];
-  
+
   // 文件管理
   documents: Document[];
   attachments: Attachment[];
-  
+
   // 審計追蹤
   auditLog: AuditLogEntry[];
   createdBy: string;
@@ -139,12 +149,12 @@ export interface UpdateEngagementInput {
 }
 
 // 導入其他相關類型
-export type { Task } from './task.types';
-export type { Payment, Receipt, Invoice } from './financial.types';
-export type { ChangeOrder, EngagementVersion } from './change.types';
-export type { Milestone, Deliverable } from './progress.types';
-export type { AcceptanceRecord, QualityCheck } from './quality.types';
-export type { Risk, Issue } from './risk.types';
-export type { Communication, Meeting } from './communication.types';
-export type { Document, Attachment } from './document.types';
 export type { AuditLogEntry } from './audit.types';
+export type { ChangeOrder, EngagementVersion } from './change.types';
+export type { Communication, Meeting } from './communication.types';
+export type { Attachment, Document } from './document.types';
+export type { Invoice, Payment, Receipt } from './financial.types';
+export type { Deliverable, Milestone } from './progress.types';
+export type { AcceptanceRecord, QualityCheck } from './quality.types';
+export type { Issue, Risk } from './risk.types';
+export type { Task } from './task.types';
