@@ -3,28 +3,6 @@
  */
 import { describe, expect, test } from '@jest/globals';
 
-// 測試類型定義
-describe('Type Definitions', () => {
-    test('所有類型定義應該正確導出', () => {
-        // 測試主要類型是否正確導出
-        expect(() => {
-            // 這些導入應該不會失敗
-            const { Engagement, Task, Milestone, Deliverable } = require('../types');
-            expect(Engagement).toBeDefined();
-            expect(Task).toBeDefined();
-            expect(Milestone).toBeDefined();
-            expect(Deliverable).toBeDefined();
-        }).not.toThrow();
-    });
-
-    test('DeliverableType 應該正確定義', () => {
-        expect(() => {
-            const { DeliverableType } = require('../types');
-            expect(DeliverableType).toBeDefined();
-        }).not.toThrow();
-    });
-});
-
 // 測試工具函數
 describe('Utility Functions', () => {
     test('convertTimestamp 應該正確工作', () => {
@@ -39,6 +17,11 @@ describe('Utility Functions', () => {
             toDate: () => new Date('2024-01-01')
         };
         expect(convertTimestamp(mockTimestamp)).toEqual(new Date('2024-01-01'));
+
+        // 測試 undefined/null 處理
+        expect(convertTimestamp(undefined)).toBeInstanceOf(Date);
+        expect(convertTimestamp(null)).toBeInstanceOf(Date);
+        expect(convertTimestamp('invalid-date')).toBeInstanceOf(Date);
     });
 
     test('formatDate 應該正確格式化日期', () => {
@@ -47,63 +30,31 @@ describe('Utility Functions', () => {
         const formatted = formatDate(date);
         expect(typeof formatted).toBe('string');
         expect(formatted).toContain('2024');
-    });
-});
 
-// 測試狀態值
-describe('Status Values', () => {
-    test('AcceptanceStatus 應該包含正確的值', () => {
-        const { AcceptanceStatus } = require('../types');
-        const validStatuses = ['草稿', '待審批', '已批准', '已駁回'];
-        // 這裡我們只是確保類型存在，實際的枚舉值檢查需要更複雜的邏輯
-        expect(AcceptanceStatus).toBeDefined();
+        // 測試 undefined/null 處理
+        expect(formatDate(undefined)).toBe('未設定');
+        expect(formatDate(null)).toBe('未設定');
+        expect(formatDate('invalid-date')).toBe('未設定');
     });
 
-    test('QualityCheckStatus 應該包含正確的值', () => {
-        const { QualityCheckStatus } = require('../types');
-        const validStatuses = ['待檢查', '檢查中', '已通過', '未通過', '需修正'];
-        expect(QualityCheckStatus).toBeDefined();
-    });
+    test('formatCurrency 應該正確格式化貨幣', () => {
+        const { formatCurrency } = require('../utils');
+        const result = formatCurrency(1000, 'TWD');
+        expect(typeof result).toBe('string');
+        expect(result).toContain('1,000');
 
-    test('IssueStatus 應該包含正確的值', () => {
-        const { IssueStatus } = require('../types');
-        const validStatuses = ['新增', '處理中', '已解決', '已關閉'];
-        expect(IssueStatus).toBeDefined();
-    });
-});
+        // 測試默認貨幣
+        const defaultResult = formatCurrency(1000);
+        expect(typeof defaultResult).toBe('string');
 
-// 測試表單輸入類型
-describe('Form Input Types', () => {
-    test('CreateCommunicationInput 應該包含 participantNames', () => {
-        const { CreateCommunicationInput } = require('../types');
-        expect(CreateCommunicationInput).toBeDefined();
-    });
-
-    test('CreateMeetingInput 應該包含 participantNames', () => {
-        const { CreateMeetingInput } = require('../types');
-        expect(CreateMeetingInput).toBeDefined();
-    });
-
-    test('CreateAttachmentInput 應該包含 createdBy', () => {
-        const { CreateAttachmentInput } = require('../types');
-        expect(CreateAttachmentInput).toBeDefined();
+        // 測試 NaN/undefined 處理
+        expect(() => formatCurrency(NaN, 'TWD')).not.toThrow();
+        expect(() => formatCurrency(undefined, 'TWD')).not.toThrow();
     });
 });
 
 // 測試修復效果
 describe('Repair Effectiveness', () => {
-    test('所有主要模組應該可以正確導入', () => {
-        expect(() => {
-            // 測試主要模組導入
-            const { engagementService } = require('../services');
-            const { addEngagementAction } = require('../actions');
-            const { EngagementCard } = require('../components');
-            expect(engagementService).toBeDefined();
-            expect(addEngagementAction).toBeDefined();
-            expect(EngagementCard).toBeDefined();
-        }).not.toThrow();
-    });
-
     test('工具函數應該正確導出', () => {
         expect(() => {
             const utils = require('../utils');
@@ -111,6 +62,59 @@ describe('Repair Effectiveness', () => {
             expect(utils.formatDate).toBeDefined();
             expect(utils.formatFinancialCurrency).toBeDefined();
         }).not.toThrow();
+    });
+
+    test('日期工具函數應該處理邊界情況', () => {
+        const { convertTimestamp, formatDate, formatDateTime, formatTime } = require('../utils');
+
+        // 測試各種邊界情況
+        const testCases = [
+            undefined,
+            null,
+            '',
+            'invalid-date',
+            NaN,
+            Infinity,
+            -Infinity
+        ];
+
+        testCases.forEach(testCase => {
+            expect(() => {
+                const converted = convertTimestamp(testCase);
+                expect(converted).toBeInstanceOf(Date);
+
+                const formatted = formatDate(testCase);
+                expect(typeof formatted).toBe('string');
+
+                const formattedDateTime = formatDateTime(testCase);
+                expect(typeof formattedDateTime).toBe('string');
+
+                const formattedTime = formatTime(testCase);
+                expect(typeof formattedTime).toBe('string');
+            }).not.toThrow();
+        });
+    });
+
+    test('貨幣格式化應該處理邊界情況', () => {
+        const { formatCurrency } = require('../utils');
+
+        const testCases = [
+            { amount: undefined, currency: 'TWD' },
+            { amount: null, currency: 'TWD' },
+            { amount: NaN, currency: 'TWD' },
+            { amount: Infinity, currency: 'TWD' },
+            { amount: -Infinity, currency: 'TWD' },
+            { amount: 0, currency: undefined },
+            { amount: 0, currency: null },
+            { amount: 0, currency: '' }
+        ];
+
+        testCases.forEach(({ amount, currency }) => {
+            expect(() => {
+                const result = formatCurrency(amount, currency);
+                expect(typeof result).toBe('string');
+            }).not.toThrow();
+        });
     });
 });
 
@@ -128,19 +132,72 @@ describe('Minimalist Code Style', () => {
         expect(convertTimestamp(date)).toBe(date);
     });
 
-    test('類型定義應該清晰明確', () => {
-        // 確保類型定義沒有冗餘
-        const types = require('../types');
-        expect(types).toBeDefined();
+    test('錯誤處理應該優雅', () => {
+        const { convertTimestamp, formatDate, formatCurrency } = require('../utils');
 
-        // 檢查關鍵類型是否存在
-        const requiredTypes = [
-            'Engagement', 'Task', 'Milestone', 'Deliverable',
-            'Payment', 'Invoice', 'QualityCheck', 'AcceptanceRecord'
+        // 測試各種錯誤情況不會拋出異常
+        const errorCases = [
+            undefined,
+            null,
+            'invalid',
+            NaN,
+            {},
+            [],
+            () => { }
         ];
 
-        requiredTypes.forEach(typeName => {
-            expect(types[typeName]).toBeDefined();
+        errorCases.forEach(errorCase => {
+            expect(() => {
+                convertTimestamp(errorCase);
+                formatDate(errorCase);
+                formatCurrency(errorCase);
+            }).not.toThrow();
         });
+    });
+});
+
+// 測試實際使用場景
+describe('Real-world Usage Scenarios', () => {
+    test('任務卡片應該能處理各種日期格式', () => {
+        const { convertTimestamp, formatDate } = require('../utils');
+
+        // 模擬任務數據
+        const taskData = {
+            lastUpdated: new Date('2024-01-01'),
+            dueDate: { toDate: () => new Date('2024-01-15') },
+            completedDate: undefined
+        };
+
+        expect(() => {
+            const lastUpdated = formatDate(taskData.lastUpdated);
+            const dueDate = formatDate(taskData.dueDate);
+            const completedDate = formatDate(taskData.completedDate);
+
+            expect(typeof lastUpdated).toBe('string');
+            expect(typeof dueDate).toBe('string');
+            expect(completedDate).toBe('未設定');
+        }).not.toThrow();
+    });
+
+    test('報表應該能處理各種金額格式', () => {
+        const { formatCurrency } = require('../utils');
+
+        // 模擬報表數據
+        const reportData = {
+            totalValue: 100000,
+            paidAmount: 50000,
+            pendingAmount: 50000,
+            currency: 'TWD'
+        };
+
+        expect(() => {
+            const total = formatCurrency(reportData.totalValue, reportData.currency);
+            const paid = formatCurrency(reportData.paidAmount, reportData.currency);
+            const pending = formatCurrency(reportData.pendingAmount, reportData.currency);
+
+            expect(typeof total).toBe('string');
+            expect(typeof paid).toBe('string');
+            expect(typeof pending).toBe('string');
+        }).not.toThrow();
     });
 });

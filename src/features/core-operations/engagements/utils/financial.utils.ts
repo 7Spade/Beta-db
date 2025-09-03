@@ -15,20 +15,38 @@ import { convertTimestamp } from './date.utils';
  * 格式化貨幣
  */
 export function formatCurrency(amount: number, currency: string = 'TWD'): string {
-  return new Intl.NumberFormat('zh-TW', {
-    style: 'currency',
-    currency: currency,
-  }).format(amount);
+  // 處理無效的貨幣代碼
+  const safeCurrency = currency && typeof currency === 'string' && currency.trim() ? currency : 'TWD';
+  const safeAmount = typeof amount === 'number' && Number.isFinite(amount) ? amount : 0;
+
+  try {
+    return new Intl.NumberFormat('zh-TW', {
+      style: 'currency',
+      currency: safeCurrency,
+    }).format(safeAmount);
+  } catch (error) {
+    // 如果貨幣代碼無效，回退到簡單格式
+    return `${safeCurrency} ${safeAmount.toLocaleString('zh-TW')}`;
+  }
 }
 
 /**
  * 格式化貨幣 (財務專用)
  */
 export function formatFinancialCurrency(amount: number, currency: string = 'TWD'): string {
-  return new Intl.NumberFormat('zh-TW', {
-    style: 'currency',
-    currency: currency,
-  }).format(amount);
+  // 處理無效的貨幣代碼
+  const safeCurrency = currency && typeof currency === 'string' && currency.trim() ? currency : 'TWD';
+  const safeAmount = typeof amount === 'number' && Number.isFinite(amount) ? amount : 0;
+
+  try {
+    return new Intl.NumberFormat('zh-TW', {
+      style: 'currency',
+      currency: safeCurrency,
+    }).format(safeAmount);
+  } catch (error) {
+    // 如果貨幣代碼無效，回退到簡單格式
+    return `${safeCurrency} ${safeAmount.toLocaleString('zh-TW')}`;
+  }
 }
 
 /**
