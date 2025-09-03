@@ -242,7 +242,7 @@ src/features/core-operations/engagements/
 │   │   ├── quality-check-form.tsx
 │   │   ├── quality-dashboard.tsx
 │   │   └── index.ts
-│   ├── risk/                     # 風險管理組件 (未實現)
+│   ├── risk/                     # 風險管理組件 (實現)
 │   │   ├── risk-list.tsx
 │   │   ├── issue-list.tsx
 │   │   ├── risk-matrix.tsx
