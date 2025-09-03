@@ -11,22 +11,13 @@ import {
   ArrowLeft,
   Clock,
   Edit,
-  FileText,
   Trash2
 } from 'lucide-react';
 import { useState } from 'react';
 import { addTaskAction, deleteTaskAction, updateTaskAction } from '../actions/task.actions';
-import { 
-  addDocumentAction, 
-  updateDocumentAction, 
-  deleteDocumentAction,
-  addAttachmentAction,
-  deleteAttachmentAction
-} from '../actions/document.actions';
 import { EngagementSummaryCard } from '../components/cards';
 import { CommunicationList, MeetingList } from '../components/communication';
-import { DocumentList, AttachmentList } from '../components/documents';
-import type { Document as EngagementDocument, Attachment as EngagementAttachment } from '../types/document.types';
+import { AttachmentList, DocumentList } from '../components/documents';
 import { FinancialSummary, InvoiceList, PaymentList } from '../components/financial';
 import { EditEngagementForm } from '../components/forms';
 import { AcceptanceRecordList, QualityCheckList } from '../components/quality';
@@ -34,6 +25,7 @@ import { IssueList, RiskList, RiskMatrix } from '../components/risk';
 import { TaskList } from '../components/tasks';
 import { useEngagement } from '../hooks';
 import type { Task } from '../types';
+import type { Attachment as EngagementAttachment, Document as EngagementDocument } from '../types/document.types';
 import { getPhaseColor, getStatusColor } from '../utils';
 
 interface EngagementDetailViewProps {

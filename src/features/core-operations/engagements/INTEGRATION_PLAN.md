@@ -259,9 +259,11 @@ src/features/core-operations/engagements/
 │   │   └── index.ts
 │   ├── documents/                # 文件管理組件 (實現)
 │   │   ├── document-list.tsx
-│   │   ├── document-uploader.tsx
-│   │   ├── document-viewer.tsx
-│   │   ├── version-history.tsx
+│   │   ├── document-card.tsx
+│   │   ├── document-form.tsx
+│   │   ├── attachment-list.tsx
+│   │   ├── attachment-card.tsx
+│   │   ├── attachment-form.tsx
 │   │   └── index.ts
 │   └── reports/                  # 報表組件 (未實現)
 │       ├── engagement-report.tsx
@@ -275,7 +277,7 @@ src/features/core-operations/engagements/
 │   ├── quality.actions.ts        # 品質管理 Actions (未實現)
 │   ├── risk.actions.ts           # 風險管理 Actions (未實現)
 │   ├── communication.actions.ts  # 溝通管理 Actions (實現)
-│   └── document.actions.ts       # 文件管理 Actions (未實現)
+│   └── document.actions.ts       # 文件管理 Actions (實現)
 ├── services/
 │   ├── progress.service.ts       # 進度管理服務 (未實現)
 │   ├── quality.service.ts        # 品質管理服務 (未實現)
@@ -304,12 +306,12 @@ src/features/core-operations/engagements/
 - 每個功能模組都有對應的組件、Actions、服務、Hooks 和工具函數
 
 **未實現功能統計**:
-- **組件文件**: 36 個 (6 個功能模組 × 平均 6 個組件) - 溝通管理已完成
-- **Actions 文件**: 4 個 - 溝通管理已完成
+- **組件文件**: 30 個 (5 個功能模組 × 平均 6 個組件) - 溝通管理和文件管理已完成
+- **Actions 文件**: 3 個 - 溝通管理和文件管理已完成
 - **Services 文件**: 5 個  
 - **Hooks 文件**: 6 個
 - **Utils 文件**: 6 個
-- **總計**: 57 個文件需要實現 (已減少 7 個)
+- **總計**: 50 個文件需要實現 (已減少 14 個)
 
 ## 📅 遷移計畫 (Migration Plan)
 
