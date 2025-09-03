@@ -21,6 +21,8 @@ import { addTaskAction, deleteTaskAction, updateTaskAction } from '../actions/ta
 import { EngagementSummaryCard } from '../components/cards';
 import { EditEngagementForm } from '../components/forms';
 import { TaskList } from '../components/tasks';
+import { PaymentList, InvoiceList, FinancialSummary } from '../components/financial';
+import { AcceptanceRecordList, QualityCheckList } from '../components/quality';
 import { useEngagement } from '../hooks';
 import type { Task } from '../types';
 import { getPhaseColor, getStatusColor } from '../utils';
@@ -213,6 +215,7 @@ export function EngagementDetailView({
           <TabsTrigger value="tasks">任務</TabsTrigger>
           <TabsTrigger value="financial">財務</TabsTrigger>
           <TabsTrigger value="progress">進度</TabsTrigger>
+          <TabsTrigger value="quality">品質</TabsTrigger>
           <TabsTrigger value="documents">文件</TabsTrigger>
           <TabsTrigger value="risks">風險</TabsTrigger>
         </TabsList>
@@ -232,39 +235,42 @@ export function EngagementDetailView({
         </TabsContent>
 
         <TabsContent value="financial" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <DollarSign className="h-5 w-5 mr-2" />
-                財務管理
-              </CardTitle>
-              <CardDescription>
-                管理付款、收款和發票
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {engagement.payments.length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">付款記錄</div>
-                </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">
-                    {engagement.receipts.length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">收款記錄</div>
-                </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">
-                    {engagement.invoices.length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">發票</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <FinancialSummary 
+            summary={{
+              totalValue: engagement.totalValue,
+              paidAmount: engagement.paidAmount,
+              pendingAmount: engagement.pendingAmount,
+              overdueAmount: 0, // 暫時設為 0，後續可以從數據計算
+              paymentProgress: engagement.totalValue > 0 ? (engagement.paidAmount / engagement.totalValue) * 100 : 0,
+              receiptProgress: 0, // 暫時設為 0，後續可以從數據計算
+              invoiceProgress: 0, // 暫時設為 0，後續可以從數據計算
+              costBreakdown: {
+                labor: 0,
+                materials: 0,
+                equipment: 0,
+                overhead: 0,
+                other: 0,
+              },
+            }}
+          />
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <PaymentList
+              payments={engagement.payments}
+              onPaymentCreate={() => refresh()}
+              onPaymentUpdate={() => refresh()}
+              onPaymentDelete={() => refresh()}
+              isLoading={isLoading}
+            />
+            
+            <InvoiceList
+              invoices={engagement.invoices}
+              onInvoiceCreate={() => refresh()}
+              onInvoiceUpdate={() => refresh()}
+              onInvoiceDelete={() => refresh()}
+              isLoading={isLoading}
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="progress" className="space-y-4">
@@ -295,6 +301,26 @@ export function EngagementDetailView({
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="quality" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <AcceptanceRecordList
+              acceptanceRecords={engagement.acceptanceRecords}
+              onAcceptanceRecordCreate={() => refresh()}
+              onAcceptanceRecordUpdate={() => refresh()}
+              onAcceptanceRecordDelete={() => refresh()}
+              isLoading={isLoading}
+            />
+            
+            <QualityCheckList
+              qualityChecks={engagement.qualityChecks}
+              onQualityCheckCreate={() => refresh()}
+              onQualityCheckUpdate={() => refresh()}
+              onQualityCheckDelete={() => refresh()}
+              isLoading={isLoading}
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="documents" className="space-y-4">
