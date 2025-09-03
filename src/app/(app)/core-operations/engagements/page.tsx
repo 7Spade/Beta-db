@@ -3,10 +3,9 @@
  */
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EngagementDashboard, EngagementListView, EngagementProvider } from '@/features/core-operations/engagements';
-import { LayoutDashboard, List, Plus } from 'lucide-react';
+import { LayoutDashboard, List } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 
@@ -62,17 +61,11 @@ function EngagementsPageContent() {
     <EngagementProvider>
       <div className="container mx-auto py-6 space-y-6">
         {/* 頁面標題 */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">專案合約管理</h1>
-            <p className="text-muted-foreground">
-              管理所有專案合約的完整生命週期，從創建到完成的全流程管理
-            </p>
-          </div>
-          <Button onClick={handleShowCreateForm}>
-            <Plus className="h-4 w-4 mr-2" />
-            創建專案合約
-          </Button>
+        <div>
+          <h1 className="text-3xl font-bold">專案合約管理</h1>
+          <p className="text-muted-foreground">
+            管理所有專案合約的完整生命週期，從創建到完成的全流程管理
+          </p>
         </div>
 
         {/* 標籤頁導航 */}
