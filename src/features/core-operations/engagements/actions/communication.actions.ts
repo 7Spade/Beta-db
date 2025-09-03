@@ -151,11 +151,11 @@ export async function updateMeetingAction(
             actualEndDate: data.actualEndDate instanceof Date ? Timestamp.fromDate(data.actualEndDate) : data.actualEndDate,
             actionItems: data.actionItems?.map(item => ({
                 ...item,
-                id: item.id || `action-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                id: `action-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
             })),
             decisions: data.decisions?.map(decision => ({
                 ...decision,
-                id: decision.id || `decision-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                id: `decision-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
             })),
             updatedBy: 'current-user',
             updatedAt: Timestamp.now(),

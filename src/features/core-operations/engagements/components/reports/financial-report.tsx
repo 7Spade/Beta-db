@@ -13,6 +13,7 @@ import {
     TrendingUp
 } from 'lucide-react';
 import type { Engagement } from '../../types/engagement.types';
+import { convertTimestamp, formatCurrency as formatCurrencyShared } from '../../utils';
 
 interface FinancialReportProps {
     engagement: Engagement;
@@ -51,8 +52,8 @@ export function FinancialReport({ engagement, className }: FinancialReportProps)
         }
 
         const sortedPayments = [...engagement.payments].sort((a, b) => {
-            const dateA = a.paymentDate.toDate ? a.paymentDate.toDate() : new Date(a.paymentDate);
-            const dateB = b.paymentDate.toDate ? b.paymentDate.toDate() : new Date(b.paymentDate);
+            const dateA = convertTimestamp(a.paymentDate);
+            const dateB = convertTimestamp(b.paymentDate);
             return dateA.getTime() - dateB.getTime();
         });
 
@@ -81,8 +82,8 @@ export function FinancialReport({ engagement, className }: FinancialReportProps)
 
         const today = new Date();
         return engagement.payments.filter(payment => {
-            const dueDate = payment.dueDate.toDate ? payment.dueDate.toDate() : new Date(payment.dueDate);
-            return dueDate < today && payment.status !== '已付款';
+            const dueDate = convertTimestamp(payment.dueDate as any);
+            return !Number.isNaN(dueDate.getTime()) && dueDate < today && payment.status !== '已付款';
         });
     };
 
@@ -96,8 +97,10 @@ export function FinancialReport({ engagement, className }: FinancialReportProps)
         return dateObj.toLocaleDateString('zh-TW');
     };
 
-    const formatCurrency = (amount: number, currency: string = engagement.currency) => {
-        return `${currency} ${amount.toLocaleString()}`;
+    const formatCurrency = (amount?: number, currency: string = engagement.currency) => {
+        const safeAmount = typeof amount === 'number' && Number.isFinite(amount) ? amount : 0;
+        const safeCurrency = currency || 'TWD';
+        return formatCurrencyShared(safeAmount, safeCurrency);
     };
 
     const getTrendIcon = (trend: string) => {

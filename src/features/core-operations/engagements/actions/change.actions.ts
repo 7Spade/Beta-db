@@ -42,7 +42,7 @@ export async function addChangeOrderAction(
     // 更新 Engagement 的變更單列表
     const updatedChangeOrders = [...engagement.changeOrders, newChangeOrder];
     const result = await engagementService.updateEngagement(engagementId, {
-      changeOrders: updatedChangeOrders,
+      changeOrders: updatedChangeOrders as any, // 保持類型兼容，服務層負責驗證
     });
 
     if (result.success) {
@@ -78,9 +78,18 @@ export async function updateChangeOrderAction(
     // 找到並更新變更單
     const updatedChangeOrders = engagement.changeOrders.map(changeOrder => {
       if (changeOrder.id === changeOrderId) {
+        const mergedImpact = input.impact
+          ? {
+              cost: input.impact.cost ?? changeOrder.impact.cost,
+              scheduleDays: input.impact.scheduleDays ?? changeOrder.impact.scheduleDays,
+              scope: input.impact.scope ?? changeOrder.impact.scope,
+            }
+          : changeOrder.impact;
+
         return {
           ...changeOrder,
           ...input,
+          impact: mergedImpact,
           updatedBy: 'system', // TODO: 從認證上下文獲取
           updatedAt: new Date(),
         };

@@ -26,7 +26,7 @@ import { QualityCheckForm } from './quality-check-form';
 
 interface QualityCheckListProps {
     qualityChecks: QualityCheck[];
-    onQualityCheckCreate: (data: Omit<QualityCheck, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>) => Promise<void>;
+    onQualityCheckCreate: (data: import('../../types/quality.types').CreateQualityCheckInput) => Promise<void>;
     onQualityCheckUpdate: (id: string, updates: Partial<QualityCheck>) => Promise<void>;
     onQualityCheckDelete: (id: string) => Promise<void>;
     isLoading?: boolean;

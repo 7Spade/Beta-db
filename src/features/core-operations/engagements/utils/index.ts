@@ -8,7 +8,7 @@ export * from './date.utils';
 // 財務工具（重命名衝突的函數）
 export {
   calculateFinancialHealthScore, calculateInvoiceSummary, calculatePaymentSummary,
-  calculateReceiptSummary, formatFinancialCurrency,
+  calculateReceiptSummary, formatCurrency, formatFinancialCurrency,
   formatPercentage, generateFinancialReportData, getFinancialInvoiceStatusColor, getFinancialPaymentStatusColor,
   getFinancialReceiptStatusColor, isInvoiceOverdue, isPaymentOverdue,
   isReceiptOverdue

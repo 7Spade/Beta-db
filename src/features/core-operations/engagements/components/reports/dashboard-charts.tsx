@@ -14,7 +14,7 @@ import {
     TrendingUp
 } from 'lucide-react';
 import type { Engagement } from '../../types/engagement.types';
-import { convertTimestamp } from '../../utils';
+import { convertTimestamp, formatCurrency as formatCurrencyShared } from '../../utils';
 
 interface DashboardChartsProps {
     engagement: Engagement;
@@ -136,8 +136,10 @@ export function DashboardCharts({ engagement, className }: DashboardChartsProps)
         return dateObj.toLocaleDateString('zh-TW');
     };
 
-    const formatCurrency = (amount: number) => {
-        return `${engagement.currency} ${amount.toLocaleString()}`;
+    const formatCurrency = (amount?: number) => {
+        const safeAmount = typeof amount === 'number' && Number.isFinite(amount) ? amount : 0;
+        const currency = engagement?.currency || 'TWD';
+        return formatCurrencyShared(safeAmount, currency);
     };
 
     const getStatusColor = (status: string) => {

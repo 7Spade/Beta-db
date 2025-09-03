@@ -14,6 +14,7 @@ import {
     XCircle
 } from 'lucide-react';
 import type { Engagement } from '../../types/engagement.types';
+import { convertTimestamp } from '../../utils';
 
 interface QualityReportProps {
     engagement: Engagement;
@@ -27,13 +28,13 @@ export function QualityReport({ engagement, className }: QualityReportProps) {
         const qualityChecks = engagement.qualityChecks || [];
 
         const totalAcceptanceRecords = acceptanceRecords.length;
-        const approvedRecords = acceptanceRecords.filter(record => record.status === '已通過').length;
-        const pendingRecords = acceptanceRecords.filter(record => record.status === '待審核').length;
-        const rejectedRecords = acceptanceRecords.filter(record => record.status === '已拒絕').length;
+        const approvedRecords = acceptanceRecords.filter(record => record.status === '已批准').length;
+        const pendingRecords = acceptanceRecords.filter(record => record.status === '待審批').length;
+        const rejectedRecords = acceptanceRecords.filter(record => record.status === '已駁回').length;
 
         const totalQualityChecks = qualityChecks.length;
-        const passedChecks = qualityChecks.filter(check => check.status === '通過').length;
-        const failedChecks = qualityChecks.filter(check => check.status === '不通過').length;
+        const passedChecks = qualityChecks.filter(check => check.status === '已通過').length;
+        const failedChecks = qualityChecks.filter(check => check.status === '未通過').length;
         const pendingChecks = qualityChecks.filter(check => check.status === '待檢查').length;
 
         const acceptanceRate = totalAcceptanceRecords > 0 ? Math.round((approvedRecords / totalAcceptanceRecords) * 100) : 0;
@@ -56,12 +57,12 @@ export function QualityReport({ engagement, className }: QualityReportProps) {
     // 計算品質問題統計
     const calculateQualityIssues = () => {
         const qualityChecks = engagement.qualityChecks || [];
-        const issues = [];
+        const issues: Array<{ checkName: string; finding: string; severity: string; status: string }> = [];
 
         qualityChecks.forEach(check => {
             if (check.findings && check.findings.length > 0) {
                 check.findings.forEach(finding => {
-                    if (finding.severity === '高' || finding.severity === '中') {
+                    if (finding.severity === 'critical' || finding.severity === 'high' || finding.severity === 'medium') {
                         issues.push({
                             checkName: check.name,
                             finding: finding.description,
@@ -92,8 +93,8 @@ export function QualityReport({ engagement, className }: QualityReportProps) {
         if (qualityChecks.length < 2) return { trend: 'stable', percentage: 0 };
 
         const sortedChecks = [...qualityChecks].sort((a, b) => {
-            const dateA = a.checkDate.toDate ? a.checkDate.toDate() : new Date(a.checkDate);
-            const dateB = b.checkDate.toDate ? b.checkDate.toDate() : new Date(b.checkDate);
+            const dateA = convertTimestamp(a.checkDate as any);
+            const dateB = convertTimestamp(b.checkDate as any);
             return dateA.getTime() - dateB.getTime();
         });
 
@@ -101,11 +102,11 @@ export function QualityReport({ engagement, className }: QualityReportProps) {
         const olderChecks = sortedChecks.slice(-6, -3);
 
         const recentPassRate = recentChecks.length > 0
-            ? (recentChecks.filter(check => check.status === '通過').length / recentChecks.length) * 100
+            ? (recentChecks.filter(check => check.status === '已通過').length / recentChecks.length) * 100
             : 0;
 
         const olderPassRate = olderChecks.length > 0
-            ? (olderChecks.filter(check => check.status === '通過').length / olderChecks.length) * 100
+            ? (olderChecks.filter(check => check.status === '已通過').length / olderChecks.length) * 100
             : 0;
 
         const percentage = Math.round(recentPassRate - olderPassRate);

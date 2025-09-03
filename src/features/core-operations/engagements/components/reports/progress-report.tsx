@@ -12,6 +12,7 @@ import {
     TrendingUp
 } from 'lucide-react';
 import type { Engagement } from '../../types/engagement.types';
+import { convertTimestamp } from '../../utils';
 
 interface ProgressReportProps {
     engagement: Engagement;
@@ -46,7 +47,7 @@ export function ProgressReport({ engagement, className }: ProgressReportProps) {
 
         const completed = engagement.tasks.filter(task => task.status === '已完成').length;
         const inProgress = engagement.tasks.filter(task => task.status === '進行中').length;
-        const pending = engagement.tasks.filter(task => task.status === '待開始').length;
+        const pending = engagement.tasks.filter(task => task.status === '待處理').length;
 
         return { completed, inProgress, pending, total: engagement.tasks.length };
     };
@@ -54,12 +55,12 @@ export function ProgressReport({ engagement, className }: ProgressReportProps) {
     // 計算逾期項目
     const calculateOverdueItems = () => {
         const today = new Date();
-        const overdueItems = [];
+        const overdueItems: Array<{ type: 'milestone' | 'task'; name: string; dueDate: Date; status: string }> = [];
 
         // 檢查逾期的里程碑
         if (engagement.milestones) {
             engagement.milestones.forEach(milestone => {
-                const dueDate = milestone.dueDate.toDate ? milestone.dueDate.toDate() : new Date(milestone.dueDate);
+                const dueDate = convertTimestamp(milestone.dueDate);
                 if (dueDate < today && milestone.status !== '已完成') {
                     overdueItems.push({
                         type: 'milestone',
@@ -75,7 +76,7 @@ export function ProgressReport({ engagement, className }: ProgressReportProps) {
         if (engagement.tasks) {
             engagement.tasks.forEach(task => {
                 if (task.dueDate) {
-                    const dueDate = task.dueDate.toDate ? task.dueDate.toDate() : new Date(task.dueDate);
+                    const dueDate = convertTimestamp(task.dueDate);
                     if (dueDate < today && task.status !== '已完成') {
                         overdueItems.push({
                             type: 'task',
@@ -93,8 +94,8 @@ export function ProgressReport({ engagement, className }: ProgressReportProps) {
 
     // 計算時間進度
     const calculateTimeProgress = () => {
-        const startDate = engagement.startDate.toDate ? engagement.startDate.toDate() : new Date(engagement.startDate);
-        const endDate = engagement.endDate.toDate ? engagement.endDate.toDate() : new Date(engagement.endDate);
+        const startDate = convertTimestamp(engagement.startDate);
+        const endDate = convertTimestamp(engagement.endDate);
         const today = new Date();
 
         const totalDuration = endDate.getTime() - startDate.getTime();

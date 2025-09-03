@@ -16,7 +16,7 @@ import { AcceptanceRecordForm } from './acceptance-record-form';
 
 interface AcceptanceRecordListProps {
     acceptanceRecords: AcceptanceRecord[];
-    onAcceptanceRecordCreate: (data: Omit<AcceptanceRecord, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>) => Promise<void>;
+    onAcceptanceRecordCreate: (data: import('../../types/quality.types').CreateAcceptanceRecordInput) => Promise<void>;
     onAcceptanceRecordUpdate: (id: string, updates: Partial<AcceptanceRecord>) => Promise<void>;
     onAcceptanceRecordDelete: (id: string) => Promise<void>;
     isLoading?: boolean;
