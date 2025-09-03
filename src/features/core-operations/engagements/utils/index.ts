@@ -5,3 +5,4 @@
 export * from './engagement.utils';
 export * from './financial.utils';
 export * from './status.utils';
+export * from './subtask.utils';

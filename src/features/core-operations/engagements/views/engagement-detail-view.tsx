@@ -321,9 +321,11 @@ export function EngagementDetailView({
         <TabsContent value="tasks" className="space-y-4">
           <TaskList
             tasks={engagement.tasks}
+            engagementId={engagement.id}
             onTaskCreate={handleTaskCreate}
             onTaskUpdate={handleTaskUpdate}
             onTaskDelete={handleTaskDelete}
+            onTasksRefresh={handleRefresh}
             isLoading={isLoading}
           />
         </TabsContent>

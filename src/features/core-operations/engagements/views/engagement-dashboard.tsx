@@ -18,6 +18,19 @@ import { ENGAGEMENT_PHASES, ENGAGEMENT_STATUSES } from '../constants';
 import { useEngagements } from '../hooks';
 import { formatCurrency, getPhaseColor, getStatusColor } from '../utils';
 
+/**
+ * 安全地將 Date | Timestamp 轉換為 Date
+ */
+function toDate(date: Date | any): Date {
+  if (date instanceof Date) {
+    return date;
+  }
+  if (date && typeof date.toDate === 'function') {
+    return date.toDate();
+  }
+  return new Date(date);
+}
+
 interface EngagementDashboardProps {
   onCreateEngagement?: () => void;
   onViewEngagement?: (id: string) => void;
@@ -39,7 +52,7 @@ export function EngagementDashboard({
     active: summaries.filter(s => s.status === '進行中').length,
     completed: summaries.filter(s => s.status === '已完成').length,
     overdue: summaries.filter(s => {
-      const endDate = s.endDate.toDate ? s.endDate.toDate() : new Date(s.endDate);
+      const endDate = toDate(s.endDate);
       return endDate < new Date() && s.status !== '已完成' && s.status !== '已終止' && s.status !== '已取消';
     }).length,
     totalValue: summaries.reduce((sum, s) => sum + s.totalValue, 0),
@@ -69,15 +82,16 @@ export function EngagementDashboard({
   // 最近更新的專案
   const recentEngagements = summaries
     .sort((a, b) => {
-      const aDate = a.updatedAt?.toDate ? a.updatedAt.toDate() : new Date();
-      const bDate = b.updatedAt?.toDate ? b.updatedAt.toDate() : new Date();
+      // 使用 startDate 作為排序依據，因為 EngagementSummary 沒有 updatedAt
+      const aDate = toDate(a.startDate);
+      const bDate = toDate(b.startDate);
       return bDate.getTime() - aDate.getTime();
     })
     .slice(0, 5);
 
   // 高風險專案（進度低於50%且即將到期）
   const highRiskEngagements = summaries.filter(s => {
-    const endDate = s.endDate.toDate ? s.endDate.toDate() : new Date(s.endDate);
+    const endDate = toDate(s.endDate);
     const daysRemaining = Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
     return s.progressPercentage < 50 && daysRemaining < 30 && s.status === '進行中';
   });
@@ -266,7 +280,7 @@ export function EngagementDashboard({
                         {engagement.progressPercentage}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {formatCurrency(engagement.totalValue, engagement.currency || 'TWD')}
+                        {formatCurrency(engagement.totalValue, 'TWD')}
                       </div>
                     </div>
                   </div>

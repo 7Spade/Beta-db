@@ -16,6 +16,19 @@ import type {
 } from '../types';
 
 /**
+ * 安全地將 Date | Timestamp 轉換為 Date
+ */
+function toDate(date: Date | any): Date {
+  if (date instanceof Date) {
+    return date;
+  }
+  if (date && typeof date.toDate === 'function') {
+    return date.toDate();
+  }
+  return new Date(date);
+}
+
+/**
  * 格式化日期
  */
 export function formatDate(date: Date | any, format: 'short' | 'long' | 'iso' = 'short'): string {
@@ -169,7 +182,7 @@ export function calculateIssueStats(engagement: Engagement) {
  * 檢查 Engagement 是否逾期
  */
 export function isEngagementOverdue(engagement: Engagement): boolean {
-  const endDate = engagement.endDate.toDate ? engagement.endDate.toDate() : new Date(engagement.endDate);
+  const endDate = toDate(engagement.endDate);
   return endDate < new Date() && engagement.status !== '已完成' && engagement.status !== '已終止' && engagement.status !== '已取消';
 }
 
@@ -177,7 +190,7 @@ export function isEngagementOverdue(engagement: Engagement): boolean {
  * 計算剩餘天數
  */
 export function calculateDaysRemaining(engagement: Engagement): number {
-  const endDate = engagement.endDate.toDate ? engagement.endDate.toDate() : new Date(engagement.endDate);
+  const endDate = toDate(engagement.endDate);
   const today = new Date();
   const diffTime = endDate.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -251,12 +264,12 @@ export function sortEngagements(
         bValue = b.name.toLowerCase();
         break;
       case 'startDate':
-        aValue = a.startDate.toDate ? a.startDate.toDate() : new Date(a.startDate);
-        bValue = b.startDate.toDate ? b.startDate.toDate() : new Date(b.startDate);
+        aValue = toDate(a.startDate);
+        bValue = toDate(b.startDate);
         break;
       case 'endDate':
-        aValue = a.endDate.toDate ? a.endDate.toDate() : new Date(a.endDate);
-        bValue = b.endDate.toDate ? b.endDate.toDate() : new Date(b.endDate);
+        aValue = toDate(a.endDate);
+        bValue = toDate(b.endDate);
         break;
       case 'totalValue':
         aValue = a.totalValue;

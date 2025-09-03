@@ -12,22 +12,27 @@ import { Timestamp } from 'firebase/firestore';
 import { Plus, Search, SortAsc, SortDesc } from 'lucide-react';
 import { useState } from 'react';
 import type { Task, TaskPriority, TaskStatus } from '../../types';
+import { SubtaskActions } from './subtask-actions';
 import { TaskCard } from './task-card';
 import { TaskForm } from './task-form';
 
 interface TaskListProps {
   tasks: Task[];
+  engagementId: string;
   onTaskUpdate: (taskId: string, updates: Partial<Task>) => Promise<void>;
   onTaskDelete: (taskId: string) => Promise<void>;
   onTaskCreate: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>) => Promise<void>;
+  onTasksRefresh?: () => void;
   isLoading?: boolean;
 }
 
 export function TaskList({
   tasks,
+  engagementId,
   onTaskUpdate,
   onTaskDelete,
   onTaskCreate,
+  onTasksRefresh,
   isLoading = false,
 }: TaskListProps) {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -244,12 +249,19 @@ export function TaskList({
         ) : (
           <div className="space-y-3">
             {filteredAndSortedTasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onUpdate={onTaskUpdate}
-                onDelete={onTaskDelete}
-              />
+              <div key={task.id} className="space-y-2">
+                <TaskCard
+                  task={task}
+                  onUpdate={onTaskUpdate}
+                  onDelete={onTaskDelete}
+                />
+                <SubtaskActions
+                  engagementId={engagementId}
+                  parentTaskId={task.id}
+                  tasks={tasks}
+                  onSuccess={onTasksRefresh}
+                />
+              </div>
             ))}
           </div>
         )}
