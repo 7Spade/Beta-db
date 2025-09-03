@@ -6,20 +6,20 @@ import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globa
 
 // Mock Firebase
 const mockFirestore = {
-  collection: jest.fn() as jest.MockedFunction<any>,
-  doc: jest.fn() as jest.MockedFunction<any>,
-  addDoc: jest.fn() as jest.MockedFunction<any>,
-  getDoc: jest.fn() as jest.MockedFunction<any>,
-  getDocs: jest.fn() as jest.MockedFunction<any>,
-  updateDoc: jest.fn() as jest.MockedFunction<any>,
-  deleteDoc: jest.fn() as jest.MockedFunction<any>,
-  writeBatch: jest.fn() as jest.MockedFunction<any>,
-  runTransaction: jest.fn() as jest.MockedFunction<any>,
-  query: jest.fn() as jest.MockedFunction<any>,
-  where: jest.fn() as jest.MockedFunction<any>,
-  orderBy: jest.fn() as jest.MockedFunction<any>,
-  limit: jest.fn() as jest.MockedFunction<any>,
-  startAfter: jest.fn() as jest.MockedFunction<any>,
+    collection: jest.fn() as jest.MockedFunction<any>,
+    doc: jest.fn() as jest.MockedFunction<any>,
+    addDoc: jest.fn() as jest.MockedFunction<any>,
+    getDoc: jest.fn() as jest.MockedFunction<any>,
+    getDocs: jest.fn() as jest.MockedFunction<any>,
+    updateDoc: jest.fn() as jest.MockedFunction<any>,
+    deleteDoc: jest.fn() as jest.MockedFunction<any>,
+    writeBatch: jest.fn() as jest.MockedFunction<any>,
+    runTransaction: jest.fn() as jest.MockedFunction<any>,
+    query: jest.fn() as jest.MockedFunction<any>,
+    where: jest.fn() as jest.MockedFunction<any>,
+    orderBy: jest.fn() as jest.MockedFunction<any>,
+    limit: jest.fn() as jest.MockedFunction<any>,
+    startAfter: jest.fn() as jest.MockedFunction<any>,
 };
 
 const mockTimestamp = {
@@ -29,24 +29,24 @@ const mockTimestamp = {
 
 // Mock Firebase modules
 jest.mock('firebase/firestore', () => ({
-  getFirestore: () => mockFirestore,
-  collection: mockFirestore.collection,
-  doc: mockFirestore.doc,
-  addDoc: mockFirestore.addDoc,
-  getDoc: mockFirestore.getDoc,
-  getDocs: mockFirestore.getDocs,
-  updateDoc: mockFirestore.updateDoc,
-  deleteDoc: mockFirestore.deleteDoc,
-  writeBatch: mockFirestore.writeBatch,
-  runTransaction: mockFirestore.runTransaction,
-  query: mockFirestore.query,
-  where: mockFirestore.where,
-  orderBy: mockFirestore.orderBy,
-  limit: mockFirestore.limit,
-  startAfter: mockFirestore.startAfter,
-  Timestamp: mockTimestamp,
-  arrayUnion: jest.fn((item) => item),
-  arrayRemove: jest.fn((item) => item),
+    getFirestore: () => mockFirestore,
+    collection: mockFirestore.collection,
+    doc: mockFirestore.doc,
+    addDoc: mockFirestore.addDoc,
+    getDoc: mockFirestore.getDoc,
+    getDocs: mockFirestore.getDocs,
+    updateDoc: mockFirestore.updateDoc,
+    deleteDoc: mockFirestore.deleteDoc,
+    writeBatch: mockFirestore.writeBatch,
+    runTransaction: mockFirestore.runTransaction,
+    query: mockFirestore.query,
+    where: mockFirestore.where,
+    orderBy: mockFirestore.orderBy,
+    limit: mockFirestore.limit,
+    startAfter: mockFirestore.startAfter,
+    Timestamp: mockTimestamp,
+    arrayUnion: jest.fn((item) => item),
+    arrayRemove: jest.fn((item) => item),
 }));
 
 // Mock Firebase client
@@ -90,8 +90,8 @@ describe('Comprehensive Database Tests', () => {
             const validation = databaseValidation.validateCreateEngagementInput(createInput);
             expect(validation.isValid).toBe(true);
 
-                  mockFirestore.collection.mockReturnValue({} as any);
-      mockFirestore.addDoc.mockResolvedValue({ id: 'engagement-123' } as any);
+            mockFirestore.collection.mockReturnValue({} as any);
+            mockFirestore.addDoc.mockResolvedValue({ id: 'engagement-123' } as any);
 
             const createResult = await engagementService.createEngagement(createInput);
             expect(createResult.success).toBe(true);
@@ -173,11 +173,11 @@ describe('Comprehensive Database Tests', () => {
                 attachments: [],
             };
 
-                  mockFirestore.getDoc.mockResolvedValue({
-        exists: () => true,
-        id: 'engagement-123',
-        data: () => mockEngagement,
-      } as any);
+            mockFirestore.getDoc.mockResolvedValue({
+                exists: () => true,
+                id: 'engagement-123',
+                data: () => mockEngagement,
+            } as any);
 
             const getResult = await engagementService.getEngagement('engagement-123');
             expect(getResult.success).toBe(true);
@@ -269,11 +269,11 @@ describe('Comprehensive Database Tests', () => {
                 invoices: [],
             };
 
-                  mockFirestore.getDoc.mockResolvedValue({
-        exists: () => true,
-        id: 'engagement-456',
-        data: () => mockEngagement,
-      } as any);
+            mockFirestore.getDoc.mockResolvedValue({
+                exists: () => true,
+                id: 'engagement-456',
+                data: () => mockEngagement,
+            } as any);
 
             const engagement = await engagementService.getEngagement('engagement-456');
             expect(engagement.success).toBe(true);
@@ -331,11 +331,11 @@ describe('Comprehensive Database Tests', () => {
             expect(firstResult.success).toBe(false);
 
             // 第二次調用成功
-                  mockFirestore.getDoc.mockResolvedValue({
-        exists: () => true,
-        id: 'engagement-error',
-        data: () => ({ name: '恢復測試專案' }),
-      } as any);
+            mockFirestore.getDoc.mockResolvedValue({
+                exists: () => true,
+                id: 'engagement-error',
+                data: () => ({ name: '恢復測試專案' }),
+            } as any);
 
             const secondResult = await engagementService.getEngagement('engagement-error');
             expect(secondResult.success).toBe(true);
@@ -355,7 +355,7 @@ describe('Comprehensive Database Tests', () => {
 
             const mockBatch = {
                 update: jest.fn(),
-                commit: jest.fn().mockRejectedValue(new Error('部分更新失敗')),
+                commit: jest.fn().mockRejectedValue(new Error('部分更新失敗')) as any,
             } as any;
 
             mockFirestore.writeBatch.mockReturnValue(mockBatch as any);
@@ -410,11 +410,11 @@ describe('Comprehensive Database Tests', () => {
             const readStartTime = performance.now();
             const readPromises = Array.from({ length: 100 }, (_, i) => {
                 mockFirestore.doc.mockReturnValue({} as any);
-                        mockFirestore.getDoc.mockResolvedValue({
-          exists: () => true,
-          id: `engagement-${i}`,
-          data: () => ({ name: `高負載測試專案 ${i}` }),
-        } as any);
+                mockFirestore.getDoc.mockResolvedValue({
+                    exists: () => true,
+                    id: `engagement-${i}`,
+                    data: () => ({ name: `高負載測試專案 ${i}` }),
+                } as any);
 
                 return engagementService.getEngagement(`engagement-${i}`);
             });
@@ -446,13 +446,13 @@ describe('Comprehensive Database Tests', () => {
                 updatedAt: new Date(),
             }));
 
-                  mockFirestore.query.mockReturnValue({} as any);
-      mockFirestore.getDocs.mockResolvedValue({
-        docs: largeDataset.slice(0, 100).map(engagement => ({
-          id: engagement.id,
-          data: () => engagement,
-        })),
-      } as any);
+            mockFirestore.query.mockReturnValue({} as any);
+            mockFirestore.getDocs.mockResolvedValue({
+                docs: largeDataset.slice(0, 100).map(engagement => ({
+                    id: engagement.id,
+                    data: () => engagement,
+                })),
+            } as any);
 
             const startTime = performance.now();
             const result = await engagementService.getEngagements({ limit: 100 });
