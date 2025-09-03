@@ -17,6 +17,7 @@ import {
 import { useState } from 'react';
 import { addTaskAction, deleteTaskAction, updateTaskAction } from '../actions/task.actions';
 import { EngagementSummaryCard } from '../components/cards';
+import { CommunicationList, MeetingList } from '../components/communication';
 import { FinancialSummary, InvoiceList, PaymentList } from '../components/financial';
 import { EditEngagementForm } from '../components/forms';
 import { AcceptanceRecordList, QualityCheckList } from '../components/quality';
@@ -99,6 +100,55 @@ export function EngagementDetailView({
       }
     } catch (error) {
       console.error('刪除任務失敗:', error);
+    }
+  };
+
+  // 溝通管理處理函數
+  const handleCommunicationCreate = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('創建溝通記錄失敗:', error);
+    }
+  };
+
+  const handleCommunicationUpdate = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('更新溝通記錄失敗:', error);
+    }
+  };
+
+  const handleCommunicationDelete = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('刪除溝通記錄失敗:', error);
+    }
+  };
+
+  const handleMeetingCreate = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('創建會議失敗:', error);
+    }
+  };
+
+  const handleMeetingUpdate = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('更新會議失敗:', error);
+    }
+  };
+
+  const handleMeetingDelete = async () => {
+    try {
+      await refresh();
+    } catch (error) {
+      console.error('刪除會議失敗:', error);
     }
   };
 
@@ -215,6 +265,7 @@ export function EngagementDetailView({
           <TabsTrigger value="financial">財務</TabsTrigger>
           <TabsTrigger value="progress">進度</TabsTrigger>
           <TabsTrigger value="quality">品質</TabsTrigger>
+          <TabsTrigger value="communication">溝通</TabsTrigger>
           <TabsTrigger value="documents">文件</TabsTrigger>
           <TabsTrigger value="risks">風險</TabsTrigger>
         </TabsList>
@@ -317,6 +368,26 @@ export function EngagementDetailView({
               onQualityCheckCreate={() => refresh()}
               onQualityCheckUpdate={() => refresh()}
               onQualityCheckDelete={() => refresh()}
+              isLoading={isLoading}
+            />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="communication" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CommunicationList
+              communications={engagement.communications}
+              onCommunicationCreate={handleCommunicationCreate}
+              onCommunicationUpdate={handleCommunicationUpdate}
+              onCommunicationDelete={handleCommunicationDelete}
+              isLoading={isLoading}
+            />
+
+            <MeetingList
+              meetings={engagement.meetings}
+              onMeetingCreate={handleMeetingCreate}
+              onMeetingUpdate={handleMeetingUpdate}
+              onMeetingDelete={handleMeetingDelete}
               isLoading={isLoading}
             />
           </div>

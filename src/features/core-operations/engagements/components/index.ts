@@ -21,3 +21,6 @@ export * from './financial';
 export * from './quality';
 export * from './risk';
 
+// 溝通管理組件
+export * from './communication';
+
