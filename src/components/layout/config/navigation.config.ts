@@ -17,6 +17,8 @@ import {
   BarChart3,
   BookOpen,
   Briefcase,
+  Building2,
+  Calculator,
   Calendar,
   CalendarDays,
   ClipboardList,
@@ -24,6 +26,7 @@ import {
   Cog,
   DollarSign,
   FileText,
+  FolderKanban,
   Handshake,
   LayoutGrid,
   Mail,
@@ -33,7 +36,7 @@ import {
   UserCheck,
   Users,
   Warehouse,
-  Wrench
+  Wrench,
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -118,42 +121,36 @@ export const navigationConfig: NavigationItem[] = [
         href: '/resource-management/document/cloud-drive',
       },
       {
-        id: 'engagements',
-        label: '專案合約管理',
-        icon: Handshake,
-        href: '/core-operations/engagements',
-        children: [
-          {
-            id: 'engagements-dashboard',
-            label: '儀表板',
-            icon: LayoutGrid,
-            href: '/core-operations/engagements',
-          },
-          {
-            id: 'engagements-list',
-            label: '專案列表',
-            icon: ClipboardList,
-            href: '/core-operations/engagements?tab=list',
-          },
-          {
-            id: 'create-engagement',
-            label: '建立專案合約',
-            icon: Plus,
-            href: '/core-operations/engagements?tab=list&create=true',
-          },
-          {
-            id: 'parse-document',
-            label: '文件解析創建',
-            icon: FileText,
-            href: '/core-operations/engagements/parse-document',
-          },
-        ],
+        id: 'projects',
+        label: '專案管理',
+        icon: FolderKanban,
+        href: '/core-operations/projects',
       },
       {
-        id: 'warehousing',
-        label: '倉儲管理',
-        icon: Warehouse,
-        href: '/core-operations/warehousing',
+        id: 'contracts',
+        label: '合約管理',
+        icon: Building2,
+        href: '/core-operations/contracts/contracts',
+        children: [
+          {
+            id: 'contract-list',
+            label: '合約列表',
+            icon: ClipboardList,
+            href: '/core-operations/contracts/contracts',
+          },
+          {
+            id: 'create-contract',
+            label: '建立合約',
+            icon: Plus,
+            href: '/core-operations/contracts/contracts/create',
+          },
+          {
+            id: 'billing',
+            label: '計價作業',
+            icon: Calculator,
+            href: '/core-operations/contracts/billing',
+          },
+        ],
       },
       {
         id: 'schedule',

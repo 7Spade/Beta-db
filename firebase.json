@@ -45,9 +45,7 @@
     {
       "source": "functions",
       "codebase": "default",
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ],
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
       "ignore": [
         "node_modules",
         ".git",
@@ -84,7 +82,7 @@
       "port": 5001
     },
     "firestore": {
-      "port": 8084
+      "port": 8081
     },
     "hosting": {
       "port": 5000
