@@ -69,9 +69,9 @@ export class NotificationService {
     }
   }
 
-    /**
-   * 發送截止日期提醒
-   */
+  /**
+ * 發送截止日期提醒
+ */
   async sendDeadlineReminder(
     engagement: Engagement,
     userId?: string,
@@ -121,9 +121,9 @@ export class NotificationService {
         message: `您已被分配新任務: "${taskTitle}"${engagementName ? ` (專案: ${engagementName})` : ''}`,
         link: `/core-operations/engagements/${engagementId}`
       });
-      
+
       console.log(`已發送任務分配通知: 任務 "${taskTitle}" 已分配給用戶 ${assigneeId}`);
-      
+
       return { success: true };
     } catch (error) {
       console.error('發送任務分配通知失敗:', error);
@@ -149,9 +149,9 @@ export class NotificationService {
         message: `需要您的審批: ${itemType} "${itemTitle}"${engagementName ? ` (專案: ${engagementName})` : ''}`,
         link: `/core-operations/engagements/${engagementId}`
       });
-      
+
       console.log(`已發送審批請求通知: ${itemType} "${itemTitle}" 需要 ${approverId} 審批`);
-      
+
       return { success: true };
     } catch (error) {
       console.error('發送審批請求通知失敗:', error);
@@ -182,9 +182,9 @@ export class NotificationService {
         message: `專案合約 "${engagement.name}" 有待付款項目${amountText ? ` (${amountText})` : ''}`,
         link: `/core-operations/engagements/${engagement.id}`
       });
-      
+
       console.log(`已發送付款提醒: Engagement ${engagement.name}`);
-      
+
       return { success: true };
     } catch (error) {
       console.error('發送付款提醒失敗:', error);
@@ -213,9 +213,9 @@ export class NotificationService {
         message: `專案合約 "${engagement.name}" 的里程碑 "${milestoneName}" 已完成`,
         link: `/core-operations/engagements/${engagement.id}`
       });
-      
+
       console.log(`已發送里程碑完成通知: "${milestoneName}" 在 Engagement ${engagement.name} 中已完成`);
-      
+
       return { success: true };
     } catch (error) {
       console.error('發送里程碑完成通知失敗:', error);

@@ -37,6 +37,15 @@ export async function addPaymentAction(
         );
         
         await financialService.updateFinancialInfo(engagementId, financialSummary);
+        
+        // 發送付款提醒通知 (如果有待付款項目)
+        if (financialSummary.pendingAmount > 0) {
+          await notificationService.sendPaymentReminder(
+            engagement,
+            undefined, // TODO: 從認證上下文獲取用戶ID
+            financialSummary.pendingAmount
+          );
+        }
       }
       
       revalidatePath('/engagements');
