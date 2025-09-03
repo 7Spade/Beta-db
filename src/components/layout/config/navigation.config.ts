@@ -150,6 +150,12 @@ export const navigationConfig: NavigationItem[] = [
         ],
       },
       {
+        id: 'warehousing',
+        label: '倉儲管理',
+        icon: Warehouse,
+        href: '/core-operations/warehousing',
+      },
+      {
         id: 'schedule',
         label: '排班表',
         icon: CalendarDays,

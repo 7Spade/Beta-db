@@ -29,7 +29,8 @@ actions/index.ts                  # 統一導出
 services/engagement.service.ts    # 主要服務
 services/financial.service.ts     # 財務服務
 services/document.service.ts      # 文件服務
-services/notification.service.ts  # 通知服務
+services/notification.service.ts  # 通知服務 (整合現有系統)
+
 services/index.ts                 # 統一導出
 
 ### Components (8 個檔案)
@@ -137,8 +138,8 @@ index.ts                          # 模組統一導出
 - ✅ 文件管理系統 (文件上傳、附件管理、版本控制)
 - ✅ 報表和儀表板系統 (專案概覽、財務、進度、品質報告和儀表板圖表)
 
-### ❌ 待實現
-- ❌ 通知和提醒系統
+### 🔄 進行中
+- 🔄 通知系統整合 (使用現有通知系統半成品)
 
 ### 📋 下一步計畫
 詳細的功能擴展計畫請參考 [EXPANSION_PLAN.md](./EXPANSION_PLAN.md)
