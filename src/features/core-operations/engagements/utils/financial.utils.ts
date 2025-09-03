@@ -9,6 +9,17 @@ import type {
   Receipt,
   ReceiptStatus
 } from '../types';
+import { convertTimestamp } from './date.utils';
+
+/**
+ * 格式化貨幣
+ */
+export function formatCurrency(amount: number, currency: string = 'TWD'): string {
+  return new Intl.NumberFormat('zh-TW', {
+    style: 'currency',
+    currency: currency,
+  }).format(amount);
+}
 
 /**
  * 格式化貨幣 (財務專用)
@@ -155,7 +166,7 @@ export function isPaymentOverdue(payment: Payment): boolean {
     return false;
   }
 
-  const requestDate = payment.requestDate.toDate ? payment.requestDate.toDate() : new Date(payment.requestDate);
+  const requestDate = convertTimestamp(payment.requestDate);
   const today = new Date();
   const daysDiff = Math.ceil((today.getTime() - requestDate.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -170,7 +181,7 @@ export function isReceiptOverdue(receipt: Receipt): boolean {
     return false;
   }
 
-  const requestDate = receipt.requestDate.toDate ? receipt.requestDate.toDate() : new Date(receipt.requestDate);
+  const requestDate = convertTimestamp(receipt.requestDate);
   const today = new Date();
   const daysDiff = Math.ceil((today.getTime() - requestDate.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -185,7 +196,7 @@ export function isInvoiceOverdue(invoice: Invoice): boolean {
     return false;
   }
 
-  const dueDate = invoice.dueDate.toDate ? invoice.dueDate.toDate() : new Date(invoice.dueDate);
+  const dueDate = convertTimestamp(invoice.dueDate);
   const today = new Date();
 
   return dueDate < today;

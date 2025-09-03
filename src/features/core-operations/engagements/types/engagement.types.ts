@@ -118,6 +118,11 @@ export interface CreateEngagementInput {
   totalValue: number;
   currency: string;
   scope: string;
+  progress?: {
+    percentage: number;
+    completedTasks: number;
+    totalTasks: number;
+  };
 }
 
 // 更新 Engagement 的輸入類型
@@ -136,15 +141,17 @@ export interface UpdateEngagementInput {
   status?: EngagementStatus;
   phase?: EngagementPhase;
   scope?: string;
+  tasks?: Task[];
 }
 
 // 導入其他相關類型
-export type { AuditLogEntry } from './audit.types';
-export type { ChangeOrder, EngagementVersion } from './change.types';
-export type { Communication, Meeting } from './communication.types';
-export type { Attachment, Document } from './document.types';
-export type { Invoice, Payment, Receipt } from './financial.types';
-export type { Deliverable, Milestone } from './progress.types';
-export type { AcceptanceRecord, QualityCheck } from './quality.types';
-export type { Issue, Risk } from './risk.types';
-export type { Task } from './task.types';
+import type { AuditLogEntry } from './audit.types';
+import type { ChangeOrder, EngagementVersion } from './change.types';
+import type { Communication, Meeting } from './communication.types';
+import type { Attachment, Document } from './document.types';
+import type { Invoice, Payment, Receipt } from './financial.types';
+import type { Deliverable, Milestone } from './progress.types';
+import type { AcceptanceRecord, QualityCheck } from './quality.types';
+import type { Issue, Risk } from './risk.types';
+import type { Task } from './task.types';
+

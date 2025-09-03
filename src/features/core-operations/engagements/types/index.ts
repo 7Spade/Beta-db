@@ -34,7 +34,7 @@ export type {
 
 export type {
   CreateDeliverableInput, CreateMilestoneInput, Deliverable, DeliverableStatus,
-  DeliverableType, Milestone, MilestoneStatus, ProgressSummary
+  Milestone, MilestoneStatus, ProgressSummary
 } from './progress.types';
 
 export type {

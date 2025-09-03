@@ -19,11 +19,15 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import type {
+  Attachment,
+  Communication,
   CreateEngagementInput,
+  Document,
   Engagement,
   EngagementPhase,
   EngagementStatus,
   EngagementSummary,
+  Meeting,
   UpdateEngagementInput,
 } from '../types';
 
@@ -304,6 +308,357 @@ export class EngagementService {
     );
 
     return totalValue > 0 ? Math.round((completedValue / totalValue) * 100) : 0;
+  }
+
+  // ==================== 溝通管理方法 ====================
+
+  /**
+   * 添加溝通記錄
+   */
+  async addCommunication(engagementId: string, communication: Omit<Communication, 'id'>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const newCommunication: Communication = {
+        ...communication,
+        id: `comm_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        createdBy: 'system',
+        updatedBy: 'system',
+      };
+
+      const updatedCommunications = [...engagement.engagement.communications, newCommunication];
+
+      await updateDoc(docRef, {
+        communications: updatedCommunications,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('添加溝通記錄失敗:', error);
+      return { success: false, error: '添加溝通記錄失敗' };
+    }
+  }
+
+  /**
+   * 更新溝通記錄
+   */
+  async updateCommunication(engagementId: string, communicationId: string, updates: Partial<Communication>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedCommunications = engagement.engagement.communications.map(comm =>
+        comm.id === communicationId
+          ? { ...comm, ...updates, updatedAt: Timestamp.now(), updatedBy: 'system' }
+          : comm
+      );
+
+      await updateDoc(docRef, {
+        communications: updatedCommunications,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('更新溝通記錄失敗:', error);
+      return { success: false, error: '更新溝通記錄失敗' };
+    }
+  }
+
+  /**
+   * 刪除溝通記錄
+   */
+  async deleteCommunication(engagementId: string, communicationId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedCommunications = engagement.engagement.communications.filter(comm => comm.id !== communicationId);
+
+      await updateDoc(docRef, {
+        communications: updatedCommunications,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('刪除溝通記錄失敗:', error);
+      return { success: false, error: '刪除溝通記錄失敗' };
+    }
+  }
+
+  // ==================== 會議管理方法 ====================
+
+  /**
+   * 添加會議
+   */
+  async addMeeting(engagementId: string, meeting: Omit<Meeting, 'id'>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const newMeeting: Meeting = {
+        ...meeting,
+        id: `meeting_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        createdBy: 'system',
+        updatedBy: 'system',
+      };
+
+      const updatedMeetings = [...engagement.engagement.meetings, newMeeting];
+
+      await updateDoc(docRef, {
+        meetings: updatedMeetings,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('添加會議失敗:', error);
+      return { success: false, error: '添加會議失敗' };
+    }
+  }
+
+  /**
+   * 更新會議
+   */
+  async updateMeeting(engagementId: string, meetingId: string, updates: Partial<Meeting>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedMeetings = engagement.engagement.meetings.map(meeting =>
+        meeting.id === meetingId
+          ? { ...meeting, ...updates, updatedAt: Timestamp.now(), updatedBy: 'system' }
+          : meeting
+      );
+
+      await updateDoc(docRef, {
+        meetings: updatedMeetings,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('更新會議失敗:', error);
+      return { success: false, error: '更新會議失敗' };
+    }
+  }
+
+  /**
+   * 刪除會議
+   */
+  async deleteMeeting(engagementId: string, meetingId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedMeetings = engagement.engagement.meetings.filter(meeting => meeting.id !== meetingId);
+
+      await updateDoc(docRef, {
+        meetings: updatedMeetings,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('刪除會議失敗:', error);
+      return { success: false, error: '刪除會議失敗' };
+    }
+  }
+
+  // ==================== 文件管理方法 ====================
+
+  /**
+   * 添加文件
+   */
+  async addDocument(engagementId: string, document: Omit<Document, 'id'>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const newDocument: Document = {
+        ...document,
+        id: `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        createdBy: 'system',
+        updatedBy: 'system',
+      };
+
+      const updatedDocuments = [...engagement.engagement.documents, newDocument];
+
+      await updateDoc(docRef, {
+        documents: updatedDocuments,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('添加文件失敗:', error);
+      return { success: false, error: '添加文件失敗' };
+    }
+  }
+
+  /**
+   * 更新文件
+   */
+  async updateDocument(engagementId: string, documentId: string, updates: Partial<Document>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedDocuments = engagement.engagement.documents.map(doc =>
+        doc.id === documentId
+          ? { ...doc, ...updates, updatedAt: Timestamp.now(), updatedBy: 'system' }
+          : doc
+      );
+
+      await updateDoc(docRef, {
+        documents: updatedDocuments,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('更新文件失敗:', error);
+      return { success: false, error: '更新文件失敗' };
+    }
+  }
+
+  /**
+   * 刪除文件
+   */
+  async deleteDocument(engagementId: string, documentId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedDocuments = engagement.engagement.documents.filter(doc => doc.id !== documentId);
+
+      await updateDoc(docRef, {
+        documents: updatedDocuments,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('刪除文件失敗:', error);
+      return { success: false, error: '刪除文件失敗' };
+    }
+  }
+
+  // ==================== 附件管理方法 ====================
+
+  /**
+   * 添加附件
+   */
+  async addAttachment(engagementId: string, attachment: Omit<Attachment, 'id'>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const newAttachment: Attachment = {
+        ...attachment,
+        id: `attach_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        uploadedAt: Timestamp.now(),
+        createdBy: 'system',
+      };
+
+      const updatedAttachments = [...engagement.engagement.attachments, newAttachment];
+
+      await updateDoc(docRef, {
+        attachments: updatedAttachments,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('添加附件失敗:', error);
+      return { success: false, error: '添加附件失敗' };
+    }
+  }
+
+  /**
+   * 刪除附件
+   */
+  async deleteAttachment(engagementId: string, attachmentId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      const engagement = await this.getEngagement(engagementId);
+
+      if (!engagement.success || !engagement.engagement) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+
+      const updatedAttachments = engagement.engagement.attachments.filter(attach => attach.id !== attachmentId);
+
+      await updateDoc(docRef, {
+        attachments: updatedAttachments,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system',
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('刪除附件失敗:', error);
+      return { success: false, error: '刪除附件失敗' };
+    }
   }
 }
 

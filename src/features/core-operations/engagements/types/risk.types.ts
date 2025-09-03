@@ -78,8 +78,11 @@ export interface CreateRiskInput {
   description: string;
   category: RiskCategory;
   level: RiskLevel;
+  status: RiskStatus;
   probability: number;
   impact: number;
+  riskScore: number;
+  identifiedDate: Date;
   mitigationPlan?: string;
   contingencyPlan?: string;
   owner?: string;
@@ -106,6 +109,10 @@ export interface CreateIssueInput {
   description: string;
   type: IssueType;
   priority: IssuePriority;
+  status: IssueStatus;
+  reportedBy: string;
+  reportedByName: string;
+  reportedDate: Date;
   assignedTo?: string;
   dueDate?: Date;
 }

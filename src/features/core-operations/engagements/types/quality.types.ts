@@ -104,6 +104,10 @@ export interface CreateAcceptanceRecordInput {
   taskId?: string;
   deliverableId?: string;
   submittedQuantity: number;
+  status: AcceptanceStatus;
+  applicantId: string;
+  applicantName: string;
+  submittedAt: Date;
   notes?: string;
   attachments?: Array<{ name: string; url: string }>;
 }
@@ -118,6 +122,7 @@ export interface UpdateAcceptanceRecordInput {
 export interface CreateQualityCheckInput {
   title: string;
   description?: string;
+  status: QualityCheckStatus;
   type: 'inspection' | 'review' | 'test' | 'audit' | 'other';
   plannedDate: Date;
   assignedTo?: string;

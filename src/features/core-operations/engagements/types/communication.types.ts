@@ -82,7 +82,7 @@ export interface Decision {
 export interface CommunicationSummary {
   totalCommunications: number;
   totalMeetings: number;
-  upcomingMeetings: number;
+  upcomingMeetingsCount: number;
   pendingActionItems: number;
   overdueActionItems: number;
   recentCommunications: Communication[];
