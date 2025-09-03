@@ -82,6 +82,10 @@ export interface UpdateChangeOrderInput {
     scheduleDays?: number;
     scope?: string;
   };
+  approvedBy?: string;
+  approvedDate?: Date | Timestamp;
+  rejectedBy?: string;
+  rejectedDate?: Date | Timestamp;
   rejectionReason?: string;
 }
 

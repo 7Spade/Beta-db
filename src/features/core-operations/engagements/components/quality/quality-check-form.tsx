@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@root/src/shared/utils';
 import { Calendar, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
-import type { QualityCheck, CreateQualityCheckInput, QualityCriteria } from '../../types';
+import type { CreateQualityCheckInput, QualityCheck, QualityCriteria } from '../../types';
 
 interface QualityCheckFormProps {
     check?: QualityCheck;
@@ -20,18 +20,18 @@ interface QualityCheckFormProps {
     onCancel?: () => void;
 }
 
-export function QualityCheckForm({ 
-    check, 
-    onSubmit, 
-    onSuccess, 
-    onCancel 
+export function QualityCheckForm({
+    check,
+    onSubmit,
+    onSuccess,
+    onCancel
 }: QualityCheckFormProps) {
     const [formData, setFormData] = useState({
         title: check?.title || '',
         description: check?.description || '',
         type: check?.type || 'inspection' as const,
-        plannedDate: check?.plannedDate ? 
-            (check.plannedDate instanceof Date ? check.plannedDate : check.plannedDate instanceof Date ? check.plannedDate : new Date()) 
+        plannedDate: check?.plannedDate ?
+            (check.plannedDate instanceof Date ? check.plannedDate : check.plannedDate instanceof Date ? check.plannedDate : new Date())
             : new Date(),
         assignedTo: check?.assignedTo || '',
     });
@@ -79,7 +79,7 @@ export function QualityCheckForm({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
@@ -89,6 +89,7 @@ export function QualityCheckForm({
             await onSubmit({
                 title: formData.title.trim(),
                 description: formData.description.trim() || undefined,
+                status: '待檢查',
                 type: formData.type,
                 plannedDate: formData.plannedDate,
                 assignedTo: formData.assignedTo || undefined,
@@ -118,10 +119,10 @@ export function QualityCheckForm({
     };
 
     const updateCriterion = (index: number, field: keyof Omit<QualityCriteria, 'id'>, value: any) => {
-        setCriteria(prev => prev.map((criterion, i) => 
+        setCriteria(prev => prev.map((criterion, i) =>
             i === index ? { ...criterion, [field]: value } : criterion
         ));
-        
+
         // 清除相關錯誤
         const errorKey = `criterion_${index}_${field}`;
         if (errors[errorKey]) {
@@ -217,7 +218,7 @@ export function QualityCheckForm({
                         添加標準
                     </Button>
                 </div>
-                
+
                 {errors.criteria && (
                     <p className="text-sm text-red-500 mb-4">{errors.criteria}</p>
                 )}
@@ -239,7 +240,7 @@ export function QualityCheckForm({
                                     </Button>
                                 )}
                             </div>
-                            
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <Label htmlFor={`criterion_${index}_description`}>描述 *</Label>
@@ -254,7 +255,7 @@ export function QualityCheckForm({
                                         <p className="text-sm text-red-500 mt-1">{errors[`criterion_${index}_description`]}</p>
                                     )}
                                 </div>
-                                
+
                                 <div>
                                     <Label htmlFor={`criterion_${index}_requirement`}>要求 *</Label>
                                     <Input
@@ -268,11 +269,11 @@ export function QualityCheckForm({
                                         <p className="text-sm text-red-500 mt-1">{errors[`criterion_${index}_requirement`]}</p>
                                     )}
                                 </div>
-                                
+
                                 <div>
                                     <Label htmlFor={`criterion_${index}_status`}>狀態</Label>
-                                    <Select 
-                                        value={criterion.status} 
+                                    <Select
+                                        value={criterion.status}
                                         onValueChange={(value) => updateCriterion(index, 'status', value)}
                                     >
                                         <SelectTrigger>
@@ -286,7 +287,7 @@ export function QualityCheckForm({
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                
+
                                 <div>
                                     <Label htmlFor={`criterion_${index}_notes`}>備註</Label>
                                     <Input

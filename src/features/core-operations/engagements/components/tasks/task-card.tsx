@@ -3,27 +3,26 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Edit, 
-  Trash2, 
-  Calendar, 
-  User, 
-  DollarSign, 
-  Clock,
-  CheckCircle,
+import {
   AlertCircle,
+  Calendar,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Edit,
   Pause,
+  Trash2,
+  User,
   X
 } from 'lucide-react';
-import { TaskStatusBadge } from './task-status-badge';
-import { TaskProgressBar } from './task-progress-bar';
+import { useState } from 'react';
+import type { Task, TaskPriority, TaskStatus } from '../../types';
 import { formatCurrency, formatDate } from '../../utils';
-import type { Task, TaskStatus, TaskPriority } from '../../types';
+import { TaskProgressBar } from './task-progress-bar';
+import { TaskStatusBadge } from './task-status-badge';
 
 interface TaskCardProps {
   task: Task;
@@ -37,9 +36,9 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
 
   const handleStatusChange = async (newStatus: TaskStatus) => {
     try {
-      await onUpdate(task.id, { 
+      await onUpdate(task.id, {
         status: newStatus,
-        lastUpdated: new Date().toISOString(),
+        lastUpdated: new Date(),
         ...(newStatus === '已完成' && { completedDate: new Date() })
       });
     } catch (error) {
@@ -115,7 +114,7 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* 進度條 */}
         <div className="space-y-2">
@@ -125,7 +124,7 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
               {task.completedQuantity} / {task.quantity}
             </span>
           </div>
-          <TaskProgressBar 
+          <TaskProgressBar
             completed={task.completedQuantity}
             total={task.quantity}
             percentage={progressPercentage}
@@ -141,7 +140,7 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
               <div className="font-medium">{formatCurrency(task.value)}</div>
             </div>
           </div>
-          
+
           {task.dueDate && (
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -151,7 +150,7 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
               </div>
             </div>
           )}
-          
+
           {task.assignedTo && (
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-muted-foreground" />
@@ -161,7 +160,7 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
               </div>
             </div>
           )}
-          
+
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
             <div>
@@ -205,7 +204,7 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
               {isDeleting ? '刪除中...' : '刪除'}
             </Button>
           </div>
-          
+
           {/* 快速狀態切換 */}
           <div className="flex gap-1">
             {task.status !== '已完成' && (

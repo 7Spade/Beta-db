@@ -101,4 +101,5 @@ export interface CreateAttachmentInput {
   fileSize: number;
   mimeType: string;
   category?: string;
+  createdBy: string;
 }

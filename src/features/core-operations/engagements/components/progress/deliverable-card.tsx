@@ -21,7 +21,7 @@ import {
   X
 } from 'lucide-react';
 import { useState } from 'react';
-import type { Deliverable, DeliverableStatus } from '../../types';
+import type { Deliverable, DeliverableStatus, DeliverableType } from '../../types';
 import { formatDate } from '../../utils';
 
 interface DeliverableCardProps {

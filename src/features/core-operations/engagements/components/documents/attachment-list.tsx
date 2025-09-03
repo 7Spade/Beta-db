@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Paperclip, Plus, Search, Upload } from 'lucide-react';
 import { useState } from 'react';
 import type { Attachment } from '../../types/document.types';
+import { convertTimestamp } from '../../utils';
 import { AttachmentCard } from './attachment-card';
 import { AttachmentForm } from './attachment-form';
 
@@ -50,24 +51,24 @@ export function AttachmentList({
   const filteredAttachments = (attachments || [])
     .filter(attachment => {
       const matchesSearch = attachment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (attachment.description && attachment.description.toLowerCase().includes(searchTerm.toLowerCase()));
+        (attachment.description && attachment.description.toLowerCase().includes(searchTerm.toLowerCase()));
       return matchesSearch;
     })
     .sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (sortBy) {
         case 'name':
           aValue = a.name;
           bValue = b.name;
           break;
         case 'uploadedAt':
-          aValue = a.uploadedAt instanceof Date ? a.uploadedAt.getTime() : 
-                  a.uploadedAt && a.uploadedAt.toMillis ? a.uploadedAt.toMillis() : 
-                  new Date(a.uploadedAt).getTime();
-          bValue = b.uploadedAt instanceof Date ? b.uploadedAt.getTime() : 
-                  b.uploadedAt && b.uploadedAt.toMillis ? b.uploadedAt.toMillis() : 
-                  new Date(b.uploadedAt).getTime();
+          aValue = a.uploadedAt instanceof Date ? a.uploadedAt.getTime() :
+            a.uploadedAt && a.uploadedAt.toMillis ? a.uploadedAt.toMillis() :
+              convertTimestamp(a.uploadedAt).getTime();
+          bValue = b.uploadedAt instanceof Date ? b.uploadedAt.getTime() :
+            b.uploadedAt && b.uploadedAt.toMillis ? b.uploadedAt.toMillis() :
+              convertTimestamp(b.uploadedAt).getTime();
           break;
         case 'fileSize':
           aValue = a.fileSize;
@@ -76,7 +77,7 @@ export function AttachmentList({
         default:
           return 0;
       }
-      
+
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {

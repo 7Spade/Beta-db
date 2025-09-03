@@ -99,7 +99,7 @@ export async function addSubtaskAction(
         description: '',
         status: '待處理',
         priority: '中',
-        lastUpdated: new Date().toISOString(),
+        lastUpdated: new Date(),
         subTasks: [],
         value: quantity * unitPrice,
         quantity: quantity,
@@ -178,7 +178,7 @@ export async function updateTaskStatusAction(
         completedQuantity: task.quantity,
         status: '已完成' as const,
         completedDate: new Date(),
-        lastUpdated: new Date().toISOString(),
+        lastUpdated: new Date(),
         updatedAt: new Date(),
     }));
 

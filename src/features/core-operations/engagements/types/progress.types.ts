@@ -26,6 +26,7 @@ export interface Milestone {
 
 // 交付物相關類型
 export type DeliverableStatus = '未開始' | '進行中' | '已完成' | '已驗收' | '已拒絕';
+export type DeliverableType = 'document' | 'product' | 'service' | 'report' | 'other';
 
 export interface Deliverable {
   id: string;
@@ -33,7 +34,7 @@ export interface Deliverable {
   name: string;
   description?: string;
   status: DeliverableStatus;
-  type: 'document' | 'product' | 'service' | 'report' | 'other';
+  type: DeliverableType;
   plannedDate: Date | Timestamp;
   actualDate?: Date | Timestamp;
   acceptedDate?: Date | Timestamp;
@@ -106,7 +107,7 @@ export interface UpdateMilestoneInput {
 export interface CreateDeliverableInput {
   title: string;
   description?: string;
-  type: 'document' | 'product' | 'service' | 'report' | 'other';
+  type: DeliverableType;
   plannedDate: Date;
   assignedTo?: string;
   acceptanceCriteria?: string[];

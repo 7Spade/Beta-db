@@ -28,6 +28,7 @@ export function MeetingForm({ meeting, onSave, onCancel }: MeetingFormProps) {
         description: meeting?.description || '',
         agenda: meeting?.agenda || [],
         participants: meeting?.participants || [],
+        participantNames: meeting?.participantNames || [],
         scheduledDate: meeting?.scheduledDate ? (meeting.scheduledDate instanceof Date ? meeting.scheduledDate : meeting.scheduledDate.toDate()) : new Date(),
         duration: meeting?.duration || 60,
         location: meeting?.location || '',

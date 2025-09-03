@@ -45,6 +45,10 @@ export function EngagementDetailView({
   const [showEditForm, setShowEditForm] = useState(false);
   const { engagement, isLoading, error, refresh } = useEngagement(engagementId);
 
+  const handleRefresh = () => {
+    refresh();
+  };
+
   const handleEditSuccess = () => {
     setShowEditForm(false);
     refresh();

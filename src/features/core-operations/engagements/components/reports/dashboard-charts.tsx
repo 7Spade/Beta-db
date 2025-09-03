@@ -14,6 +14,7 @@ import {
     TrendingUp
 } from 'lucide-react';
 import type { Engagement } from '../../types/engagement.types';
+import { convertTimestamp } from '../../utils';
 
 interface DashboardChartsProps {
     engagement: Engagement;
@@ -89,8 +90,8 @@ export function DashboardCharts({ engagement, className }: DashboardChartsProps)
 
     // 計算時間進度
     const getTimeProgress = () => {
-        const startDate = engagement.startDate.toDate ? engagement.startDate.toDate() : new Date(engagement.startDate);
-        const endDate = engagement.endDate.toDate ? engagement.endDate.toDate() : new Date(engagement.endDate);
+        const startDate = convertTimestamp(engagement.startDate);
+        const endDate = convertTimestamp(engagement.endDate);
         const today = new Date();
 
         const totalDuration = endDate.getTime() - startDate.getTime();
@@ -108,8 +109,8 @@ export function DashboardCharts({ engagement, className }: DashboardChartsProps)
         const acceptanceRecords = engagement.acceptanceRecords || [];
         const qualityChecks = engagement.qualityChecks || [];
 
-        const approvedRecords = acceptanceRecords.filter(record => record.status === '已通過').length;
-        const passedChecks = qualityChecks.filter(check => check.status === '通過').length;
+        const approvedRecords = acceptanceRecords.filter(record => record.status === '已批准').length;
+        const passedChecks = qualityChecks.filter(check => check.status === '已通過').length;
 
         const acceptanceRate = acceptanceRecords.length > 0 ? Math.round((approvedRecords / acceptanceRecords.length) * 100) : 0;
         const qualityPassRate = qualityChecks.length > 0 ? Math.round((passedChecks / qualityChecks.length) * 100) : 0;

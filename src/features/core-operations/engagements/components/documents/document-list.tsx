@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileText, Plus, Search, Upload } from 'lucide-react';
 import { useState } from 'react';
-import type { Document, DocumentType, DocumentStatus } from '../../types/document.types';
+import type { Document, DocumentStatus, DocumentType } from '../../types/document.types';
+import { convertTimestamp } from '../../utils';
 import { DocumentCard } from './document-card';
 import { DocumentForm } from './document-form';
 
@@ -55,15 +56,15 @@ export function DocumentList({
   const filteredDocuments = (documents || [])
     .filter(document => {
       const matchesSearch = document.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (document.description && document.description.toLowerCase().includes(searchTerm.toLowerCase()));
+        (document.description && document.description.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesType = typeFilter === 'all' || document.type === typeFilter;
       const matchesStatus = statusFilter === 'all' || document.status === statusFilter;
-      
+
       return matchesSearch && matchesType && matchesStatus;
     })
     .sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (sortBy) {
         case 'title':
           aValue = a.title;
@@ -78,17 +79,17 @@ export function DocumentList({
           bValue = b.status;
           break;
         case 'createdAt':
-          aValue = a.createdAt instanceof Date ? a.createdAt.getTime() : 
-                  a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 
-                  new Date(a.createdAt).getTime();
-          bValue = b.createdAt instanceof Date ? b.createdAt.getTime() : 
-                  b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 
-                  new Date(b.createdAt).getTime();
+          aValue = a.createdAt instanceof Date ? a.createdAt.getTime() :
+            a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() :
+              convertTimestamp(a.createdAt).getTime();
+          bValue = b.createdAt instanceof Date ? b.createdAt.getTime() :
+            b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() :
+              convertTimestamp(b.createdAt).getTime();
           break;
         default:
           return 0;
       }
-      
+
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {
@@ -188,7 +189,7 @@ export function DocumentList({
                 />
               </div>
             </div>
-            
+
             <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as DocumentType | 'all')}>
               <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="類型" />

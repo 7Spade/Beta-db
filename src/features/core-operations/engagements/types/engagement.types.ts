@@ -142,6 +142,7 @@ export interface UpdateEngagementInput {
   phase?: EngagementPhase;
   scope?: string;
   tasks?: Task[];
+  changeOrders?: ChangeOrder[];
 }
 
 // 導入其他相關類型

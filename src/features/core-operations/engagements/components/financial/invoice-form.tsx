@@ -128,7 +128,8 @@ export function InvoiceForm({ invoice, onSubmit, onCancel }: InvoiceFormProps) {
 
     const addItem = () => {
         if (newItem.description.trim() && newItem.quantity > 0 && newItem.unitPrice > 0) {
-            const item: Omit<InvoiceItem, 'id'> = {
+            const item: InvoiceItem = {
+                id: `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
                 description: newItem.description.trim(),
                 quantity: newItem.quantity,
                 unitPrice: newItem.unitPrice,

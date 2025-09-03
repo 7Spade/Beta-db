@@ -150,8 +150,9 @@ export async function createEngagementFromDocument(
       auditLog: [
         {
           id: `audit-${Date.now()}`,
+          entityType: 'engagement',
+          entityId: engagementId,
           action: 'create',
-          description: '從文件解析創建 Engagement',
           userId: 'system',
           userName: '系統',
           timestamp: Timestamp.fromDate(now),

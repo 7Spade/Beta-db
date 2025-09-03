@@ -33,7 +33,7 @@ export type {
 } from './change.types';
 
 export type {
-  CreateDeliverableInput, CreateMilestoneInput, Deliverable, DeliverableStatus,
+  CreateDeliverableInput, CreateMilestoneInput, Deliverable, DeliverableStatus, DeliverableType,
   Milestone, MilestoneStatus, ProgressSummary
 } from './progress.types';
 

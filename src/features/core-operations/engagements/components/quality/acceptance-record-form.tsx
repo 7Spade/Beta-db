@@ -6,7 +6,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@root/src/shared/utils';
 import { Calendar, X } from 'lucide-react';
@@ -20,11 +19,11 @@ interface AcceptanceRecordFormProps {
     onCancel?: () => void;
 }
 
-export function AcceptanceRecordForm({ 
-    record, 
-    onSubmit, 
-    onSuccess, 
-    onCancel 
+export function AcceptanceRecordForm({
+    record,
+    onSubmit,
+    onSuccess,
+    onCancel
 }: AcceptanceRecordFormProps) {
     const [formData, setFormData] = useState({
         title: record?.title || '',
@@ -53,7 +52,7 @@ export function AcceptanceRecordForm({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
@@ -65,6 +64,10 @@ export function AcceptanceRecordForm({
                 taskId: formData.taskId || undefined,
                 deliverableId: formData.deliverableId || undefined,
                 submittedQuantity: formData.submittedQuantity,
+                status: '待審批',
+                applicantId: 'current-user', // TODO: 從認證系統獲取
+                applicantName: '當前用戶', // TODO: 從認證系統獲取
+                submittedAt: new Date(),
                 notes: formData.notes.trim() || undefined,
             });
             onSuccess?.();

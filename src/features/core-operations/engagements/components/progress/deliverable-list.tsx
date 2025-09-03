@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Timestamp } from 'firebase/firestore';
 import { FileText, Package, Plus, Search, SortAsc, SortDesc, User } from 'lucide-react';
 import { useState } from 'react';
-import type { Deliverable, DeliverableStatus } from '../../types';
+import type { Deliverable, DeliverableStatus, DeliverableType } from '../../types';
 import { DeliverableCard } from './deliverable-card';
 import { DeliverableForm } from './deliverable-form';
 

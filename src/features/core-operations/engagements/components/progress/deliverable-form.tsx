@@ -15,7 +15,7 @@ import { cn } from '@root/src/shared/utils';
 import { format } from 'date-fns';
 import { CalendarIcon, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
-import type { Deliverable, DeliverableStatus } from '../../types';
+import type { Deliverable, DeliverableStatus, DeliverableType } from '../../types';
 
 interface DeliverableFormProps {
   deliverable?: Deliverable;

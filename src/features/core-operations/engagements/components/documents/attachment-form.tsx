@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { X, Upload, Paperclip } from 'lucide-react';
+import { Paperclip, Upload, X } from 'lucide-react';
 import { useState } from 'react';
 import type { CreateAttachmentInput } from '../../types/document.types';
 
@@ -24,6 +24,7 @@ export function AttachmentForm({ attachment, onSave, onCancel }: AttachmentFormP
     fileSize: attachment?.fileSize || 0,
     mimeType: attachment?.mimeType || '',
     category: attachment?.category || '',
+    createdBy: 'current-user', // TODO: 從認證系統獲取
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

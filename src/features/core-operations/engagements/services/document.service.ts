@@ -65,6 +65,7 @@ export class DocumentService {
         ...input,
         uploadedBy: 'system', // TODO: 從認證上下文獲取
         uploadedAt: Timestamp.now(),
+        createdBy: input.createdBy,
       };
 
       const docRef = doc(firestore, this.collectionName, engagementId);

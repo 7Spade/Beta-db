@@ -96,6 +96,7 @@ export interface CreateCommunicationInput {
   subject: string;
   content: string;
   participants: string[];
+  participantNames: string[];
   date: Date;
   duration?: number;
   attachments?: Array<{ name: string; url: string }>;
@@ -124,6 +125,7 @@ export interface CreateMeetingInput {
   description?: string;
   agenda?: string[];
   participants: string[];
+  participantNames: string[];
   scheduledDate: Date;
   actualStartDate?: Date;
   actualEndDate?: Date;

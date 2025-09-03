@@ -7,8 +7,8 @@ import { revalidatePath } from 'next/cache';
 import { engagementService, notificationService } from '../services';
 import type {
   CreateTaskInput,
-  UpdateTaskInput,
   TaskStatus,
+  UpdateTaskInput,
 } from '../types';
 
 /**
@@ -26,13 +26,13 @@ export async function addTaskAction(
     }
 
     const engagement = engagementResult.engagement;
-    
+
     // 創建新任務
     const newTask = {
       id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       ...input,
       status: '待處理' as TaskStatus,
-      lastUpdated: new Date().toISOString(),
+      lastUpdated: new Date(),
       subTasks: [],
       completedQuantity: 0,
       createdBy: 'system', // TODO: 從認證上下文獲取
@@ -56,7 +56,7 @@ export async function addTaskAction(
           input.assignedTo
         );
       }
-      
+
       revalidatePath('/engagements');
       revalidatePath(`/engagements/${engagementId}`);
     }
@@ -85,14 +85,14 @@ export async function updateTaskAction(
     }
 
     const engagement = engagementResult.engagement;
-    
+
     // 找到並更新任務
     const updatedTasks = engagement.tasks.map(task => {
       if (task.id === taskId) {
         return {
           ...task,
           ...input,
-          lastUpdated: new Date().toISOString(),
+          lastUpdated: new Date(),
           updatedBy: 'system', // TODO: 從認證上下文獲取
           updatedAt: new Date(),
         };
@@ -132,7 +132,7 @@ export async function deleteTaskAction(
     }
 
     const engagement = engagementResult.engagement;
-    
+
     // 移除任務
     const updatedTasks = engagement.tasks.filter(task => task.id !== taskId);
     const result = await engagementService.updateEngagement(engagementId, {
@@ -172,7 +172,7 @@ export async function assignTaskAction(
   assignedTo: string
 ): Promise<{ success: boolean; error?: string }> {
   const result = await updateTaskAction(engagementId, taskId, { assignedTo });
-  
+
   if (result.success) {
     // 發送分配通知
     const engagementResult = await engagementService.getEngagement(engagementId);
@@ -187,7 +187,7 @@ export async function assignTaskAction(
       }
     }
   }
-  
+
   return result;
 }
 

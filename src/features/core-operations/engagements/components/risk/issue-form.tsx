@@ -68,6 +68,10 @@ export function IssueForm({
                 description: formData.description.trim(),
                 type: formData.type,
                 priority: formData.priority,
+                status: '新增',
+                reportedBy: 'current-user', // TODO: 從認證系統獲取
+                reportedByName: '當前用戶', // TODO: 從認證系統獲取
+                reportedDate: new Date(),
                 assignedTo: formData.assignedTo.trim() || undefined,
                 dueDate: formData.dueDate,
             });

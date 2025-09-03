@@ -29,6 +29,7 @@ export function CommunicationForm({ communication, onSave, onCancel }: Communica
         subject: communication?.subject || '',
         content: communication?.content || '',
         participants: communication?.participants || [],
+        participantNames: communication?.participantNames || [],
         date: communication?.date ? (communication.date instanceof Date ? communication.date : communication.date.toDate()) : new Date(),
         duration: communication?.duration || undefined,
         attachments: communication?.attachments || [],

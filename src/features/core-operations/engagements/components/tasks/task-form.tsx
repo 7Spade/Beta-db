@@ -89,7 +89,7 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
                 description: formData.description.trim() || undefined,
                 status: formData.status,
                 priority: formData.priority,
-                lastUpdated: new Date().toISOString(),
+                lastUpdated: new Date(),
                 subTasks: task?.subTasks || [],
                 value: formData.quantity * formData.unitPrice - formData.discount,
                 quantity: formData.quantity,
