@@ -39,41 +39,36 @@
 ## 剩餘待修復的問題
 
 ### 🔄 高優先級 (阻塞編譯)
-1. **Actions 中的類型問題** (8 個錯誤)
-   - `change.actions.ts`: `changeOrders` 屬性不存在
-   - `communication.actions.ts`: 缺少 `participantNames` 屬性
-   - `document.actions.ts`: 缺少 `createdBy` 屬性
-   - `subtask.actions.ts`: `lastUpdated` 類型不匹配
-   - `task.actions.ts`: `lastUpdated` 類型不匹配
+1. **Actions 中的類型問題** (4 個錯誤)
+   - `change.actions.ts`: `changeOrders` 類型不匹配
+   - `communication.actions.ts`: 在 `Omit` 類型下誤用 `id`（2 個）
+   - `document-parse.actions.ts`: `Omit<Engagement, "id">` 中不允許 `progress`
 
-2. **組件中的 Timestamp 轉換** (4 個錯誤)
-   - `attachment-list.tsx`: 需要修復 Timestamp 轉換
-   - `document-list.tsx`: 需要修復 Timestamp 轉換
-
-3. **表單類型不匹配** (6 個錯誤)
-   - `acceptance-record-form.tsx`: 缺少必要屬性
-   - `quality-check-form.tsx`: 缺少 `status` 屬性
-   - `issue-form.tsx`: 缺少必要屬性
-   - `risk-form.tsx`: 缺少必要屬性
+2. **表單類型不匹配** (2 個錯誤)
+   - `acceptance-record-list.tsx`: `onSubmit` 類型不匹配
+   - `quality-check-list.tsx`: `onSubmit` 類型不匹配
 
 ### 🔄 中優先級 (功能完整性)
-4. **報表組件中的 Timestamp 轉換** (46 個錯誤)
-   - `dashboard-charts.tsx`: 8 個錯誤
+3. **報表組件中的日期轉換與狀態值** (53 個錯誤)
    - `financial-report.tsx`: 15 個錯誤
    - `progress-report.tsx`: 15 個錯誤
    - `quality-report.tsx`: 23 個錯誤
 
-5. **狀態值不匹配** (多個錯誤)
-   - 品質狀態值不匹配 (中文 vs 英文)
-   - 任務狀態值不匹配
+4. **狀態值不匹配** (多個錯誤)
+   - 中文/英文狀態值比較導致類型不相容（見 progress/quality 報表）
 
 ### 🔄 低優先級 (代碼品質)
-6. **工具函數導出問題** (4 個錯誤)
-   - `utils/index.ts`: 導出衝突和缺失函數
+5. **工具函數與導出問題** (多處)
+   - `formatCurrency` 未導出，導致多處導入失敗（financial-*、`task-card.tsx`、`engagement-dashboard.tsx` 等）
+   - `utils/index.ts` 缺少命名導出：`calculateEngagementDuration`、`formatEngagementDate`、`getEngagementPhaseColor`、`getEngagementPriority`、`getEngagementStatusColor`
 
-7. **組件屬性問題** (2 個錯誤)
-   - `task-card.tsx`: `lastUpdated` 類型問題
-   - `task-form.tsx`: `lastUpdated` 類型問題
+6. **組件導入問題**
+   - `engagement-dashboard.tsx`: `getPhaseColor`/`getStatusColor` 導入名錯誤
+   - `engagement-detail-view.tsx`: 同上
+
+7. **測試失敗** (4 個錯誤)
+   - `__tests__/types.test.ts`: 3 個（狀態/階段字面值與類型不符、`Task.startDate` 不存在）
+   - `__tests__/utils.test.ts`: 1 個（`formatCurrency` 未導出）
 
 ## 修復策略
 

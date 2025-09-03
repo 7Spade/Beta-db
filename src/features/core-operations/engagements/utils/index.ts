@@ -14,9 +14,14 @@ export {
   isReceiptOverdue
 } from './financial.utils';
 
-// 其他工具（避免 formatDate 衝突）
+// 其他工具（避免 formatDate 衝突，並與實際導出對齊）
 export {
-  calculateEngagementDuration, calculateEngagementProgress, formatEngagementDate, getEngagementPhaseColor, getEngagementPriority, getEngagementStatusColor, isEngagementOverdue
+  calculateDaysRemaining, calculateEngagementProgress, filterEngagements,
+  // 以別名方式導出以避免與 date.utils 的 formatDate 衝突
+  formatDate as formatEngagementDate, generateEngagementSummary,
+  // 直接導出原名，避免與 status.utils 的命名衝突
+  getPhaseColor,
+  getStatusColor, isEngagementOverdue, sortEngagements
 } from './engagement.utils';
 
 export * from './status.utils';
