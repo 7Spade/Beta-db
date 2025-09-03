@@ -66,7 +66,7 @@ export function DashboardCharts({ engagement, className }: DashboardChartsProps)
 
         return engagement.milestones.map((milestone, index) => ({
             name: milestone.name,
-            progress: milestone.progress || 0,
+            progress: milestone.progress !== null && milestone.progress !== undefined ? milestone.progress : null,
             status: milestone.status,
             dueDate: milestone.dueDate
         }));
@@ -313,10 +313,10 @@ export function DashboardCharts({ engagement, className }: DashboardChartsProps)
                                             <span className="text-sm text-muted-foreground">
                                                 {formatDate(milestone.dueDate)}
                                             </span>
-                                            <span className="text-sm font-medium">{milestone.progress}%</span>
+                                            <span className="text-sm font-medium">{milestone.progress !== null && milestone.progress !== undefined ? `${milestone.progress}%` : '無進度'}</span>
                                         </div>
                                     </div>
-                                    <Progress value={milestone.progress} className="h-2" />
+                                    <Progress value={milestone.progress || 0} className="h-2" />
                                 </div>
                             ))}
                         </div>

@@ -103,7 +103,7 @@ export interface EngagementSummary {
   totalValue: number;
   status: EngagementStatus;
   phase: EngagementPhase;
-  progressPercentage: number;
+  progressPercentage: number | null;
 }
 
 // 創建 Engagement 的輸入類型

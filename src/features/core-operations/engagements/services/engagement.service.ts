@@ -35,10 +35,51 @@ export class EngagementService {
   private readonly collectionName = 'engagements';
 
   /**
+   * 驗證輸入數據
+   */
+  private validateEngagementInput(input: CreateEngagementInput): { isValid: boolean; error?: string } {
+    if (!input.name || input.name.trim().length === 0) {
+      return { isValid: false, error: '專案名稱不能為空' };
+    }
+    
+    if (!input.contractor || input.contractor.trim().length === 0) {
+      return { isValid: false, error: '承包商不能為空' };
+    }
+    
+    if (!input.client || input.client.trim().length === 0) {
+      return { isValid: false, error: '客戶不能為空' };
+    }
+    
+    if (!input.startDate || !input.endDate) {
+      return { isValid: false, error: '開始日期和結束日期不能為空' };
+    }
+    
+    if (input.startDate >= input.endDate) {
+      return { isValid: false, error: '開始日期必須早於結束日期' };
+    }
+    
+    if (input.totalValue <= 0) {
+      return { isValid: false, error: '總價值必須大於 0' };
+    }
+    
+    if (!input.currency || input.currency.trim().length === 0) {
+      return { isValid: false, error: '貨幣不能為空' };
+    }
+    
+    return { isValid: true };
+  }
+
+  /**
    * 創建新的 Engagement
    */
   async createEngagement(input: CreateEngagementInput): Promise<{ success: boolean; engagementId?: string; error?: string }> {
     try {
+      // 驗證輸入數據
+      const validation = this.validateEngagementInput(input);
+      if (!validation.isValid) {
+        return { success: false, error: validation.error };
+      }
+
       const engagementData = {
         ...input,
         startDate: Timestamp.fromDate(input.startDate),
@@ -257,6 +298,16 @@ export class EngagementService {
     updates: Array<{ id: string; data: UpdateEngagementInput }>
   ): Promise<{ success: boolean; error?: string }> {
     try {
+      // 驗證所有更新數據
+      for (const { data } of updates) {
+        if (data.startDate && data.endDate && data.startDate >= data.endDate) {
+          return { success: false, error: '開始日期必須早於結束日期' };
+        }
+        if (data.totalValue !== undefined && data.totalValue <= 0) {
+          return { success: false, error: '總價值必須大於 0' };
+        }
+      }
+
       const batch = writeBatch(firestore);
 
       updates.forEach(({ id, data }) => {
@@ -290,6 +341,60 @@ export class EngagementService {
       console.error('批量更新 Engagements 失敗:', error);
       const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
       return { success: false, error: `批量更新失敗: ${errorMessage}` };
+    }
+  }
+
+  /**
+   * 使用事務更新 Engagement
+   */
+  async updateEngagementWithTransaction(
+    id: string,
+    input: UpdateEngagementInput,
+    additionalUpdates?: Record<string, any>
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { runTransaction } = await import('firebase/firestore');
+      
+      const result = await runTransaction(firestore, async (transaction) => {
+        const docRef = doc(firestore, this.collectionName, id);
+        const docSnap = await transaction.get(docRef);
+        
+        if (!docSnap.exists()) {
+          throw new Error('Engagement 不存在');
+        }
+        
+        const currentData = docSnap.data();
+        const updateData = {
+          ...input,
+          ...additionalUpdates,
+          updatedBy: 'system', // TODO: 從認證上下文獲取
+          updatedAt: Timestamp.now(),
+        };
+        
+        // 處理日期轉換
+        if (input.startDate) {
+          (updateData as any).startDate = Timestamp.fromDate(input.startDate);
+        }
+        if (input.endDate) {
+          (updateData as any).endDate = Timestamp.fromDate(input.endDate);
+        }
+        if (input.actualStartDate) {
+          (updateData as any).actualStartDate = Timestamp.fromDate(input.actualStartDate);
+        }
+        if (input.actualEndDate) {
+          (updateData as any).actualEndDate = Timestamp.fromDate(input.actualEndDate);
+        }
+        
+        transaction.update(docRef, updateData);
+        
+        return { success: true };
+      });
+      
+      return result;
+    } catch (error) {
+      console.error('事務更新 Engagement 失敗:', error);
+      const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
+      return { success: false, error: `更新失敗: ${errorMessage}` };
     }
   }
 

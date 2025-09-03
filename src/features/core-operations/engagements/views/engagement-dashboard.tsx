@@ -57,8 +57,8 @@ export function EngagementDashboard({
     }).length,
     totalValue: summaries.reduce((sum, s) => sum + s.totalValue, 0),
     averageProgress: summaries.length > 0
-      ? Math.round(summaries.reduce((sum, s) => sum + s.progressPercentage, 0) / summaries.length)
-      : 0,
+      ? Math.round(summaries.reduce((sum, s) => sum + (s.progressPercentage || 0), 0) / summaries.length)
+      : null,
   };
 
   // 按狀態分組
@@ -277,7 +277,7 @@ export function EngagementDashboard({
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-medium text-red-600">
-                        {engagement.progressPercentage}%
+                        {engagement.progressPercentage !== null ? `${engagement.progressPercentage}%` : '無進度'}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         {formatCurrency(engagement.totalValue, 'TWD')}
@@ -322,7 +322,7 @@ export function EngagementDashboard({
                         {engagement.status}
                       </Badge>
                       <div className="text-xs text-muted-foreground mt-1">
-                        {engagement.progressPercentage}%
+                        {engagement.progressPercentage !== null ? `${engagement.progressPercentage}%` : '無進度'}
                       </div>
                     </div>
                   </div>

@@ -65,12 +65,45 @@ export class FinancialService {
     paidDate?: Date
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      // 這裡需要先獲取當前的 engagement，更新特定的 payment，然後保存回去
-      // 由於 Firestore 的限制，我們需要這樣做
       const docRef = doc(firestore, this.collectionName, engagementId);
       
-      // 實際實現中，我們需要先獲取文檔，修改數組中的特定項目，然後更新
-      // 這裡簡化處理，實際應該使用更複雜的邏輯
+      // 獲取當前的 engagement 文檔
+      const { getDoc } = await import('firebase/firestore');
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+      
+      const engagementData = docSnap.data();
+      const payments = engagementData.payments || [];
+      
+      // 找到並更新特定的付款記錄
+      const updatedPayments = payments.map((payment: Payment) => {
+        if (payment.id === paymentId) {
+          return {
+            ...payment,
+            status,
+            ...(paidDate && { paidDate: Timestamp.fromDate(paidDate) }),
+            updatedAt: Timestamp.now(),
+            updatedBy: 'system', // TODO: 從認證上下文獲取
+          };
+        }
+        return payment;
+      });
+      
+      // 檢查是否找到要更新的付款記錄
+      const paymentExists = payments.some((payment: Payment) => payment.id === paymentId);
+      if (!paymentExists) {
+        return { success: false, error: '付款記錄不存在' };
+      }
+      
+      // 更新文檔
+      await updateDoc(docRef, {
+        payments: updatedPayments,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system', // TODO: 從認證上下文獲取
+      });
       
       return { success: true };
     } catch (error) {
@@ -204,6 +237,122 @@ export class FinancialService {
   }
 
   /**
+   * 更新收款狀態
+   */
+  async updateReceiptStatus(
+    engagementId: string,
+    receiptId: string,
+    status: Receipt['status'],
+    receivedDate?: Date
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      
+      // 獲取當前的 engagement 文檔
+      const { getDoc } = await import('firebase/firestore');
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+      
+      const engagementData = docSnap.data();
+      const receipts = engagementData.receipts || [];
+      
+      // 找到並更新特定的收款記錄
+      const updatedReceipts = receipts.map((receipt: Receipt) => {
+        if (receipt.id === receiptId) {
+          return {
+            ...receipt,
+            status,
+            ...(receivedDate && { receivedDate: Timestamp.fromDate(receivedDate) }),
+            updatedAt: Timestamp.now(),
+            updatedBy: 'system', // TODO: 從認證上下文獲取
+          };
+        }
+        return receipt;
+      });
+      
+      // 檢查是否找到要更新的收款記錄
+      const receiptExists = receipts.some((receipt: Receipt) => receipt.id === receiptId);
+      if (!receiptExists) {
+        return { success: false, error: '收款記錄不存在' };
+      }
+      
+      // 更新文檔
+      await updateDoc(docRef, {
+        receipts: updatedReceipts,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system', // TODO: 從認證上下文獲取
+      });
+      
+      return { success: true };
+    } catch (error) {
+      console.error('更新收款狀態失敗:', error);
+      const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
+      return { success: false, error: `更新失敗: ${errorMessage}` };
+    }
+  }
+
+  /**
+   * 更新發票狀態
+   */
+  async updateInvoiceStatus(
+    engagementId: string,
+    invoiceId: string,
+    status: Invoice['status'],
+    paidDate?: Date
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      
+      // 獲取當前的 engagement 文檔
+      const { getDoc } = await import('firebase/firestore');
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+      
+      const engagementData = docSnap.data();
+      const invoices = engagementData.invoices || [];
+      
+      // 找到並更新特定的發票記錄
+      const updatedInvoices = invoices.map((invoice: Invoice) => {
+        if (invoice.id === invoiceId) {
+          return {
+            ...invoice,
+            status,
+            ...(paidDate && { paidDate: Timestamp.fromDate(paidDate) }),
+            updatedAt: Timestamp.now(),
+            updatedBy: 'system', // TODO: 從認證上下文獲取
+          };
+        }
+        return invoice;
+      });
+      
+      // 檢查是否找到要更新的發票記錄
+      const invoiceExists = invoices.some((invoice: Invoice) => invoice.id === invoiceId);
+      if (!invoiceExists) {
+        return { success: false, error: '發票記錄不存在' };
+      }
+      
+      // 更新文檔
+      await updateDoc(docRef, {
+        invoices: updatedInvoices,
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system', // TODO: 從認證上下文獲取
+      });
+      
+      return { success: true };
+    } catch (error) {
+      console.error('更新發票狀態失敗:', error);
+      const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
+      return { success: false, error: `更新失敗: ${errorMessage}` };
+    }
+  }
+
+  /**
    * 更新 Engagement 的財務信息
    */
   async updateFinancialInfo(
@@ -216,11 +365,108 @@ export class FinancialService {
         paidAmount: financialSummary.paidAmount,
         pendingAmount: financialSummary.pendingAmount,
         updatedAt: Timestamp.now(),
+        updatedBy: 'system', // TODO: 從認證上下文獲取
       });
 
       return { success: true };
     } catch (error) {
       console.error('更新財務信息失敗:', error);
+      const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
+      return { success: false, error: `更新失敗: ${errorMessage}` };
+    }
+  }
+
+  /**
+   * 批量更新財務記錄
+   */
+  async batchUpdateFinancialRecords(
+    engagementId: string,
+    updates: {
+      payments?: Array<{ id: string; status: Payment['status']; paidDate?: Date }>;
+      receipts?: Array<{ id: string; status: Receipt['status']; receivedDate?: Date }>;
+      invoices?: Array<{ id: string; status: Invoice['status']; paidDate?: Date }>;
+    }
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const docRef = doc(firestore, this.collectionName, engagementId);
+      
+      // 獲取當前的 engagement 文檔
+      const { getDoc } = await import('firebase/firestore');
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        return { success: false, error: 'Engagement 不存在' };
+      }
+      
+      const engagementData = docSnap.data();
+      let updatedData: any = {
+        updatedAt: Timestamp.now(),
+        updatedBy: 'system', // TODO: 從認證上下文獲取
+      };
+      
+      // 更新付款記錄
+      if (updates.payments) {
+        const payments = engagementData.payments || [];
+        const updatedPayments = payments.map((payment: Payment) => {
+          const update = updates.payments!.find(u => u.id === payment.id);
+          if (update) {
+            return {
+              ...payment,
+              status: update.status,
+              ...(update.paidDate && { paidDate: Timestamp.fromDate(update.paidDate) }),
+              updatedAt: Timestamp.now(),
+              updatedBy: 'system',
+            };
+          }
+          return payment;
+        });
+        updatedData.payments = updatedPayments;
+      }
+      
+      // 更新收款記錄
+      if (updates.receipts) {
+        const receipts = engagementData.receipts || [];
+        const updatedReceipts = receipts.map((receipt: Receipt) => {
+          const update = updates.receipts!.find(u => u.id === receipt.id);
+          if (update) {
+            return {
+              ...receipt,
+              status: update.status,
+              ...(update.receivedDate && { receivedDate: Timestamp.fromDate(update.receivedDate) }),
+              updatedAt: Timestamp.now(),
+              updatedBy: 'system',
+            };
+          }
+          return receipt;
+        });
+        updatedData.receipts = updatedReceipts;
+      }
+      
+      // 更新發票記錄
+      if (updates.invoices) {
+        const invoices = engagementData.invoices || [];
+        const updatedInvoices = invoices.map((invoice: Invoice) => {
+          const update = updates.invoices!.find(u => u.id === invoice.id);
+          if (update) {
+            return {
+              ...invoice,
+              status: update.status,
+              ...(update.paidDate && { paidDate: Timestamp.fromDate(update.paidDate) }),
+              updatedAt: Timestamp.now(),
+              updatedBy: 'system',
+            };
+          }
+          return invoice;
+        });
+        updatedData.invoices = updatedInvoices;
+      }
+      
+      // 更新文檔
+      await updateDoc(docRef, updatedData);
+      
+      return { success: true };
+    } catch (error) {
+      console.error('批量更新財務記錄失敗:', error);
       const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
       return { success: false, error: `更新失敗: ${errorMessage}` };
     }

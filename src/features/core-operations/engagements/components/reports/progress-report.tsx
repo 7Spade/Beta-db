@@ -22,21 +22,21 @@ interface ProgressReportProps {
 export function ProgressReport({ engagement, className }: ProgressReportProps) {
     // 計算整體進度
     const calculateOverallProgress = () => {
-        if (!engagement.tasks || engagement.tasks.length === 0) return 0;
+        if (!engagement.tasks || engagement.tasks.length === 0) return null;
         const completedTasks = engagement.tasks.filter(task => task.status === '已完成').length;
         return Math.round((completedTasks / engagement.tasks.length) * 100);
     };
 
     // 計算里程碑進度
     const calculateMilestoneProgress = () => {
-        if (!engagement.milestones || engagement.milestones.length === 0) return 0;
+        if (!engagement.milestones || engagement.milestones.length === 0) return null;
         const completedMilestones = engagement.milestones.filter(milestone => milestone.status === '已完成').length;
         return Math.round((completedMilestones / engagement.milestones.length) * 100);
     };
 
     // 計算交付物進度
     const calculateDeliverableProgress = () => {
-        if (!engagement.deliverables || engagement.deliverables.length === 0) return 0;
+        if (!engagement.deliverables || engagement.deliverables.length === 0) return null;
         const completedDeliverables = engagement.deliverables.filter(deliverable => deliverable.status === '已完成').length;
         return Math.round((completedDeliverables / engagement.deliverables.length) * 100);
     };
@@ -151,24 +151,24 @@ export function ProgressReport({ engagement, className }: ProgressReportProps) {
                                 <Target className="h-4 w-4" />
                                 整體進度
                             </div>
-                            <p className="text-2xl font-bold">{overallProgress}%</p>
-                            <Progress value={overallProgress} className="h-2" />
+                            <p className="text-2xl font-bold">{overallProgress !== null ? `${overallProgress}%` : '無進度'}</p>
+                            <Progress value={overallProgress || 0} className="h-2" />
                         </div>
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <CheckCircle className="h-4 w-4" />
                                 里程碑進度
                             </div>
-                            <p className="text-2xl font-bold">{milestoneProgress}%</p>
-                            <Progress value={milestoneProgress} className="h-2" />
+                            <p className="text-2xl font-bold">{milestoneProgress !== null ? `${milestoneProgress}%` : '無進度'}</p>
+                            <Progress value={milestoneProgress || 0} className="h-2" />
                         </div>
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Package className="h-4 w-4" />
                                 交付物進度
                             </div>
-                            <p className="text-2xl font-bold">{deliverableProgress}%</p>
-                            <Progress value={deliverableProgress} className="h-2" />
+                            <p className="text-2xl font-bold">{deliverableProgress !== null ? `${deliverableProgress}%` : '無進度'}</p>
+                            <Progress value={deliverableProgress || 0} className="h-2" />
                         </div>
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -255,7 +255,7 @@ export function ProgressReport({ engagement, className }: ProgressReportProps) {
                                             {milestone.status}
                                         </Badge>
                                         <div className="text-sm text-muted-foreground">
-                                            進度: {milestone.progress || 0}%
+                                            進度: {milestone.progress !== null && milestone.progress !== undefined ? `${milestone.progress}%` : '無進度'}
                                         </div>
                                     </div>
                                 </div>
@@ -291,7 +291,7 @@ export function ProgressReport({ engagement, className }: ProgressReportProps) {
                                             {deliverable.status}
                                         </Badge>
                                         <div className="text-sm text-muted-foreground">
-                                            進度: {deliverable.progress || 0}%
+                                            進度: {deliverable.progress !== null && deliverable.progress !== undefined ? `${deliverable.progress}%` : '無進度'}
                                         </div>
                                     </div>
                                 </div>

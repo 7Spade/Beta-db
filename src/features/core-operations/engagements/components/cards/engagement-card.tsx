@@ -3,11 +3,11 @@
  */
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { CalendarDays, DollarSign, Users, Clock } from 'lucide-react';
+import { CalendarDays, Clock, DollarSign } from 'lucide-react';
 import type { EngagementSummary } from '../../types';
 
 interface EngagementCardProps {
@@ -75,15 +75,15 @@ export function EngagementCard({ engagement, onView, onEdit, onDelete }: Engagem
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* 進度條 */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>進度</span>
-            <span>{engagement.progressPercentage}%</span>
+            <span>{engagement.progressPercentage !== null ? `${engagement.progressPercentage}%` : '無進度'}</span>
           </div>
-          <Progress value={engagement.progressPercentage} className="h-2" />
+          <Progress value={engagement.progressPercentage || 0} className="h-2" />
         </div>
 
         {/* 基本信息 */}
@@ -115,8 +115,8 @@ export function EngagementCard({ engagement, onView, onEdit, onDelete }: Engagem
         {/* 操作按鈕 */}
         <div className="flex justify-end space-x-2 pt-2">
           {onView && (
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => onView(engagement.id)}
             >
@@ -124,8 +124,8 @@ export function EngagementCard({ engagement, onView, onEdit, onDelete }: Engagem
             </Button>
           )}
           {onEdit && (
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => onEdit(engagement.id)}
             >
@@ -133,8 +133,8 @@ export function EngagementCard({ engagement, onView, onEdit, onDelete }: Engagem
             </Button>
           )}
           {onDelete && (
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               size="sm"
               onClick={() => onDelete(engagement.id)}
             >

@@ -137,13 +137,33 @@ export async function updateReceiptStatusAction(
   receivedDate?: Date
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // TODO: 實現更新收款狀態的邏輯
-    // 類似於 updatePaymentStatus，但針對 receipts
+    const result = await financialService.updateReceiptStatus(
+      engagementId,
+      receiptId,
+      status,
+      receivedDate
+    );
     
-    revalidatePath('/engagements');
-    revalidatePath(`/engagements/${engagementId}`);
+    if (result.success) {
+      // 更新 Engagement 的財務摘要
+      const engagementResult = await engagementService.getEngagement(engagementId);
+      if (engagementResult.success && engagementResult.engagement) {
+        const engagement = engagementResult.engagement;
+        const financialSummary = financialService.calculateFinancialSummary(
+          engagement.totalValue,
+          engagement.payments,
+          engagement.receipts,
+          engagement.invoices
+        );
+        
+        await financialService.updateFinancialInfo(engagementId, financialSummary);
+      }
+      
+      revalidatePath('/engagements');
+      revalidatePath(`/engagements/${engagementId}`);
+    }
     
-    return { success: true };
+    return result;
   } catch (error) {
     console.error('更新收款狀態 Action 失敗:', error);
     const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
@@ -198,12 +218,33 @@ export async function updateInvoiceStatusAction(
   paidDate?: Date
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // TODO: 實現更新發票狀態的邏輯
+    const result = await financialService.updateInvoiceStatus(
+      engagementId,
+      invoiceId,
+      status,
+      paidDate
+    );
     
-    revalidatePath('/engagements');
-    revalidatePath(`/engagements/${engagementId}`);
+    if (result.success) {
+      // 更新 Engagement 的財務摘要
+      const engagementResult = await engagementService.getEngagement(engagementId);
+      if (engagementResult.success && engagementResult.engagement) {
+        const engagement = engagementResult.engagement;
+        const financialSummary = financialService.calculateFinancialSummary(
+          engagement.totalValue,
+          engagement.payments,
+          engagement.receipts,
+          engagement.invoices
+        );
+        
+        await financialService.updateFinancialInfo(engagementId, financialSummary);
+      }
+      
+      revalidatePath('/engagements');
+      revalidatePath(`/engagements/${engagementId}`);
+    }
     
-    return { success: true };
+    return result;
   } catch (error) {
     console.error('更新發票狀態 Action 失敗:', error);
     const errorMessage = error instanceof Error ? error.message : '發生未知錯誤';
