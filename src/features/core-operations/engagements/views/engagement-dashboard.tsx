@@ -93,7 +93,7 @@ export function EngagementDashboard({
   const highRiskEngagements = summaries.filter(s => {
     const endDate = toDate(s.endDate);
     const daysRemaining = Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-    return s.progressPercentage < 50 && daysRemaining < 30 && s.status === '進行中';
+    return (s.progressPercentage ?? 0) < 50 && daysRemaining < 30 && s.status === '進行中';
   });
 
   if (isLoading) {

@@ -355,7 +355,7 @@ describe('Comprehensive Database Tests', () => {
 
             const mockBatch = {
                 update: jest.fn(),
-                commit: jest.fn().mockRejectedValue(new Error('部分更新失敗')) as any,
+                commit: jest.fn().mockImplementation(() => Promise.reject(new Error('部分更新失敗'))),
             } as any;
 
             mockFirestore.writeBatch.mockReturnValue(mockBatch as any);
