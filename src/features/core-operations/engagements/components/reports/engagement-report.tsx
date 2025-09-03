@@ -6,6 +6,13 @@ import { Progress } from '@/components/ui/progress';
 import { Calendar, Clock, DollarSign, FileText, Users } from 'lucide-react';
 import type { Engagement } from '../../types/engagement.types';
 
+const toNumber = (value: unknown) => {
+    const num = typeof value === 'number' ? value : Number(value);
+    return Number.isFinite(num) ? num : 0;
+};
+
+const formatAmount = (value: unknown) => toNumber(value).toLocaleString();
+
 interface EngagementReportProps {
     engagement: Engagement;
     className?: string;
@@ -21,13 +28,16 @@ export function EngagementReport({ engagement, className }: EngagementReportProp
 
     // 計算財務狀態
     const calculateFinancialStatus = () => {
-        const paidPercentage = engagement.totalValue > 0
-            ? Math.round((engagement.paidAmount / engagement.totalValue) * 100)
+        const total = toNumber(engagement.totalValue);
+        const paid = toNumber(engagement.paidAmount);
+        const pending = toNumber(engagement.pendingAmount);
+        const paidPercentage = total > 0
+            ? Math.round((paid / total) * 100)
             : 0;
         return {
             paidPercentage,
-            pendingAmount: engagement.pendingAmount,
-            totalValue: engagement.totalValue
+            pendingAmount: pending,
+            totalValue: total
         };
     };
 
@@ -113,7 +123,7 @@ export function EngagementReport({ engagement, className }: EngagementReportProp
                                 專案價值
                             </div>
                             <p className="font-medium">
-                                {engagement.currency} {engagement.totalValue.toLocaleString()}
+                                {engagement.currency} {formatAmount(engagement.totalValue)}
                             </p>
                         </div>
                     </div>
@@ -188,7 +198,7 @@ export function EngagementReport({ engagement, className }: EngagementReportProp
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">總價值</span>
                                 <span className="font-medium">
-                                    {engagement.currency} {engagement.totalValue.toLocaleString()}
+                                    {engagement.currency} {formatAmount(engagement.totalValue)}
                                 </span>
                             </div>
                             <Progress value={100} className="h-2" />
@@ -197,7 +207,7 @@ export function EngagementReport({ engagement, className }: EngagementReportProp
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">已付款</span>
                                 <span className="font-medium">
-                                    {engagement.currency} {engagement.paidAmount.toLocaleString()}
+                                    {engagement.currency} {formatAmount(engagement.paidAmount)}
                                 </span>
                             </div>
                             <Progress value={financialStatus.paidPercentage} className="h-2" />
@@ -206,7 +216,7 @@ export function EngagementReport({ engagement, className }: EngagementReportProp
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">待付款</span>
                                 <span className="font-medium">
-                                    {engagement.currency} {engagement.pendingAmount.toLocaleString()}
+                                    {engagement.currency} {formatAmount(engagement.pendingAmount)}
                                 </span>
                             </div>
                             <Progress
